@@ -25,11 +25,7 @@ nmap <CR> o<Esc>
 " Colorscheme options
 let g:spacegray_use_italics = 1
 let g:spacegray_underline_search = 1
-
-" Powerline
-set  rtp+=/usr/local/lib/python2.7/site-packages/powerline/bindings/vim/
-set laststatus=2
-set t_Co=256
+highlight Normal ctermfg=grey ctermbg=darkblue
 
 " Some basic config
 colorscheme candid
