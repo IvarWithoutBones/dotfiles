@@ -6,6 +6,7 @@ Plug 'scrooloose/nerdtree'
 Plug 'jistr/vim-nerdtree-tabs'
 Plug 'rust-lang/rust.vim'
 Plug 'jampow/vim-arc-dark-theme'
+Plug 'mboughaba/i3config.vim'
 call plug#end()
 
 " Map CTRL+n to toggle NERDTree
@@ -17,6 +18,11 @@ let NERDTreeWinSize=20
 
 " Automatically save and run python3 scripts when pressing F5 
 autocmd Filetype python nnoremap <buffer> <F5> :w<CR>:vert ter python3 "%"<CR>
+
+aug i3config_ft_detection
+	au!
+	au BufNewFile,BufRead ~/.config/i3/config set filetype=i3config
+aug end
 
 " Maps to insert a new line without going into insert mode
 nmap <S-Enter> O<Esc>
