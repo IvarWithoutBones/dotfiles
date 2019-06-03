@@ -60,7 +60,7 @@ bindsym $mod+a focus parent
 set $ws1 "1"
 set $ws2 "2: Firefox"
 set $ws3 "3: Discord"
-set $ws4 "4"
+set $ws4 "4: Spotify"
 set $ws5 "5"
 set $ws6 "6"
 set $ws7 "7"
@@ -95,16 +95,17 @@ bindsym $mod+Shift+0 move container to workspace $ws10
 # Move workspaces
 bindsym $mod+n move workspace to output left
 
-# Automatically open applications in certain workspaces
+# Automatically open applications in certain workspaces (note: you can get this with xprop)
 assign [class="Firefox"] $ws2
 assign [class="discord"] $ws3
+for_window [class = "Spotify"] move to workspace $ws4
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+e exec "i3-nagbar -f 'Monospace' -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
 
 set $bg-color 	         #2f343f
 set $inactive-bg-color   #2f343f
@@ -134,7 +135,7 @@ bar {
 }
 
 hide_edge_borders both
-   					    										
+
 # start network manager for wifi
 exec --no-startup-id nm-applet
 
@@ -170,3 +171,6 @@ bindsym $mod+shift+w exec firefox
 
 # launch discord
 bindsym $mod+shift+d exec discord
+
+# launch spotify
+bindsym $mod+shift+s exec spotify
