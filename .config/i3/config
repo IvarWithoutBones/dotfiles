@@ -1,7 +1,6 @@
 set $mod Mod4
 
-# Font for window titles. Will also be used by the bar unless a different font
-# is used in the bar {} block below.
+# Font for window titles.
 font pango:System San Francisco Display 10
 
 # Use Mouse+$mod to drag floating windows to their wanted position
@@ -22,23 +21,17 @@ bindsym $mod+j focus down
 bindsym $mod+k focus up
 bindsym $mod+l focus right
 
-# alternatively, you can use the cursor keys:
-bindsym $mod+Left focus left
-bindsym $mod+Down focus down
-bindsym $mod+Up focus up
-bindsym $mod+Right focus right
-
 # move focused window
 bindsym $mod+Shift+h move left
 bindsym $mod+Shift+j move down
 bindsym $mod+Shift+k move up
 bindsym $mod+Shift+l move right
 
-# alternatively, you can use the cursor keys:
-bindsym $mod+Shift+Left move left
-bindsym $mod+Shift+Down move down
-bindsym $mod+Shift+Up move up
-bindsym $mod+Shift+Right move right
+# resize windows
+bindsym $mod+Ctrl+h resize shrink width 10 px or 10 ppt
+bindsym $mod+Ctrl+j resize grow height 10 px or 10 ppt
+bindsym $mod+Ctrl+k resize shrink height 10 px or 10 ppt
+bindsym $mod+Ctrl+l resize grow width 10 px or 10 ppt
 
 # split in horizontal orientation
 bindsym $mod+simicolom split h
@@ -63,11 +56,10 @@ bindsym $mod+space focus mode_toggle
 # focus the parent container
 bindsym $mod+a focus parent
 
-# Define names for default workspaces for which we configure key bindings later on.
-# We use variables to avoid repeating the names in multiple places.
+# Define names for workspaces 
 set $ws1 "1"
-set $ws2 "2"
-set $ws3 "3"
+set $ws2 "2: Firefox"
+set $ws3 "3: Discord"
 set $ws4 "4"
 set $ws5 "5"
 set $ws6 "6"
@@ -114,33 +106,6 @@ bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
 
-# resize window (you can also use the mouse for that)
-mode "resize" {
-        # These bindings trigger as soon as you enter the resize mode
-
-        # Pressing left will shrink the window’s width.
-        # Pressing right will grow the window’s width.
-        # Pressing up will shrink the window’s height.
-        # Pressing down will grow the window’s height.
-        bindsym j resize shrink width 10 px or 10 ppt
-        bindsym k resize grow height 10 px or 10 ppt
-        bindsym l resize shrink height 10 px or 10 ppt
-        bindsym semicolon resize grow width 10 px or 10 ppt
-
-        # same bindings, but for the arrow keys
-        bindsym Left resize shrink width 10 px or 10 ppt
-        bindsym Down resize grow height 10 px or 10 ppt
-        bindsym Up resize shrink height 10 px or 10 ppt
-        bindsym Right resize grow width 10 px or 10 ppt
-
-        # back to normal: Enter or Escape or $mod+r
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
-        bindsym $mod+r mode "default"
-}
-
-bindsym $mod+r mode "resize"
-
 set $bg-color 	         #2f343f
 set $inactive-bg-color   #2f343f
 set $text-color          #f3f4f5
@@ -170,38 +135,38 @@ bar {
 
 hide_edge_borders both
    					    										
-# Start network manager for wifi
+# start network manager for wifi
 exec --no-startup-id nm-applet
 
-# Handles opacity
+# handles opacity
 exec --no-startup-id compton -f
 
-# Make second display work
+# make second display work
 exec xrandr --output DP-1-1 --auto --right-of HDMI-0
 
-# Volume control
+# volume control
 bindsym XF86AudioRaiseVolume exec amixer -q set Master 2dB+ unmute
 bindsym XF86AudioLowerVolume exec amixer -q set Master 2dB- unmute
 bindsym XF86AudioMute exec amixer -q set Master toggle
 
-# Gaps
+# gaps
 gaps outer 3
 gaps inner 7
 
-# Remap capslock to escape
+# remap capslock to escape
 exec --no-startup-id xmodmap -e "remove Lock = Caps_Lock" -e "keysym Caps_Lock = Escape"
 
-# Set wallpaper
+# set wallpaper
 exec --no-startup-id feh --bg-scale /home/ivar/Misc/Pictures/latenight_woods1.png
 
-# Screenshots
+# screenshots
 bindsym --release Print exec scrot /tmp/screenshot_'%Y-%m-%d_%H:%M:%S'.png -se 'xclip -selection clipboard -target image/png -i $f'
 
-# Lock the screen when you press mod+shift+x
+# lock the screen when you press mod+shift+x
 bindsym $mod+shift+x exec /home/ivar/.scripts/lock.sh
 
-# Launch firefox
+# launch firefox
 bindsym $mod+shift+w exec firefox
 
-# Launch discord
+# launch discord
 bindsym $mod+shift+d exec discord
