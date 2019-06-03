@@ -170,9 +170,6 @@ bar {
 
 hide_edge_borders both
    					    										
-# Lock the screen when you press mod+shift+x
-bindsym $mod+shift+x exec /home/ivar/.scripts/lock.sh
-
 # Start network manager for wifi
 exec --no-startup-id nm-applet
 
@@ -182,20 +179,26 @@ exec --no-startup-id compton -f
 # Make second display work
 exec xrandr --output DP-1-1 --auto --right-of HDMI-0
 
-# Gaps
-gaps outer 3
-gaps inner 7
-
-# Set wallpaper
-exec --no-startup-id feh --bg-scale /home/ivar/Misc/Pictures/latenight_woods1.png
-
 # Volume control
 bindsym XF86AudioRaiseVolume exec amixer -q set Master 2dB+ unmute
 bindsym XF86AudioLowerVolume exec amixer -q set Master 2dB- unmute
 bindsym XF86AudioMute exec amixer -q set Master toggle
 
+# Gaps
+gaps outer 3
+gaps inner 7
+
+# Remap capslock to escape
+exec --no-startup-id xmodmap -e "remove Lock = Caps_Lock" -e "keysym Caps_Lock = Escape"
+
+# Set wallpaper
+exec --no-startup-id feh --bg-scale /home/ivar/Misc/Pictures/latenight_woods1.png
+
 # Screenshots
 bindsym --release Print exec scrot /tmp/screenshot_'%Y-%m-%d_%H:%M:%S'.png -se 'xclip -selection clipboard -target image/png -i $f'
+
+# Lock the screen when you press mod+shift+x
+bindsym $mod+shift+x exec /home/ivar/.scripts/lock.sh
 
 # Launch firefox
 bindsym $mod+shift+w exec firefox
