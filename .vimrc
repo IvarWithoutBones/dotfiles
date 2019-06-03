@@ -5,7 +5,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'scrooloose/nerdtree'
 Plug 'jistr/vim-nerdtree-tabs'
 Plug 'rust-lang/rust.vim'
-Plug 'Lokaltog/vim-powerline'
+Plug 'jampow/vim-arc-dark-theme'
 call plug#end()
 
 " Map CTRL+n to toggle NERDTree
@@ -28,7 +28,7 @@ let g:spacegray_underline_search = 1
 highlight Normal ctermfg=grey ctermbg=darkblue
 
 " Some basic config
-colorscheme candid
+colorscheme arc-dark
 set tabstop=4
 let python_highlight_all=1
 syntax on
