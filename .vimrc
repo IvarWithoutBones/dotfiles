@@ -19,6 +19,7 @@ let NERDTreeWinSize=20
 " Automatically save and run python3 scripts when pressing F5 
 autocmd Filetype python nnoremap <buffer> <F5> :w<CR>:vert ter python3 "%"<CR>
 
+" Enable syntax highlighting for the i3 config file
 aug i3config_ft_detection
 	au!
 	au BufNewFile,BufRead ~/.config/i3/config set filetype=i3config
