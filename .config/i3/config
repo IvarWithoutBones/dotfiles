@@ -142,6 +142,9 @@ exec --no-startup-id nm-applet
 # handles opacity
 exec --no-startup-id compton -f
 
+# makes my eyes not fall out
+exec -no-startup-id redshift-gtk
+
 # make second display work
 exec xrandr --output DP-1-1 --auto --right-of HDMI-0
 
