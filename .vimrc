@@ -5,7 +5,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'scrooloose/nerdtree'
 Plug 'jistr/vim-nerdtree-tabs'
 Plug 'rust-lang/rust.vim'
-Plug 'jampow/vim-arc-dark-theme'
+Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'mboughaba/i3config.vim'
 call plug#end()
 
@@ -33,7 +33,7 @@ nmap <CR> o<Esc>
 let g:spacegray_use_italics = 1
 let g:spacegray_underline_search = 1
 highlight Normal ctermfg=grey ctermbg=darkblue
-colorscheme arc-dark
+colorscheme dracula
 
 " Some basic config
 set tabstop=4
