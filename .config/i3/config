@@ -143,7 +143,7 @@ exec --no-startup-id nm-applet
 exec --no-startup-id compton -f
 
 # makes my eyes not fall out
-exec -no-startup-id redshift-gtk
+exec --no-startup-id redshift-gtk
 
 # make second display work
 exec xrandr --output DP-1-1 --auto --right-of HDMI-0
@@ -177,3 +177,6 @@ bindsym $mod+shift+d exec discord
 
 # launch spotify
 bindsym $mod+shift+s exec spotify
+
+# launch ranger (file manager)
+bindsym $mod+shift+m exec st ranger
