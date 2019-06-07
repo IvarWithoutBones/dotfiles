@@ -33,11 +33,12 @@ nmap <CR> o<Esc>
 let g:spacegray_use_italics = 1
 let g:spacegray_underline_search = 1
 highlight Normal ctermfg=grey ctermbg=darkblue
+colorscheme arc-dark
 
 " Some basic config
-colorscheme arc-dark
 set tabstop=4
 let python_highlight_all=1
 syntax on
 set number
+set relativenumber
 set mouse=a
