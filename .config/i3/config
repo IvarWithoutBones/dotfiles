@@ -34,7 +34,7 @@ bindsym $mod+Ctrl+k resize shrink height 10 px or 10 ppt
 bindsym $mod+Ctrl+l resize grow width 10 px or 10 ppt
 
 # split in horizontal orientation
-bindsym $mod+simicolom split h
+bindsym $mod+Shift+Ctrl split h
 
 # split in vertical orientation
 bindsym $mod+v split v
@@ -58,14 +58,14 @@ bindsym $mod+a focus parent
 
 # Define names for workspaces 
 set $ws1 "1"
-set $ws2 "2: Firefox"
+set $ws2 "2: Media"
 set $ws3 "3: Discord"
 set $ws4 "4: Spotify"
 set $ws5 "5"
 set $ws6 "6"
 set $ws7 "7"
 set $ws8 "8"
-set $ws9 "9"
+set $ws9 "9: Torrent"
 set $ws10 "10"
 
 # switch to workspace
@@ -93,15 +93,14 @@ bindsym $mod+Shift+9 move container to workspace $ws9
 bindsym $mod+Shift+0 move container to workspace $ws10
 
 # Move workspaces
-bindsym $mod+n move workspace to output left
+bindsym $mod+n move workspace to output right
 
 # Automatically open applications in certain workspaces (note: you can get this with xprop)
 assign [class="Firefox"] $ws2
 assign [class="discord"] $ws3
+assign [class="Transmission-gtk"] $ws9
 for_window [class = "Spotify"] move to workspace $ws4
 
-# reload the configuration file
-bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
@@ -140,7 +139,7 @@ hide_edge_borders both
 exec --no-startup-id nm-applet
 
 # handles opacity
-exec --no-startup-id compton -f
+exec_always --no-startup-id compton -f
 
 # makes my eyes not fall out
 exec --no-startup-id redshift-gtk
@@ -155,13 +154,13 @@ bindsym XF86AudioMute exec amixer -q set Master toggle
 
 # gaps
 gaps outer 3
-gaps inner 7
+gaps inner 3
 
 # remap capslock to escape
 exec --no-startup-id xmodmap -e "remove Lock = Caps_Lock" -e "keysym Caps_Lock = Escape"
 
 # set wallpaper
-exec --no-startup-id feh --bg-scale /home/ivar/Misc/Pictures/latenight_woods1.png
+exec --no-startup-id nitrogen --restore
 
 # screenshots
 bindsym --release Print exec scrot /tmp/screenshot_'%Y-%m-%d_%H:%M:%S'.png -se 'xclip -selection clipboard -target image/png -i $f'

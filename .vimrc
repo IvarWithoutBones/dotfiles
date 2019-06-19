@@ -18,6 +18,8 @@ let NERDTreeWinSize=20
 
 " Automatically save and run python3 scripts when pressing F5 
 autocmd Filetype python nnoremap <buffer> <F5> :w<CR>:vert ter python3 "%"<CR>
+autocmd Filetype cs nnoremap <buffer> <F5> :w<CR>:vert ter dotnet run<CR>
+autocmd Filetype rust nnoremap <buffer> <F5> :w<CR>:vert ter cargo run ..<CR>
 
 " Enable syntax highlighting for the i3 config file
 aug i3config_ft_detection
