@@ -145,7 +145,7 @@ exec_always --no-startup-id compton -f
 exec --no-startup-id redshift-gtk
 
 # make second display work
-exec xrandr --output DP-1-1 --auto --right-of HDMI-0
+exec_always xrandr --output DP-1-1 --auto --right-of HDMI-0
 
 # volume control
 bindsym XF86AudioRaiseVolume exec amixer -q set Master 2dB+ unmute
@@ -156,11 +156,14 @@ bindsym XF86AudioMute exec amixer -q set Master toggle
 gaps outer 3
 gaps inner 3
 
+# mount second hdd
+exec sudo mount /dev/sda5 /home/ivar/Misc/HDD/
+
 # remap capslock to escape
 exec --no-startup-id xmodmap -e "remove Lock = Caps_Lock" -e "keysym Caps_Lock = Escape"
 
 # set wallpaper
-exec --no-startup-id nitrogen --restore
+exec_always --no-startup-id nitrogen --restore
 
 # screenshots
 bindsym --release Print exec scrot /tmp/screenshot_'%Y-%m-%d_%H:%M:%S'.png -se 'xclip -selection clipboard -target image/png -i $f'
