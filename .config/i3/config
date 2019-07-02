@@ -166,7 +166,7 @@ exec --no-startup-id xmodmap -e "remove Lock = Caps_Lock" -e "keysym Caps_Lock =
 exec_always --no-startup-id nitrogen --restore
 
 # screenshots
-bindsym --release Print exec scrot /tmp/screenshot_'%Y-%m-%d_%H:%M:%S'.png -se 'xclip -selection clipboard -target image/png -i $f'
+bindsym --release Print exec scrot /tmp/screenshot_'%Y-%m-%d_%H:%M'.png -se 'xclip -selection clipboard -target image/png -i $f'
 
 # lock the screen when you press mod+shift+x
 bindsym $mod+shift+x exec /home/ivar/.scripts/lock.sh
