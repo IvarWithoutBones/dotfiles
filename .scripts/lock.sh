@@ -1,6 +1,6 @@
 #!/bin/bash
 
-scrot /tmp/screen.png
+maim /tmp/screen.png
 convert /tmp/screen.png -scale 10% -scale 1000% /tmp/screen.png
 lock_dir=$HOME/Misc/Pictures/lock.png
 
