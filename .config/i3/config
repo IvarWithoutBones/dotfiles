@@ -99,7 +99,7 @@ bindsym $mod+n move workspace to output right
 assign [class="Firefox"] $ws2
 assign [class="discord"] $ws3
 assign [class="Transmission-gtk"] $ws9
-for_window [class = "Spotify"] move to workspace $ws4
+for_window [class="Spotify"] move to workspace $ws4
 
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
