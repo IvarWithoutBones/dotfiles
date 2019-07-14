@@ -28,4 +28,4 @@ then
         convert /tmp/screen.png $lock_dir -geometry +$PX+$PY -composite -matte  /tmp/screen.png
     done
 fi 
-i3lock -e -u -n -i /tmp/screen.png
+i3lock -e -n -i /tmp/screen.png
