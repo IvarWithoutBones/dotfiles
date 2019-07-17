@@ -96,7 +96,7 @@ bindsym $mod+Shift+0 move container to workspace $ws10
 bindsym $mod+n move workspace to output right
 
 # Automatically open applications in certain workspaces (note: you can get this with xprop)
-assign [class="Firefox"] $ws2
+assign [class="qutebrowser"] $ws2
 assign [class="discord"] $ws3
 assign [class="Transmission-gtk"] $ws9
 for_window [class="Spotify"] move to workspace $ws4
@@ -141,7 +141,7 @@ exec --no-startup-id nm-applet
 # handles opacity
 exec_always --no-startup-id compton -f
 
-# makes my eyes not fall out
+# makes my eye not fall out with a fancy gtk widget menu
 exec --no-startup-id redshift-gtk
 
 # make second display work
@@ -171,8 +171,8 @@ bindsym --release Print exec maim -s /tmp/screenshot.png && xclip -selection cli
 # lock the screen when you press mod+shift+x
 bindsym $mod+shift+x exec /home/ivar/.scripts/lock.sh
 
-# launch firefox
-bindsym $mod+shift+w exec firefox
+# launch qutebrowser
+bindsym $mod+shift+w exec qutebrowser
 
 # launch discord
 bindsym $mod+shift+d exec discord
