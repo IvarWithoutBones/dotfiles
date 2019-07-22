@@ -1,19 +1,16 @@
 set $mod Mod4
 
-# Font for window titles.
+# font for window titles.
 font pango:System San Francisco Display 10
 
-# Use Mouse+$mod to drag floating windows to their wanted position
+# restart i3
+bindsym $mod+Shift+r restart
+
+# exit i3
+bindsym $mod+Shift+e exec "i3-nagbar -f 'System San Francisco Display' -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3?' -B 'Yes, exit i3' 'i3-msg exit'"
+
+# Mouse+$mod to drag floating windows
 floating_modifier $mod
-
-# start a terminal
-bindsym $mod+Return exec st 
-
-# kill focused window
-bindsym $mod+Shift+q kill
-
-# start rofi (a program launcher)
-bindsym $mod+d exec /home/ivar/.scripts/rofi.sh
 
 # change focus
 bindsym $mod+h focus left
@@ -33,30 +30,37 @@ bindsym $mod+Ctrl+j resize grow height 10 px or 10 ppt
 bindsym $mod+Ctrl+k resize shrink height 10 px or 10 ppt
 bindsym $mod+Ctrl+l resize grow width 10 px or 10 ppt
 
-# split in horizontal orientation
+# gaps between windows
+gaps outer 3
+gaps inner 3
+
+# split horizontally
 bindsym $mod+Shift+Ctrl split h
 
-# split in vertical orientation
+# split vertically
 bindsym $mod+v split v
 
-# enter fullscreen mode for the focused container
-bindsym $mod+f fullscreen toggle
-
-# change container layout (stacked, tabbed, toggle split)
+# change layout
 bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
 
-# toggle tiling / floating
+# enter fullscreen
+bindsym $mod+f fullscreen toggle
+
+# toggle floating
 bindsym $mod+Shift+space floating toggle
 
-# change focus between tiling / floating windows
+# change focus between floating windows
 bindsym $mod+space focus mode_toggle
 
 # focus the parent container
 bindsym $mod+a focus parent
 
-# Define names for workspaces 
+# kill focused window
+bindsym $mod+Shift+q kill
+
+# names for workspaces 
 set $ws1 "1"
 set $ws2 "2: Media"
 set $ws3 "3: Discord"
@@ -80,7 +84,7 @@ bindsym $mod+8 workspace $ws8
 bindsym $mod+9 workspace $ws9
 bindsym $mod+0 workspace $ws10
 
-# move focused container to workspace
+# move focused program to workspace
 bindsym $mod+Shift+1 move container to workspace $ws1
 bindsym $mod+Shift+2 move container to workspace $ws2
 bindsym $mod+Shift+3 move container to workspace $ws3
@@ -92,20 +96,16 @@ bindsym $mod+Shift+8 move container to workspace $ws8
 bindsym $mod+Shift+9 move container to workspace $ws9
 bindsym $mod+Shift+0 move container to workspace $ws10
 
-# Move workspaces
+# move workspace to right monitor (wraps)
 bindsym $mod+n move workspace to output right
 
-# Automatically open applications in certain workspaces (note: you can get this with xprop)
+# open applications in specific workspaces (note: you can get the class with xprop)
 assign [class="qutebrowser"] $ws2
 assign [class="discord"] $ws3
 assign [class="Transmission-gtk"] $ws9
 for_window [class="Spotify"] move to workspace $ws4
 
-# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-bindsym $mod+Shift+r restart
-# exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -f 'Monospace' -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
-
+# set colors
 set $bg-color 	         #2f343f
 set $inactive-bg-color   #2f343f
 set $text-color          #f3f4f5
@@ -119,7 +119,7 @@ client.unfocused        $inactive-bg-color		$inactive-bg-color $inactive-text-co
 client.focused_inactive $inactive-bg-color 		$inactive-bg-color $inactive-text-color $bg-color
 client.urgent           $urgent-bg-color    	$urgent-bg-color   $text-color          $bf-color
 
-# bar
+# status bar
 bar {
 	position top
 	status_command i3blocks -c /home/ivar/.config/i3/i3blocks.conf
@@ -133,43 +133,43 @@ bar {
    		}
 }
 
-hide_edge_borders both
-
-# start network manager for wifi
-exec --no-startup-id nm-applet
-
-# handles opacity
-exec_always --no-startup-id compton -f
-
-# makes my eye not fall out with a fancy gtk widget menu
-exec --no-startup-id redshift-gtk
-
-# make second display work
-exec_always xrandr --output DP-1-1 --auto --right-of HDMI-0
-
 # volume control
 bindsym XF86AudioRaiseVolume exec amixer -q set Master 2dB+ unmute
 bindsym XF86AudioLowerVolume exec amixer -q set Master 2dB- unmute
 bindsym XF86AudioMute exec amixer -q set Master toggle
 
-# gaps
-gaps outer 3
-gaps inner 3
+# make second display work
+exec_always xrandr --output DP-1-1 --auto --left-of HDMI-0
 
-# mount second hdd
-exec sudo mount /dev/sda5 /home/ivar/Misc/HDD/
+# handles opacity. f flag for animations when (for example) switching workspaces
+exec_always --no-startup-id compton -f
 
-# remap capslock to escape
+# map capslock to escape
 exec --no-startup-id xmodmap -e "remove Lock = Caps_Lock" -e "keysym Caps_Lock = Escape"
 
-# set wallpaper
-exec_always --no-startup-id nitrogen --restore
+# start network manager applet for wifi
+exec --no-startup-id nm-applet
 
-# screenshots
+# makes my eye not fall out with a fancy gtk widget
+exec --no-startup-id redshift-gtk
+
+# mount hdd
+exec sudo mount /dev/sda5 /home/ivar/Misc/HDD/
+
+# take screenshot and put into clipboard
 bindsym --release Print exec maim -s /tmp/screenshot.png && xclip -selection clipboard -t image/png < /tmp/screenshot.png
 
-# lock the screen when you press mod+shift+x
+# set wallpaper (note: change with nitrogen)
+exec_always --no-startup-id nitrogen --restore
+
+# launch st (terminal)
+bindsym $mod+Return exec st 
+
+# lock the screen
 bindsym $mod+shift+x exec /home/ivar/.scripts/lock.sh
+
+# launch rofi (program launcher)
+bindsym $mod+d exec /home/ivar/.scripts/rofi.sh
 
 # launch qutebrowser
 bindsym $mod+shift+w exec qutebrowser
@@ -179,6 +179,3 @@ bindsym $mod+shift+d exec discord
 
 # launch spotify
 bindsym $mod+shift+s exec spotify
-
-# launch ranger (file manager)
-bindsym $mod+shift+m exec st ranger
