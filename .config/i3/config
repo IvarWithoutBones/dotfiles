@@ -169,7 +169,7 @@ bindsym $mod+Return exec st
 bindsym $mod+shift+x exec /home/ivar/.scripts/lock.sh
 
 # launch rofi (program launcher)
-bindsym $mod+d exec /home/ivar/.scripts/rofi.sh
+bindsym $mod+d exec rofi -show run
 
 # launch qutebrowser
 bindsym $mod+shift+w exec qutebrowser
