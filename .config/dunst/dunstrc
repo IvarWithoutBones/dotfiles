@@ -1,7 +1,7 @@
 #!vim :set fp=cfg
 [global]
     # Which monitor should the notifications be displayed on.
-    monitor = 0
+    monitor = 1
 
     geometry = "300x5-30+20"
 
