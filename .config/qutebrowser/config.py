@@ -18,9 +18,29 @@ config.set('content.javascript.enabled', True, 'chrome://*/*')
 # Type: Bool
 config.set('content.javascript.enabled', True, 'qute://*/*')
 
+# Which categories to show (in which order) in the :open completion.
+# Type: FlagList
+# Valid values:
+#   - searchengines
+#   - quickmarks
+#   - bookmarks
+#   - history
+c.completion.open_categories = ['searchengines', 'quickmarks', 'bookmarks', 'history']
+
 # CSS border value for hints.
 # Type: String
 c.hints.border = '1px solid #000000'
+
+# Search engines which can be used via the address bar. Maps a search
+# engine name (such as `DEFAULT`, or `ddg`) to a URL with a `{}`
+# placeholder. The placeholder will be replaced by the search term, use
+# `{{` and `}}` for literal `{`/`}` signs. The search engine named
+# `DEFAULT` is used when `url.auto_search` is turned on and something
+# else than a URL was entered to be opened. Other search engines can be
+# used by prepending the search engine name to the search term, e.g.
+# `:open google qutebrowser`.
+# Type: Dict
+c.url.searchengines = {'DEFAULT': 'https://duckduckgo.com/?q={}', 'yt': 'https://www.youtube.com/results?search_query={}', 'tweak': 'https://tweakers.net/zoeken/?keyword={}'}
 
 # Text color of the completion widget. May be a single color to use for
 # all columns or a list of three colors, one for each column.
