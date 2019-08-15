@@ -7,7 +7,7 @@ font pango:System San Francisco Display 10
 bindsym $mod+Shift+r restart
 
 # exit i3
-bindsym $mod+Shift+e exec "i3-nagbar -f 'System San Francisco Display' -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3?' -B 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+e exec "i3-nagbar -f 'System San Francisco Display' -t warning -m 'You pressed the exit shortcut. Do you want to logout?' -B 'Yes, exit i3' 'i3-msg exit'"
 
 # Mouse+$mod to drag floating windows
 floating_modifier $mod
@@ -100,8 +100,9 @@ bindsym $mod+Shift+0 move container to workspace $ws10
 bindsym $mod+n move workspace to output right
 
 # open applications in specific workspaces (note: you can get the class with xprop)
-assign [class="qutebrowser"] $ws2
+assign [class="Firefox"] $ws2
 assign [class="discord"] $ws3
+assign [class="qutebrowser"] $ws2
 assign [class="Transmission-gtk"] $ws9
 for_window [class="Spotify"] move to workspace $ws4
 
@@ -122,6 +123,7 @@ client.urgent           $urgent-bg-color    	$urgent-bg-color   $text-color     
 # status bar
 bar {
 	position top
+	font pango:fontawesome-webfont 10
 	status_command i3blocks -c /home/ivar/.config/i3/i3blocks.conf
    		colors {
    			background $bg-color
@@ -134,27 +136,36 @@ bar {
 }
 
 # volume control
-bindsym XF86AudioRaiseVolume exec amixer -q set Master 2dB+ unmute
-bindsym XF86AudioLowerVolume exec amixer -q set Master 2dB- unmute
-bindsym XF86AudioMute exec amixer -q set Master toggle
+bindsym XF86AudioMute exec amixer set Master toggle
+bindsym XF86AudioRaiseVolume exec amixer set Master 5%+
+bindsym XF86AudioLowerVolume exec amixer set Master 5%-
+
+# media player control
+bindsym XF86AudioPause exec playerctl play-pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+bindsym XF86AudioStop exec playerctl stop
 
 # make second display work
 exec_always xrandr --output DP-1-1 --auto --left-of HDMI-0
 
 # handles opacity. f flag for animations when (for example) switching workspaces
-exec_always --no-startup-id compton -f
+exec_always --no-startup-id compton
+
+# fixes terminal
+exec xrdb /home/ivar/.Xresources
 
 # map capslock to escape
-exec --no-startup-id xmodmap -e "remove Lock = Caps_Lock" -e "keysym Caps_Lock = Escape"
+exec_always --no-startup-id xmodmap -e "remove Lock = Caps_Lock" -e "keysym Caps_Lock = Escape"
 
 # start network manager applet for wifi
 exec --no-startup-id nm-applet
 
 # makes my eye not fall out with a fancy gtk widget
-exec --no-startup-id redshift-gtk
+exec --no-startup-id redshift
 
 # mount hdd
-exec sudo mount /dev/sda5 /home/ivar/Misc/HDD/
+exec_always sudo mount /dev/sda5 /home/ivar/Misc/HDD/
 
 # take screenshot and put into clipboard
 bindsym --release Print exec maim -s /tmp/screenshot.png && xclip -selection clipboard -t image/png < /tmp/screenshot.png
@@ -162,8 +173,8 @@ bindsym --release Print exec maim -s /tmp/screenshot.png && xclip -selection cli
 # set wallpaper (note: change with nitrogen)
 exec_always --no-startup-id nitrogen --restore
 
-# launch st (terminal)
-bindsym $mod+Return exec st 
+# launch terminal
+bindsym $mod+Return exec st
 
 # lock the screen
 bindsym $mod+shift+x exec /home/ivar/.scripts/lock.sh
@@ -171,8 +182,11 @@ bindsym $mod+shift+x exec /home/ivar/.scripts/lock.sh
 # launch rofi (program launcher)
 bindsym $mod+d exec rofi -show run
 
-# launch qutebrowser
+# launch browser
 bindsym $mod+shift+w exec qutebrowser
+
+# launch netflix
+bindsym $mod+shift+n exec firefox https://netflix.com/browse
 
 # launch discord
 bindsym $mod+shift+d exec discord
