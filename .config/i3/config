@@ -1,7 +1,7 @@
 set $mod Mod4
 
 # font for window titles.
-font pango:System San Francisco Display 10
+font pango:Liberation Sans 10
 
 # restart i3
 bindsym $mod+Shift+r restart
@@ -33,6 +33,9 @@ bindsym $mod+Ctrl+l resize grow width 10 px or 10 ppt
 # gaps between windows
 gaps outer 3
 gaps inner 3
+
+# remove titlebar
+for_window [class="^.*"] border pixel 1
 
 # split horizontally
 bindsym $mod+Shift+Ctrl split h
@@ -101,10 +104,11 @@ bindsym $mod+n move workspace to output right
 
 # open applications in specific workspaces (note: you can get the class with xprop)
 assign [class="Firefox"] $ws2
-assign [class="discord"] $ws3
 assign [class="qutebrowser"] $ws2
-assign [class="Transmission-gtk"] $ws9
+assign [class="electronplayer"] $ws2
+assign [class="discord"] $ws3
 for_window [class="Spotify"] move to workspace $ws4
+assign [class="Transmission-gtk"] $ws9
 
 # set colors
 set $bg-color 	         #2f343f
@@ -115,7 +119,7 @@ set $urgent-bg-color     #E53935
 
 # window colors
 #                       border              	background         text                 indicator
-client.focused          $bg-color           	$bg-color          $text-color          #4a5160
+client.focused          $bg-color           	#81848c            $text-color          #81848c
 client.unfocused        $inactive-bg-color		$inactive-bg-color $inactive-text-color $bg-color
 client.focused_inactive $inactive-bg-color 		$inactive-bg-color $inactive-text-color $bg-color
 client.urgent           $urgent-bg-color    	$urgent-bg-color   $text-color          $bf-color
@@ -123,7 +127,7 @@ client.urgent           $urgent-bg-color    	$urgent-bg-color   $text-color     
 # status bar
 bar {
 	position top
-	font pango:fontawesome-webfont 10
+	font pango:Liberation Sans 9
 	status_command i3blocks -c /home/ivar/.config/i3/i3blocks.conf
    		colors {
    			background $bg-color
@@ -147,49 +151,49 @@ bindsym XF86AudioPrev exec playerctl previous
 bindsym XF86AudioStop exec playerctl stop
 
 # make second display work
-exec_always xrandr --output DP-1-1 --auto --left-of HDMI-0
+exec_always --no-startup-id xrandr --output DP-1-1 --auto --left-of HDMI-0
 
-# handles opacity. f flag for animations when (for example) switching workspaces
-exec_always --no-startup-id compton
+# start notification handler
+exec --no-startup-id dunst
 
-# fixes terminal
-exec xrdb /home/ivar/.Xresources
+# fixes Xresources. terminal, rofi, ect use this.
+exec xrdb --no-startup-id /home/ivar/.Xresources
 
-# map capslock to escape
+# set volume to 30%
+exec amixer set Master 30%
+
+# map capslock to escape. exec_always since this breaks sometimes.
 exec_always --no-startup-id xmodmap -e "remove Lock = Caps_Lock" -e "keysym Caps_Lock = Escape"
 
-# start network manager applet for wifi
-exec --no-startup-id nm-applet
-
-# makes my eye not fall out with a fancy gtk widget
-exec --no-startup-id redshift
-
-# mount hdd
-exec_always sudo mount /dev/sda5 /home/ivar/Misc/HDD/
+# start redshift with the netherlands as an location.
+exec --no-startup-id redshift -l 50.77083:3.57361
 
 # take screenshot and put into clipboard
-bindsym --release Print exec maim -s /tmp/screenshot.png && xclip -selection clipboard -t image/png < /tmp/screenshot.png
+bindsym --release Print exec --no-startup-id maim -s /tmp/screenshot.png && xclip -selection clipboard -t image/png < /tmp/screenshot.png
 
 # set wallpaper (note: change with nitrogen)
 exec_always --no-startup-id nitrogen --restore
 
 # launch terminal
-bindsym $mod+Return exec st
+bindsym $mod+Return exec --no-startup-id urxvt
 
 # lock the screen
-bindsym $mod+shift+x exec /home/ivar/.scripts/lock.sh
+bindsym $mod+shift+x exec --no-startup-id /home/ivar/.scripts/lock.sh
 
 # launch rofi (program launcher)
-bindsym $mod+d exec rofi -show run
+bindsym $mod+d exec --no-startup-id rofi -show run
+
+# launch vim (text editor)
+bindsym $mod+shift+v exec --no-startup-id urxvt -e vim
 
 # launch browser
 bindsym $mod+shift+w exec qutebrowser
 
 # launch netflix
-bindsym $mod+shift+n exec firefox https://netflix.com/browse
+bindsym $mod+shift+n exec appimage-run /home/ivar/apps/electronplayer.AppImage
 
 # launch discord
-bindsym $mod+shift+d exec discord
+bindsym $mod+shift+d exec Discord
 
 # launch spotify
 bindsym $mod+shift+s exec spotify
