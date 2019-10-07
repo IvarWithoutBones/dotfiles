@@ -5,7 +5,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'scrooloose/nerdtree'
 Plug 'jistr/vim-nerdtree-tabs'
 Plug 'rust-lang/rust.vim'
-Plug 'dracula/vim', { 'as': 'dracula' }
+Plug 'challenger-deep-theme/vim', { 'as': 'challenger-deep' }
 Plug 'mboughaba/i3config.vim'
 call plug#end()
 
@@ -35,7 +35,7 @@ nmap <CR> o<Esc>
 let g:spacegray_use_italics = 1
 let g:spacegray_underline_search = 1
 highlight Normal ctermfg=grey ctermbg=darkblue
-colorscheme dracula
+colorscheme challenger_deep
 
 " Some basic config
 set tabstop=4
@@ -44,3 +44,9 @@ syntax on
 set number
 set relativenumber
 set mouse=a
+
+" Enable block cursor
+let &t_ti.="\e[1 q"
+let &t_SI.="\e[5 q"
+let &t_EI.="\e[1 q"
+let &t_te.="\e[0 q"
