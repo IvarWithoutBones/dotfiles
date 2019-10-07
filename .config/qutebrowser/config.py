@@ -18,6 +18,11 @@ config.set('content.javascript.enabled', True, 'chrome://*/*')
 # Type: Bool
 config.set('content.javascript.enabled', True, 'qute://*/*')
 
+# Directory to save downloads to. If unset, a sensible OS-specific
+# default is used.
+# Type: Directory
+c.downloads.location.directory = '/home/ivar/downloads/'
+
 # Which categories to show (in which order) in the :open completion.
 # Type: FlagList
 # Valid values:
@@ -40,7 +45,7 @@ c.hints.border = '1px solid #000000'
 # used by prepending the search engine name to the search term, e.g.
 # `:open google qutebrowser`.
 # Type: Dict
-c.url.searchengines = {'DEFAULT': 'https://duckduckgo.com/?q={}', 'yt': 'https://www.youtube.com/results?search_query={}', 'tweak': 'https://tweakers.net/zoeken/?keyword={}'}
+c.url.searchengines = {'DEFAULT': 'https://duckduckgo.com/?q={}', 'nix': 'https://nixos.org/nixos/packages.html?channel=nixos-19.03&query={}', 'tweak': 'https://tweakers.net/zoeken/?keyword={}', 'yt': 'https://www.youtube.com/results?search_query={}', 'proton': 'https://www.protondb.com/search?q={}'}
 
 # Text color of the completion widget. May be a single color to use for
 # all columns or a list of three colors, one for each column.
@@ -79,7 +84,7 @@ c.colors.completion.item.selected.fg = '#eceff4'
 # Type: QssColor
 c.colors.completion.item.selected.bg = '#8fbcbb'
 
-# Top border color of the completion widget category headers.
+# Top border color of the selected completion item.
 # Type: QssColor
 c.colors.completion.item.selected.border.top = '#8fbcbb'
 
@@ -125,7 +130,7 @@ c.colors.hints.fg = '#eceff4'
 c.colors.hints.bg = '#2f343f'
 
 # Font color for the matched part of hints.
-# Type: QssColor
+# Type: QtColor
 c.colors.hints.match.fg = '#eee8d5'
 
 # Text color for the keyhint widget.

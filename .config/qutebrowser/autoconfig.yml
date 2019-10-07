@@ -3,13 +3,10 @@
 
 config_version: 2
 settings:
-  colors.tabs.bar.bg:
-    global: '#2f343f'
-  colors.tabs.even.bg:
-    global: '#2f343f'
-  colors.tabs.odd.bg:
-    global: '#2f343f'
-  colors.tabs.selected.even.bg:
-    global: '#706d66'
-  colors.tabs.selected.odd.bg:
-    global: '#706d66'
+  url.searchengines:
+    global:
+      DEFAULT: https://duckduckgo.com/?q={}
+      nix: https://nixos.org/nixos/packages.html?channel=nixos-19.03&query={}
+      proton: https://www.protondb.com/search?q={}
+      tweak: https://tweakers.net/zoeken/?keyword={}
+      yt: https://www.youtube.com/results?search_query={}
