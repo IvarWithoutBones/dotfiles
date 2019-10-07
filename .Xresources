@@ -1,5 +1,12 @@
-*.background: #383c4a
-*.foreground: #D2D2D2
+!URXVT configuration
+URxvt*font: xft:DejaVu Sans Mono
+URxvt.scrollBar: false
+URxvt.iso14755: false
+URxvt.keysym.Shift-Control-V: eval:paste_clipboard
+URxvt.keysym.Shift-Control-C: eval:selection_to_clipboard
+
+*background: #383c4a
+*foreground: #D2D2D2
 
 !black
 *color0: #383c4a
