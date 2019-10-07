@@ -53,6 +53,7 @@ bindkey '^e' edit-command-line
 # Path additions
 path+=/opt/minecraft/minecraft-launcher
 path+=/snap/bin
+path+=/home/ivar/.local/bin
 
 # Exports
 export VISUAL=vim
@@ -62,16 +63,11 @@ export EDITOR="$VISUAL"
 alias ls="ls --color=auto"
 alias la="ls --color=auto -A"
 alias filesize="du -sh"
-alias lsblk="lsblk | grep -v snap"
 alias speedtest="printf 'Ping: ' && ping google.com -c 1 | grep time= | cut -d'=' -f4 && speedtest | grep -E 'Download|Upload'"
 alias mp3="mpv --no-video"
-alias wine="wine64"
 alias watch="watch -n0 -c"
-alias sm64="mupen64plus '/home/ivar/misc/hdd/roms/N64/Super Mario 64 (Japan).z64'"
-alias sm64-60fps="mupen64plus '/home/ivar/misc/hdd/roms/N64/SM64 60fps V2.z64'"
-alias !!="fuck"
-
-# Load zsh-syntax-highlighting
-source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
+alias sm64="mupen64plus '/mnt/hdd/roms/N64/Super Mario 64 (Japan).z64'"
+alias sm64-60fps="mupen64plus '/mnt/hdd/roms/N64/SM64 60fps V2.z64'"
 
 eval $(thefuck --alias)
+source /home/ivar/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
