@@ -83,7 +83,7 @@
   # Define user accounts.
   users.users.ivar = {
   	isNormalUser = true;
-  	extraGroups = [ "wheel" "networkmanager" ]; # Enable ‘sudo’ for the user.
+  	extraGroups = [ "wheel" "networkmanager" ]; # Enable ‘sudo’ and network managing permissions for the user.
 	shell = pkgs.zsh;
   };
 
