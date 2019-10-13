@@ -31,8 +31,8 @@ bindsym $mod+Ctrl+k resize shrink height 10 px or 10 ppt
 bindsym $mod+Ctrl+l resize grow width 10 px or 10 ppt
 
 # gaps between windows
-gaps outer 3
-gaps inner 3
+gaps outer 4
+gaps inner 4
 
 # remove titlebar
 for_window [class="^.*"] border pixel 1
@@ -151,10 +151,13 @@ bindsym XF86AudioPrev exec playerctl previous
 bindsym XF86AudioStop exec playerctl stop
 
 # make second display work
-exec_always --no-startup-id xrandr --output DP-1-1 --auto --left-of HDMI-0
+exec_always --no-startup-id xrandr --output HDMI-0 --mode 1280x1024 --pos 0x416 --rotate normal --output DP-0 --mode 3440x1440 --pos 1280x0 --primary
 
 # start notification handler
 exec --no-startup-id dunst
+
+# start network manager applet
+exec --no-startup-id nm-applet
 
 # fixes Xresources. terminal, rofi, ect use this.
 exec xrdb --no-startup-id /home/ivar/.Xresources

@@ -16,11 +16,13 @@
   # Networking options.
   networking = {
 	hostName = "nixos";
-	wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+	networkmanager.enable = true;
+	enableIPv6 = false;
   };
 
-  # Use the unstable channel.
+  # Enable automatic updates.
   system.autoUpgrade.channel = "https://nixos.org/channels/nixos-unstable/";
+  system.autoUpgrade.enable = true;
 
   # Select internationalisation properties.
   i18n = {
@@ -50,7 +52,14 @@
   
   # Enable 32bit support for OpenGL and Pulseaudio, this is required by some Steam games.
   hardware = {
+	opengl.enable = true;
+	opengl.extraPackages = with pkgs; [
+		vaapiIntel
+		vaapiVdpau
+		libvdpau-va-gl
+	];
   	opengl.driSupport32Bit = true;
+	pulseaudio.enable = true;
   	pulseaudio.support32Bit = true;
   };
 
@@ -67,7 +76,6 @@
 
   # Enable sound.
   sound.enable = true;
-  hardware.pulseaudio.enable = true;
 
   # Enable the zsh shell.
   programs.zsh.enable = true;
@@ -75,7 +83,7 @@
   # Define user accounts.
   users.users.ivar = {
   	isNormalUser = true;
-  	extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+  	extraGroups = [ "wheel" "networkmanager" ]; # Enable ‘sudo’ for the user.
 	shell = pkgs.zsh;
   };
 
