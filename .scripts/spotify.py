@@ -1,14 +1,11 @@
 #!/usr/bin/python
-
 import dbus
 import os
 import sys
 
-
 try:
     bus = dbus.SessionBus()
     spotify = bus.get_object("org.mpris.MediaPlayer2.spotify", "/org/mpris/MediaPlayer2")
-
 
     if os.environ.get('BLOCK_BUTTON'):
         control_iface = dbus.Interface(spotify, 'org.mpris.MediaPlayer2.Player')
@@ -29,6 +26,3 @@ try:
     exit
 except dbus.exceptions.DBusException:
     exit
-
-
-
