@@ -41,6 +41,7 @@
   environment.systemPackages = with pkgs; [
   	wget 
   	vim
+ 	cudatoolkit
   	(steam.override { extraPkgs = pkgs: [ mono gtk3 gtk3-x11 libgdiplus zlib ]; nativeOnly = true; }).run
   ];
 
@@ -76,9 +77,6 @@
 
   # Enable sound.
   sound.enable = true;
-
-  # Enable the zsh shell.
-  programs.zsh.enable = true;
 
   # Define user accounts.
   users.users.ivar = {
