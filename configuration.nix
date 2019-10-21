@@ -38,13 +38,25 @@
 
   # System packages.
   environment.systemPackages = with pkgs; [
+	rxvt_unicode
   	wget 
   	vim
- 	cudatoolkit
+	maim
+	dunst
+	imagemagick
+	mupdf
+	rofi
+	nitrogen
+	redshift
+	qutebrowser
+	discord
+	spotify
+	transmission-gtk
+	appimage-run
   	(steam.override { extraPkgs = pkgs: [ mono gtk3 gtk3-x11 libgdiplus zlib ]; nativeOnly = true; }).run
   ];
 
-  # Always update the linux kernel to the latest version.
+  # Always update the Linux packages to their latest versions.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # Enable the OpenSSH daemon.
