@@ -96,5 +96,5 @@
 	shell = pkgs.zsh;
   };
 
-  system.stateVersion = "19.03"; # Do not change unless told to. 
+  system.stateVersion = "20.03"; # Do not change unless told to. 
 }
