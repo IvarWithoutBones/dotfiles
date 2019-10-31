@@ -108,7 +108,10 @@ assign [class="electronplayer"] $ws2
 assign [class="discord"] $ws3
 for_window [class="Spotify"] move to workspace $ws4
 assign [class="Steam"] $ws5
+assign [class="Snes9x-gtk"] $ws5
 assign [class="Transmission-gtk"] $ws9
+
+bindsym $mod+shift+m exec "i3-msg 'workspace 2: Media; append_layout /home/ivar/.scripts/16:9_layout.json'"
 
 # set colors
 set $bg-color 	         #2f343f
