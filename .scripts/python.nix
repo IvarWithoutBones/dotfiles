@@ -1,3 +1,3 @@
 with import <nixpkgs> {};
 
-python3.withPackages (ps: with ps; [ setuptools dbus-python requests psutil ])
+python38.withPackages (ps: with ps; [ setuptools dbus-python ])
