@@ -1,8 +1,5 @@
-#!/bin/bash
-
-maim /tmp/screen.png
-convert /tmp/screen.png -scale 10% -scale 1000% /tmp/screen.png
-lock_dir=$HOME/Misc/Pictures/lock.png
+maim /tmp/lockscreen.png
+convert /tmp/lockscreen.png -scale 10% -scale 1000% /tmp/lockscreen.png
 
 if [[ -f $lock_dir ]] 
 then
@@ -25,7 +22,8 @@ then
         PX=$(($SROX + $SRX/2 - $RX/2))
         PY=$(($SROY + $SRY/2 - $RY/2))
 
-        convert /tmp/screen.png $lock_dir -geometry +$PX+$PY -composite -matte  /tmp/screen.png
+        convert /tmp/lockscreen.png $lock_dir -geometry +$PX+$PY -composite -matte  /tmp/lockscreen.png
     done
 fi 
-i3lock -e -n -i /tmp/screen.png
+
+i3lock -e -n -i /tmp/lockscreen.png
