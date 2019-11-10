@@ -42,6 +42,7 @@
   	vim
     wget
     xorg.xmodmap
+    xorg.xprop
 	maim
     xclip
 	dunst
@@ -53,14 +54,17 @@
 	redshift
     playerctl
     perl
+    speedtest-cli
 	wine
 	qutebrowser
+    mpv
 	discord
 	spotify
 	appimage-run
 	transmission-gtk
   	(steam.override { extraPkgs = pkgs: [ mono gtk3 gtk3-x11 libgdiplus zlib ]; nativeOnly = true; }).run
 	snes9x-gtk
+    libretro.mupen64plus
   ];
 
   # Always update the Linux packages to their latest versions.
