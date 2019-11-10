@@ -7,6 +7,7 @@ Plug 'jistr/vim-nerdtree-tabs'
 Plug 'rust-lang/rust.vim'
 Plug 'challenger-deep-theme/vim', { 'as': 'challenger-deep' }
 Plug 'mboughaba/i3config.vim'
+Plug 'LnL7/vim-nix'
 call plug#end()
 
 " Map CTRL+n to toggle NERDTree
