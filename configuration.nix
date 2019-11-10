@@ -1,4 +1,3 @@
-#!vim:ft=config
 { config, pkgs, ... }:
 
 {
@@ -38,22 +37,30 @@
 
   # System packages.
   environment.systemPackages = with pkgs; [
+    i3lock
 	rxvt_unicode
-  	wget 
   	vim
+    wget
+    xorg.xmodmap
 	maim
+    xclip
 	dunst
-	imagemagick
-	mupdf
 	rofi
+    clipit
+    networkmanagerapplet
+	imagemagick
 	nitrogen
 	redshift
+    playerctl
+    perl
+	wine
 	qutebrowser
 	discord
 	spotify
-	transmission-gtk
 	appimage-run
+	transmission-gtk
   	(steam.override { extraPkgs = pkgs: [ mono gtk3 gtk3-x11 libgdiplus zlib ]; nativeOnly = true; }).run
+	snes9x-gtk
   ];
 
   # Always update the Linux packages to their latest versions.
@@ -65,11 +72,6 @@
   # Enable 32bit support for OpenGL and Pulseaudio, this is required by some Steam games.
   hardware = {
 	opengl.enable = true;
-	opengl.extraPackages = with pkgs; [
-		vaapiIntel
-		vaapiVdpau
-		libvdpau-va-gl
-	];
   	opengl.driSupport32Bit = true;
 	pulseaudio.enable = true;
   	pulseaudio.support32Bit = true;
