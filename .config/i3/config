@@ -109,7 +109,7 @@ assign [class="discord"] $ws3
 for_window [class="Spotify"] move to workspace $ws4
 assign [class="Steam"] $ws5
 assign [class="Snes9x-gtk"] $ws5
-assign [class="Transmission-gtk"] $ws9
+assign [class="Transmission-gtk"] $ws10
 
 bindsym $mod+shift+m exec "i3-msg 'workspace 2: Media; append_layout /home/ivar/.scripts/16:9_layout.json'"
 
@@ -173,6 +173,9 @@ exec_always --no-startup-id xmodmap -e "remove Lock = Caps_Lock" -e "keysym Caps
 
 # start redshift with the netherlands as an location.
 exec --no-startup-id redshift -l 50.77083:3.57361
+
+# launch clipboard manager
+exec --no-startup-id clipit
 
 # take screenshot and put into clipboard
 bindsym --release Print exec --no-startup-id maim -s /tmp/screenshot.png && xclip -selection clipboard -t image/png < /tmp/screenshot.png
