@@ -38,32 +38,32 @@
   # System packages.
   environment.systemPackages = with pkgs; [
     i3lock
-	rxvt_unicode
-  	vim
+    rxvt_unicode
+    vim
     wget
     xorg.xmodmap
     xorg.xprop
-	maim
+    maim
     xclip
-	dunst
-	dmenu
+    dunst
+    dmenu
     clipit
     networkmanagerapplet
-	imagemagick
-	nitrogen
-	redshift
+    imagemagick
+    nitrogen
+    redshift
     playerctl
     perl
     speedtest-cli
-	wine
-	qutebrowser
+    wine
+    qutebrowser
     mpv
-	discord
-	spotify
-	appimage-run
-	transmission-gtk
-  	(steam.override { extraPkgs = pkgs: [ mono gtk3 gtk3-x11 libgdiplus zlib ]; nativeOnly = true; }).run
-	snes9x-gtk
+    discord
+    spotify
+    appimage-run
+    transmission-gtk
+    (steam.override { extraPkgs = pkgs: [ mono gtk3 gtk3-x11 libgdiplus zlib ]; nativeOnly = true; }).run
+    snes9x-gtk
     libretro.mupen64plus
   ];
 
@@ -75,9 +75,9 @@
   
   # Configure hardware options.
   hardware = {
-	opengl.enable = true;
+    opengl.enable = true;
     opengl.driSupport32Bit = true; # Required by some Steam games.
-	pulseaudio.enable = true;
+    pulseaudio.enable = true;
     pulseaudio.support32Bit = true; # Required by some Steam games.
   };
 
