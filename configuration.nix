@@ -46,7 +46,7 @@
 	maim
     xclip
 	dunst
-	rofi
+	dmenu
     clipit
     networkmanagerapplet
 	imagemagick
@@ -73,12 +73,12 @@
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
   
-  # Enable 32bit support for OpenGL and Pulseaudio, this is required by some Steam games.
+  # Configure hardware options.
   hardware = {
 	opengl.enable = true;
-  	opengl.driSupport32Bit = true;
+    opengl.driSupport32Bit = true; # Required by some Steam games.
 	pulseaudio.enable = true;
-  	pulseaudio.support32Bit = true;
+    pulseaudio.support32Bit = true; # Required by some Steam games.
   };
 
   # Configure the Xserver.
