@@ -38,33 +38,35 @@
   # System packages.
   environment.systemPackages = with pkgs; [
     i3lock
-    rxvt_unicode
-    vim
+	rxvt_unicode
+  	vim
     wget
     xorg.xmodmap
     xorg.xprop
-    maim
+	maim
     xclip
-    dunst
-    dmenu
+	dunst
+	dmenu
     clipit
     networkmanagerapplet
-    imagemagick
-    nitrogen
-    redshift
+	imagemagick
+	nitrogen
+	redshift
     playerctl
     perl
     speedtest-cli
-    wine
-    qutebrowser
+    python38Packages.virtualenv
+	wine
+	qutebrowser
     mpv
-    discord
-    spotify
-    appimage-run
-    transmission-gtk
-    (steam.override { extraPkgs = pkgs: [ mono gtk3 gtk3-x11 libgdiplus zlib ]; nativeOnly = true; }).run
-    snes9x-gtk
+	discord
+	spotify
+	appimage-run
+	transmission-gtk
+  	(steam.override { extraPkgs = pkgs: [ mono gtk3 gtk3-x11 libgdiplus zlib ]; nativeOnly = true; }).run
+	snes9x-gtk
     libretro.mupen64plus
+    desmume
   ];
 
   # Always update the Linux packages to their latest versions.
@@ -75,10 +77,10 @@
   
   # Configure hardware options.
   hardware = {
-    opengl.enable = true;
-    opengl.driSupport32Bit = true; # Required by some Steam games.
-    pulseaudio.enable = true;
-    pulseaudio.support32Bit = true; # Required by some Steam games.
+	opengl.enable = true;
+  	opengl.driSupport32Bit = true; # Required by some Steam games.
+	pulseaudio.enable = true;
+  	pulseaudio.support32Bit = true; # Required by some Steam games.
   };
 
   # Configure the Xserver.
@@ -87,7 +89,7 @@
   	layout = "us";
   	xkbOptions = "eurosign:e";
 	videoDrivers = [ "nvidiaBeta" ];
-	displayManager.slim.enable = true;
+    displayManager.lightdm.enable = true;
 	windowManager.i3.package = pkgs.i3-gaps;
 	windowManager.i3.enable = true;
   };
