@@ -103,7 +103,6 @@ bindsym $mod+Shift+0 move container to workspace $ws10
 bindsym $mod+n move workspace to output right
 
 # open applications in specific workspaces (note: you can get the class with xprop)
-assign [class="qutebrowser"] $ws2
 assign [class="electronplayer"] $ws2
 assign [class="discord"] $ws3
 for_window [class="Spotify"] move to workspace $ws4
@@ -163,7 +162,7 @@ exec --no-startup-id dunst
 exec --no-startup-id nm-applet
 
 # fixes Xresources. terminal, rofi, ect use this.
-exec xrdb --no-startup-id /home/ivar/.Xresources
+exec --no-startup-id xrdb /home/ivar/.Xresources
 
 # set volume to 30%
 exec amixer set Master 30%
@@ -178,7 +177,7 @@ exec --no-startup-id redshift -l 50.77083:3.57361
 exec --no-startup-id clipit
 
 # take screenshot and put into clipboard
-bindsym --release Print exec --no-startup-id maim -s /tmp/screenshot.png && xclip -selection clipboard -t image/png < /tmp/screenshot.png
+bindsym --release Print exec --no-startup-id maim -su /tmp/screenshot.png && xclip -selection clipboard -t image/png < /tmp/screenshot.png
 
 # set wallpaper (note: change with nitrogen)
 exec_always --no-startup-id nitrogen --restore
@@ -196,7 +195,7 @@ bindsym $mod+d exec --no-startup-id dmenu_run
 bindsym $mod+shift+v exec --no-startup-id urxvt -e vim
 
 # launch browser
-bindsym $mod+shift+w exec qutebrowser --qt-flag ignore-gpu-blacklist --qt-flag enable-gpu-rasterization --qt-flag enable-native-gpu-memory-buffers --qt-flag num-raster-threads=2
+bindsym $mod+shift+w exec "i3-msg 'workspace 2: Media; exec qutebrowser --qt-flag ignore-gpu-blacklist --qt-flag enable-gpu-rasterization --qt-flag enable-native-gpu-memory-buffers --qt-flag num-raster-threads=2'"
 
 # launch netflix
 bindsym $mod+shift+n exec appimage-run /home/ivar/misc/electronplayer.AppImage
