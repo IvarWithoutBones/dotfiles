@@ -55,7 +55,6 @@
     playerctl
     perl
     speedtest-cli
-    python38Packages.virtualenv
 	wine
 	qutebrowser
     mpv
@@ -74,7 +73,7 @@
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
-  
+
   # Configure hardware options.
   hardware = {
 	opengl.enable = true;
