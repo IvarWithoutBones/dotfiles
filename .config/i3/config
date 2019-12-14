@@ -161,11 +161,14 @@ exec --no-startup-id dunst
 # start network manager applet
 exec --no-startup-id nm-applet
 
+# start blueman applet
+exec --no-startup-id blueman-applet
+
 # fixes Xresources. terminal, rofi, ect use this.
 exec --no-startup-id xrdb /home/ivar/.Xresources
 
-# set volume to 30%
-exec amixer set Master 30%
+# set volume to 35%
+exec amixer set Master 35%
 
 # map capslock to escape. exec_always since this breaks sometimes.
 exec_always --no-startup-id xmodmap -e "remove Lock = Caps_Lock" -e "keysym Caps_Lock = Escape"
