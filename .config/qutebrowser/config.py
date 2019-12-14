@@ -45,7 +45,7 @@ c.hints.border = '1px solid #000000'
 # used by prepending the search engine name to the search term, e.g.
 # `:open google qutebrowser`.
 # Type: Dict
-c.url.searchengines = {'DEFAULT': 'https://duckduckgo.com/?q={}', 'nix': 'https://nixos.org/nixos/packages.html?channel=nixos-19.03&query={}', 'tweak': 'https://tweakers.net/zoeken/?keyword={}', 'yt': 'https://www.youtube.com/results?search_query={}', 'proton': 'https://www.protondb.com/search?q={}'}
+c.url.searchengines = {'DEFAULT': 'https://duckduckgo.com/?q={}', 'git': 'https://github.com/search?q={}', 'kat': 'https://katcr.co/katsearch/page/1/{}', 'nix': 'https://nixos.org/nixos/packages.html?channel=nixos-unstable&query={}', 'proton': 'https://www.protondb.com/search?q={}', 'tweak': 'https://tweakers.net/zoeken/?keyword={}', 'yt': 'https://www.youtube.com/results?search_query={}'}
 
 # Text color of the completion widget. May be a single color to use for
 # all columns or a list of three colors, one for each column.
