@@ -64,15 +64,28 @@
 	transmission-gtk
   	(steam.override { extraPkgs = pkgs: [ mono gtk3 gtk3-x11 libgdiplus zlib ]; nativeOnly = true; }).run
 	snes9x-gtk
-    libretro.mupen64plus
-    desmume
   ];
 
   # Always update the Linux packages to their latest versions.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
+  # Configure services
+  services = {
+    openssh.enable = true; # Enable the OpenSSH daemon.
+    blueman.enable = true; # Enable the blueman applet
+    xserver = {
+	  enable = true;
+  	  layout = "us";
+  	  xkbOptions = "eurosign:e";
+	  videoDrivers = [ "nvidiaBeta" ];
+      displayManager.lightdm.enable = true;
+	  windowManager.i3.package = pkgs.i3-gaps;
+	  windowManager.i3.enable = true;
+    };
+  };
+
+  # Enable sound.
+  sound.enable = true;
 
   # Configure hardware options.
   hardware = {
@@ -80,21 +93,8 @@
   	opengl.driSupport32Bit = true; # Required by some Steam games.
 	pulseaudio.enable = true;
   	pulseaudio.support32Bit = true; # Required by some Steam games.
+    bluetooth.enable = true;
   };
-
-  # Configure the Xserver.
-  services.xserver = {
-	enable = true;
-  	layout = "us";
-  	xkbOptions = "eurosign:e";
-	videoDrivers = [ "nvidiaBeta" ];
-    displayManager.lightdm.enable = true;
-	windowManager.i3.package = pkgs.i3-gaps;
-	windowManager.i3.enable = true;
-  };
-
-  # Enable sound.
-  sound.enable = true;
 
   # Define user accounts.
   users.users.ivar = {
