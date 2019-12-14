@@ -37,27 +37,27 @@
 
   # System packages.
   environment.systemPackages = with pkgs; [
-    i3lock
+    	i3lock
 	rxvt_unicode
   	vim
-    wget
-    xorg.xmodmap
-    xorg.xprop
+    	wget
+    	xorg.xmodmap
+    	xorg.xprop
 	maim
-    xclip
+    	xclip
 	dunst
 	dmenu
-    clipit
-    networkmanagerapplet
+    	clipit
+    	networkmanagerapplet
 	imagemagick
 	nitrogen
 	redshift
-    playerctl
-    perl
-    speedtest-cli
+    	playerctl
+    	perl
+    	speedtest-cli
 	wine
 	qutebrowser
-    mpv
+    	mpv
 	discord
 	spotify
 	appimage-run
@@ -71,17 +71,17 @@
 
   # Configure services
   services = {
-    openssh.enable = true; # Enable the OpenSSH daemon.
-    blueman.enable = true; # Enable the blueman applet
-    xserver = {
-	  enable = true;
-  	  layout = "us";
-  	  xkbOptions = "eurosign:e";
-	  videoDrivers = [ "nvidiaBeta" ];
-      displayManager.lightdm.enable = true;
-	  windowManager.i3.package = pkgs.i3-gaps;
-	  windowManager.i3.enable = true;
-    };
+  	openssh.enable = true; # Enable the OpenSSH daemon.
+  	blueman.enable = true; # Enable the blueman applet
+    	xserver = {
+		enable = true;
+  	  	layout = "us";
+  	  	xkbOptions = "eurosign:e";
+	  	videoDrivers = [ "nvidiaBeta" ];
+      		displayManager.lightdm.enable = true;
+	  	windowManager.i3.package = pkgs.i3-gaps;
+	  	windowManager.i3.enable = true;
+    	};
   };
 
   # Enable sound.
@@ -93,7 +93,7 @@
   	opengl.driSupport32Bit = true; # Required by some Steam games.
 	pulseaudio.enable = true;
   	pulseaudio.support32Bit = true; # Required by some Steam games.
-    bluetooth.enable = true;
+    	bluetooth.enable = true;
   };
 
   # Define user accounts.
