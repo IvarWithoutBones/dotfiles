@@ -5,7 +5,6 @@ call plug#begin('/home/ivar/.vim/plugged')
 Plug 'scrooloose/nerdtree'
 Plug 'jistr/vim-nerdtree-tabs'
 Plug 'rust-lang/rust.vim'
-Plug 'challenger-deep-theme/vim', { 'as': 'challenger-deep' }
 Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'mboughaba/i3config.vim'
 Plug 'LnL7/vim-nix'
