@@ -44,6 +44,7 @@ let python_highlight_all=1
 syntax on
 set number
 set relativenumber
+set tabstop=8
 set mouse=a
 
 " Enable block cursor
