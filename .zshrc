@@ -64,9 +64,6 @@ alias la="ls --color=auto -A"
 alias speedtest="printf 'Ping: ' && ping google.com -c 1 | grep time= | cut -d'=' -f4 && speedtest | grep -E 'Download|Upload'"
 alias mp3="mpv --no-video"
 alias watch="watch -n0 -c"
-alias sm64="retroarch-mupen64plus '/home/ivar/misc/roms/N64/Super Mario 64 (Japan).z64'"
-alias sm64-60fps="retroarch-mupen64plus '/mnt/hdd/roms/N64/SM64 60fps V2.z64'"
-alias class="xprop | grep WM_CLASS"
 alias killdiscord="pkill Discord && pkill Discord" # For some reason you need to kill it twice?
 alias viewurl="/home/ivar/.scripts/viewurl.sh"
 
