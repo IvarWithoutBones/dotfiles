@@ -1,11 +1,12 @@
 " Download plugins in this directory
-call plug#begin('~/.vim/plugged')
+call plug#begin('/home/ivar/.vim/plugged')
 
 " Plugins
 Plug 'scrooloose/nerdtree'
 Plug 'jistr/vim-nerdtree-tabs'
 Plug 'rust-lang/rust.vim'
 Plug 'challenger-deep-theme/vim', { 'as': 'challenger-deep' }
+Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'mboughaba/i3config.vim'
 Plug 'LnL7/vim-nix'
 call plug#end()
@@ -36,7 +37,7 @@ nmap <CR> o<Esc>
 let g:spacegray_use_italics = 1
 let g:spacegray_underline_search = 1
 highlight Normal ctermfg=grey ctermbg=darkblue
-colorscheme challenger_deep
+colorscheme dracula
 
 " Some basic config
 set tabstop=4
