@@ -1,0 +1,3 @@
+[submodule ".scripts/spotify"]
+	path = .scripts/spotify
+	url = https://github.com/Yvar192/i3blocks-spotify
