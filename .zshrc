@@ -68,7 +68,7 @@ alias sm64="retroarch-mupen64plus '/home/ivar/misc/roms/N64/Super Mario 64 (Japa
 alias sm64-60fps="retroarch-mupen64plus '/mnt/hdd/roms/N64/SM64 60fps V2.z64'"
 alias class="xprop | grep WM_CLASS"
 alias killdiscord="pkill Discord && pkill Discord" # For some reason you need to kill it twice?
-alias undertale="wine '/home/ivar/.wine/drive_c/GOG Games/Undertale/UNDERTALE.exe'"
+alias viewurl="/home/ivar/.scripts/viewurl.sh"
 
 eval $(thefuck --alias)
 source /home/ivar/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
