@@ -1,10 +1,9 @@
 { config, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+  imports = [
+        ./hardware-configuration.nix # Include the results of the hardware scan. You can generate this with nixos-generate-config.
+  ];
 
   environment.pathsToLink = [ "/libexec" ]; # links /libexec from derivations to /run/current-system/sw
 
@@ -27,9 +26,9 @@
   	consoleFont = "Lat2-Terminus16";
   	consoleKeyMap = "us";
   	defaultLocale = "en_US.UTF-8";
-   };
+  };
 
-  # Set your time zone.
+  # Set the time zone to Amsterdam.
   time.timeZone = "Europe/Amsterdam";
 
   # Allow unfree packages.
@@ -38,6 +37,7 @@
   # System packages.
   environment.systemPackages = with pkgs; [
     	i3lock
+        httrack
 	rxvt_unicode
   	vim
     	wget
@@ -64,6 +64,7 @@
 	transmission-gtk
   	(steam.override { extraPkgs = pkgs: [ mono gtk3 gtk3-x11 libgdiplus zlib ]; nativeOnly = true; }).run
 	snes9x-gtk
+        audacity
   ];
 
   # Always update the Linux packages to their latest versions.
@@ -81,27 +82,29 @@
       		displayManager.lightdm.enable = true;
 	  	windowManager.i3.package = pkgs.i3-gaps;
 	  	windowManager.i3.enable = true;
-    	};
+        };
   };
 
   # Enable sound.
   sound.enable = true;
 
-  # Configure hardware options.
+  # Configure hardware options. Note that 32-bit support is enabled as some Steam games require this.
   hardware = {
 	opengl.enable = true;
-  	opengl.driSupport32Bit = true; # Required by some Steam games.
+  	opengl.driSupport32Bit = true;
 	pulseaudio.enable = true;
-  	pulseaudio.support32Bit = true; # Required by some Steam games.
+  	pulseaudio.support32Bit = true;
     	bluetooth.enable = true;
   };
 
   # Define user accounts.
-  users.users.ivar = {
-  	isNormalUser = true;
-  	extraGroups = [ "wheel" "networkmanager" ]; # Enable ‘sudo’ and network managing permissions for the user.
-	shell = pkgs.zsh;
+  users.users = {
+        ivar = {
+  	      isNormalUser = true;
+  	      extraGroups = [ "wheel" "networkmanager" ]; # Enable ‘sudo’ and network managing permissions for the user.
+	      shell = pkgs.zsh;
+        };
   };
 
-  system.stateVersion = "20.03"; # Do not change unless told to. 
+  system.stateVersion = "20.03"; # Do not change this unless told to. 
 }
