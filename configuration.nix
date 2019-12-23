@@ -5,7 +5,8 @@
         ./hardware-configuration.nix # Include the results of the hardware scan. You can generate this with nixos-generate-config.
   ];
 
-  environment.pathsToLink = [ "/libexec" ]; # links /libexec from derivations to /run/current-system/sw
+  # links /libexec from derivations to /run/current-system/sw
+  environment.pathsToLink = [ "/libexec" ];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -21,12 +22,13 @@
   system.autoUpgrade.channel = "https://nixos.org/channels/nixos-unstable/";
   system.autoUpgrade.enable = true;
 
-  # Select internationalisation properties.
-  i18n = {
-  	consoleFont = "Lat2-Terminus16";
-  	consoleKeyMap = "us";
-  	defaultLocale = "en_US.UTF-8";
+  # Internationalisation properties.
+  console = {
+        keyMap = "us";
+        font = "Lat2-Terminus16";
   };
+
+  i18n.defaultLocale = "en_US.UTF-8";
 
   # Set the time zone to Amsterdam.
   time.timeZone = "Europe/Amsterdam";
@@ -37,7 +39,6 @@
   # System packages.
   environment.systemPackages = with pkgs; [
     	i3lock
-        httrack
 	rxvt_unicode
   	vim
     	wget
