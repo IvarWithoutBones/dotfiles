@@ -47,6 +47,8 @@ c.hints.border = '1px solid #000000'
 # Type: Dict
 c.url.searchengines = {'DEFAULT': 'https://duckduckgo.com/?q={}', 'git': 'https://github.com/search?q={}', 'kat': 'https://katcr.co/katsearch/page/1/{}', 'nix': 'https://nixos.org/nixos/packages.html?channel=nixos-unstable&query={}', 'proton': 'https://www.protondb.com/search?q={}', 'tweak': 'https://tweakers.net/zoeken/?keyword={}', 'yt': 'https://www.youtube.com/results?search_query={}'}
 
+config.set('content.headers.user_agent', 'Mozilla/5.0 (X11; Linux x86_64; rv:57.0) Gecko/20100101 Firefox/77.0', 'https://accounts.google.com/*')
+
 # Text color of the completion widget. May be a single color to use for
 # all columns or a list of three colors, one for each column.
 # Type: List of QtColor, or QtColor
