@@ -108,6 +108,7 @@ assign [class="discord"] $ws3
 for_window [class="Spotify"] move to workspace $ws4
 assign [class="Steam"] $ws5
 assign [class="Snes9x-gtk"] $ws5
+assign [class="hatintimegame.exe"] $ws5
 assign [class="Transmission-gtk"] $ws10
 
 bindsym $mod+shift+m exec "i3-msg 'workspace 2: Media; append_layout /home/ivar/.scripts/16:9_layout.json'"
@@ -185,6 +186,9 @@ bindsym --release Print exec --no-startup-id maim -su /tmp/screenshot.png && xcl
 # set wallpaper (note: change with nitrogen)
 exec_always --no-startup-id nitrogen --restore
 
+# puts applets on the other monitor (cant find a proper way to do this??)
+exec i3-msg restart
+
 # launch terminal
 bindsym $mod+Return exec --no-startup-id urxvt
 
@@ -201,10 +205,13 @@ bindsym $mod+shift+v exec --no-startup-id urxvt -e vim
 bindsym $mod+shift+w exec "i3-msg 'workspace 2: Media; exec qutebrowser --qt-flag ignore-gpu-blacklist --qt-flag enable-gpu-rasterization --qt-flag enable-native-gpu-memory-buffers --qt-flag num-raster-threads=2'"
 
 # launch netflix
-bindsym $mod+shift+n exec appimage-run /home/ivar/misc/electronplayer.AppImage
+bindsym $mod+shift+n exec /home/ivar/misc/electronplayer.AppImage
 
 # launch discord
-bindsym $mod+shift+d exec Discord
+bindsym $mod+shift+d exec discord
 
 # launch spotify
 bindsym $mod+shift+s exec spotify
+
+# launch transmission-gtk, my preferred torrent client
+bindsym $mod+shift+t exec transmission-gtk
