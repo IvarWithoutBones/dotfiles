@@ -23,12 +23,11 @@
   system.autoUpgrade.enable = true;
 
   # Internationalisation properties.
-  console = {
-    keyMap = "us";
-    font = "Lat2-Terminus16";
+  i18n = {
+    defaultLocale = "en_US.UTF-8";
+    consoleKeyMap = "us";
+    consoleFont = "Lat2-Terminus16";
   };
-
-  i18n.defaultLocale = "en_US.UTF-8";
 
   # Set the time zone to Amsterdam.
   time.timeZone = "Europe/Amsterdam";
@@ -38,34 +37,9 @@
 
   # System packages.
   environment.systemPackages = with pkgs; [
-    i3lock
-    rxvt_unicode
     vim
     wget
-    xorg.xmodmap
-    xorg.xprop
-    maim
-    xclip
-    dunst
-    dmenu
-    clipit
-    networkmanagerapplet
-    imagemagick
-    nitrogen
-    redshift
-    playerctl
-    perl
-    speedtest-cli
-    wine
-    qutebrowser
-    mpv
-    discord
-    spotify
-    appimage-run
-    transmission-gtk
-    steam
-    snes9x-gtk
-    audacity
+    git
   ];
 
   # Always update the Linux packages to their latest versions.
@@ -81,10 +55,28 @@
       xkbOptions = "eurosign:e";
       videoDrivers = [ "nvidiaBeta" ];
       displayManager.lightdm.enable = true;
-      windowManager.i3.package = pkgs.i3-gaps;
-      windowManager.i3.enable = true;
+      windowManager.i3 = {
+      	package = pkgs.i3-gaps;
+      	enable = true;
+	extraPackages = with pkgs; [
+	  i3blocks
+	  i3status
+	  i3lock
+	  dmenu
+	];
+      };
+      desktopManager.session = [ {
+ 	manage = "desktop";
+	name = "i3";
+      	start = ''
+          ${pkgs.i3}/bin/i3
+      	'';
+      } ];
+      desktopManager.default = "i3";
     };
   };
+
+  programs.dconf.enable = true;
 
   # Enable sound.
   sound.enable = true;
@@ -106,6 +98,8 @@
       shell = pkgs.zsh;
     };
   };
+
+  nix.allowedUsers = [ "@wheel" ];
 
   system.stateVersion = "20.03"; # Do not change this unless told to. 
 }
