@@ -165,9 +165,6 @@ exec --no-startup-id nm-applet
 # start blueman applet
 exec --no-startup-id blueman-applet
 
-# fixes Xresources. terminal, rofi, ect use this.
-exec --no-startup-id xrdb /home/ivar/.Xresources
-
 # set volume to 35%
 exec amixer set Master 35%
 
@@ -190,7 +187,7 @@ exec_always --no-startup-id nitrogen --restore
 exec i3-msg restart
 
 # launch terminal
-bindsym $mod+Return exec --no-startup-id urxvt
+bindsym $mod+Return exec --no-startup-id alacritty
 
 # lock the screen
 bindsym $mod+shift+x exec --no-startup-id /home/ivar/.scripts/lock.sh
@@ -198,17 +195,14 @@ bindsym $mod+shift+x exec --no-startup-id /home/ivar/.scripts/lock.sh
 # launch dmenu_run (program launcher)
 bindsym $mod+d exec --no-startup-id dmenu_run
 
-# launch vim (text editor)
-bindsym $mod+shift+v exec --no-startup-id urxvt -e vim
-
 # launch browser
 bindsym $mod+shift+w exec "i3-msg 'workspace 2: Media; exec qutebrowser --qt-flag ignore-gpu-blacklist --qt-flag enable-gpu-rasterization --qt-flag enable-native-gpu-memory-buffers --qt-flag num-raster-threads=2'"
 
 # launch netflix
-bindsym $mod+shift+n exec /home/ivar/misc/electronplayer.AppImage
+bindsym $mod+shift+n exec appimage-run /home/ivar/misc/electronplayer.AppImage
 
 # launch discord
-bindsym $mod+shift+d exec discord
+bindsym $mod+shift+d exec Discord
 
 # launch spotify
 bindsym $mod+shift+s exec spotify
