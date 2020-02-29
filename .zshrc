@@ -65,7 +65,10 @@ alias speedtest="printf 'Ping: ' && ping google.com -c 1 | grep time= | cut -d'=
 alias mp3="mpv --no-video"
 alias watch="watch -n0 -c"
 alias killdiscord="pkill Discord && pkill Discord" # For some reason you need to kill it twice?
-alias viewurl="/home/ivar/.scripts/viewurl.sh"
+alias viewurl="~/.scripts/viewurl.sh"
+alias update-system="~/.scripts/update-system.sh"
+alias rustdocs="rustup docs --book"
+alias sm64="mupen64plus '/mnt/hdd/roms/N64/Super Mario 64 (Japan).z64'"
 
 eval $(thefuck --alias)
 source /home/ivar/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
