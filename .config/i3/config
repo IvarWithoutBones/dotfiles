@@ -3,11 +3,11 @@ set $mod Mod4
 # font for window titles.
 font pango:Liberation Sans 10
 
-# restart i3
-bindsym $mod+Shift+r restart
-
 # exit i3
-bindsym $mod+Shift+e exec "i3-nagbar -f 'System San Francisco Display' -t warning -m 'You pressed the exit shortcut. Do you want to logout?' -B 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+e exec [ "$(printf "No\\nYes" | dmenu -i -p "Would you like to exit i3?")" = "Yes" ] && i3-msg exit
+
+# restart i3
+bindsym $mod+Shift+r exec i3-msg restart
 
 # Mouse+$mod to drag floating windows
 floating_modifier $mod
@@ -187,7 +187,7 @@ exec_always --no-startup-id nitrogen --restore
 exec i3-msg restart
 
 # launch terminal
-bindsym $mod+Return exec --no-startup-id alacritty
+bindsym $mod+Return exec --no-startup-id /home/ivar/.local/bin/st
 
 # lock the screen
 bindsym $mod+shift+x exec --no-startup-id /home/ivar/.scripts/lock.sh
