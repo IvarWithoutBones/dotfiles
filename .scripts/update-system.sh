@@ -1,18 +1,16 @@
-function echo_green {
+function do_but_green {
 	tput setaf 2
 	echo $1
 	tput sgr0
+	$1
 }
 
-echo_green "nix-channel --update"
-nix-channel --update
-echo_green "home-manager switch --keep-going"
-home-manager switch --keep-going
-echo_green "sudo nixos-rebuild switch --upgrade"
-sudo nixos-rebuild switch --upgrade
-echo_green "nix-env -if ~/.scripts/python.nix"
-nix-env -if ~/.scripts/python.nix
+do_but_green "nix-channel --update"
+do_but_green "home-manager switch --keep-going"
+do_but_green "sudo nixos-rebuild switch --upgrade"
+do_but_green "nix-env -if /home/ivar/.scripts/python.nix"
+do_but_green "nix-collect-garbage"
 
-if [ "$1" != "-n" ]; then # The N stands for no, trust me it makes sense
-	echo_green "nix-collect-garbage"
-	nix-collect-garbage; fi
+if [ "$1" == "-f" ]; then # In case you really wanna save some space
+	do_but_green "nix-store -v --optimise"
+fi
