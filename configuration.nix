@@ -18,15 +18,10 @@
     networkmanager.enable = true;
   };
 
-  # Enable automatic updates.
-  system.autoUpgrade.channel = "https://nixos.org/channels/nixos-unstable/";
-  system.autoUpgrade.enable = true;
-
-  # Internationalisation properties.
-  i18n = {
-    defaultLocale = "en_US.UTF-8";
-    consoleKeyMap = "us";
-    consoleFont = "Lat2-Terminus16";
+  # Console properties.
+  console = {
+    keyMap = "us";
+    font = "Lat2-Terminus16";
   };
 
   # Set the time zone to Amsterdam.
@@ -37,7 +32,6 @@
 
   # System packages.
   environment.systemPackages = with pkgs; [
-    vim
     wget
     git
   ];
@@ -48,7 +42,6 @@
   # Configure services
   services = {
     openssh.enable = true; # Enable the OpenSSH daemon.
-    blueman.enable = true; # Enable the blueman applet
     xserver = {
       enable = true;
       layout = "us";
@@ -65,18 +58,8 @@
 	  dmenu
 	];
       };
-      desktopManager.session = [ {
- 	manage = "desktop";
-	name = "i3";
-      	start = ''
-          ${pkgs.i3}/bin/i3
-      	'';
-      } ];
-      desktopManager.default = "i3";
     };
   };
-
-  programs.dconf.enable = true;
 
   # Enable sound.
   sound.enable = true;
@@ -87,7 +70,6 @@
     opengl.driSupport32Bit = true;
     pulseaudio.enable = true;
     pulseaudio.support32Bit = true;
-    bluetooth.enable = true;
   };
 
   # Define user accounts.
