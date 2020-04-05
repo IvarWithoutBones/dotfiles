@@ -2,12 +2,21 @@
 call plug#begin('/home/ivar/.vim/plugged')
 
 " Plugins
-Plug 'scrooloose/nerdtree'
-Plug 'jistr/vim-nerdtree-tabs'
-Plug 'rust-lang/rust.vim'
 Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'mboughaba/i3config.vim'
+Plug 'preservim/nerdtree'
+Plug 'jistr/vim-nerdtree-tabs'
+Plug 'itchyny/lightline.vim'
 Plug 'LnL7/vim-nix'
+Plug 'rust-lang/rust.vim'
+
+" Autocomplete
+Plug 'roxma/nvim-yarp'
+Plug 'ncm2/ncm2'
+Plug 'ncm2/ncm2-bufword'
+Plug 'ncm2/ncm2-path'
+Plug 'ncm2/ncm2-vim'
+Plug 'Shougo/neco-vim'
 call plug#end()
 
 " Map CTRL+n to toggle NERDTree
@@ -19,8 +28,13 @@ let NERDTreeWinSize=20
 
 " Automatically save and run python3 scripts when pressing F5 
 autocmd Filetype python nnoremap <buffer> <F5> :w<CR>:vert ter python3 "%"<CR>
-autocmd Filetype cs nnoremap <buffer> <F5> :w<CR>:vert ter dotnet run<CR>
 autocmd Filetype rust nnoremap <buffer> <F5> :w<CR>:vert ter cargo run ..<CR>
+
+imap <c-space> <Plug>(asyncomplete_force_refresh)
+
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
 
 " Enable syntax highlighting for the i3 config file
 aug i3config_ft_detection
@@ -39,8 +53,11 @@ highlight Normal ctermfg=grey ctermbg=darkblue
 colorscheme dracula
 
 " Some basic config
+autocmd BufEnter * call ncm2#enable_for_buffer()
+set completeopt=noinsert,menuone,noselect
 set tabstop=4
 let python_highlight_all=1
+let g:deoplete#enable_at_startup = 1
 syntax on
 set number
 set relativenumber
