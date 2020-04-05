@@ -6,58 +6,63 @@
 
   nixpkgs.config.allowUnfree = true;
 
-  home.packages = [
-    pkgs.xorg.xmodmap
-    pkgs.xorg.xprop
-    pkgs.alacritty
-    pkgs.vim
-    pkgs.wget
-    pkgs.git
-    pkgs.htop
-    pkgs.sysstat
-    pkgs.gdb
-    pkgs.clang
-    pkgs.unzip
-    pkgs.maim
-    pkgs.xclip
-    pkgs.dunst
-    pkgs.clipit
-    pkgs.networkmanagerapplet
-    pkgs.feh
-    pkgs.pavucontrol
-    pkgs.imagemagick
-    pkgs.firefox
-    pkgs.lxappearance
-    pkgs.fff
-    pkgs.arc-theme
-    pkgs.arc-icon-theme
-    pkgs.tree
-    pkgs.nitrogen
-    pkgs.rustup
-    pkgs.pkg-config
-    pkgs.binutils
-    pkgs.coreutils-full
-    pkgs.file
-    pkgs.cmake
-    pkgs.vscode-with-extensions
-    pkgs.gnumake
-    pkgs.redshift
-    pkgs.playerctl
-    pkgs.perl
-    pkgs.speedtest-cli
-    pkgs.qutebrowser
-    pkgs.tor-browser-bundle-bin
-    pkgs.thefuck
-    pkgs.mpv
-    pkgs.discord
-    pkgs.spotify
-    pkgs.appimage-run
-    pkgs.transmission-gtk
-    pkgs.steam
-    pkgs.snes9x-gtk
-    pkgs.mupen64plus
-    pkgs.nix-index
+  home.packages = with pkgs; [
+    xorg.xmodmap
+    xorg.xprop
+    neovim
+    wget
+    git
+    htop
+    sysstat
+    unzip
+    maim
+    xclip
+    dunst
+    clipit
+    networkmanagerapplet
+    feh
+    pavucontrol
+    imagemagick
+    firefox
+    lxappearance
+    arc-theme
+    arc-icon-theme
+    tree
+    nitrogen
+    binutils
+    coreutils
+    file
+    cmake
+    gnumake
+    redshift
+    playerctl
+    perl
+    speedtest-cli
+    qutebrowser
+    tor-browser-bundle-bin
+    mpv
+    discord
+    spotify
+    appimage-run
+    transmission-gtk
+    steam
+    snes9x-gtk
+    mupen64plus
+    dolphinEmu
+    nix-index
+    nix-prefetch-git
+    ffmpeg
+    neofetch
+    gdb
   ];
+
+  programs.neovim = {
+    viAlias = true;
+    vimAlias = true;
+    extraPython3Packages = [
+      pkgs.python37Packages.jedi # Does not work for some reason?
+    ];
+  };
 
   home.stateVersion = "20.03";
 }
