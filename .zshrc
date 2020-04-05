@@ -55,7 +55,7 @@ path+=/opt/minecraft/minecraft-launcher
 path+=/home/ivar/.local/bin
 
 # Exports
-export VISUAL=vim
+export VISUAL=nvim
 export EDITOR="$VISUAL"
 
 # Aliases
@@ -68,7 +68,7 @@ alias killdiscord="pkill Discord && pkill Discord" # For some reason you need to
 alias viewurl="~/.scripts/viewurl.sh"
 alias update-system="~/.scripts/update-system.sh"
 alias rustdocs="rustup docs --book"
-alias sm64="mupen64plus '/mnt/hdd/roms/N64/Super Mario 64 (Japan).z64'"
+alias sm64="mupen64plus '/home/ivar/misc/roms/N64/Super Mario 64 (Japan).z64'"
+alias build-nixos-package="nix-build -E '((import <nixpkgs> {}).callPackage (import ./default.nix) { })'"
 
-eval $(thefuck --alias)
 source /home/ivar/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
