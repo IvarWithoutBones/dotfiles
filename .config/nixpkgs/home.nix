@@ -1,5 +1,4 @@
 { config, pkgs, ... }:
-
 {
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
@@ -54,13 +53,14 @@
     ffmpeg
     neofetch
     gdb
+    (python38.withPackages (pkgs: with pkgs; [ setuptools dbus-python ]))
   ];
 
   programs.neovim = {
     viAlias = true;
     vimAlias = true;
     extraPython3Packages = [
-      pkgs.python37Packages.jedi # Does not work for some reason?
+      pkgs.python38Packages.jedi # Does not work for some reason?
     ];
   };
 
