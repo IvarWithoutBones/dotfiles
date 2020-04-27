@@ -1,4 +1,7 @@
 { config, pkgs, ... }:
+let
+  vimsettings = import ./nvim.nix;
+in
 {
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
@@ -6,9 +9,12 @@
   nixpkgs.config.allowUnfree = true;
 
   home.packages = with pkgs; [
+    obs-studio
+    alacritty
+    _1password
+    thunderbird
     xorg.xmodmap
     xorg.xprop
-    neovim
     wget
     git
     htop
@@ -44,6 +50,7 @@
     spotify
     appimage-run
     transmission-gtk
+    xp-pen-g430
     steam
     snes9x-gtk
     mupen64plus
@@ -54,15 +61,10 @@
     neofetch
     gdb
     (python38.withPackages (pkgs: with pkgs; [ setuptools dbus-python ]))
+    ncspot
   ];
 
-  programs.neovim = {
-    viAlias = true;
-    vimAlias = true;
-    extraPython3Packages = [
-      pkgs.python38Packages.jedi # Does not work for some reason?
-    ];
-  };
+  programs.neovim = vimsettings pkgs;
 
   home.stateVersion = "20.03";
 }
