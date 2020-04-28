@@ -1,11 +1,11 @@
 { config, pkgs, ... }:
 let
   vimsettings = import ./nvim.nix;
+  qutesettings = import ./qutebrowser.nix;
 in
 {
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
-
   nixpkgs.config.allowUnfree = true;
 
   home.packages = with pkgs; [
@@ -43,7 +43,6 @@ in
     playerctl
     perl
     speedtest-cli
-    qutebrowser
     tor-browser-bundle-bin
     mpv
     discord
@@ -65,6 +64,7 @@ in
   ];
 
   programs.neovim = vimsettings pkgs;
+  programs.qutebrowser = qutesettings;
 
   home.stateVersion = "20.03";
 }
