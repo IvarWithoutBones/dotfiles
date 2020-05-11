@@ -154,7 +154,7 @@ bindsym XF86AudioPrev exec playerctl previous
 bindsym XF86AudioStop exec playerctl stop
 
 # make second display work
-exec_always --no-startup-id xrandr --output HDMI-0 --mode 1280x1024 --pos 0x416 --rotate normal --output DP-0 --mode 3440x1440 --pos 1280x0 --primary
+exec_always --no-startup-id xrandr --output DVI-D-0 --off --output HDMI-0 --mode 1280x1024 --pos 4720x570 --rotate normal --output DP-0 --primary --mode 3440x1440 --pos 1280x0 --rotate normal --output DP-1 --off --primary
 
 # start notification handler
 exec --no-startup-id dunst
@@ -205,7 +205,7 @@ bindsym $mod+shift+n exec appimage-run /home/ivar/misc/electronplayer.AppImage
 bindsym $mod+shift+d exec Discord
 
 # launch spotify
-bindsym $mod+shift+s exec spotify
+bindsym $mod+shift+s exec "i3-msg 'workspace 4: Spotify; exec alacritty -e ncspot'"
 
 # launch transmission-gtk, my preferred torrent client
 bindsym $mod+shift+t exec transmission-gtk
