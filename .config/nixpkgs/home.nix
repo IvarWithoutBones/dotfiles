@@ -6,65 +6,72 @@ in
 {
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+
   nixpkgs.config.allowUnfree = true;
 
   home.packages = with pkgs; [
-    obs-studio
-    alacritty
-    _1password
-    thunderbird
-    xorg.xmodmap
-    xorg.xprop
-    wget
-    git
-    htop
+    # Utils required by dotfiles
+    xorg.xmodmap xorg.xprop
+    nitrogen
     sysstat
-    unzip
     maim
     xclip
     dunst
-    clipit
-    networkmanagerapplet
     feh
-    pavucontrol
     imagemagick
+    speedtest-cli
+    redshift
+    perl
+
+    # General utils
+    unar unzip
+    cmake gnumake
+    wget
+    git
+    htop
+    neofetch
+    tree
+
+    # Nix specific utils
+    nix-index
+    nix-prefetch-git
+    appimage-run
+
+    # Python38 libraries
+    (python38.withPackages (pkgs: with pkgs; [
+      setuptools
+      dbus-python
+    ]))
+
+    # Games
+    snes9x-gtk mupen64plus dolphinEmu
+    steam
+
+    # Media
+    kdenlive obs-studio
+    ncspot alacritty
+    playerctl
+    spotify
     firefox
+    tor-browser-bundle-bin
+    mpv
+    ffmpeg
+
+    # Applications
+    _1password
+    pavucontrol
     lxappearance
     arc-theme
     arc-icon-theme
-    tree
-    nitrogen
-    binutils
-    coreutils
-    file
-    cmake
-    gnumake
-    redshift
-    playerctl
-    perl
-    speedtest-cli
-    tor-browser-bundle-bin
-    mpv
     discord
-    spotify
-    appimage-run
     transmission-gtk
-    xp-pen-g430
-    steam
-    snes9x-gtk
-    mupen64plus
-    dolphinEmu
-    nix-index
-    nix-prefetch-git
-    ffmpeg
-    neofetch
-    gdb
-    (python38.withPackages (pkgs: with pkgs; [ setuptools dbus-python ]))
-    ncspot
+    pentablet-driver
   ];
 
-  programs.neovim = vimsettings pkgs;
-  programs.qutebrowser = qutesettings;
+  programs = {
+    neovim = vimsettings pkgs;
+    qutebrowser = qutesettings;
+  };
 
-  home.stateVersion = "20.03";
+  home.stateVersion = "20.09";
 }
