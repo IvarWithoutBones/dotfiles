@@ -1,8 +1,8 @@
 { config, pkgs, ... }:
 let
-  vimsettings = import ./nvim.nix;
-  qutesettings = import ./qutebrowser.nix;
-  dunstsettings = import ./dunst.nix;
+  vimsettings = import ./programs/nvim.nix;
+  qutesettings = import ./programs/qutebrowser.nix;
+  dunstsettings = import ./programs/dunst.nix;
 in
 {
   # Let Home Manager install and manage itself.
