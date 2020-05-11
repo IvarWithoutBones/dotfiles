@@ -2,6 +2,7 @@
 let
   vimsettings = import ./nvim.nix;
   qutesettings = import ./qutebrowser.nix;
+  dunstsettings = import ./dunst.nix;
 in
 {
   # Let Home Manager install and manage itself.
@@ -16,7 +17,6 @@ in
     sysstat
     maim
     xclip
-    dunst
     feh
     imagemagick
     speedtest-cli
@@ -72,6 +72,8 @@ in
     neovim = vimsettings pkgs;
     qutebrowser = qutesettings;
   };
+
+  services.dunst = dunstsettings;
 
   home.stateVersion = "20.09";
 }
