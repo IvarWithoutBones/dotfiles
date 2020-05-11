@@ -154,7 +154,7 @@ bindsym XF86AudioPrev exec playerctl previous
 bindsym XF86AudioStop exec playerctl stop
 
 # make second display work
-exec_always --no-startup-id xrandr --output DVI-D-0 --off --output HDMI-0 --mode 1280x1024 --pos 4720x570 --rotate normal --output DP-0 --primary --mode 3440x1440 --pos 1280x0 --rotate normal --output DP-1 --off --primary
+exec_always --no-startup-id xrandr --output DVI-D-0 --off --output HDMI-0 --mode 1280x1024 --pos 4720x570 --rotate normal --output DP-0 --mode 3440x1440 --pos 1280x0 --rotate normal --output DP-1 --off --primary
 
 # start notification handler
 exec --no-startup-id dunst
