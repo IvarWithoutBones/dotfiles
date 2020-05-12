@@ -1,13 +1,10 @@
 { config, pkgs, ... }:
 let
-  vimsettings = import ./programs/nvim.nix;
-  qutesettings = import ./programs/qutebrowser.nix;
-  dunstsettings = import ./programs/dunst.nix;
+  vimSettings = import ./programs/nvim.nix;
+  quteSettings = import ./programs/qutebrowser.nix;
+  dunstSettings = import ./programs/dunst.nix;
 in
 {
-  # Let Home Manager install and manage itself.
-  programs.home-manager.enable = true;
-
   nixpkgs.config.allowUnfree = true;
 
   home.packages = with pkgs; [
@@ -68,12 +65,13 @@ in
     pentablet-driver
   ];
 
-  programs = {
-    neovim = vimsettings pkgs;
-    qutebrowser = qutesettings;
+ programs = {
+    home-manager.enable = true;
+    neovim = vimSettings pkgs;
+    qutebrowser = quteSettings;
   };
 
-  services.dunst = dunstsettings;
+  services.dunst = dunstSettings;
 
   home.stateVersion = "20.09";
 }
