@@ -4,7 +4,7 @@
     ./hardware-configuration.nix
   ];
 
-  # links /libexec from derivations to /run/current-system/sw
+  # links paths from derivations to /run/current-system/sw
   environment.pathsToLink = [ "/libexec" "/share/zsh" ];
 
   boot = {
@@ -25,7 +25,7 @@
     font = "Lat2-Terminus16";
   };
 
-  # Allow unfree packages. Required for the propietary Nvidia driver
+  # Required for the propietary Nvidia driver
   nixpkgs.config.allowUnfree = true;
 
   time.timeZone = "Europe/Amsterdam";
@@ -62,12 +62,10 @@
     pulseaudio.support32Bit = true;
   };
 
-  users.users = {
-    ivar = {
-      isNormalUser = true;
-      extraGroups = [ "wheel" "networkmanager" ];
-      shell = pkgs.zsh;
-    };
+  users.users.ivar = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" "networkmanager" ];
+    shell = pkgs.zsh;
   };
 
   nix = {
