@@ -58,7 +58,7 @@ in
       fonts = [ "Liberation Sans 10" ];
       position = "top";
       colors = {
-        background = "#2f343f";
+        background = backgroundColor;
         separator = "757575";
         focusedWorkspace = { background = backgroundColor; border = backgroundColor; text = textColor; };
         activeWorkspace = { background = backgroundColor; border = backgroundColor; text = textColor; };
