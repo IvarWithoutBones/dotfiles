@@ -54,7 +54,7 @@ in
     };
 
     bars = [ { 
-      statusCommand = "${pkgs.i3blocks}/bin/i3blocks -c ~/.config/i3/i3blocks.conf";
+      statusCommand = "${pkgs.i3blocks}/bin/i3blocks -c ~/.config/i3blocks.conf";
       fonts = [ "Liberation Sans 10" ];
       position = "top";
       colors = {
