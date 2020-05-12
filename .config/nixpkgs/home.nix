@@ -3,6 +3,7 @@ let
   vimSettings = import ./programs/nvim.nix;
   quteSettings = import ./programs/qutebrowser.nix;
   dunstSettings = import ./programs/dunst.nix;
+  i3Settings = import ./programs/i3/i3.nix;
 in
 {
   nixpkgs.config.allowUnfree = true;
@@ -19,6 +20,9 @@ in
     speedtest-cli
     redshift
     perl
+    i3blocks
+    i3lock
+    dmenu
 
     # General utils
     unar unzip
@@ -72,6 +76,12 @@ in
   };
 
   services.dunst = dunstSettings;
+
+  xsession = {
+    enable = true;
+    scriptPath = ".hm-xsession";
+    windowManager.i3 = i3Settings pkgs;
+  };
 
   home.stateVersion = "20.09";
 }

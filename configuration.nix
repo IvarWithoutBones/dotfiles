@@ -5,7 +5,7 @@
   ];
 
   # links /libexec from derivations to /run/current-system/sw
-  environment.pathsToLink = [ "/libexec" ];
+  environment.pathsToLink = [ "/libexec" "/share/zsh" ];
 
   boot = {
     loader = {
@@ -39,15 +39,13 @@
       videoDrivers = [ "nvidiaBeta" ];
       digimend.enable = true;
       displayManager.lightdm.enable = true;
-      windowManager.i3 = {
-        package = pkgs.i3-gaps;
-        enable = true;
-        extraPackages = with pkgs; [
-	  i3blocks
-	  i3lock
-          dmenu
-	];
-      };
+      desktopManager.session = [ {
+        name = "home-manager";
+        start = ''
+          ${pkgs.runtimeShell} $HOME/.hm-xsession &
+          waitPID=$!
+        '';
+      } ];
     };
   };
 
