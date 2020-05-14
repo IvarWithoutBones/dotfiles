@@ -24,6 +24,7 @@ in
 
     # Disable default resize mode
     modes = {};
+
     terminal = "st";
 
     window.commands = [
@@ -54,7 +55,8 @@ in
     };
 
     bars = [ { 
-      statusCommand = "${pkgs.i3blocks}/bin/i3blocks -c ~/.config/i3blocks.conf";
+      statusCommand = "${pkgs.i3blocks}/bin/i3blocks -c ~/.config/i3/i3blocks.conf";
+#      command = "${pkgs.i3blocks}/bin/i3blocks";
       fonts = [ "Liberation Sans 10" ];
       position = "top";
       colors = {

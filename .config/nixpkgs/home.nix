@@ -1,9 +1,10 @@
 { config, pkgs, ... }:
 let
-  vimSettings = import ./programs/nvim.nix;
-  quteSettings = import ./programs/qutebrowser.nix;
-  dunstSettings = import ./programs/dunst.nix;
-  i3Settings = import ./programs/i3/i3.nix;
+  stBuild = pkgs.callPackage ../st { };
+  vimSettings = import ../nvim/nvim.nix;
+  quteSettings = import ../qutebrowser/qutebrowser.nix;
+  dunstSettings = import ../dunst/dunst.nix;
+  i3Settings = import ../i3/i3.nix;
 in
 {
   nixpkgs = {
@@ -14,7 +15,7 @@ in
           ../dmenu/dmenu-xresources-20200302.patch
         ];
       };
-      st = pkgs.callPackage ./programs/st { };
+      st = stBuild;
     };
   };
 

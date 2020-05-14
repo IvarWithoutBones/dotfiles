@@ -3,6 +3,8 @@ pkgs:
   enable = true;
   viAlias = true;
   vimAlias = true;
+  vimdiffAlias = true;
+
   plugins = with pkgs.vimPlugins; [
     papercolor-theme
     nerdtree
@@ -10,6 +12,8 @@ pkgs:
     lightline-vim
     vim-nix
     rust-vim
+    limelight-vim
+    goyo-vim
 
     # Autocomplete
     nvim-yarp
@@ -38,6 +42,11 @@ pkgs:
     " Maps to insert a new line without going into insert mode
     nmap <S-Enter> O<Esc>
     nmap <CR> o<Esc>
+
+    " Writing mode
+    autocmd! User GoyoEnter Limelight
+    autocmd! User GoyoLeave Limelight!
+    map <F2> <ESC>:Limelight!! <bar> :Goyo <CR>
     
     " Colorscheme options
     set t_Co=256
@@ -53,6 +62,7 @@ pkgs:
     syntax on
     let python_highlight_all=1
     set relativenumber
+    set number
     set tabstop=8
     set mouse=a
     
