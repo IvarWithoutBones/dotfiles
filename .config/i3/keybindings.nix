@@ -68,7 +68,7 @@ mod:
   "${mod}+Shift+x" = "exec --no-startup-id /home/ivar/.scripts/lock.sh";
   "${mod}+d" = "exec --no-startup-id dmenu_run";
   "${mod}+Shift+w" = "exec \"i3-msg 'workspace 2: Media; exec qutebrowser --qt-flag ignore-gpu-blacklist --qt-flag enable-gpu-rasterization --qt-flag enable-native-gpu-memory-buffers --qt-flag num-raster-threads=2'\"";
-  "${mod}+Shift+n" = "exec appimage-run /home/ivar/misc/electronplayer.AppImage";
+  "${mod}+Shift+n" = "exec appimage-run /home/ivar/.local/bin/electronplayer.AppImage";
   "${mod}+Shift+d" = "exec Discord";
   "${mod}+Shift+s" = "exec \"i3-msg 'workspace 4: Spotify; exec alacritty -e ncspot'\"";
   "${mod}+Shift+t" = "exec transmission-gtk";
