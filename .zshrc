@@ -1,6 +1,6 @@
 # Enable colors and change prompt:
 autoload -U colors && colors
-PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
+PS1="%{$fg[magenta]%}%~%{$fg[red]%}%{$reset_color%} >%b "
 
 # History in cache directory:
 HISTSIZE=10000
@@ -12,7 +12,6 @@ autoload -U compinit
 zstyle ':completion:*' menu select
 zmodload zsh/complist
 compinit
-_comp_options+=(globdots)		# Include hidden files.
 
 # vi mode
 bindkey -v
@@ -46,14 +45,6 @@ zle -N zle-line-init
 echo -ne '\e[5 q' # Use beam shape cursor on startup.
 preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 
-# Edit line in vim with ctrl-e:
-autoload edit-command-line; zle -N edit-command-line
-bindkey '^e' edit-command-line
-
-# Path additions
-path+=/opt/minecraft/minecraft-launcher
-path+=/home/ivar/.local/bin
-
 # Exports
 export VISUAL=nvim
 export EDITOR="$VISUAL"
@@ -68,7 +59,6 @@ alias killdiscord="pkill Discord && pkill Discord" # For some reason you need to
 alias viewurl="~/.scripts/viewurl.sh"
 alias update-system="~/.scripts/update-system.sh"
 alias rustdocs="rustup docs --book"
-alias sm64="mupen64plus '/home/ivar/misc/roms/N64/Super Mario 64 (Japan).z64'"
 alias build-nixos-package="nix-build -E '((import <nixpkgs> {}).callPackage (import ./default.nix) { })'"
 
-source /home/ivar/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source ~/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
