@@ -63,10 +63,10 @@ mod:
   "XF86AudioStop" = "exec playerctl stop";
 
   # General programs
-  "${mod}+Return" = "exec --no-startup-id /home/ivar/.local/bin/st";
+  "${mod}+Return" = "exec --no-startup-id st";
   "--release Print" = "exec --no-startup-id maim -su /tmp/screenshot.png && xclip -selection clipboard -t image/png < /tmp/screenshot.png";
   "${mod}+Shift+x" = "exec --no-startup-id /home/ivar/.scripts/lock.sh";
-  "${mod}+d" = "exec dmenu_run";
+  "${mod}+d" = "exec --no-startup-id dmenu_run";
   "${mod}+Shift+w" = "exec \"i3-msg 'workspace 2: Media; exec qutebrowser --qt-flag ignore-gpu-blacklist --qt-flag enable-gpu-rasterization --qt-flag enable-native-gpu-memory-buffers --qt-flag num-raster-threads=2'\"";
   "${mod}+Shift+n" = "exec appimage-run /home/ivar/misc/electronplayer.AppImage";
   "${mod}+Shift+d" = "exec Discord";

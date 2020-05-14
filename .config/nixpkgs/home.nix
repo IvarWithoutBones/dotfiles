@@ -6,7 +6,17 @@ let
   i3Settings = import ./programs/i3/i3.nix;
 in
 {
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs = {
+    config.allowUnfree = true;
+    config.packageOverrides = pkgs: {
+      dmenu = pkgs.dmenu.override {
+        patches = [
+          ../dmenu/dmenu-xresources-20200302.patch
+        ];
+      };
+      st = pkgs.callPackage ./programs/st { };
+    };
+  };
 
   home.packages = with pkgs; [
     # Utils required by dotfiles
@@ -23,6 +33,7 @@ in
     i3blocks
     i3lock
     dmenu
+    st
 
     # General utils
     unar unzip
