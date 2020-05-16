@@ -1,10 +1,10 @@
 pkgs:
 let
   mod = "Mod4";
-  keys = import ./keybindings.nix mod; #TODO: Define workspaces somewhere, not sure how to pass multiple vars to an import?
+  keyBinds = import ./keybindings.nix; #TODO: Define workspaces somewhere, not sure how to pass multiple vars to an import?
 
   # Colors
-  backgroundColor = "#2f343f";
+  backgroundColor = "#202020";
   textColor = "#ffffff";
   inactiveTextColor = "#676e7d";
 in
@@ -14,7 +14,7 @@ in
 
   config = {
     modifier = mod;
-    keybindings = keys;
+    keybindings = keyBinds mod pkgs;
     fonts = [ "Liberation Sans 10" ];
 
     gaps = {
@@ -34,9 +34,9 @@ in
 
     startup = [
       { command = "--no-startup-id amixer set Master 35%"; always = false; }
-      { command = "--no-startup-id xmodmap -e 'remove Lock = Caps_Lock' -e 'keysym Caps_Lock = Escape'"; always = true; }
-      { command = "--no-startup-id redshift -l 50.77083:3.57361"; always = false; }
-      { command = "--no-startup-id xrandr --output DVI-D-0 --off --output HDMI-0 --mode 1280x1024 --pos 4720x570 --rotate normal --output DP-0 --mode 3440x1440 --pos 1280x0 --rotate normal --output DP-1 --off --primary"; always = true; }
+      { command = "--no-startup-id ${pkgs.xorg.xmodmap}/bin/xmodmap -e 'remove Lock = Caps_Lock' -e 'keysym Caps_Lock = Escape'"; always = true; }
+      { command = "--no-startup-id ${pkgs.redshift}/bin/redshift -l 50.77083:3.57361"; always = false; }
+      { command = "--no-startup-id ${pkgs.xlibs.xrandr}/bin/xrandr --output DVI-D-0 --off --output HDMI-0 --mode 1280x1024 --pos 4720x570 --rotate normal --output DP-0 --mode 3440x1440 --pos 1280x0 --rotate normal --output DP-1 --off --primary"; always = true; }
       { command = "--no-startup-id ~/.local/bin/xwallpaper --daemon --output DP-0 --zoom ~/.config/wallpapers/latenight_woods.png --output HDMI-0 --zoom ~/.config/wallpapers/spirited_away.png"; always = false; } # xwallpaper is not yet in nixpkgs, tho i've opened an PR: https://github.com/NixOS/nixpkgs/pull/87753
     ];
 

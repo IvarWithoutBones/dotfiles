@@ -21,16 +21,12 @@ in
 
   home.packages = with pkgs; [
     # Utils required by dotfiles
-    xorg.xmodmap xorg.xprop
+    xorg.xprop
     sysstat
-    maim
-    xclip
     feh
     imagemagick
     speedtest-cli
-    redshift
     perl
-    i3blocks
     i3lock
     dmenu
     st
@@ -38,6 +34,7 @@ in
     # General utils
     unar unzip
     cmake gnumake
+    dconf # Required for some GTK based app's settings to be saved
     wget
     git
     htop
@@ -47,7 +44,6 @@ in
     # Nix specific utils
     nix-index
     nix-prefetch-git
-    appimage-run
 
     # Python38 libraries
     (python38.withPackages (pkgs: with pkgs; [
@@ -61,23 +57,22 @@ in
 
     # Media
     kdenlive obs-studio
-    ncspot alacritty
-    playerctl
-    spotify
-    firefox
+    ncspot spotify
+    firefox # Have to keep this installed for the 1password extension, unfortunately
     tor-browser-bundle-bin
     mpv
     ffmpeg
 
     # Applications
-    _1password
     pavucontrol
     lxappearance
     arc-theme
+    capitaine-cursors
     arc-icon-theme
     discord
     transmission-gtk
     pentablet-driver
+    mupdf
   ];
 
  programs = {

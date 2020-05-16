@@ -1,6 +1,6 @@
-mod:
+mod: pkgs:
 {
-  "${mod}+Shift+e" = "exec [ \"$(printf \"No\\nYes\" | dmenu -i -p \"Would you like to exit i3?\")\" = \"Yes\" ] && i3-msg exit";
+  "${mod}+Shift+e" = "exec [ \"$(printf \"No\\nYes\" | ${pkgs.dmenu}/bin/dmenu -i -p \"Would you like to exit i3?\")\" = \"Yes\" ] && ${pkgs.i3-gaps}/bin/i3-msg exit";
   "${mod}+Shift+r" = "exec i3-msg restart";
 
   # Navigation
@@ -57,19 +57,19 @@ mod:
   "XF86AudioLowerVolume" = "exec amixer set Master 5%-";
 
   # Media player control
-  "XF86AudioPause" = "exec playerctl play-pause";
-  "XF86AudioNext" = "exec playerctl next";
-  "XF86AudioPrev" = "exec playerctl previous";
-  "XF86AudioStop" = "exec playerctl stop";
+  "XF86AudioPause" = "exec ${pkgs.playerctl}/bin/playerctl play-pause";
+  "XF86AudioNext" = "exec ${pkgs.playerctl}/bin/playerctl next";
+  "XF86AudioPrev" = "exec ${pkgs.playerctl}/bin/playerctl previous";
+  "XF86AudioStop" = "exec ${pkgs.playerctl}/bin/playerctl stop";
 
   # General programs
-  "${mod}+Return" = "exec --no-startup-id st";
-  "--release Print" = "exec --no-startup-id maim -su /tmp/screenshot.png && xclip -selection clipboard -t image/png < /tmp/screenshot.png";
+  "${mod}+Return" = "exec --no-startup-id ${pkgs.st}/bin/st";
+  "--release Print" = "exec --no-startup-id ${pkgs.maim}/bin/maim -su /tmp/screenshot.png && ${pkgs.xclip}/bin/xclip -selection clipboard -t image/png < /tmp/screenshot.png";
+  "${mod}+d" = "exec --no-startup-id ${pkgs.dmenu}/bin/dmenu_run";
+  "${mod}+Shift+w" = "exec \"${pkgs.i3-gaps}/bin/i3-msg 'workspace 2: Media; exec ${pkgs.qutebrowser}/bin/qutebrowser --qt-flag ignore-gpu-blacklist --qt-flag enable-gpu-rasterization --qt-flag enable-native-gpu-memory-buffers --qt-flag num-raster-threads=2'\"";
+  "${mod}+Shift+d" = "exec ${pkgs.discord}/bin/Discord";
+  "${mod}+Shift+s" = "exec \"${pkgs.i3-gaps}/bin/i3-msg 'workspace 4: Spotify; exec ${pkgs.alacritty}/bin/alacritty -e ncspot'\"";
+  "${mod}+Shift+t" = "exec ${pkgs.transmission-gtk}/bin/transmission-gtk";
+  "${mod}+Shift+n" = "exec ${pkgs.appimage-run}/bin/appimage-run /home/ivar/.local/bin/electronplayer.AppImage";
   "${mod}+Shift+x" = "exec --no-startup-id /home/ivar/.scripts/lock.sh";
-  "${mod}+d" = "exec --no-startup-id dmenu_run";
-  "${mod}+Shift+w" = "exec \"i3-msg 'workspace 2: Media; exec qutebrowser --qt-flag ignore-gpu-blacklist --qt-flag enable-gpu-rasterization --qt-flag enable-native-gpu-memory-buffers --qt-flag num-raster-threads=2'\"";
-  "${mod}+Shift+n" = "exec appimage-run /home/ivar/.local/bin/electronplayer.AppImage";
-  "${mod}+Shift+d" = "exec Discord";
-  "${mod}+Shift+s" = "exec \"i3-msg 'workspace 4: Spotify; exec alacritty -e ncspot'\"";
-  "${mod}+Shift+t" = "exec transmission-gtk";
 }
