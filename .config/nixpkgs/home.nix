@@ -22,7 +22,6 @@ in
   home.packages = with pkgs; [
     # Utils required by dotfiles
     xorg.xmodmap xorg.xprop
-    nitrogen
     sysstat
     maim
     xclip
