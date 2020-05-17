@@ -1,50 +1,35 @@
 youtube https://www.youtube.com/
-Twitch https://www.twitch.tv/
-Netflix https://www.netflix.com/browse
-Github https://github.com/
-Rust docs https://doc.rust-lang.org/book/
-Duckduckgo https://duckduckgo.com/
-Tumblr https://www.tumblr.com/dashboard
-qutebrowser https://qutebrowser.org/
-qutebrowser cheatsheet https://raw.githubusercontent.com/qutebrowser/qutebrowser/master/doc/img/cheatsheet-big.png
-Dotfiles https://github.com/Yvar192/dotfiles
-Speedtest http://speedtest.net/
-Reddit https://www.reddit.com/
-Twitter https://twitter.com/home
-NixOS Manual https://nixos.org/nixos/manual/
-Lightswitch https://github.com/lightswitch-emu
+twitch https://www.twitch.tv/
+github https://github.com/
+rust docs https://doc.rust-lang.org/book/
+dotfiles https://github.com/ivarWithoutBones/dotfiles
+reddit https://www.reddit.com/
+twitter https://twitter.com/home
+nixos manual https://nixos.org/nixos/manual/
+nixpkgs https://github.com/NixOS/nixpkgs
 yuzu https://github.com/yuzu-emu/yuzu
-Discord https://discordapp.com/
-Discord.py Docs https://discordpy.readthedocs.io/en/latest/api.html
-Ryujinx https://github.com/ryujinx/ryujinx
-Tweakers https://tweakers.net/
-translate https://translate.google.com/
-Marktplaats https://www.marktplaats.nl/
-Zwoofs https://www.zwoofs.nl/
-Gamepad viewer https://gamepadviewer.com/
-g2a https://www.g2a.com/
+yuzu mainline https://github.com/yuzu-emu/yuzu-mainline
+ryujinx https://github.com/ryujinx/ryujinx
+yuzu website https://yuzu-emu.org/
+ryujinx website https://ryujinx.org/#/
+discord https://discordapp.com/
+tweakers https://tweakers.net/
+google translate https://translate.google.com/
+google maps https://www.google.com/maps
+google drive http://drive.google.com/
+marktplaats https://www.marktplaats.nl/
+zwoofs https://www.zwoofs.nl/
 Unixporn https://www.reddit.com/r/unixporn/
-Distrowatch https://www.distrowatch.com/
-st https://github.com/lukesmithxyz/st
-nixos packages https://nixos.org/nixos/packages.html?channel=nixos-19.03
-nixos multimonitor reddit https://www.reddit.com/r/NixOS/comments/dca4h4/some_help_needed_regarding_multimonitors/
 bol https://www.bol.com/nl/
 kickass torrents https://katcr.co/
 protondb https://www.protondb.com/
 gmail https://mail.google.com/mail/u/0/#
-VPS https://billing.hostens.com/clientarea/services/vps-hosting/26930/&synch_redirect=1
-vaporl https://www.vaporl.com/
-google maps https://www.google.com/maps
-yazu https://yuzu-emu.org/
-ryu https://ryujinx.org/#/
-Deepl https://www.deepl.com/translator
+deepl translator https://www.deepl.com/translator
 binary https://nixos.wiki/wiki/Packaging/Binaries
 skyline https://github.com/skyline-emu/skyline
 protonmail https://mail.protonmail.com/inbox
 azarius https://azarius.net/
-tree network https://www.treesnetwork.com/
 livesplit https://one.livesplit.org/
 speedrun.com https://www.speedrun.com/
-google drive http://drive.google.com/
 splits.io https://splits.io/
-good site https://permadi.com/java/spaint/spaint.html
+home manager options https://rycee.gitlab.io/home-manager/options.html
