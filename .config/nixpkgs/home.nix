@@ -1,5 +1,6 @@
 { config, pkgs, ... }:
 let
+  requiredPackages = import ./requiredPackages.nix;
   stBuild = pkgs.callPackage ../st { };
   vimSettings = import ../nvim/nvim.nix;
   quteSettings = import ../qutebrowser/qutebrowser.nix;
@@ -19,22 +20,10 @@ in
     };
   };
 
-  home.packages = with pkgs; [
-    # Utils required by dotfiles
-    xorg.xprop
-    sysstat
-    feh
-    imagemagick
-    speedtest-cli
-    perl
-    i3lock
-    dmenu
-    st
-
+  home.packages = with pkgs; requiredPackages pkgs ++ [
     # General utils
     unar unzip
     cmake gnumake
-    dconf # Required for some GTK based app's settings to be saved
     wget
     git
     htop
@@ -44,12 +33,6 @@ in
     # Nix specific utils
     nix-index
     nix-prefetch-git
-
-    # Python38 libraries
-    (python38.withPackages (pkgs: with pkgs; [
-      setuptools
-      dbus-python
-    ]))
 
     # Games
     snes9x-gtk mupen64plus dolphinEmu
