@@ -56,7 +56,6 @@ alias speedtest="printf 'Ping: ' && ping google.com -c 1 | grep time= | cut -d'=
 alias mp3="mpv --no-video"
 alias watch="watch -n0 -c"
 alias killdiscord="pkill Discord && pkill Discord" # For some reason you need to kill it twice?
-alias viewurl="~/.scripts/viewurl.sh"
 alias update-system="~/.scripts/update-system.sh"
 alias rustdocs="rustup docs --book"
 alias build-nixos-package="nix-build -E '((import <nixpkgs> {}).callPackage (import ./default.nix) { })'"
