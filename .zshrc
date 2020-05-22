@@ -49,6 +49,8 @@ preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 export VISUAL=nvim
 export EDITOR="$VISUAL"
 
+path+=/home/ivar/.local/bin
+
 # Aliases
 alias ls="ls --color=auto"
 alias la="ls --color=auto -A"
@@ -59,5 +61,7 @@ alias killdiscord="pkill Discord && pkill Discord" # For some reason you need to
 alias update-system="~/.scripts/update-system.sh"
 alias rustdocs="rustup docs --book"
 alias build-nixos-package="nix-build -E '((import <nixpkgs> {}).callPackage (import ./default.nix) { })'"
+alias dotconfig="nvim \$(find ~/.config/ -type f | fzf -m)"
 
-source ~/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source ~/.config/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+eval "$(direnv hook zsh)"

@@ -29,10 +29,12 @@ in
     htop
     neofetch
     tree
+    fzf
 
     # Nix specific utils
     nix-index
     nix-prefetch-git
+    direnv
 
     # Games
     snes9x-gtk mupen64plus dolphinEmu
@@ -85,7 +87,10 @@ in
     "color15" = "#E6E6E6";
   };
 
-  services.dunst = dunstSettings;
+  services = {
+    dunst = dunstSettings;
+    lorri.enable = true;
+  };
 
   xsession = {
     enable = true;
