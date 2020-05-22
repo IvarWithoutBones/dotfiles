@@ -36,7 +36,7 @@ in
       { command = "--no-startup-id amixer set Master 35%"; always = false; }
       { command = "--no-startup-id ${pkgs.xorg.xmodmap}/bin/xmodmap -e 'remove Lock = Caps_Lock' -e 'keysym Caps_Lock = Escape'"; always = true; }
       { command = "--no-startup-id ${pkgs.redshift}/bin/redshift -l 50.77083:3.57361"; always = false; }
-      { command = "--no-startup-id ${pkgs.xlibs.xrandr}/bin/xrandr --output DVI-D-0 --off --output HDMI-0 --mode 1280x1024 --pos 4720x570 --rotate normal --output DP-0 --mode 3440x1440 --pos 1280x0 --rotate normal --output DP-1 --off --primary"; always = true; }
+      { command = "--no-startup-id ${pkgs.xlibs.xrandr}/bin/xrandr --output HDMI-0 --mode 1280x1024 --pos 4720x570 --output DP-0 --mode 3440x1440 --pos 1280x0 --primary"; always = true; }
       { command = "--no-startup-id ~/.local/bin/xwallpaper --daemon --output DP-0 --zoom ~/.config/wallpapers/latenight_woods.png --output HDMI-0 --zoom ~/.config/wallpapers/spirited_away.png"; always = false; } # xwallpaper is not yet in nixpkgs, tho i've opened an PR: https://github.com/NixOS/nixpkgs/pull/87753
     ];
 
@@ -55,7 +55,7 @@ in
     };
 
     bars = [ { 
-      statusCommand = "${pkgs.i3blocks}/bin/i3blocks -c ~/.config/i3/i3blocks.conf";
+      statusCommand = "${pkgs.i3blocks}/bin/i3blocks -c ~/.config/i3/i3blocks.conf"; #TODO: nix-ify this config file when home-manager implements that
       fonts = [ "Liberation Sans 10" ];
       position = "top";
       colors = {

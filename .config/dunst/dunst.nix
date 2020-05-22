@@ -3,7 +3,7 @@
 
   settings = {
     global = {
-      monitor = 1;
+      monitor = 0;
       geometry = "300x5-30+20";
       shrink = false;
       notification_height = 0;
