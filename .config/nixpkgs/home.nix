@@ -20,47 +20,51 @@ in
     };
   };
 
-  home.packages = with pkgs; requiredPackages pkgs ++ [
-    # General utils
-    unar unzip
-    cmake gnumake
-    wget
-    git
-    htop
-    neofetch
-    tree
-    fzf
+  home = {
+    username = "ivar";
+    homeDirectory = "/home/ivar";
+    packages = with pkgs; requiredPackages pkgs ++ [
+      # General utils
+      unar unzip
+      cmake gnumake
+      wget
+      git
+      htop
+      neofetch
+      tree
+      fzf
 
-    # Nix specific utils
-    nix-index
-    nix-prefetch-git
-    direnv
+      # Nix specific utils
+      nix-index
+      nix-prefetch-git
+      direnv
 
-    # Games
-    snes9x-gtk mupen64plus dolphinEmu
-    steam
+      # Games
+      snes9x-gtk mupen64plus dolphinEmu
+      steam
 
-    # Media
-    kdenlive obs-studio
-    ncspot spotify
-    firefox # Have to keep this installed for the 1password extension, unfortunately
-    tor-browser-bundle-bin
-    mpv
-    ffmpeg
+      # Media
+      kdenlive obs-studio
+      ncspot spotify
+      firefox # Have to keep this installed for the 1password extension, unfortunately
+      tor-browser-bundle-bin
+      mpv
+      ffmpeg
 
-    # Applications
-    pavucontrol
-    lxappearance
-    arc-theme
-    capitaine-cursors
-    arc-icon-theme
-    discord
-    transmission-gtk
-    pentablet-driver
-    mupdf
-  ];
+      # Applications
+      pavucontrol
+      lxappearance
+      arc-theme
+      capitaine-cursors
+      arc-icon-theme
+      discord
+      transmission-gtk
+      pentablet-driver
+      mupdf
+    ];
+  };
 
- programs = {
+  programs = {
     home-manager.enable = true;
     neovim = vimSettings pkgs;
     qutebrowser = quteSettings;
