@@ -61,6 +61,7 @@ alias killdiscord="pkill Discord && pkill Discord" # For some reason you need to
 alias update-system="~/.scripts/update-system.sh"
 alias rustdocs="rustup docs --book"
 alias build-nixos-package="nix-build -E '((import <nixpkgs> {}).callPackage (import ./default.nix) { })'"
+alias build-nixos-package-qt="nix-build -E '((import <nixpkgs> {}).libsForQt5.callPackage (import ./default.nix) { })'"
 alias dotconfig="nvim \$(find ~/.config/ -type f | fzf -m)"
 
 source ~/.config/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
