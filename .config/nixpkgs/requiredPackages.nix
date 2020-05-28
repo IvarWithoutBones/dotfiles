@@ -4,13 +4,12 @@ pkgs:
 with pkgs; [
   st
   dmenu
-  xorg.xprop
   sysstat
-  feh
   imagemagick
   speedtest-cli
   perl
   i3lock
+  maim # Required for lock script & screenshots
   dconf # Required for some GTK based app's settings to be saved
   
   (python38.withPackages (pkgs: with pkgs; [
