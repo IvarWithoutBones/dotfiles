@@ -17,12 +17,12 @@
     colors = {
       completion = {
         fg = "#eceff4";
-        odd.bg = "#434c5e";
-        even.bg = "#434c5e";
+        odd.bg = "#333333";
+        even.bg = "#333333";
         category.fg = "#eceff4";
-        category.bg = "#3b4252";
-        category.border.top = "#3b4252";
-        category.border.bottom = "#3b4252";
+        category.bg = "#202020";
+        category.border.top = "#202020";
+        category.border.bottom = "#202020";
         item.selected.fg = "#eceff4";
         item.selected.bg = "#8fbcbb";
         item.selected.border.top = "#8fbcbb";
@@ -99,10 +99,10 @@
         indicator.start = "#8fbcbb";
         indicator.stop = "#ebcb8b";
         indicator.error = "#bf616a";
-        odd.bg = "#4b5151";
-        even.bg = "#4b5151";
-        selected.odd.bg = "#2f343f";
-        selected.even.bg = "#2f343f";
+        odd.bg = "#333333";
+        even.bg = "#333333";
+        selected.odd.bg = "#202020";
+        selected.even.bg = "#202020";
       };
     };
   };

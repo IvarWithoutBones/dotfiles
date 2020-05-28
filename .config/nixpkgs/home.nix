@@ -1,21 +1,16 @@
 { config, pkgs, ... }:
 let
   requiredPackages = import ./requiredPackages.nix;
-  stBuild = pkgs.callPackage ../st { };
-  vimSettings = import ../nvim/nvim.nix;
-  quteSettings = import ../qutebrowser/qutebrowser.nix;
-  dunstSettings = import ../dunst/dunst.nix;
-  i3Settings = import ../i3/i3.nix;
+  stBuild = pkgs.callPackage ./programs/st { };
+  vimSettings = import ./programs/nvim.nix;
+  quteSettings = import ./programs/qutebrowser.nix;
+  dunstSettings = import ./programs/dunst.nix;
+  i3Settings = import ./programs/i3/i3.nix;
 in
 {
   nixpkgs = {
     config.allowUnfree = true;
     config.packageOverrides = pkgs: {
-      dmenu = pkgs.dmenu.override {
-        patches = [
-          ../dmenu/dmenu-xresources-20200302.patch
-        ];
-      };
       st = stBuild;
     };
   };
@@ -38,6 +33,7 @@ in
       nix-index
       nix-prefetch-git
       direnv
+      nixpkgs-review
 
       # Games
       snes9x-gtk mupen64plus dolphinEmu
@@ -70,6 +66,17 @@ in
     qutebrowser = quteSettings;
   };
 
+  services = {
+    dunst = dunstSettings;
+    lorri.enable = true;
+  };
+
+  xsession = {
+    enable = true;
+    scriptPath = ".hm-xsession";
+    windowManager.i3 = i3Settings pkgs;
+  };
+
   xresources.properties = {
     "foreground" = "#F8F8F2";
     "background" = "#282A36";
@@ -89,17 +96,6 @@ in
     "color13" = "#FF92D0";
     "color14" = "#9AEDFE";
     "color15" = "#E6E6E6";
-  };
-
-  services = {
-    dunst = dunstSettings;
-    lorri.enable = true;
-  };
-
-  xsession = {
-    enable = true;
-    scriptPath = ".hm-xsession";
-    windowManager.i3 = i3Settings pkgs;
   };
 
   home.stateVersion = "20.09";
