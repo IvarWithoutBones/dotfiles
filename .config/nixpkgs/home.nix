@@ -1,6 +1,7 @@
 { config, pkgs, ... }:
 let
   requiredPackages = import ./requiredPackages.nix;
+  zshSettings = import ./programs/zsh.nix;
   vimSettings = import ./programs/nvim.nix;
   quteSettings = import ./programs/qutebrowser.nix;
   dunstSettings = import ./programs/dunst.nix;
@@ -71,6 +72,7 @@ in
   programs = {
     home-manager.enable = true;
     neovim = vimSettings pkgs;
+    zsh = zshSettings pkgs;
     qutebrowser = quteSettings;
   };
 
