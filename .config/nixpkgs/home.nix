@@ -1,7 +1,6 @@
 { config, pkgs, ... }:
 let
   requiredPackages = import ./requiredPackages.nix;
-  stBuild = pkgs.callPackage ./programs/st { };
   vimSettings = import ./programs/nvim.nix;
   quteSettings = import ./programs/qutebrowser.nix;
   dunstSettings = import ./programs/dunst.nix;
@@ -11,7 +10,16 @@ in
   nixpkgs = {
     config.allowUnfree = true;
     config.packageOverrides = pkgs: {
-      st = stBuild;
+      st = (pkgs.st.overrideAttrs (attrs: {
+        pname = "luke-st";
+        version = "unstable-2020-05-17";
+        src = pkgs.fetchFromGitHub {
+          owner = "LukeSmithxyz";
+          repo = "st";
+          rev = "22c71c355ca4f4e965c3d07e9ac37b0da7349255";
+          sha256 = "0hnzm0yqbz04y95wg8kl6mm6cik52mrygm8s8p579fikk6vlq3bx";
+        };
+      }));
     };
   };
 
