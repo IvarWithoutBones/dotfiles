@@ -1,6 +1,6 @@
 [submodule ".scripts/spotify"]
 	path = .scripts/spotify
-	url = https://github.com/Yvar192/i3blocks-spotify
+	url = https://github.com/IvarWithoutBones/i3blocks-spotify
 [submodule ".scripts/i3blocks"]
 	path = .scripts/i3blocks
-	url = https://github.com/Yvar192/i3blocks-contrib
+	url = https://github.com/IvarWithoutBones/i3blocks-contrib
