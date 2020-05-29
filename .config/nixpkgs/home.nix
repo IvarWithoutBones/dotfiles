@@ -8,9 +8,9 @@ let
   i3Settings = import ./programs/i3/i3.nix;
 in
 {
-  nixpkgs = {
-    config.allowUnfree = true;
-    config.packageOverrides = pkgs: {
+  nixpkgs.config = {
+    allowUnfree = true;
+    packageOverrides = pkgs: {
       st = (pkgs.st.overrideAttrs (attrs: {
         pname = "luke-st";
         version = "unstable-2020-05-17";
@@ -27,6 +27,7 @@ in
   home = {
     username = "ivar";
     homeDirectory = "/home/ivar";
+    stateVersion = "20.09";
     packages = with pkgs; requiredPackages pkgs ++ [
       # General utils
       unar unzip
@@ -107,6 +108,4 @@ in
     "color14" = "#9AEDFE";
     "color15" = "#E6E6E6";
   };
-
-  home.stateVersion = "20.09";
 }
