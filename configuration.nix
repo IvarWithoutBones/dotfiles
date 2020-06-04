@@ -1,8 +1,6 @@
 { config, pkgs, ... }:
 {
-  imports = [
-    ./hardware-configuration.nix
-  ];
+  imports = [ ./hardware-configuration.nix ];
 
   # links paths from derivations to /run/current-system/sw
   environment.pathsToLink = [ "/libexec" "/share/zsh" ];
