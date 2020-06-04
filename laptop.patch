@@ -1,0 +1,83 @@
+diff --git a/configuration.nix b/configuration.nix
+index d176a82..12c4a7c 100644
+--- a/configuration.nix
++++ b/configuration.nix
+@@ -1,4 +1,16 @@
+ { config, pkgs, ... }:
++let
++  # Required till https://github.com/NixOS/nixpkgs/pull/88809 is merged, version currently in nixpkgs does not compile with more recent kernels.
++  wifi = (config.boot.kernelPackages.rtl8821ce.overrideAttrs (attrs: {
++    version = "5.5.2_34066.20200325";
++    src = pkgs.fetchFromGitHub {
++      owner = "tomaspinho";
++      repo = "rtl8821ce";
++      rev = "69765eb288a8dfad3b055b906760b53e02ab1dea";
++      sha256 = "17jiw25k74kv5lnvgycvj2g1n06hbrpjz6p4znk4a62g136rhn4s";
++    };
++  }));
++in
+ {
+   imports = [ ./hardware-configuration.nix ];
+ 
+@@ -11,10 +23,11 @@
+       efi.canTouchEfiVariables = true;
+     };
+     kernelPackages = pkgs.linuxPackages_latest;
++    extraModulePackages = [ wifi ];
+   };
+ 
+   networking = {
+-    hostName = "nixos";
++    hostName = "nixos-laptop";
+     networkmanager.enable = true;
+   };
+ 
+@@ -23,19 +36,25 @@
+     font = "Lat2-Terminus16";
+   };
+ 
+-  # Required for the propietary Nvidia driver
+-  nixpkgs.config.allowUnfree = true;
+-
+   time.timeZone = "Europe/Amsterdam";
+ 
+   services = {
+     openssh.enable = true;
++    tlp.enable = true;
++    # Without this it uses like 80% of a thread, and i only got 2. No idea what it does tbh
++    journald.extraConfig = ''
++      GRUB_CMDLINE_LINUX_DEFAULT="quiet splash pci=nomsi,pcie_aspm=off"
++    '';
+     xserver = {
+       enable = true;
+       layout = "us";
+       xkbOptions = "eurosign:e";
+-      videoDrivers = [ "nvidiaBeta" ];
+-      digimend.enable = true;
++      videoDrivers = [ "amdgpu" ];
++      libinput = {
++        enable = true;
++        naturalScrolling = true;
++        accelProfile = "flat";
++      };
+       displayManager.lightdm.enable = true;
+       desktopManager.session = [ {
+         name = "home-manager";
+@@ -47,17 +66,11 @@
+     };
+   };
+ 
+-  # Required for some GTK based app's settings to be saved
+-  programs.dconf.enable = true;
+-
+   sound.enable = true;
+ 
+-  # 32-bit support is enabled as some Steam games require this
+   hardware = {
+     opengl.enable = true;
+-    opengl.driSupport32Bit = true;
+     pulseaudio.enable = true;
+-    pulseaudio.support32Bit = true;
+   };
+ 
+   users.users.ivar = {
