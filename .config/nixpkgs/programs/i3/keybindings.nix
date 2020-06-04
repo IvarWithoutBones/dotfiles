@@ -1,4 +1,7 @@
-mod: pkgs:
+cfg: let
+  pkgs = cfg.pkgs;
+  mod = cfg.mod;
+in
 {
   "${mod}+Shift+e" = "exec [ \"$(printf \"No\\nYes\" | ${pkgs.dmenu}/bin/dmenu -i -p \"Would you like to exit i3?\")\" = \"Yes\" ] && ${pkgs.i3-gaps}/bin/i3-msg exit";
   "${mod}+Shift+r" = "exec i3-msg restart";
@@ -26,29 +29,29 @@ mod: pkgs:
   "${mod}+space" = "focus mode_toggle";
   "${mod}+a" = "focus parent";
   "${mod}+Shift+q" = "kill";
-  "${mod}+1" = "workspace 1";
-  "${mod}+2" = "workspace 2: Media";
-  "${mod}+3" = "workspace 3: Discord";
-  "${mod}+4" = "workspace 4: Spotify";
-  "${mod}+5" = "workspace 5: Games";
-  "${mod}+6" = "workspace 6";
-  "${mod}+7" = "workspace 7";
-  "${mod}+8" = "workspace 8";
-  "${mod}+9" = "workspace 9";
-  "${mod}+0" = "workspace 10: Torrent";
-  "${mod}+Shift+1" = "move container to workspace 1";
-  "${mod}+Shift+2" = "move container to workspace 2: Media";
-  "${mod}+Shift+3" = "move container to workspace 3: Discord";
-  "${mod}+Shift+4" = "move container to workspace 4: Spotify";
-  "${mod}+Shift+5" = "move container to workspace 5: Games";
-  "${mod}+Shift+6" = "move container to workspace 6";
-  "${mod}+Shift+7" = "move container to workspace 7";
-  "${mod}+Shift+8" = "move container to workspace 8";
-  "${mod}+Shift+9" = "move container to workspace 9";
-  "${mod}+Shift+0" = "move container to workspace 10: Torrent";
-  "${mod}+n" = "move workspace to output right";
 
-  # Open media layout
+  # Workspace navigation
+  "${mod}+1" = "workspace ${cfg.workspaces.ws1}";
+  "${mod}+2" = "workspace ${cfg.workspaces.ws2}";
+  "${mod}+3" = "workspace ${cfg.workspaces.ws3}";
+  "${mod}+4" = "workspace ${cfg.workspaces.ws4}";
+  "${mod}+5" = "workspace ${cfg.workspaces.ws5}";
+  "${mod}+6" = "workspace ${cfg.workspaces.ws6}";
+  "${mod}+7" = "workspace ${cfg.workspaces.ws7}";
+  "${mod}+8" = "workspace ${cfg.workspaces.ws8}";
+  "${mod}+9" = "workspace ${cfg.workspaces.ws9}";
+  "${mod}+0" = "workspace ${cfg.workspaces.ws10}";
+  "${mod}+Shift+1" = "move container to workspace ${cfg.workspaces.ws1}";
+  "${mod}+Shift+2" = "move container to workspace ${cfg.workspaces.ws2}";
+  "${mod}+Shift+3" = "move container to workspace ${cfg.workspaces.ws3}";
+  "${mod}+Shift+4" = "move container to workspace ${cfg.workspaces.ws4}";
+  "${mod}+Shift+5" = "move container to workspace ${cfg.workspaces.ws5}";
+  "${mod}+Shift+6" = "move container to workspace ${cfg.workspaces.ws6}";
+  "${mod}+Shift+7" = "move container to workspace ${cfg.workspaces.ws7}";
+  "${mod}+Shift+8" = "move container to workspace ${cfg.workspaces.ws8}";
+  "${mod}+Shift+9" = "move container to workspace ${cfg.workspaces.ws9}";
+  "${mod}+Shift+0" = "move container to workspace ${cfg.workspaces.ws10}";
+
   "${mod}+Shift+m" = "exec --no-startup-id \"i3-msg 'workspace 2: Media; append_layout /home/ivar/.scripts/16:9_layout.json'\"";
 
   # Volume control
@@ -62,14 +65,18 @@ mod: pkgs:
   "XF86AudioPrev" = "exec ${pkgs.playerctl}/bin/playerctl previous";
   "XF86AudioStop" = "exec ${pkgs.playerctl}/bin/playerctl stop";
 
+  # Brightness control
+  "XF86MonBrightnessUp" = "exec ${pkgs.brightnessctl}/bin/brightnessctl set 10%+";
+  "XF86MonBrightnessDown" = "exec ${pkgs.brightnessctl}/bin/brightnessctl set 10%-";
+
   # General programs
   "${mod}+Return" = "exec --no-startup-id ${pkgs.st}/bin/st";
   "--release Print" = "exec --no-startup-id ${pkgs.maim}/bin/maim -su /tmp/screenshot.png && ${pkgs.xclip}/bin/xclip -selection clipboard -t image/png < /tmp/screenshot.png";
   "${mod}+d" = "exec --no-startup-id ${pkgs.dmenu}/bin/dmenu_run";
-  "${mod}+Shift+w" = "exec \"${pkgs.i3-gaps}/bin/i3-msg 'workspace 2: Media; exec ${pkgs.qutebrowser}/bin/qutebrowser --qt-flag ignore-gpu-blacklist --qt-flag enable-gpu-rasterization --qt-flag enable-native-gpu-memory-buffers --qt-flag num-raster-threads=2'\"";
+  "${mod}+Shift+w" = "exec \"${pkgs.i3-gaps}/bin/i3-msg 'workspace ${cfg.workspaces.ws2}; exec ${pkgs.qutebrowser}/bin/qutebrowser --qt-flag ignore-gpu-blacklist --qt-flag enable-gpu-rasterization --qt-flag enable-native-gpu-memory-buffers --qt-flag num-raster-threads=2'\"";
   "${mod}+Shift+d" = "exec ${pkgs.discord}/bin/Discord";
   "${mod}+Shift+Ctrl+d" = "exec pkill Discord && pkill Discord";
-  "${mod}+Shift+s" = "exec \"${pkgs.i3-gaps}/bin/i3-msg 'workspace 4: Spotify; exec ${pkgs.alacritty}/bin/alacritty -e ncspot'\"";
+  "${mod}+Shift+s" = "exec \"${pkgs.i3-gaps}/bin/i3-msg 'workspace ${cfg.workspaces.ws4}; exec ${pkgs.alacritty}/bin/alacritty -e ncspot'\"";
   "${mod}+Shift+t" = "exec ${pkgs.transmission-gtk}/bin/transmission-gtk";
   "${mod}+Shift+n" = "exec ${pkgs.appimage-run}/bin/appimage-run /home/ivar/.local/bin/electronplayer.AppImage";
   "${mod}+Shift+x" = "exec --no-startup-id /home/ivar/.scripts/lock.sh";

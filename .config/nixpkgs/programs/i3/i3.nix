@@ -1,20 +1,35 @@
-pkgs:
-let
-  mod = "Mod4";
-  keyBinds = import ./keybindings.nix; #TODO: Define workspaces somewhere, not sure how to pass multiple vars to an import?
+pkgs: let
+  keyBinds = import ./keybindings.nix;
 
   # Colors
   backgroundColor = "#202020";
   textColor = "#ffffff";
   inactiveTextColor = "#676e7d";
+
+  cfg = {
+    pkgs = pkgs;
+    mod = "Mod4";
+    workspaces = {
+      ws1 = "1";
+      ws2 = "2: Media";
+      ws3 = "3: Discord";
+      ws4 = "4";
+      ws5 = "5";
+      ws6 = "6";
+      ws7 = "7";
+      ws8 = "8";
+      ws9 = "9";
+      ws10 = "10";
+    };
+  };
 in
 {
   package = pkgs.i3-gaps;
   enable = true;
 
   config = {
-    modifier = mod;
-    keybindings = keyBinds mod pkgs;
+    modifier = cfg.mod;
+    keybindings = keyBinds cfg;
     fonts = [ "Liberation Sans 10" ];
 
     gaps = {
@@ -29,22 +44,22 @@ in
 
     window.commands = [
       { command = "border pixel 1"; criteria = { class = "^.*"; }; }
-      { command = "move to workspace 4: Spotify"; criteria = { class = "Spotify"; }; }
+      { command = "move to workspace ${cfg.workspaces.ws4}"; criteria = { class = "Spotify"; }; }
     ];
 
     startup = [
+      { command = "--no-startup-id i3-msg workspace ${cfg.workspaces.ws1}"; always = false; } # Dirty but otherwise it defaults to the last one
       { command = "--no-startup-id amixer set Master 35%"; always = false; }
       { command = "--no-startup-id ${pkgs.xorg.xmodmap}/bin/xmodmap -e 'remove Lock = Caps_Lock' -e 'keysym Caps_Lock = Escape'"; always = true; }
       { command = "--no-startup-id ${pkgs.redshift}/bin/redshift -l 50.77083:3.57361"; always = false; }
       { command = "--no-startup-id ${pkgs.xlibs.xrandr}/bin/xrandr --output HDMI-0 --mode 1280x1024 --pos 4720x570 --output DP-0 --mode 3440x1440 --pos 1280x0 --primary"; always = true; }
-      { command = "--no-startup-id ~/.local/bin/xwallpaper --daemon --output DP-0 --zoom ~/.config/wallpapers/latenight_woods.png --output HDMI-0 --zoom ~/.config/wallpapers/spirited_away.png"; always = false; } # xwallpaper is not yet in nixpkgs, tho i've opened an PR: https://github.com/NixOS/nixpkgs/pull/87753
+      { command = "--no-startup-id ~/.local/bin/xwallpaper --daemon --zoom ~/.config/wallpapers/latenight_woods.png"; always = false; } # xwallpaper is not yet in nixpkgs, tho i've opened an PR: https://github.com/NixOS/nixpkgs/pull/87753
     ];
 
     assigns = {
-      "2: Media" = [ { class = "electronplayer"; } ];
-      "3: Discord" = [ { class = "discord"; } ];
-      "5: Games" = [ { class = "Steam"; } ];
-      "10: Torrent" = [ { class = "Transmission-gtk"; } ];
+      "${cfg.workspaces.ws2}" = [ { class = "electronplayer"; } ];
+      "${cfg.workspaces.ws3}" = [ { class = "discord"; } ];
+      "${cfg.workspaces.ws10}" = [ { class = "Transmission-gtk"; } ];
     };
 
     colors = {
