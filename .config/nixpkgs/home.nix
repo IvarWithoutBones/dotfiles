@@ -13,12 +13,12 @@ in
     packageOverrides = pkgs: {
       st = (pkgs.st.overrideAttrs (attrs: {
         pname = "luke-st";
-        version = "unstable-2020-05-17";
+        version = "unstable-2020-06-02";
         src = pkgs.fetchFromGitHub {
           owner = "LukeSmithxyz";
           repo = "st";
-          rev = "22c71c355ca4f4e965c3d07e9ac37b0da7349255";
-          sha256 = "0hnzm0yqbz04y95wg8kl6mm6cik52mrygm8s8p579fikk6vlq3bx";
+          rev = "b6a1f2d3339553e314e9f563b96c38f4859fdd08";
+          sha256 = "1j0iwy1v7dw5877s0kxl17bayqxm7hcfbxx174fqyh1n95pyw4fw";
         };
       }));
     };
