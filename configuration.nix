@@ -47,9 +47,6 @@
     };
   };
 
-  # Required for some GTK based app's settings to be saved
-  programs.dconf.enable = true;
-
   sound.enable = true;
 
   # 32-bit support is enabled as some Steam games require this
