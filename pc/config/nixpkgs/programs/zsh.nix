@@ -1,29 +1,34 @@
-pkgs:
+globalConfig: let
+  pkgs = globalConfig.pkgs;
+in
 {
   enable = true;
 
   defaultKeymap = "viins";
   dotDir = ".config/zsh";
-  history.path = ".cache/zsh/history";
+  history.path = "${globalConfig.homeDir}/.cache/zsh/history";
 
   sessionVariables = {
     VISUAL = "nvim";
     EDITOR = "nvim";
     PS1 = "%F{magenta}%~%f > ";
+    LESSHISTFILE = "/dev/null";
   };
 
   shellAliases = {
     ls = "ls --color=auto";
     la = "ls --color=auto -A";
-    speedtest = "printf 'Ping: ' && ping google.com -c 1 | grep time= | cut -d'=' -f4 && speedtest | grep -E 'Download|Upload'";
+    speedtest = "printf 'Ping: ' && ping google.com -c 1 | grep time= | cut -d'=' -f4 && ${pkgs.speedtest-cli}/bin/speedtest | grep -E 'Download|Upload'";
     mp3 = "mpv --no-video";
     watch = "watch -n0 -c";
     killdiscord = "pkill Discord && pkill Discord"; # For some reason you need to kill it twice?
     update-system = "~/.scripts/update-system.sh";
+    dotconfig = "nvim \$(find ~/.config/ -type f | ${pkgs.fzf}/bin/fzf -m)";
+    sm64 = "cd ~/misc/sm64/ && ./sm64 --skip-intro && cd ~";
+    battery-left="${pkgs.acpi}/bin/acpi | cut -d' ' -f5";
+    caps="${pkgs.xdotool}/bin/xdotool key Caps_Lock";
     build-nixos-package = "nix-build -E '((import <nixpkgs> {}).callPackage (import ./default.nix) { })'";
     build-nixos-package-qt = "nix-build -E '((import <nixpkgs> {}).libsForQt5.callPackage (import ./default.nix) { })'";
-    dotconfig = "nvim \$(find ~/.config/ -type f | fzf -m)";
-    sm64 = "cd ~/misc/sm64/ && ./sm64 && cd ~";
   };
 
   plugins = [{

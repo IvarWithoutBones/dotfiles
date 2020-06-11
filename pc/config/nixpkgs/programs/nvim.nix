@@ -1,4 +1,6 @@
-pkgs:
+globalConfig: let
+  pkgs = globalConfig.pkgs;
+in
 {
   enable = true;
   viAlias = true;
@@ -10,8 +12,7 @@ pkgs:
     nerdtree
     vim-nerdtree-tabs
     lightline-vim
-    vim-nix
-    rust-vim
+    vim-polyglot
     limelight-vim
     goyo-vim
 

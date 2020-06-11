@@ -1,12 +1,11 @@
-pkgs:
-
-# These packages are required by my dotfiles
-with pkgs; [
+globalConfig: let
+  pkgs = globalConfig.pkgs;
+in
+with pkgs; [ # These packages are required by my dotfiles
   st
   dmenu
   sysstat
   imagemagick
-  speedtest-cli
   perl
   i3lock
   maim # Required for lock script & screenshots

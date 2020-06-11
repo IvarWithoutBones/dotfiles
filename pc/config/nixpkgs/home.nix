@@ -6,6 +6,12 @@ let
   quteSettings = import ./programs/qutebrowser.nix;
   dunstSettings = import ./programs/dunst.nix;
   i3Settings = import ./programs/i3/i3.nix;
+
+  globalConfig = {
+    pkgs = pkgs;
+    homeDir = "/home/ivar";
+    backgroundColor = "#2f343f";
+  };
 in
 {
   nixpkgs.config = {
@@ -26,18 +32,18 @@ in
 
   home = {
     username = "ivar";
-    homeDirectory = "/home/ivar";
+    homeDirectory = globalConfig.homeDir;
     stateVersion = "20.09";
-    packages = with pkgs; requiredPackages pkgs ++ [
+    packages = with pkgs; requiredPackages globalConfig ++ [
       # General utils
       unar unzip
       cmake gnumake
+      bat
       wget
       git
-      htop
+      htop gotop
       neofetch
       tree
-      fzf
 
       # Nix specific utils
       nix-index
@@ -60,9 +66,7 @@ in
       # Applications
       pavucontrol
       lxappearance
-      arc-theme
-      capitaine-cursors
-      arc-icon-theme
+      arc-theme capitaine-cursors arc-icon-theme
       discord
       transmission-gtk
       pentablet-driver
@@ -72,25 +76,25 @@ in
 
   programs = {
     home-manager.enable = true;
-    neovim = vimSettings pkgs;
-    zsh = zshSettings pkgs;
+    neovim = vimSettings globalConfig;
+    zsh = zshSettings globalConfig;
     qutebrowser = quteSettings;
   };
 
   services = {
-    dunst = dunstSettings;
+    dunst = dunstSettings globalConfig;
     lorri.enable = true;
   };
 
   xsession = {
     enable = true;
     scriptPath = ".hm-xsession";
-    windowManager.i3 = i3Settings pkgs;
+    windowManager.i3 = i3Settings globalConfig;
   };
 
   xresources.properties = {
     "foreground" = "#F8F8F2";
-    "background" = "#282A36";
+    "background" = globalConfig.backgroundColor;
     "color0" = "#000000";
     "color1" = "#FF5555";
     "color2" = "#50FA7B";

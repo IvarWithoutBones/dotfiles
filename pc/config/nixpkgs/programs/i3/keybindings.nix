@@ -30,7 +30,6 @@ in
   "${mod}+a" = "focus parent";
   "${mod}+Shift+q" = "kill";
 
-  # Workspace navigation
   "${mod}+1" = "workspace ${cfg.workspaces.ws1}";
   "${mod}+2" = "workspace ${cfg.workspaces.ws2}";
   "${mod}+3" = "workspace ${cfg.workspaces.ws3}";
@@ -52,7 +51,10 @@ in
   "${mod}+Shift+9" = "move container to workspace ${cfg.workspaces.ws9}";
   "${mod}+Shift+0" = "move container to workspace ${cfg.workspaces.ws10}";
 
-  "${mod}+Shift+m" = "exec --no-startup-id \"i3-msg 'workspace 2: Media; append_layout /home/ivar/.scripts/16:9_layout.json'\"";
+  "${mod}+n" = "move workspace to output right";
+
+  # Open media layout
+  "${mod}+Shift+m" = "exec --no-startup-id \"i3-msg 'workspace ${cfg.workspaces.ws2}; append_layout /home/ivar/.scripts/16:9_layout.json'\"";
 
   # Volume control
   "XF86AudioMute" = "exec amixer set Master toggle";
@@ -64,10 +66,6 @@ in
   "XF86AudioNext" = "exec ${pkgs.playerctl}/bin/playerctl next";
   "XF86AudioPrev" = "exec ${pkgs.playerctl}/bin/playerctl previous";
   "XF86AudioStop" = "exec ${pkgs.playerctl}/bin/playerctl stop";
-
-  # Brightness control
-  "XF86MonBrightnessUp" = "exec ${pkgs.brightnessctl}/bin/brightnessctl set 10%+";
-  "XF86MonBrightnessDown" = "exec ${pkgs.brightnessctl}/bin/brightnessctl set 10%-";
 
   # General programs
   "${mod}+Return" = "exec --no-startup-id ${pkgs.st}/bin/st";

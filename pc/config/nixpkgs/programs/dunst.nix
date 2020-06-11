@@ -1,3 +1,7 @@
+globalConfig: let
+  backgroundColor = globalConfig.backgroundColor;
+  foregroundColor = "#ffffff";
+in
 {
   enable = true;
 
@@ -11,7 +15,7 @@
       padding = 8;
       horizontal_padding = 8;
       frame_width = 3;
-      color = "#ffffff";
+      color = foregroundColor;
       frame_color = "#565d6d";
       separator_color = "#565d6d";
       font = "System San Francisco Display 8";
@@ -43,18 +47,18 @@
     };
 
     urgency_low = {
-      background = "#2f343f";
-      foreground = "#ffffff";
+      background = backgroundColor;
+      foreground = foregroundColor;
       timeout = 10;
     };
     urgency_normal = {
-      background = "#2f343f";
-      foreground = "#ffffff";
+      background = backgroundColor;
+      foreground = foregroundColor;
       timeout = 10;
     };
     urgency_critical = {
-      background = "#2f343f";
-      foreground = "#ffffff";
+      background = backgroundColor;
+      foreground = foregroundColor;
       timeout = 10;
     };
   };

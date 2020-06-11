@@ -1,8 +1,9 @@
-pkgs: let
+globalConfig: let
   keyBinds = import ./keybindings.nix;
+  pkgs = globalConfig.pkgs;
 
   # Colors
-  backgroundColor = "#202020";
+  backgroundColor = globalConfig.backgroundColor;
   textColor = "#ffffff";
   inactiveTextColor = "#676e7d";
 
@@ -13,7 +14,7 @@ pkgs: let
       ws1 = "1";
       ws2 = "2: Media";
       ws3 = "3: Discord";
-      ws4 = "4";
+      ws4 = "4: Spotify";
       ws5 = "5";
       ws6 = "6";
       ws7 = "7";
@@ -51,9 +52,9 @@ in
       { command = "--no-startup-id i3-msg workspace ${cfg.workspaces.ws1}"; always = false; } # Dirty but otherwise it defaults to the last one
       { command = "--no-startup-id amixer set Master 35%"; always = false; }
       { command = "--no-startup-id ${pkgs.xorg.xmodmap}/bin/xmodmap -e 'remove Lock = Caps_Lock' -e 'keysym Caps_Lock = Escape'"; always = true; }
-      { command = "--no-startup-id ${pkgs.redshift}/bin/redshift -l 50.77083:3.57361"; always = false; }
+      { command = "--no-startup-id ${pkgs.redshift}/bin/redshift -l 50.77083:3.57361 -t 6500K:3000K"; always = false; }
       { command = "--no-startup-id ${pkgs.xlibs.xrandr}/bin/xrandr --output HDMI-0 --mode 1280x1024 --pos 4720x570 --output DP-0 --mode 3440x1440 --pos 1280x0 --primary"; always = true; }
-      { command = "--no-startup-id ~/.local/bin/xwallpaper --daemon --zoom ~/.config/wallpapers/latenight_woods.png"; always = false; } # xwallpaper is not yet in nixpkgs, tho i've opened an PR: https://github.com/NixOS/nixpkgs/pull/87753
+      { command = "--no-startup-id ~/.local/bin/xwallpaper --daemon --output DP-0 --zoom ~/.config/wallpapers/latenight_woods.png --output HDMI-0 --zoom ~/.config/wallpapers/spirited_away.png"; always = false; } # xwallpaper is not yet in nixpkgs, tho i've opened an PR: https://github.com/NixOS/nixpkgs/pull/87753
     ];
 
     assigns = {
