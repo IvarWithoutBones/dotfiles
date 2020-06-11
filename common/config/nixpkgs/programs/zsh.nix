@@ -16,6 +16,7 @@ in
   };
 
   shellAliases = {
+    diff = "diff --color=auto";
     ls = "ls --color=auto";
     la = "ls --color=auto -A";
     speedtest = "printf 'Ping: ' && ping google.com -c 1 | grep time= | cut -d'=' -f4 && ${pkgs.speedtest-cli}/bin/speedtest | grep -E 'Download|Upload'";
