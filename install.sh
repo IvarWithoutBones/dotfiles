@@ -7,7 +7,7 @@ function do_but_green {
         $1
 }
 
-MACHINE=	# Put in either either "pc" or "laptop"
+MACHINE=	# Set this to either "pc" or "laptop"
 
 # Failchecks
 if [ -z "$MACHINE" ]; then
@@ -22,3 +22,4 @@ do_but_green "mkdir -p $(pwd)/$MACHINE/config"
 do_but_green "cp -vrfL $(pwd)/$MACHINE/config/* /home/ivar/.config/"
 do_but_green "mkdir -p $(pwd)/$MACHINE/scripts"
 do_but_green "cp -vrfL $(pwd)/$MACHINE/scripts/* /home/ivar/.scripts/"
+do_but_green "sudo cp -vfL $(pwd)/$MACHINE/configuration.nix /etc/nixos/configuration.nix"
