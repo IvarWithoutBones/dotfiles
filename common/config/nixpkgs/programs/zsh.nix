@@ -18,7 +18,7 @@ in
   shellAliases = {
     ls = "ls --color=auto";
     la = "ls --color=auto -A";
-    diff = "diff --color=auto";
+    diff = "diff --color=auto -u";
     dirdiff = "diff --color=auto -ENwbur";
     speedtest = "printf 'Ping: ' && ping google.com -c 1 | grep time= | cut -d'=' -f4 && ${pkgs.speedtest-cli}/bin/speedtest | grep -E 'Download|Upload'";
     mp3 = "mpv --no-video";
