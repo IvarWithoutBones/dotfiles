@@ -13,8 +13,7 @@ MACHINE=	# Put in either either "pc" or "laptop"
 if [ -z "$MACHINE" ]; then
 	echo "No machine was selected"
 	exit
-fi
-if [ ! -d "$(pwd)/$MACHINE" ]; then
+elif [ ! -d "$(pwd)/$MACHINE" ]; then
 	echo "$(pwd)/$MACHINE does not exist"
 	exit
 fi
