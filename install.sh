@@ -18,8 +18,8 @@ elif [ ! -d "$(pwd)/$MACHINE" ]; then
 	exit
 fi
 
-do_but_green "mkdir -p $(pwd)/$MACHINE/config"
+do_but_green "mkdir -p /home/ivar/.config"
 do_but_green "cp -vrfL $(pwd)/$MACHINE/config/* /home/ivar/.config/"
-do_but_green "mkdir -p $(pwd)/$MACHINE/scripts"
+do_but_green "mkdir -p /home/ivar/.scripts"
 do_but_green "cp -vrfL $(pwd)/$MACHINE/scripts/* /home/ivar/.scripts/"
 do_but_green "sudo cp -vfL $(pwd)/$MACHINE/configuration.nix /etc/nixos/configuration.nix"
