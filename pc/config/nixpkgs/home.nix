@@ -78,7 +78,7 @@ in
     home-manager.enable = true;
     neovim = vimSettings globalConfig;
     zsh = zshSettings globalConfig;
-    qutebrowser = quteSettings;
+    qutebrowser = quteSettings globalConfig;
   };
 
   services = {
