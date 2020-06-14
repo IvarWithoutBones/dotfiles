@@ -25,9 +25,9 @@ in
     mp3 = "mpv --no-video";
     watch = "watch -n0 -c";
     killdiscord = "pkill Discord && pkill Discord"; # For some reason you need to kill it twice?
-    update-system = "~/.scripts/update-system.sh";
-    dotconfig = "nvim \$(find ~/.config/ -type f | ${pkgs.fzf}/bin/fzf -m)";
-    sm64 = "cd ~/misc/sm64/ && ./sm64 --skip-intro && cd ~";
+    update-system = "${globalConfig.homeDir}/.scripts/update-system.sh";
+    dotconfig = "nvim \$(find ${globalConfig.homeDir}/.config/ -type f | ${pkgs.fzf}/bin/fzf -m)";
+    sm64 = "cd ${globalConfig.homeDir}/misc/sm64/ && ./sm64 --skip-intro && cd ~";
     battery-left="${pkgs.acpi}/bin/acpi | cut -d' ' -f5";
     caps="${pkgs.xdotool}/bin/xdotool key Caps_Lock";
     build-nixos-package = "nix-build -E '((import <nixpkgs> {}).callPackage (import ./default.nix) { })'";
