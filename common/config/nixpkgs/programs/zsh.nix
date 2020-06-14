@@ -11,6 +11,7 @@ in
   sessionVariables = {
     VISUAL = "nvim";
     EDITOR = "nvim";
+    TERMINAL = "st";
     PS1 = "%F{magenta}%~%f > ";
     LESSHISTFILE = "/dev/null";
   };
