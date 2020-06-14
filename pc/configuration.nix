@@ -24,10 +24,10 @@
     font = "Lat2-Terminus16";
   };
 
+  time.timeZone = "Europe/Amsterdam";
+
   # Required for the propietary Nvidia driver
   nixpkgs.config.allowUnfree = true;
-
-  time.timeZone = "Europe/Amsterdam";
 
   services = {
     openssh.enable = true;
@@ -52,10 +52,14 @@
 
   # 32-bit support is enabled as some Steam games require this
   hardware = {
-    opengl.enable = true;
-    opengl.driSupport32Bit = true;
-    pulseaudio.enable = true;
-    pulseaudio.support32Bit = true;
+    opengl = {
+      enable = true;
+      driSupport32Bit = true;
+    };
+    pulseaudio = {
+      enable = true;
+      support32Bit = true;
+    };
   };
 
   users.users.ivar = {
