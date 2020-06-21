@@ -77,5 +77,5 @@ in
   "${mod}+Shift+s" = "exec \"${pkgs.i3-gaps}/bin/i3-msg 'workspace ${cfg.workspaces.ws4}; exec ${pkgs.st}/bin/st -e ncspot'\"";
   "${mod}+Shift+t" = "exec ${pkgs.transmission-gtk}/bin/transmission-gtk";
   "${mod}+Shift+n" = "exec ${pkgs.appimage-run}/bin/appimage-run /home/ivar/.local/bin/electronplayer.AppImage";
-  "${mod}+Shift+x" = "exec --no-startup-id /home/ivar/.scripts/lock.sh";
+  "${mod}+Shift+x" = "exec ${pkgs.callPackage /home/ivar/.scripts/lock.nix {}}/bin/i3lock";
 }
