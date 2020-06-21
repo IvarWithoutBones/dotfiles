@@ -24,6 +24,7 @@ in
     };
     kernelPackages = pkgs.linuxPackages_latest;
     extraModulePackages = [ wifi ];
+    kernelParams = [ "acpi_backlight=vendor" ];
   };
 
   networking = {
@@ -41,10 +42,7 @@ in
   services = {
     openssh.enable = true;
     tlp.enable = true;
-    # Without this it uses like 80% of a thread, and i only got 2. No idea what it does tbh
-    journald.extraConfig = ''
-      GRUB_CMDLINE_LINUX_DEFAULT="quiet splash pci=nomsi,pcie_aspm=off"
-    '';
+    fstrim.enable = true;
     xserver = {
       enable = true;
       layout = "us";
@@ -70,6 +68,8 @@ in
   sound.enable = true;
 
   hardware = {
+    enableRedistributableFirmware = true;
+    cpu.amd.updateMicrocode = true;
     opengl.enable = true;
     pulseaudio.enable = true;
   };
