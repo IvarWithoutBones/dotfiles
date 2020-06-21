@@ -40,7 +40,7 @@ in
   time.timeZone = "Europe/Amsterdam";
 
   services = {
-    openssh.enable = true;
+    blueman.enable = true;
     tlp.enable = true;
     fstrim.enable = true;
     xserver = {
@@ -72,6 +72,7 @@ in
     cpu.amd.updateMicrocode = true;
     opengl.enable = true;
     pulseaudio.enable = true;
+    bluetooth.enable = true;
   };
 
   users.users.ivar = {
