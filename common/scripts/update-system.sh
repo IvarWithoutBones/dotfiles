@@ -10,7 +10,3 @@ do_but_green "nix-channel --update"
 do_but_green "home-manager switch --keep-going"
 do_but_green "sudo nixos-rebuild switch --upgrade"
 do_but_green "nix-collect-garbage"
-
-if [ "$1" == "-f" ]; then 
-	do_but_green "nix-store -v --optimise"
-fi
