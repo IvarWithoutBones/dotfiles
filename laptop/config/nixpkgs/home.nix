@@ -36,35 +36,29 @@ in
     stateVersion = "20.09";
     packages = with pkgs; requiredPackages globalConfig ++ [
       # General utils
-      unar unzip
-      cmake gnumake
-      bat
-      wget
-      git
       htop gotop
+      wget git
+      unar
       neofetch
       tree
+      bat
 
       # Nix specific utils
       nix-index
       nix-prefetch-git
       direnv
-      nixpkgs-review
 
       # Media
       ncspot spotify
       firefox # Have to keep this installed for the 1password extension, unfortunately
-      tor-browser-bundle-bin
       mpv
 
       # Applications
       discord
       dolphinEmu
       pavucontrol
-      lxappearance
       arc-theme capitaine-cursors arc-icon-theme
       transmission-gtk
-      mupdf
     ];
   };
 
