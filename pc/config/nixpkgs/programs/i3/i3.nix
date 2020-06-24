@@ -54,7 +54,7 @@ in
       { command = "--no-startup-id ${pkgs.xorg.xmodmap}/bin/xmodmap -e 'remove Lock = Caps_Lock' -e 'keysym Caps_Lock = Escape'"; always = true; }
       { command = "--no-startup-id ${pkgs.redshift}/bin/redshift -l 50.77083:3.57361 -t 6500K:3000K"; always = false; }
       { command = "--no-startup-id ${pkgs.xlibs.xrandr}/bin/xrandr --output HDMI-0 --mode 1280x1024 --pos 4720x570 --output DP-0 --mode 3440x1440 --pos 1280x0 --primary"; always = true; }
-      { command = "--no-startup-id ~/.local/bin/xwallpaper --daemon --output DP-0 --zoom ~/.config/wallpapers/latenight_woods.png --output HDMI-0 --zoom ~/.config/wallpapers/spirited_away.png"; always = false; } # xwallpaper is not yet in nixpkgs, tho i've opened an PR: https://github.com/NixOS/nixpkgs/pull/87753
+      { command = "--no-startup-id ${pkgs.xwallpaper}/bin/xwallpaper --daemon --output DP-0 --zoom ~/.config/wallpapers/latenight_woods.png --output HDMI-0 --zoom ~/.config/wallpapers/spirited_away.png"; always = false; }
     ];
 
     assigns = {

@@ -53,7 +53,7 @@ in
       { command = "--no-startup-id amixer set Master 35%"; always = false; }
       { command = "--no-startup-id ${pkgs.xorg.xmodmap}/bin/xmodmap -e 'remove Lock = Caps_Lock' -e 'keysym Caps_Lock = Escape'"; always = true; }
       { command = "--no-startup-id ${pkgs.redshift}/bin/redshift -l 50.77083:3.57361 -t 6500K:3000K"; always = false; }
-      { command = "--no-startup-id ~/.local/bin/xwallpaper --daemon --zoom ~/.config/wallpapers/spirited_away.png"; always = false; } # xwallpaper is not yet in nixpkgs, tho i've opened an PR: https://github.com/NixOS/nixpkgs/pull/87753
+      { command = "--no-startup-id ${pkgs.xwallpaper}/bin/xwallpaper --daemon --zoom ~/.config/wallpapers/spirited_away.png"; always = false; }
     ];
 
     assigns = {
