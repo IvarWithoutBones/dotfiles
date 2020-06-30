@@ -11,7 +11,7 @@
       efi.canTouchEfiVariables = true;
     };
     kernelPackages = pkgs.linuxPackages_latest;
-    extraModulePackages = with pkgs.linuxPackages_latest; [ rtl8192eu ];
+    extraModulePackages = with config.boot.kernelPackages; [ rtl8192eu ];
   };
 
   networking = {
