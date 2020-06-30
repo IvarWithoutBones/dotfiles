@@ -64,6 +64,7 @@ in
 
   programs = {
     home-manager.enable = true;
+    command-not-found.enable = true;
     neovim = vimSettings globalConfig;
     zsh = zshSettings globalConfig;
     qutebrowser = quteSettings globalConfig;
