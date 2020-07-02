@@ -36,20 +36,17 @@ in
     stateVersion = "20.09";
     packages = with pkgs; requiredPackages globalConfig ++ [
       # General utils
-      unar unzip
-      cmake gnumake
-      bat
-      wget
-      git
       htop gotop
+      wget git
+      unar
       neofetch
       tree
+      bat
 
       # Nix specific utils
       nix-index
       nix-prefetch-git
       direnv
-      nixpkgs-review
 
       # Games
       snes9x-gtk mupen64plus dolphinEmu
@@ -76,6 +73,7 @@ in
 
   programs = {
     home-manager.enable = true;
+    command-not-found.enable = true;
     neovim = vimSettings globalConfig;
     zsh = zshSettings globalConfig;
     qutebrowser = quteSettings globalConfig;
