@@ -9,7 +9,7 @@ let
 
   globalConfig = {
     pkgs = pkgs;
-    homeDir = "/home/ivar";
+    homeDir = builtins.getEnv "HOME";
     backgroundColor = "#2f343f";
   };
 in
