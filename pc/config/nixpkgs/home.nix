@@ -16,6 +16,7 @@ in
 {
   nixpkgs.config = {
     allowUnfree = true;
+    allowBroken = true; # https://github.com/NixOS/nixpkgs/issues/93174
     packageOverrides = pkgs: {
       st = (pkgs.st.overrideAttrs (attrs: {
         pname = "luke-st";
