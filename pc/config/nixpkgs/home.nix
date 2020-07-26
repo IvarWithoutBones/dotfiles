@@ -20,13 +20,14 @@ in
     packageOverrides = pkgs: {
       st = (pkgs.st.overrideAttrs (attrs: {
         pname = "luke-st";
-        version = "unstable-2020-06-02";
+        version = "unstable-2020-07-08";
         src = pkgs.fetchFromGitHub {
           owner = "LukeSmithxyz";
           repo = "st";
-          rev = "b6a1f2d3339553e314e9f563b96c38f4859fdd08";
-          sha256 = "1j0iwy1v7dw5877s0kxl17bayqxm7hcfbxx174fqyh1n95pyw4fw";
+          rev = "e187610a230803ddca6b86fe0620cacdee177ac3";
+          sha256 = "1aricnhcaxglyiyvcgfaf0g3glxis6rs84h9hd13ccmh181v0mkz";
         };
+        buildInputs = attrs.buildInputs ++ [ pkgs.harfbuzz ];
       }));
     };
   };
