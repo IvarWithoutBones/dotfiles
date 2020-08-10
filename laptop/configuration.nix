@@ -29,7 +29,7 @@
 
   services = {
     blueman.enable = true;
-    tlp.enable = true;
+    #tlp.enable = true; # TODO: reenable when i figure out the device ID of the bluetooth adapter to blacklist (https://wiki.archlinux.org/index.php/TLP timeout error)
     fstrim.enable = true;
     xserver = {
       enable = true;
@@ -59,8 +59,18 @@
     enableRedistributableFirmware = true;
     cpu.amd.updateMicrocode = true;
     opengl.enable = true;
-    pulseaudio.enable = true;
-    bluetooth.enable = true;
+    pulseaudio = {
+      enable = true;
+      package = pkgs.pulseaudioFull;
+      extraModules = [ pkgs.pulseaudio-modules-bt ];
+      extraConfig = "
+        load-module module-switch-on-connect
+      ";
+    };
+    bluetooth = {
+      enable = true;
+      config = { General = { Enable = "Source,Sink,Media,Socket"; }; };
+    };
   };
 
   users.users.ivar = {
