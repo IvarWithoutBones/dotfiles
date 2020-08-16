@@ -19,12 +19,12 @@ in
     packageOverrides = pkgs: {
       st = (pkgs.st.overrideAttrs (attrs: {
         pname = "luke-st";
-        version = "unstable-2020-07-08";
+        version = "unstable-2020-08-07";
         src = pkgs.fetchFromGitHub {
           owner = "LukeSmithxyz";
           repo = "st";
-          rev = "e187610a230803ddca6b86fe0620cacdee177ac3";
-          sha256 = "1aricnhcaxglyiyvcgfaf0g3glxis6rs84h9hd13ccmh181v0mkz";
+          rev = "de6fd85eeb544548ed5ad23a639eedd6af510036";
+          sha256 = "1xyrbi857435dln7i6qb9ys2jizv43a2zq6fx4dr8z52ramxzyky";
         };
         buildInputs = attrs.buildInputs ++ [ pkgs.harfbuzz ];
       }));
