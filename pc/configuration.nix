@@ -52,6 +52,8 @@
 
   # 32-bit support is enabled as some Steam games require this
   hardware = {
+    enableRedistributableFirmware = true;
+    cpu.intel.updateMicrocode = true;
     opengl = {
       enable = true;
       driSupport32Bit = true;
