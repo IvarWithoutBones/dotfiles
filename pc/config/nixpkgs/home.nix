@@ -19,7 +19,7 @@ in
     packageOverrides = pkgs: {
       st = (pkgs.st.overrideAttrs (attrs: {
         pname = "luke-st";
-        version = unstable-2020-08-07;
+        version = "unstable-2020-08-07";
         src = pkgs.fetchFromGitHub {
           owner = "LukeSmithxyz";
           repo = "st";
