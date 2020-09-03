@@ -9,7 +9,7 @@ in
     DEFAULT = "https://duckduckgo.com/?q={}";
     git = "https://github.com/search?q={}";
     kat = "https://katcr.co/katsearch/page/1/{}";
-    nix = "https://nixos.org/nixos/packages.html?channel=nixpkgs-unstable&query={}";
+    nix = "https://search.nixos.org/packages?query={}&sort=relevance&channel=unstable";
     proton = "https://www.protondb.com/search?q={}";
     tweak = "https://tweakers.net/zoeken/?keyword={}";
     yt = "https://www.youtube.com/results?search_query={}";
