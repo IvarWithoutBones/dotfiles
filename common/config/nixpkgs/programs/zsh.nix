@@ -48,10 +48,20 @@ in
   initExtra = ''
     copy-nix-derivation() {
       if [ -z "$2" ]; then
-        EDITOR=cat nix edit nixpkgs.$1 > default.nix && nvim default.nix
+        FILE="default.nix"
       else
-        EDITOR=cat nix edit nixpkgs.$1 > $2 && nvim $2
+        FILE=$2
       fi
+      if [ -f "$FILE" ]; then
+        PNAME=$(grep pname $FILE | head -1 | cut -d'"' -f2)
+        read ANSWER\?"$FILE exists, which most likely contains a derivation for $PNAME. Do you wish to override? [Y/N] "
+        case $ANSWER in
+          [yY]* ) echo "Overwriting $FILE...";;
+          [nN]* ) return;;
+          * )     echo "Not a valid answer, exiting..."; return;;
+        esac
+      fi
+      EDITOR=cat nix edit nixpkgs.$1 > $FILE && nvim $FILE
     }
 
     autoload -U compinit
