@@ -34,6 +34,7 @@ in
     autocmd Filetype python nnoremap <buffer> <F5> :w<CR>:!python3 "%"<CR>
     autocmd Filetype sh nnoremap <buffer> <F5> :w<CR>:!"./%"<CR>
     autocmd Filetype rust nnoremap <buffer> <F5> :w<CR>:!cargo run ..<CR>
+    autocmd Filetype nix nnoremap <buffer> <F5> :w<CR>:!nix-build -E '((import <nixpkgs> {}).callPackage (import ./%) { })'<CR>
     
     imap <c-space> <Plug>(asyncomplete_force_refresh)
     inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
