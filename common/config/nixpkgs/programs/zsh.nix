@@ -32,6 +32,7 @@ in
     caps="${pkgs.xdotool}/bin/xdotool key Caps_Lock";
     build-nixos-package = "nix-build -E '((import <nixpkgs> {}).callPackage (import ./default.nix) { })'";
     build-nixos-package-qt = "nix-build -E '((import <nixpkgs> {}).libsForQt5.callPackage (import ./default.nix) { })'";
+    build-nixos-package-py = "nix-build -E '((import <nixpkgs> {}).python3Packages.callPackage (import ./default.nix) { })'";
   };
 
   plugins = [{
@@ -45,6 +46,14 @@ in
   }];
 
   initExtra = ''
+    copy-nix-derivation() {
+      if [ -z "$2" ]; then
+        EDITOR=cat nix edit nixpkgs.$1 > default.nix && nvim default.nix
+      else
+        EDITOR=cat nix edit nixpkgs.$1 > $2 && nvim $2
+      fi
+    }
+
     autoload -U compinit
     zstyle ':completion:*' menu select
     zmodload zsh/complist
