@@ -54,14 +54,14 @@ in
       steam
 
       # Media
-      kdenlive obs-studio
+      obs-studio
       ncspot spotify
-      firefox # Have to keep this installed for the 1password extension, unfortunately
       tor-browser-bundle-bin
       mpv
       ffmpeg
 
       # Applications
+      _1password-gui
       pavucontrol
       lxappearance
       arc-theme capitaine-cursors arc-icon-theme
