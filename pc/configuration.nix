@@ -35,7 +35,7 @@
       enable = true;
       layout = "us";
       xkbOptions = "eurosign:e";
-      videoDrivers = [ "nvidiaBeta" ];
+      videoDrivers = [ "nvidiaVulkanBeta" ];
       digimend.enable = true;
       displayManager.lightdm.enable = true;
       desktopManager.session = [ {
