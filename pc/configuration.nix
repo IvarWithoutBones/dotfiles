@@ -35,7 +35,11 @@
       enable = true;
       layout = "us";
       xkbOptions = "eurosign:e";
-      videoDrivers = [ "nvidiaVulkanBeta" ];
+      videoDrivers = [ "nvidiaBeta" ];
+      # Fixes screentearing
+      screenSection = ''
+        Option "metamodes" "nvidia-auto-select +0+0 { ForceCompositionPipeline = On }"
+      '';
       digimend.enable = true;
       displayManager.lightdm.enable = true;
       desktopManager.session = [ {
