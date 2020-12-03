@@ -6,8 +6,8 @@ function do_but_green {
 	$1
 }
 
-do_but_green "nix-channel --update"
-do_but_green "home-manager switch --keep-going"
-do_but_green "sudo nixos-rebuild switch --upgrade"
-do_but_green "nix search --update-cache > /dev/null"
-do_but_green "nix-collect-garbage"
+do_but_green "nix-channel --update" \
+&& do_but_green "home-manager switch --keep-going" \
+&& do_but_green "sudo nixos-rebuild switch --upgrade" \
+&& do_but_green "nix search --update-cache > /dev/null" \
+&& do_but_green "nix-collect-garbage"
