@@ -1,1 +1,0 @@
-../../../../common/config/nixpkgs/programs/nvim.nix

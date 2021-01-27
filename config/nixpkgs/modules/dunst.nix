@@ -1,8 +1,6 @@
-globalConfig: let
-  backgroundColor = globalConfig.backgroundColor;
-  foregroundColor = "#ffffff";
-in
-{
+{ pkgs, ... }: {
+
+services.dunst = {
   enable = true;
 
   settings = {
@@ -15,7 +13,7 @@ in
       padding = 8;
       horizontal_padding = 8;
       frame_width = 3;
-      color = foregroundColor;
+      color = "#ffffff";
       frame_color = "#565d6d";
       separator_color = "#565d6d";
       font = "System San Francisco Display 8";
@@ -47,19 +45,19 @@ in
     };
 
     urgency_low = {
-      background = backgroundColor;
-      foreground = foregroundColor;
+      background = "#2f343f";
+      foreground = "#ffffff";
       timeout = 10;
     };
     urgency_normal = {
-      background = backgroundColor;
-      foreground = foregroundColor;
+      background = "#2f343f";
+      foreground = "#ffffff";
       timeout = 10;
     };
     urgency_critical = {
-      background = backgroundColor;
-      foreground = foregroundColor;
+      background = "#2f343f";
+      foreground = "#ffffff";
       timeout = 10;
     };
   };
-}
+}; }

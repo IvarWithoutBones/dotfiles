@@ -1,8 +1,6 @@
-globalConfig: let
-  backgroundColor = globalConfig.backgroundColor;
-  unselectedBackgroundColor = "#4b5151";
-in
-{
+{ pkgs, ... }: {
+
+programs.qutebrowser = {
   enable = true;
 
   searchEngines = {
@@ -10,13 +8,14 @@ in
     git = "https://github.com/search?q={}";
     kat = "https://katcr.co/katsearch/page/1/{}";
     nix = "https://search.nixos.org/packages?query={}&sort=relevance&channel=unstable";
+    pip = "https://pypi.org/search/?q={}";
     proton = "https://www.protondb.com/search?q={}";
     tweak = "https://tweakers.net/zoeken/?keyword={}";
     yt = "https://www.youtube.com/results?search_query={}";
   };
 
   settings = {
-    downloads.location.directory = "${globalConfig.homeDir}/downloads";
+    downloads.location.directory = "${builtins.getEnv "HOME"}/downloads";
 
     colors = {
       completion = {
@@ -26,10 +25,10 @@ in
         match.fg = "#eee8d5";
         category = {
           fg = "#eceff4";
-          bg = backgroundColor;
+          bg = "#2f343f";
           border = {
-            top = backgroundColor;
-            bottom = backgroundColor;
+            top = "#2f343f";
+            bottom = "#2f343f";
           };
         };
         item.selected = {
@@ -136,12 +135,12 @@ in
           error = "#bf616a";
         };
         selected = {
-          odd.bg = backgroundColor;
-          even.bg = backgroundColor;
+          odd.bg = "#2f343f";
+          even.bg = "#2f343f";
         };
-        odd.bg = unselectedBackgroundColor;
-        even.bg = unselectedBackgroundColor;
+        even.bg = "#4b5151";
+        odd.bg = "#4b5151";
       };
     };
   };
-}
+}; }

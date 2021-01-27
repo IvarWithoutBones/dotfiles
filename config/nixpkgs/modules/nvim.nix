@@ -1,8 +1,8 @@
-globalConfig: let
-  pkgs = globalConfig.pkgs;
-in
-{
+{ pkgs, ... }: {
+
+programs.neovim = {
   enable = true;
+
   viAlias = true;
   vimAlias = true;
   vimdiffAlias = true;
@@ -68,4 +68,4 @@ in
     set tabstop=8
     set mouse=a
   '';
-}
+}; }

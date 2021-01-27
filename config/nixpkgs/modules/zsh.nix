@@ -1,12 +1,11 @@
-globalConfig: let
-  pkgs = globalConfig.pkgs;
-in
-{
+{ pkgs, ... }: {
+
+programs.zsh = {
   enable = true;
 
   defaultKeymap = "viins";
   dotDir = ".config/zsh";
-  history.path = "${globalConfig.homeDir}/.cache/zsh/history";
+  history.path = "${builtins.getEnv "HOME"}/.cache/zsh/history";
 
   sessionVariables = {
     VISUAL = "nvim";
@@ -23,11 +22,8 @@ in
     dirdiff = "diff --color=auto -ENwbur";
     speedtest = "printf 'Ping: ' && ping google.com -c 1 | grep time= | cut -d'=' -f4 && ${pkgs.speedtest-cli}/bin/speedtest | grep -E 'Download|Upload'";
     mp3 = "mpv --no-video";
-    watch = "watch -n0 -c";
-    killdiscord = "pkill Discord && pkill Discord"; # For some reason you need to kill it twice?
-    update-system = "${globalConfig.homeDir}/.scripts/update-system.sh";
-    dotconfig = "nvim \$(find ${globalConfig.homeDir}/.config/ -type f | ${pkgs.fzf}/bin/fzf -m)";
-    sm64 = "cd ${globalConfig.homeDir}/misc/sm64/ && ./sm64 --skip-intro && cd ~";
+    update-system = "${builtins.getEnv "HOME"}/.scripts/update-system.sh";
+    dotconfig = "nvim \$(find ${builtins.getEnv "HOME"}/.config/ -type f | ${pkgs.fzf}/bin/fzf -m)";
     battery-left="${pkgs.acpi}/bin/acpi | cut -d' ' -f5";
     caps="${pkgs.xdotool}/bin/xdotool key Caps_Lock";
     build-nixos-package = "nix-build -E '((import <nixpkgs> {}).callPackage (import ./default.nix) { })'";
@@ -37,12 +33,8 @@ in
 
   plugins = [{
     name = "zsh-syntax-highlighting";
-    src = pkgs.fetchFromGitHub {
-      owner = "zsh-users";
-      repo = "zsh-syntax-highlighting";
-      rev = "0.7.1";
-      sha256 = "03r6hpb5fy4yaakqm3lbf4xcvd408r44jgpv4lnzl9asp4sb9qc0";
-    };
+    src = pkgs.zsh-syntax-highlighting;
+    file = "share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh";
   }];
 
   initExtra = ''
@@ -101,4 +93,4 @@ in
 
     eval "$(direnv hook zsh)"
   '';
-}
+}; }
