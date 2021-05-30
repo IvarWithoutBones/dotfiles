@@ -1,11 +1,18 @@
-{ pkgs, ... }: {
-
+{ pkgs, ... }:
+let
+  nur = import (builtins.fetchTarball "https://github.com/nix-community/NUR/archive/master.tar.gz") { inherit pkgs; };
+in {
 home.packages = with pkgs; [
+  snes9x-gtk
+
   sysstat
-  perl
   dconf # Required for some GTK based app's settings to be saved
+  perl
+  arc-theme capitaine-cursors arc-icon-theme
+  twitter-color-emoji
   
   # General utils
+  pbgopy
   st
   htop gotop
   wget git
@@ -14,24 +21,30 @@ home.packages = with pkgs; [
   tree
   bat
   feh
+  python3Minimal
 
   # Nix specific utils
   nix-index
   nix-prefetch-git
   direnv
+  cachix
 
   # Media
   ncspot spotify apple-music-electron
   mpv
 
   # Applications
-  minecraft
-  _2048-in-terminal
-  steam
   _1password-gui
   discord
-  dolphinEmu
   pavucontrol
-  arc-theme capitaine-cursors arc-icon-theme
   transmission-gtk
+
+  # Emulators/games
+  dolphinEmuMaster
+#  nur.repos.ivar.ryujinx
+#  nur.repos.ivar.yuzu-ea
+  lutris # for cemu
+  steam
+  minecraft
+  _2048-in-terminal
 ]; }

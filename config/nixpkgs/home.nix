@@ -23,11 +23,14 @@ nixpkgs.config = {
       };
       buildInputs = attrs.buildInputs ++ [ pkgs.harfbuzz ];
     }));
+    discord = (pkgs.discord.overrideAttrs (attrs: { # This always uses the latest version of Discord, which sometimes it won't boot without.
+      src = builtins.fetchTarball "https://discord.com/api/download?platform=linux&format=tar.gz";
+    }));
   };
 };
 
 home = {
-  username = "ivar";
+  username = "ivv";
   homeDirectory = builtins.getEnv "HOME";
   stateVersion = "20.09";
 };
@@ -38,6 +41,8 @@ programs = {
 };
 
 services.lorri.enable = true;
+
+fonts.fontconfig.enable = true;
 
 xsession = {
   enable = true;

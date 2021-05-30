@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ lib, pkgs, ... }: {
 
 programs.zsh = {
   enable = true;
@@ -15,7 +15,7 @@ programs.zsh = {
     LESSHISTFILE = "/dev/null";
   };
 
-  shellAliases = {
+  shellAliases = rec {
     ls = "ls --color=auto";
     la = "ls --color=auto -A";
     diff = "diff --color=auto -u";
@@ -24,8 +24,9 @@ programs.zsh = {
     mp3 = "mpv --no-video";
     update-system = "${builtins.getEnv "HOME"}/.scripts/update-system.sh";
     dotconfig = "nvim \$(find ${builtins.getEnv "HOME"}/.config/ -type f | ${pkgs.fzf}/bin/fzf -m)";
-    battery-left="${pkgs.acpi}/bin/acpi | cut -d' ' -f5";
-    caps="${pkgs.xdotool}/bin/xdotool key Caps_Lock";
+    battery-left = "${pkgs.acpi}/bin/acpi | cut -d' ' -f5";
+    caps = "${pkgs.xdotool}/bin/xdotool key Caps_Lock";
+    CAPS = caps;
     build-nixos-package = "nix-build -E '((import <nixpkgs> {}).callPackage (import ./default.nix) { })'";
     build-nixos-package-qt = "nix-build -E '((import <nixpkgs> {}).libsForQt5.callPackage (import ./default.nix) { })'";
     build-nixos-package-py = "nix-build -E '((import <nixpkgs> {}).python3Packages.callPackage (import ./default.nix) { })'";

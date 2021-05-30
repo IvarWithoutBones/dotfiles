@@ -14,6 +14,11 @@ programs.qutebrowser = {
     yt = "https://www.youtube.com/results?search_query={}";
   };
 
+  # Fixes error upon startup. should get fixed in upstream home-manager
+  extraConfig = ''
+    config.load_autoconfig(False)
+  '';
+
   settings = {
     downloads.location.directory = "${builtins.getEnv "HOME"}/downloads";
 

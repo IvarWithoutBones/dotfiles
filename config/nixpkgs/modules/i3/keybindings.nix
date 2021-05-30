@@ -48,6 +48,8 @@
   "${mod}+Shift+9" = "move container to workspace ${workspaces.ws9}";
   "${mod}+Shift+0" = "move container to workspace ${workspaces.ws10}";
 
+  "${mod}+n" = "move workspace to output right";
+
   # Volume control
   "XF86AudioMute" = "exec amixer set Master toggle";
   "XF86AudioRaiseVolume" = "exec amixer set Master 5%+";
