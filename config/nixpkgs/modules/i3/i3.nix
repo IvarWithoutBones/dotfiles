@@ -28,7 +28,11 @@ xsession.windowManager.i3 =
     config = {
       modifier = mod;
       keybindings = import ./keybindings.nix { inherit pkgs mod workspaces; };
-      fonts = [ "Liberation Sans 10" ];
+      fonts = {
+        names = [ "Liberation Sans" ];
+        size = 10.0;
+      };
+      defaultWorkspace = "workspace ${workspaces.ws1}";
 
       gaps = {
         inner = 4;
@@ -46,7 +50,6 @@ xsession.windowManager.i3 =
       ];
 
       startup = [
-        { command = "--no-startup-id i3-msg workspace ${workspaces.ws1}"; always = false; } # Dirty but otherwise it defaults to the last one
         { command = "--no-startup-id ${pkgs.alsaUtils}/bin/amixer set Master 35%"; always = false; }
         { command = "--no-startup-id ${pkgs.xorg.xmodmap}/bin/xmodmap -e 'remove Lock = Caps_Lock' -e 'keysym Caps_Lock = Escape'"; always = true; }
         { command = "--no-startup-id ${pkgs.redshift}/bin/redshift -l 50.77083:3.57361 -t 6500K:3000K"; always = false; }
@@ -68,7 +71,10 @@ xsession.windowManager.i3 =
 
       bars = [ { 
         statusCommand = "${pkgs.i3blocks}/bin/i3blocks -c ~/.config/i3/i3blocks.conf"; #TODO: nix-ify this config file when home-manager implements that
-        fonts = [ "Liberation Sans 10" ];
+        fonts = {
+          names = [ "Liberation Sans" ];
+          size = 10.0;
+        };
         position = "top";
         colors = {
           background = backgroundColor;
