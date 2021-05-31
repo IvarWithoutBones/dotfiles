@@ -69,21 +69,6 @@ xsession.windowManager.i3 =
         urgent = { background = "#e53935"; border = "e53935"; childBorder = "e53935"; text = textColor; indicator = backgroundColor; };
       };
 
-      bars = [ { 
-        statusCommand = "${pkgs.i3blocks}/bin/i3blocks -c ~/.config/i3/i3blocks.conf"; #TODO: nix-ify this config file when home-manager implements that
-        fonts = {
-          names = [ "Liberation Sans" ];
-          size = 10.0;
-        };
-        position = "top";
-        colors = {
-          background = backgroundColor;
-          separator = "757575";
-          focusedWorkspace = { background = backgroundColor; border = backgroundColor; text = textColor; };
-          activeWorkspace = { background = backgroundColor; border = backgroundColor; text = textColor; };
-          inactiveWorkspace = { background = backgroundColor; border = backgroundColor; text = inactiveTextColor; };
-          urgentWorkspace = { background = "#e53935"; border = "e53935"; text = textColor; };
-        };
-      } ];
+      bars = [ (import ./bar.nix { inherit pkgs backgroundColor textColor inactiveTextColor; }) ];
     };
 }; }
