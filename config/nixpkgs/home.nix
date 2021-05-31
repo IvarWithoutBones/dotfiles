@@ -14,14 +14,18 @@ nixpkgs.config = {
   packageOverrides = pkgs: {
     st = (pkgs.st.overrideAttrs (attrs: {
       pname = "luke-st";
-      version = "unstable-2021-01-24";
+      version = "unstable-2021-05-21";
       src = pkgs.fetchFromGitHub {
         owner = "LukeSmithxyz";
         repo = "st";
-        rev = "73c034ba05101e2fc337183af1cdec5bfe318b99";
-        sha256 = "1gjidvlvah5d5hmi61nxbqnmq2035c1zlrlk7vvb4vfk1vz3rs1l";
+        rev = "ecd5e3f7984e194fe9d6956b2057be064d194895";
+        sha256 = "05w49mjxl5lfxxbhhcnhph7zv740hkyc97b0va09q9pr077xbvz6";
       };
       buildInputs = attrs.buildInputs ++ [ pkgs.harfbuzz ];
+      preInstall = ''
+        substituteInPlace Makefile --replace "git" "#git" # For some reason, submodules are being fetched in the installPhase
+        substituteInPlace st-urlhandler --replace "dmenu" "${pkgs.dmenu}/bin/dmenu"
+      '';
     }));
     discord = (pkgs.discord.overrideAttrs (attrs: { # This always uses the latest version of Discord, which sometimes it won't boot without.
       src = builtins.fetchTarball "https://discord.com/api/download?platform=linux&format=tar.gz";
