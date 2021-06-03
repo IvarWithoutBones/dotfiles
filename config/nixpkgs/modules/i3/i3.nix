@@ -1,5 +1,9 @@
 { pkgs, config, ... }: {
 
+imports = [
+  ./bar.nix
+];
+
 xsession.windowManager.i3 =
   let
     mod = "Mod4";
@@ -8,7 +12,7 @@ xsession.windowManager.i3 =
       ws1 = "1";
       ws2 = "2: Media";
       ws3 = "3: Discord";
-      ws4 = "4: Spotify";
+      ws4 = "4: Music";
       ws5 = "5";
       ws6 = "6";
       ws7 = "7";
@@ -69,6 +73,23 @@ xsession.windowManager.i3 =
         urgent = { background = "#e53935"; border = "e53935"; childBorder = "e53935"; text = textColor; indicator = backgroundColor; };
       };
 
-      bars = [ (import ./bar.nix { inherit pkgs backgroundColor textColor inactiveTextColor; }) ];
+      bars = [ {
+        statusCommand = "${pkgs.i3status-rust}/bin/i3status-rs ${config.xdg.configHome}/i3status-rust/config-top.toml";
+        position = "top";
+
+        fonts = {
+          names = [ "Liberation Sans" ];
+          size = 10.0;
+        };
+
+        colors = {
+          background = backgroundColor;
+          separator = "757575";
+          focusedWorkspace = { background = backgroundColor; border = backgroundColor; text = textColor; };
+          activeWorkspace = { background = backgroundColor; border = backgroundColor; text = textColor; };
+          inactiveWorkspace = { background = backgroundColor; border = backgroundColor; text = inactiveTextColor; };
+          urgentWorkspace = { background = "#e53935"; border = "e53935"; text = textColor; };
+        };
+      } ];
     };
 }; }
