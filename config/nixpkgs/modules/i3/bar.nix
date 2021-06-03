@@ -17,7 +17,7 @@
         interval = 1;
       } {
         block = "memory";
-        format_mem = "{mem_total_used}";
+        format_mem = "{mem_used}";
         interval = 1;
       } {
         block = "battery";
