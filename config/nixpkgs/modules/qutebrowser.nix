@@ -10,8 +10,22 @@ programs.qutebrowser = {
     nix = "https://search.nixos.org/packages?query={}&sort=relevance&channel=unstable";
     pip = "https://pypi.org/search/?q={}";
     proton = "https://www.protondb.com/search?q={}";
-    tweak = "https://tweakers.net/zoeken/?keyword={}";
     yt = "https://www.youtube.com/results?search_query={}";
+  };
+
+  quickmarks = {
+    youtube = "https://www.youtube.com/";
+    deepl = "https://www.deepl.com/translator";
+    protonmail = "https://mail.protonmail.com/inbox";
+    github = "https://github.com/";
+    dotfiles = "https://github.com/ivarWithoutBones/dotfiles";
+    home-manager-options = "https://rycee.gitlab.io/home-manager/options.html";
+    nixos-options = "https://nixos.org/nixos/options.html#";
+    nixos-manual = "https://nixos.org/nixos/manual/";
+    nixpkgs-manual = "https://nixos.org/manual/nixpkgs/stable/";
+    nixpkgs = "https://github.com/NixOS/nixpkgs";
+    yuzu = "https://github.com/yuzu-emu/yuzu";
+    ryujinx = "https://github.com/ryujinx/ryujinx";
   };
 
   settings = {
