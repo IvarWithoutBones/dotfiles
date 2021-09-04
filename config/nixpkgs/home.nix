@@ -9,6 +9,24 @@ imports = [
   ./modules/i3/i3.nix
 ];
 
+programs.sm64ex = {
+  enable = true;
+    package = (pkgs.sm64ex.overrideAttrs (attrs: {
+      src = pkgs.fetchFromGitHub {
+        owner = "djoslin0";
+        repo = "sm64ex-coop";
+        rev = "85984dacc551513d79380128504675a6930aec09";
+        sha256 = "1q3lh4z25yx6a4byhy5a616wm2nx28fzw6mak59ql2cj9l906a68";
+      };
+      patches = attrs.patches or [] ++ [(pkgs.fetchpatch {
+        url = "https://github.com/djoslin0/sm64ex-coop/pull/91/commits/aa7c4b366669041d8c0ab94c109e1d6cb8ccadaf.diff";
+        sha256 = "098xfj54hvzbxm0nklszqpy7pjnlz55d22sh4wzhinn9smy011p0";
+      })];
+    }));
+  baserom = /home/ivv/downloads/sm64.z64;
+  extraCompileFlags = [ "DISCORD_SDK=0" ];
+};
+
 nixpkgs.config = {
   allowUnfree = true;
   packageOverrides = pkgs: {
@@ -21,8 +39,8 @@ nixpkgs.config = {
         rev = "ecd5e3f7984e194fe9d6956b2057be064d194895";
         sha256 = "05w49mjxl5lfxxbhhcnhph7zv740hkyc97b0va09q9pr077xbvz6";
       };
-      buildInputs = attrs.buildInputs ++ [ pkgs.harfbuzz ];
-      preInstall = ''
+      buildInputs = attrs.buildInputs or [] ++ [ pkgs.harfbuzz ];
+      preInstall = attrs.preInstall or "" + ''
         substituteInPlace Makefile --replace "git" "#git" # For some reason, submodules are being fetched in the installPhase
         substituteInPlace st-urlhandler --replace "dmenu" "${pkgs.dmenu}/bin/dmenu"
       '';
