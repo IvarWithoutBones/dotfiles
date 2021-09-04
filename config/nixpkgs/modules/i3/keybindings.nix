@@ -75,5 +75,5 @@
   "${mod}+Shift+s" = "exec \"${pkgs.i3-gaps}/bin/i3-msg 'workspace ${workspaces.ws4}; exec ${pkgs.st}/bin/st -e ncspot'\"";
   "${mod}+Shift+t" = "exec ${pkgs.transmission-gtk}/bin/transmission-gtk";
   "${mod}+Shift+n" = "exec ${pkgs.electronplayer}/bin/electronplayer";
-  "${mod}+Shift+x" = "exec ${pkgs.callPackage /home/ivv/.scripts/lock.nix {}}/bin/i3lock";
+  "${mod}+Shift+x" = "exec ${pkgs.i3lock-fancy}/bin/i3lock-fancy";
 }
