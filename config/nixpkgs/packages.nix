@@ -28,6 +28,7 @@ home.packages = with pkgs; [
   mpv
 
   # Applications
+  firefox
   _1password-gui
   discord
   pavucontrol
@@ -35,9 +36,8 @@ home.packages = with pkgs; [
 
   # Emulators/games
   dolphinEmuMaster
-  snes9x-gtk
-#  nur.repos.ivar.ryujinx
-#  nur.repos.ivar.yuzu-ea
+  nur.repos.ivar.ryujinx
+  nur.repos.ivar.yuzu-ea
   lutris # for cemu
   steam
   minecraft
