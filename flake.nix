@@ -24,6 +24,8 @@
       modules = [
         ./configuration.nix
         ({ pkgs, config, ... }: {
+          networking.hostName = "nixos-laptop";
+
           boot = {
             kernelParams = [ "acpi_backlight=vendor" ]; # Fixes backlight
             extraModulePackages = with config.boot.kernelPackages; [ rtl8821ce ];
@@ -43,6 +45,9 @@
           hardware.cpu.amd.updateMicrocode = true;
         })
         home-manager.nixosModules.home-manager {
+          home-manager.extraSpecialArgs = {
+            hasBattery = true;
+          };
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.users.ivv = import ./home-manager/home.nix;
@@ -58,6 +63,7 @@
           nixpkgs.overlays = [ notmuch-overlay ];
 
           networking.hostName = "nixos-pc";
+
           services.xserver = {
             videoDrivers = [ "nvidia" ];
             screenSection = '' # Fixes screentearing on nvidia GPUs
@@ -71,6 +77,9 @@
           };
         })
         home-manager.nixosModules.home-manager {
+          home-manager.extraSpecialArgs = {
+            hasBattery = false;
+          };
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.users.ivv = import ./home-manager/home.nix;

@@ -1,4 +1,5 @@
-{ pkgs, config, ... }:
+{ pkgs, config, hasBattery ? false, ... }:
+
 {
   programs.i3status-rust = {
     enable = true;
@@ -19,11 +20,11 @@
         block = "memory";
         format_mem = "{mem_used}";
         interval = 1;
-      } {
+      } ] ++ pkgs.lib.optionals hasBattery [ {
         block = "battery";
         format = "{percentage}";
         interval = 5;
-      } {
+      } ] ++ [ {
         block = "time";
         format = "%H:%M:%S";
         interval = 1;
