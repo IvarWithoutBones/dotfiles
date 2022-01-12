@@ -92,9 +92,7 @@
       let NERDTreeIgnore=['\.pyc$', '\~$', '__pycache__']
       let NERDTreeWinSize=21
   
-      nnoremap <C-m> :NERDTreeToggleVCS<CR>
-      nnoremap <C-n> :wincmd p<CR>
-  
+      map <silent> <C-n> :NERDTreeToggle<CR>
       autocmd VimEnter * NERDTree | wincmd p
   
       " Close the tab if NERDTree is the only window remaining in it.
