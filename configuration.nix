@@ -1,22 +1,39 @@
 { config, pkgs, ... }:
+
 {
-  imports = [ ./hardware-configuration.nix ];
+  # TODO: do this cleanly
+  imports = [ /etc/nixos/hardware-configuration.nix ];
 
   # links paths from derivations to /run/current-system/sw
   environment.pathsToLink = [ "/libexec" "/share/zsh" ];
 
+  nixpkgs.config.allowUnfree = true;
+
+  nix = {
+    package = pkgs.nixUnstable;
+    extraOptions = ''
+      experimental-features = nix-command flakes
+    '';
+  };
+
+  programs = {
+    steam.enable = true;
+    zsh.enable = true;
+  };
+
   boot = {
     loader = {
-      systemd-boot.enable = true;
-      efi.canTouchEfiVariables = true;
+      systemd-boot = {
+        enable = true;
+        configurationLimit = 10; # See https://github.com/NixOS/nixpkgs/issues/23926
+      };
+      efi.canTouchEfiVariables = false;
     };
     kernelPackages = pkgs.linuxPackages_latest;
-    extraModulePackages = with config.boot.kernelPackages; [ rtl8821ce ];
-    kernelParams = [ "acpi_backlight=vendor" ]; # Fixes backlight on laptop
+    binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
 
   networking = {
-    hostName = "nixos-laptop";
     networkmanager.enable = true;
   };
 
@@ -27,15 +44,11 @@
 
   time.timeZone = "Europe/Amsterdam";
 
+  networking.firewall.enable = true;
+
   services = {
-    openssh.enable = true;
-    blueman.enable = true;
-    fstrim.enable = true;
     xserver = {
       enable = true;
-      layout = "us";
-      xkbOptions = "eurosign:e";
-      videoDrivers = [ "amdgpu" ];
       libinput = {
         enable = true;
         touchpad = {
@@ -44,39 +57,56 @@
           accelProfile = "flat";
         };
       };
-      displayManager.lightdm.enable = true;
+      displayManager.lightdm.enable = !(config.services.greetd.enable);
+      displayManager.startx.enable = config.services.greetd.enable; # Required for greetd, it doesn't start the xserver
       desktopManager.session = [ {
         name = "home-manager";
         start = ''
-          ${pkgs.runtimeShell} $HOME/.hm-xsession &
+          ${pkgs.runtimeShell} ${pkgs.lib.optionalString config.services.xserver.displayManager.startx.enable "startx"} $HOME/.hm-xsession &
           waitPID=$!
         '';
       } ];
     };
+
+    greetd = {
+      enable = true;
+      vt = config.services.xserver.tty;
+      settings = {
+        default_session.command = "${pkgs.greetd.tuigreet}/bin/tuigreet --sessions \"${config.services.xserver.displayManager.sessionData.desktops}/share/xsessions\" --time";
+      };
+    };
+
+    zerotierone = {
+      enable = false;
+      port = 7777;
+    };
+
+    openssh.enable = true;
+    blueman.enable = true;
+    fstrim.enable = true;
   };
 
   sound.enable = true;
 
   hardware = {
     enableRedistributableFirmware = true;
-    cpu.amd.updateMicrocode = true;
     opengl = {
-    	enable = true;
-	    driSupport32Bit = true;
-  	  extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
+      enable = true;
+      driSupport32Bit = true;
+      extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
     };
-    pulseaudio = { # For bluetooth headphones
+    pulseaudio = {
       enable = true;
       support32Bit = true;
       package = pkgs.pulseaudioFull;
-      extraModules = [ pkgs.pulseaudio-modules-bt ];
+      extraModules = [ pkgs.pulseaudio-modules-bt ]; # For bluetooth headphones
       extraConfig = "
         load-module module-switch-on-connect
       ";
     };
     bluetooth = {
       enable = true;
-      settings = { General = { Enable = "Source,Sink,Media,Socket"; }; };
+      settings = { General.Enable = "Source,Sink,Media,Socket"; };
     };
   };
 
@@ -92,5 +122,5 @@
     autoOptimiseStore = true;
   };
 
-  system.stateVersion = "20.09";
+  system.stateVersion = "22.05";
 }

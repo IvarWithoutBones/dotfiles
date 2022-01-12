@@ -1,8 +1,22 @@
-{ pkgs, mod, workspaces }:
+{ pkgs, config, mod, workspaces }:
 
 {
   "${mod}+Shift+e" = "exec [ \"$(printf \"No\\nYes\" | ${pkgs.dmenu}/bin/dmenu -i -p \"Would you like to exit i3?\")\" = \"Yes\" ] && ${pkgs.i3-gaps}/bin/i3-msg exit";
   "${mod}+Shift+r" = "exec i3-msg restart";
+
+  # Colors from dracula. TODO: set this from the fetched theme?
+  "${mod}+d" = "exec --no-startup-id ${pkgs.dmenu}/bin/dmenu_run -nf '#F8F8F2' -nb '#282A36' -sb '#6272A4' -sf '#F8F8F2'";
+
+  # General programs
+  "${mod}+Return" = "exec --no-startup-id ${config.home.sessionVariables.TERMINAL}";
+  "--release Print" = "exec --no-startup-id ${pkgs.maim}/bin/maim -su /tmp/screenshot.png && ${pkgs.xclip}/bin/xclip -selection clipboard -t image/png < /tmp/screenshot.png";
+  "${mod}+Shift+w" = "exec \"${pkgs.i3-gaps}/bin/i3-msg 'workspace ${workspaces.ws2}; exec ${pkgs.qutebrowser}/bin/qutebrowser --qt-flag ignore-gpu-blacklist --qt-flag enable-gpu-rasterization --qt-flag enable-native-gpu-memory-buffers --qt-flag num-raster-threads=2'\"";
+  "${mod}+Shift+d" = "exec ${pkgs.discord}/bin/Discord";
+  "${mod}+Shift+Ctrl+d" = "exec pkill Discord && pkill Discord";
+  "${mod}+Shift+s" = "exec \"${pkgs.i3-gaps}/bin/i3-msg 'workspace ${workspaces.ws4}; exec ${pkgs.st}/bin/st -e ncspot'\"";
+  "${mod}+Shift+t" = "exec ${pkgs.transmission-gtk}/bin/transmission-gtk";
+  "${mod}+Shift+n" = "exec ${pkgs.electronplayer}/bin/electronplayer";
+  "${mod}+Shift+x" = "exec ${pkgs.i3lock-fancy}/bin/i3lock-fancy";
 
   # Navigation
   "${mod}+h" = "focus left";
@@ -64,16 +78,4 @@
   # Brightness control
   "XF86MonBrightnessUp" = "exec ${pkgs.brightnessctl}/bin/brightnessctl set 10%+";
   "XF86MonBrightnessDown" = "exec ${pkgs.brightnessctl}/bin/brightnessctl set 10%-";
-
-  # General programs
-  "${mod}+Return" = "exec --no-startup-id ${pkgs.st}/bin/st";
-  "--release Print" = "exec --no-startup-id ${pkgs.maim}/bin/maim -su /tmp/screenshot.png && ${pkgs.xclip}/bin/xclip -selection clipboard -t image/png < /tmp/screenshot.png";
-  "${mod}+d" = "exec --no-startup-id ${pkgs.dmenu}/bin/dmenu_run";
-  "${mod}+Shift+w" = "exec \"${pkgs.i3-gaps}/bin/i3-msg 'workspace ${workspaces.ws2}; exec ${pkgs.qutebrowser}/bin/qutebrowser --qt-flag ignore-gpu-blacklist --qt-flag enable-gpu-rasterization --qt-flag enable-native-gpu-memory-buffers --qt-flag num-raster-threads=2'\"";
-  "${mod}+Shift+d" = "exec ${pkgs.discord}/bin/Discord";
-  "${mod}+Shift+Ctrl+d" = "exec pkill Discord && pkill Discord";
-  "${mod}+Shift+s" = "exec \"${pkgs.i3-gaps}/bin/i3-msg 'workspace ${workspaces.ws4}; exec ${pkgs.st}/bin/st -e ncspot'\"";
-  "${mod}+Shift+t" = "exec ${pkgs.transmission-gtk}/bin/transmission-gtk";
-  "${mod}+Shift+n" = "exec ${pkgs.electronplayer}/bin/electronplayer";
-  "${mod}+Shift+x" = "exec ${pkgs.i3lock-fancy}/bin/i3lock-fancy";
 }

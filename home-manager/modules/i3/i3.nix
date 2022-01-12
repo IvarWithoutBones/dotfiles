@@ -1,37 +1,37 @@
-{ pkgs, config, ... }: {
+{ pkgs, config, ... }: 
 
-imports = [
-  ./bar.nix
-];
+let 
+  mod = "Mod4";
 
-xsession.windowManager.i3 =
-  let
-    mod = "Mod4";
+  workspaces = {
+    ws1 = "1";
+    ws2 = "2: Media";
+    ws3 = "3: Discord";
+    ws4 = "4: Music";
+    ws5 = "5";
+    ws6 = "6";
+    ws7 = "7";
+    ws8 = "8";
+    ws9 = "9";
+    ws10 = "10";
+  };
 
-    workspaces = {
-      ws1 = "1";
-      ws2 = "2: Media";
-      ws3 = "3: Discord";
-      ws4 = "4: Music";
-      ws5 = "5";
-      ws6 = "6";
-      ws7 = "7";
-      ws8 = "8";
-      ws9 = "9";
-      ws10 = "10";
-    };
+  # Colors
+  backgroundColor = "#2f343f";
+  textColor = "#ffffff";
+  inactiveTextColor = "#676e7d";
+in {
+  imports = [
+    ./bar.nix
+  ];
 
-    # Colors
-    backgroundColor = "#2f343f";
-    textColor = "#ffffff";
-    inactiveTextColor = "#676e7d";
-  in {
+  xsession.windowManager.i3 = {
     enable = true;
     package = pkgs.i3-gaps;
 
     config = {
       modifier = mod;
-      keybindings = import ./keybindings.nix { inherit pkgs mod workspaces; };
+      keybindings = import ./keybindings.nix { inherit config pkgs mod workspaces; };
       fonts = {
         names = [ "Liberation Sans" ];
         size = 10.0;
@@ -46,11 +46,11 @@ xsession.windowManager.i3 =
       # Disable default resize mode
       modes = {};
 
-      terminal = "${pkgs.st}/bin/st";
+      terminal = config.home.sessionVariables.TERMINAL;
 
       window.commands = [
-        { command = "border pixel 1"; criteria = { class = "^.*"; }; }
-        { command = "move to workspace ${workspaces.ws4}"; criteria = { class = "Spotify"; }; }
+        { command = "border pixel 1"; criteria.class = "^.*"; }
+        { command = "move to workspace ${workspaces.ws4}"; criteria.class = "Spotify"; }
       ];
 
       startup = [
@@ -92,4 +92,5 @@ xsession.windowManager.i3 =
         };
       } ];
     };
-}; }
+  }; 
+}

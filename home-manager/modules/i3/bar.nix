@@ -36,7 +36,6 @@
           cpu = "CPU:";
           memory_mem = "Memory:";
           bat = "Battery:";
-          bat_full = "Battery: 100%";
           time = "";
 
           # As far as i know, it is not possible to set the label of all status's of these blocks directly.
