@@ -12,7 +12,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, flake-utils }: let
+  outputs = inputs @ { self, nixpkgs, home-manager, flake-utils }: let
     notmuch-overlay = final: prev: {
       notmuch = prev.notmuch.overrideAttrs (attrs: {
         doCheck = false;
@@ -24,6 +24,9 @@
       modules = [
         ./configuration.nix
         ({ pkgs, config, ... }: {
+          # TODO: remove this
+          nixpkgs.overlays = [ notmuch-overlay ];
+
           networking.hostName = "nixos-laptop";
 
           boot = {
@@ -47,10 +50,11 @@
         home-manager.nixosModules.home-manager {
           home-manager.extraSpecialArgs = {
             hasBattery = true;
+            sm64Rom = /home/ivv/misc/roms/n64/sm64.z64;
           };
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.users.ivv = import ./home-manager/home.nix;
+          home-manager.users.ivv = (import ./home-manager/home.nix) inputs;
         }
       ];
     };
@@ -79,10 +83,11 @@
         home-manager.nixosModules.home-manager {
           home-manager.extraSpecialArgs = {
             hasBattery = false;
+            sm64Rom = /mnt/hdd/roms/n64/baserom.us.z64;
           };
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.users.ivv = import ./home-manager/home.nix;
+          home-manager.users.ivv = (import ./home-manager/home.nix) inputs;
         }
       ];
     };
