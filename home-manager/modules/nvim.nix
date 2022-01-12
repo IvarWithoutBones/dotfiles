@@ -30,8 +30,9 @@
       ripgrep # For :Telescope live_grep
       ccls
       rnix-lsp
+      xclip # For clipboard support
     ];
-  
+
     coc = {
       enable = true;
       settings = {
@@ -65,13 +66,12 @@
       syntax on
       set relativenumber
       set number
-      set tabstop=8
+      set tabstop=2
       set mouse=a
       set cmdheight=2
       set updatetime=300
       set signcolumn=yes
-      set clipboard+=unnamedplus
-      let python_highlight_all=1
+      set clipboard+=unnamedplus " NOTE: this needs xclip
 
       " various fixes for the tab key
       set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
@@ -91,16 +91,28 @@
       let bufferline.icons = v:false
       let bufferline.icon_close_tab = '●'
 
-      nnoremap <c-h> :BufferPrevious<CR>
-      nnoremap <c-l> :BufferNext<CR>
-      nnoremap <c-w> :BufferClose<CR>
+      nnoremap <silent> <c-h> :BufferPrevious<CR>
+      nnoremap <silent> <c-l> :BufferNext<CR>
+      nnoremap <silent> <c-w> :BufferClose<CR>
   
       " NERDTree config
+      let NERDTreeMinimalUI = v:true
+      let NERDTreeStatusline="" " Removes the statusline
       let NERDTreeIgnore=['\.pyc$', '\~$', '__pycache__']
       let NERDTreeWinSize=21
-      let NERDTreeStatusline="" " Removes the statusline
 
-      map <silent> <C-n> :NERDTreeToggle<CR>
+      " NERDTree sometimes won't let you close it when its focused, so we need to unfocus it first.
+      " We can probably do this from the mapping, but I have no clue how.
+      function Toggle_NERDTree()
+        if &filetype ==# 'nerdtree'
+          :wincmd p
+        endif
+        :NERDTreeToggle
+      endfunction
+
+      map <silent> <c-b> :call Toggle_NERDTree()<CR>
+      map <silent> <c-n> :wincmd p<CR>
+
       autocmd VimEnter * NERDTree | wincmd p
   
       " Close the tab if NERDTree is the only window remaining in it.
@@ -139,3 +151,4 @@
     '';
   };
 }
+
