@@ -1,8 +1,6 @@
 { pkgs, config, ... }:
 
 {
-  # TODO: add https://github.com/nvim-telescope/telescope.nvim for a grep with preview.
-  # Also maybe https://github.com/akinsho/toggleterm.nvim? seems useful.
   programs.neovim = {
     enable = true;
   
@@ -11,19 +9,25 @@
     vimdiffAlias = true;
   
     plugins = with pkgs.vimPlugins; [
-      nerdtree
       barbar-nvim
+      coc-nvim
+      toggleterm-nvim
+      nerdtree
+      vim-rooter
+
       airline
       iceberg-vim
 
-      coc-nvim
+      telescope-nvim
+      plenary-nvim # Dependency of telescope
+
       vim-nix
-      limelight-vim
-      goyo-vim
     ];
 
     extraPackages = with pkgs; [
       nodejs_latest
+      lua
+      ripgrep # For :Telescope live_grep
       ccls
       rnix-lsp
     ];
@@ -69,6 +73,9 @@
       set clipboard+=unnamedplus
       let python_highlight_all=1
 
+      " various fixes for the tab key
+      set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
+
       " Maps to insert a new line without going into insert mode
       nmap <S-Enter> O<Esc>
       nmap <CR> o<Esc>
@@ -91,7 +98,8 @@
       " NERDTree config
       let NERDTreeIgnore=['\.pyc$', '\~$', '__pycache__']
       let NERDTreeWinSize=21
-  
+      let NERDTreeStatusline="" " Removes the statusline
+
       map <silent> <C-n> :NERDTreeToggle<CR>
       autocmd VimEnter * NERDTree | wincmd p
   
@@ -100,11 +108,10 @@
   
       " Open the existing NERDTree on each new tab.
       autocmd BufWinEnter * if getcmdwintype() == ${"''"} | silent NERDTreeMirror | endif
-  
-      " Writing mode
-      autocmd! User GoyoEnter Limelight
-      autocmd! User GoyoLeave Limelight!
-      map <F2> <ESC>:Limelight!! <bar> :Goyo <CR>
+
+      " Telescope config
+      nnoremap <silent> <c-p> :Telescope live_grep<CR>
+      nnoremap <silent> <c-k> :Telescope find_files<CR>
       
       " Completion
       inoremap <silent><expr> <TAB>
@@ -121,6 +128,14 @@
   
       autocmd CursorHold * silent call CocActionAsync('highlight')
       inoremap <silent><expr> <c-space> coc#refresh()
+
+      " Pop up terminal config
+      nnoremap <silent> <c-o> :ToggleTerm<CR>
+      autocmd TermEnter term://*toggleterm#*
+        \ tnoremap <silent> <c-o> <Cmd>exe v:count1 . "ToggleTerm"<CR>
+
+      " Automatically cd's into project root, as to
+      let g:rooter_patterns = ['.git', '=${config.home.homeDirectory}/nix/nixpkgs' ]
     '';
   };
 }
