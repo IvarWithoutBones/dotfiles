@@ -21,8 +21,8 @@
         format_mem = "{mem_used}";
         interval = 1;
       } ] ++ pkgs.lib.optionals hasBattery [ {
-        block = "battery";
-        format = "{percentage}";
+        block = "custom"; # Battery percentage, the default keeps breaking.
+        command = "echo \"$(cat /sys/class/power_supply/BAT0/capacity)%\"";
         interval = 5;
       } ] ++ [ {
         block = "time";
