@@ -29,7 +29,7 @@
       };
       efi.canTouchEfiVariables = false;
     };
-    kernelPackages = pkgs.linuxPackages_latest;
+    kernelPackages = pkgs.linuxPackages_5_15; # This is because of nvidia driver. TODO: set this in a more appropriate place
     binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
 
