@@ -12,21 +12,12 @@
     };
   };
 
-  outputs = inputs @ { self, nixpkgs, home-manager, flake-utils }: let
-    notmuch-overlay = final: prev: {
-      notmuch = prev.notmuch.overrideAttrs (attrs: {
-        doCheck = false;
-      });
-    };
-  in {
+  outputs = inputs @ { self, nixpkgs, home-manager, flake-utils }: {
     nixosConfigurations.nixos-laptop = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
         ./configuration.nix
         ({ pkgs, config, ... }: {
-          # TODO: remove this
-          nixpkgs.overlays = [ notmuch-overlay ];
-
           networking.hostName = "nixos-laptop";
 
           boot = {
@@ -63,8 +54,6 @@
       modules = [
         ./configuration.nix
         ({ pkgs, config, ... }: {
-          # TODO: remove this
-          nixpkgs.overlays = [ notmuch-overlay ];
 
           networking.hostName = "nixos-pc";
 
@@ -76,7 +65,7 @@
           };
           hardware = {
             # TODO: currently `beta` fails to compile, switch this back as soon as it doesn't
-            nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
+            nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
             cpu.intel.updateMicrocode = true;
           };
         })
