@@ -26,6 +26,7 @@ in {
     quickmarks = {
       nixpkgs = "https://github.com/NixOS/nixpkgs";
       nixpkgs-manual = "https://nixos.org/manual/nixpkgs/unstable/";
+      hydra-trunk = "https://hydra.nixos.org/jobset/nixpkgs/trunk";
       nixos-options = "https://search.nixos.org/options?channel=unstable";
       nixos-manual = "https://nixos.org/nixos/manual/";
       home-manager = "https://github.com/nix-community/home-manager";
@@ -33,6 +34,7 @@ in {
       home-manager-manual = "https://nix-community.github.io/home-manager/";
 
       github = "https://github.com/";
+      github-notifications = "https://github.com/notifications";
       dotfiles = "https://github.com/ivarWithoutBones/dotfiles";
       nur-actions = "https://github.com/IvarWithoutBones/NUR/actions";
 
