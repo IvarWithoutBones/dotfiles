@@ -47,6 +47,7 @@
   networking.firewall.enable = true;
 
   services = {
+    udev.packages = [ pkgs.qmk-udev-rules ];
     xserver = {
       enable = true;
       libinput = {
@@ -89,6 +90,10 @@
   sound.enable = true;
 
   hardware = {
+    opentabletdriver = {
+      enable = true;
+      daemon.enable = true;
+    };
     enableRedistributableFirmware = true;
     opengl = {
       enable = true;
