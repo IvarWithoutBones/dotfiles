@@ -9,6 +9,7 @@ in {
     # General utils
     alacritty
     htop
+    ripgrep
     wget git
     unar
     neofetch

@@ -15,6 +15,7 @@
     shellAliases = rec {
       ls = "ls --color=auto";
       la = "ls --color=auto -A";
+      grep = "${pkgs.ripgrep}/bin/rg -p --with-filename";
       diff = "diff --color=auto -u";
       dirdiff = "diff --color=auto -ENwbur";
       cat = "bat -p";
