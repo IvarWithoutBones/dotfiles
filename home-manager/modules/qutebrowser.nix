@@ -24,22 +24,25 @@ in {
     };
   
     quickmarks = {
-      nixpkgs = "https://github.com/NixOS/nixpkgs";
-      nixpkgs-manual = "https://nixos.org/manual/nixpkgs/unstable/";
-      hydra-trunk = "https://hydra.nixos.org/jobset/nixpkgs/trunk";
-      nixos-options = "https://search.nixos.org/options?channel=unstable";
-      nixos-manual = "https://nixos.org/nixos/manual/";
-      home-manager = "https://github.com/nix-community/home-manager";
-      home-manager-options = "https://rycee.gitlab.io/home-manager/options.html";
-      home-manager-manual = "https://nix-community.github.io/home-manager/";
-
-      github = "https://github.com/";
+      protonmail = "https://mail.protonmail.com/inbox";
+      github = "https://github.com";
       github-notifications = "https://github.com/notifications";
+
+      nix-manual = "https://nixos.org/manual/nix/unstable";
+      nixpkgs = "https://github.com/NixOS/nixpkgs";
+      nixpkgs-prs = "https://github.com/NixOS/nixpkgs/pulls";
+      nixpkgs-manual = "https://nixos.org/manual/nixpkgs/unstable";
+      hydra-trunk = "https://hydra.nixos.org/jobset/nixpkgs/trunk";
+      nixos-manual = "https://nixos.org/nixos/manual";
+      nixos-options = "https://search.nixos.org/options?channel=unstable";
+      home-manager = "https://github.com/nix-community/home-manager";
+      home-manager-manual = "https://nix-community.github.io/home-manager";
+      home-manager-options = "https://rycee.gitlab.io/home-manager/options.html";
+
       dotfiles = "https://github.com/ivarWithoutBones/dotfiles";
       nur-actions = "https://github.com/IvarWithoutBones/NUR/actions";
 
       youtube = "https://www.youtube.com/";
-      protonmail = "https://mail.protonmail.com/inbox";
       catan = "https://colonist.io";
     };
   };
