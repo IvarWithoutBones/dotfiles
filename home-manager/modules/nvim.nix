@@ -10,18 +10,25 @@
   
     plugins = with pkgs.vimPlugins; [
       barbar-nvim
-      coc-nvim
-      toggleterm-nvim
       nerdtree
+      toggleterm-nvim
+      coc-nvim
+
       vim-rooter
+      vim-nix
 
       airline
-      iceberg-vim
-
+      tender-vim
       telescope-nvim
       plenary-nvim # Dependency of telescope
-
-      vim-nix
+      {
+        plugin = telescope-frecency-nvim;
+        type = "lua";
+        config = ''require"telescope".load_extension("frecency")'';
+      } {
+        plugin = sqlite-lua;
+        config = "let g:sqlite_clib_path = '${pkgs.sqlite.out}/lib/libsqlite3.so'";
+      }
     ];
 
     extraPackages = with pkgs; [
@@ -36,8 +43,11 @@
     coc = {
       enable = true;
       settings = {
-        suggest.enablePreview = true;
-        suggest.enablePreselect = false;
+        suggest = {
+          enablePreview = true;
+          noselect = true;
+          enablePreselect = false;
+        };
         client.snippetSupport = true;
         languageserver = {
           nix = {
@@ -63,7 +73,7 @@
     };
   
     extraConfig = ''
-      syntax on
+      syntax enable
       set relativenumber
       set number
       set tabstop=2
@@ -81,9 +91,10 @@
       nmap <CR> o<Esc>
 
       " Colorscheme options
-      set t_Co=256
+      let $NVIM_TUI_ENABLE_TRUE_COLOR=1
       set termguicolors
-      colorscheme iceberg
+      colorscheme tender
+      let g:airline_theme = 'tender'
 
       " Tab config
       let bufferline = get(g:, 'bufferline', {})
@@ -122,25 +133,10 @@
       autocmd BufWinEnter * if getcmdwintype() == ${"''"} | silent NERDTreeMirror | endif
 
       " Telescope config
-      nnoremap <silent> <c-p> :Telescope live_grep<CR>
-      nnoremap <silent> <c-k> :Telescope find_files<CR>
+      nnoremap <silent> tp :Telescope live_grep theme=ivy<CR>
+      nnoremap <silent> tk :Telescope find_files theme=ivy<CR>
+      nnoremap <silent> th :Telescope frecency frecency theme=ivy<CR> # History files
       
-      " Completion
-      inoremap <silent><expr> <TAB>
-        \ pumvisible() ? "\<C-n>" :
-        \ <SID>check_back_space() ? "\<TAB>" :
-        \ coc#refresh()
-  
-      inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-  
-      function! s:check_back_space() abort
-        let col = col('.') - 1
-        return !col || getline('.')[col - 1]  =~# '\s'
-      endfunction
-  
-      autocmd CursorHold * silent call CocActionAsync('highlight')
-      inoremap <silent><expr> <c-space> coc#refresh()
-
       " Pop up terminal config
       nnoremap <silent> <c-o> :ToggleTerm<CR>
       autocmd TermEnter term://*toggleterm#*
@@ -148,6 +144,39 @@
 
       " Automatically cd's into project root, as to
       let g:rooter_patterns = ['.git', '=${config.home.homeDirectory}/nix/nixpkgs' ]
+
+      " Coc config
+      set signcolumn=number
+      autocmd CursorHold * silent call CocActionAsync('highlight')
+
+      inoremap <silent><expr> <TAB>
+        \ pumvisible() ? "\<C-n>" :
+        \ <SID>check_back_space() ? "\<TAB>" :
+        \ coc#refresh()
+
+      inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+        \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+  
+      inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+      " Use K to show documentation in preview window.
+      nnoremap <silent> K :call <SID>show_documentation()<CR>
+      inoremap <silent><expr> <c-space> coc#refresh()
+
+      function! s:check_back_space() abort
+        let col = col('.') - 1
+        return !col || getline('.')[col - 1]  =~# '\s'
+      endfunction
+  
+      function! s:show_documentation()
+        if (index(['vim','help'], &filetype) >= 0)
+          execute 'h '.expand('<cword>')
+        elseif (coc#rpc#ready())
+          call CocActionAsync('doHover')
+        else
+          execute '!' . &keywordprg . " " . expand('<cword>')
+        endif
+      endfunction
     '';
   };
 }
