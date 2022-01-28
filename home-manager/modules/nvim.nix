@@ -53,6 +53,10 @@
           nix = {
             command = "rnix-lsp";
             filetypes = [ "nix" ];
+            rootPatterns = [
+              "flake.lock"
+              ".git"
+            ];
           };
           cpp = {
             command = "ccls";
@@ -66,6 +70,7 @@
               "CMakeLists.txt"
               "build"
               "src"
+              ".git"
             ];
           };
         };
@@ -74,14 +79,14 @@
   
     extraConfig = ''
       syntax enable
-      set relativenumber
       set number
+      set relativenumber
       set tabstop=2
       set mouse=a
       set cmdheight=2
       set updatetime=300
       set signcolumn=yes
-      set clipboard+=unnamedplus " NOTE: this needs xclip
+      set clipboard+=unnamedplus " For system clipboard support, needs xclip
 
       " various fixes for the tab key
       set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
@@ -102,10 +107,18 @@
       let bufferline.icons = v:false
       let bufferline.icon_close_tab = '●'
 
-      nnoremap <silent> <c-h> :BufferPrevious<CR>
-      nnoremap <silent> <c-l> :BufferNext<CR>
-      nnoremap <silent> <c-w> :BufferClose<CR>
-  
+      nnoremap <silent> <s-f> :BufferPick<CR>
+      nnoremap <silent> fw :BufferClose<CR>
+      nnoremap <silent> fl :BufferNext<CR>
+      nnoremap <silent> fh :BufferPrevious<CR>
+      nnoremap <silent> fml :BufferMoveNext<CR>
+      nnoremap <silent> fmh :BufferMovePrevious<CR>
+
+      " Telescope config
+      nnoremap <silent> tg :Telescope live_grep theme=ivy<CR>
+      nnoremap <silent> tk :Telescope find_files theme=ivy<CR>
+      nnoremap <silent> th :Telescope frecency frecency theme=ivy<CR> # History files
+
       " NERDTree config
       let NERDTreeMinimalUI = v:true
       let NERDTreeStatusline="" " Removes the statusline
@@ -131,11 +144,6 @@
   
       " Open the existing NERDTree on each new tab.
       autocmd BufWinEnter * if getcmdwintype() == ${"''"} | silent NERDTreeMirror | endif
-
-      " Telescope config
-      nnoremap <silent> tp :Telescope live_grep theme=ivy<CR>
-      nnoremap <silent> tk :Telescope find_files theme=ivy<CR>
-      nnoremap <silent> th :Telescope frecency frecency theme=ivy<CR> # History files
       
       " Pop up terminal config
       nnoremap <silent> <c-o> :ToggleTerm<CR>
