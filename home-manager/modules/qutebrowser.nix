@@ -4,6 +4,7 @@ let
   dracula-theme = pkgs.fetchurl {
     url = "https://raw.githubusercontent.com/dracula/qutebrowser/ba5bd6589c4bb8ab35aaaaf7111906732f9764ef/draw.py";
     sha256 = "sha256-skZYKoB8KSf8VG+5vqlSkg1q7uNZxIY/AizgtPxYyjQ=";
+    name = "qutebrowser-dracula-theme.py";
   };
 in {
   programs.qutebrowser = {
