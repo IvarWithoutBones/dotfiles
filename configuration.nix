@@ -24,7 +24,6 @@
       systemd-boot = {
         enable = true;
         configurationLimit = 10; # See https://github.com/NixOS/nixpkgs/issues/23926
-        consoleMode = "max"; # Fixes tty resolution on nvidia
       };
       efi.canTouchEfiVariables = false;
     };

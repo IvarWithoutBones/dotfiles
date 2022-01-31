@@ -17,7 +17,8 @@ in
       else null
     )];
 
-    screenSection = lib.optionalString (gpu == "nvidia") '' # Fixes screentearing
+    # Fixes screentearing
+    screenSection = lib.optionalString (gpu == "nvidia") ''
       Option "metamodes" "nvidia-auto-select +0+0 { ForceCompositionPipeline = On }"
     '';
 
@@ -35,4 +36,7 @@ in
     nvidia.package = lib.optionals (gpu == "nvidia") config.boot.kernelPackages.nvidiaPackages.beta;
     cpu.${cpu}.updateMicrocode = true;
   };
+
+  # Fixes tty resolution
+  boot.loader.systemd-boot.consoleMode = lib.optionalString (gpu == "nvidia") "max";
 }
