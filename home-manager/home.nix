@@ -1,4 +1,4 @@
-flakes: { pkgs, config, sm64Rom ? null, ... }:
+flakes: { pkgs, config, sm64Rom, ... }:
 
 {
   imports = [

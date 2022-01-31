@@ -21,17 +21,33 @@
       } // profile;
 
       nixosConfigFromProfile = profile:
-        { system, extraModules ? [], extraConfig ? {}, ... }:
+        { system
+        , extraModules ? []
+        , extraConfig ? {}
+        , homeManager ? {}
+        , ... }:
+
           nixpkgs.lib.nixosSystem {
             inherit system;
+            specialArgs = inputs;
+
             modules = extraModules
               ++ [( extraConfig )]
-              ++ (configFromProfile profile).modules;
+              ++ ((configFromProfile profile).modules or [])
+              ++ lib.optionals (homeManager.enable or false) [
+                home-manager.nixosModules.home-manager {
+                  home-manager.useGlobalPkgs = true;
+                  home-manager.useUserPackages = true;
+                  home-manager.extraSpecialArgs = {
+                    hasBattery = false;
+                    sm64Rom = null;
+                  } // homeManager;
+                  home-manager.users.ivv = (import ./home-manager/home.nix) inputs; # TODO: make configurable
+                }
+              ];
           };
     };
 
-    # TODO: create a seperate file for this, we also want to optionally integrate home-manager. preferably from nixos module
-    # This also means we have to properly seperate everything into their own module, so that each profile can import whatever they choose.
     testProfile = {
       modules = [
         ./configuration.nix
@@ -41,6 +57,11 @@
     nixosConfigurations = {
       nixos-pc = lib.nixosConfigFromProfile testProfile {
         system = "x86_64-linux";
+
+        homeManager = {
+          enable = true;
+          sm64Rom = /mnt/hdd/roms/n64/baserom.us.z64;
+        };
 
         # TODO: remove the { ... } part when nvidia shit is factored out.
         extraConfig = { config, ...}: {
@@ -58,22 +79,16 @@
             cpu.intel.updateMicrocode = true;
           };
         };
-
-        extraModules = [
-          home-manager.nixosModules.home-manager {
-            home-manager.extraSpecialArgs = {
-              hasBattery = false;
-              sm64Rom = /mnt/hdd/roms/n64/baserom.us.z64;
-            };
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.ivv = (import ./home-manager/home.nix) inputs;
-          }
-        ];
       };
 
       nixos-laptop = lib.nixosConfigFromProfile testProfile {
         system = "x86_64-linux";
+
+        homeManager = {
+          enable = true;
+          hasBattery = true;
+          sm64Rom = /home/ivv/misc/roms/n64/sm64.z64;
+        };
 
         extraConfig = { config, ... }: {
           networking.hostName = "nixos-laptop";
@@ -96,25 +111,13 @@
           };
           hardware.cpu.amd.updateMicrocode = true;
         };
-
-        extraModules = [
-          home-manager.nixosModules.home-manager {
-            home-manager.extraSpecialArgs = {
-              hasBattery = true;
-              sm64Rom = /home/ivv/misc/roms/n64/sm64.z64;
-            };
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.ivv = (import ./home-manager/home.nix) inputs;
-          }
-        ];
       };
     };
   } // (flake-utils.lib.eachDefaultSystem (system: let
     pkgs = nixpkgs.legacyPackages.${system};
  in {
     devShell = pkgs.mkShell {
-      buildInputs = with pkgs; [
+      nativeBuildInputs = with pkgs; [
         coreutils
         neovim
         bat
