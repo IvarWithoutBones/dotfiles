@@ -7,34 +7,29 @@
   # links paths from derivations to /run/current-system/sw
   environment.pathsToLink = [ "/libexec" "/share/zsh" ];
 
-  nixpkgs.config.allowUnfree = true;
-
   nix = {
     package = pkgs.nixUnstable;
-    extraOptions = ''
-      experimental-features = nix-command flakes
-    '';
+    settings = rec {
+      experimental-features = [ "nix-command" "flakes" ];
+      trusted-users = [ "@wheel" "ivv" ];
+      allowed-users = trusted-users;
+      auto-optimise-store = true;
+    };
   };
 
-  programs = {
-    steam.enable = true;
-    zsh.enable = true;
-  };
+  nixpkgs.config.allowUnfree = true;
 
   boot = {
     loader = {
       systemd-boot = {
         enable = true;
         configurationLimit = 10; # See https://github.com/NixOS/nixpkgs/issues/23926
+        consoleMode = "max"; # Fixes tty resolution on nvidia
       };
       efi.canTouchEfiVariables = false;
     };
-    kernelPackages = pkgs.linuxPackages_5_15; # This is because of nvidia driver. TODO: set this in a more appropriate place
+    kernelPackages = pkgs.linuxPackages_latest;
     binfmt.emulatedSystems = [ "aarch64-linux" ];
-  };
-
-  networking = {
-    networkmanager.enable = true;
   };
 
   console = {
@@ -44,10 +39,17 @@
 
   time.timeZone = "Europe/Amsterdam";
 
-  networking.firewall.enable = true;
+  programs = {
+    steam.enable = true;
+    zsh.enable = true;
+  };
 
   services = {
+    openssh.enable = true;
+    blueman.enable = true;
+    fstrim.enable = true;
     udev.packages = [ pkgs.qmk-udev-rules ];
+
     xserver = {
       enable = true;
       libinput = {
@@ -76,24 +78,12 @@
         default_session.command = "${pkgs.greetd.tuigreet}/bin/tuigreet --sessions \"${config.services.xserver.displayManager.sessionData.desktops}/share/xsessions\" --time";
       };
     };
-
-    zerotierone = {
-      enable = false;
-      port = 7777;
-    };
-
-    openssh.enable = true;
-    blueman.enable = true;
-    fstrim.enable = true;
   };
 
+  networking.networkmanager.enable = true;
   sound.enable = true;
 
   hardware = {
-    opentabletdriver = {
-      enable = true;
-      daemon.enable = true;
-    };
     enableRedistributableFirmware = true;
     opengl = {
       enable = true;
@@ -109,9 +99,13 @@
         load-module module-switch-on-connect
       ";
     };
+    opentabletdriver = {
+      enable = true;
+      daemon.enable = true;
+    };
     bluetooth = {
       enable = true;
-      settings = { General.Enable = "Source,Sink,Media,Socket"; };
+      settings.General.Enable = "Source,Sink,Media,Socket";
     };
   };
 
@@ -119,12 +113,6 @@
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" "audio" ];
     shell = pkgs.zsh;
-  };
-
-  nix = {
-    allowedUsers = [ "@wheel" "ivv" ];
-    trustedUsers = [ "@wheel" "ivv" ];
-    autoOptimiseStore = true;
   };
 
   system.stateVersion = "22.05";
