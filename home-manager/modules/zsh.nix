@@ -14,21 +14,15 @@
   
     shellAliases = rec {
       ls = "ls --color=auto";
-      la = "ls --color=auto -A";
+      cat = "bat -p";
       grep = "${pkgs.ripgrep}/bin/rg -p --with-filename";
       diff = "diff --color=auto -u";
       dirdiff = "diff --color=auto -ENwbur";
-      cat = "bat -p";
       speedtest = "printf 'Ping: ' && ping google.com -c 1 | grep time= | cut -d'=' -f4 && ${pkgs.speedtest-cli}/bin/speedtest | grep -E 'Download|Upload'";
       mp3 = "mpv --no-video";
-      update-system = "$HOME/.scripts/update-system.sh";
-      dotconfig = "nvim \$(find $HOME/.config/ -type f | ${pkgs.fzf}/bin/fzf -m)";
       battery-left = "${pkgs.acpi}/bin/acpi | cut -d' ' -f5";
       caps = "${pkgs.xdotool}/bin/xdotool key Caps_Lock";
       CAPS = caps;
-      build-nixos-package = "nix-build -E '((import <nixpkgs> {}).callPackage (import ./default.nix) { })'";
-      build-nixos-package-qt = "nix-build -E '((import <nixpkgs> {}).libsForQt5.callPackage (import ./default.nix) { })'";
-      build-nixos-package-py = "nix-build -E '((import <nixpkgs> {}).python3Packages.callPackage (import ./default.nix) { })'";
     };
   
     plugins = [ {
@@ -49,6 +43,16 @@
 
     initExtra = ''
       ${pkgs.lib.optionalString config.programs.direnv.enable ''eval "$(direnv hook zsh)"''}
+
+      callPackage() {
+        if [ -z "$1" ]; then
+          FILE="default.nix"
+        else
+          FILE="$1"
+        fi
+
+        nix-build -E "((import <nixpkgs> {}).callPackage (import $(realpath "$FILE")) { })"
+      }
 
       copy-nix-derivation() {
         if [ -z "$2" ]; then
