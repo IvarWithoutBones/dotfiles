@@ -1,6 +1,4 @@
 {
-  # TODO: add system specific configurations to importable modules when it makes sense, so it's more portable. (intel/amd, nvidia, etc)
-
   description = "My NixOS configuration, using home-manager";
 
   inputs = {
@@ -22,94 +20,87 @@
 
       nixosConfigFromProfile = profile:
         { system
+        , hostname
+        , hardware ? {}
         , extraModules ? []
         , extraConfig ? {}
         , homeManager ? {}
         , ... }:
 
-          nixpkgs.lib.nixosSystem {
-            inherit system;
-            specialArgs = inputs;
+        let
+          hardwareArgs = {
+            cpu = null;
+            gpu = null;
+            touchpad = false;
+            battery = false;
+          } // hardware;
+        in
+        nixpkgs.lib.nixosSystem {
+          specialArgs = inputs // hardwareArgs;
+          inherit system;
 
-            modules = extraModules
-              ++ [( extraConfig )]
-              ++ ((configFromProfile profile).modules or [])
-              ++ lib.optionals (homeManager.enable or false) [
-                home-manager.nixosModules.home-manager {
-                  home-manager.useGlobalPkgs = true;
-                  home-manager.useUserPackages = true;
-                  home-manager.extraSpecialArgs = {
-                    hasBattery = false;
-                    sm64Rom = null;
-                  } // homeManager;
-                  home-manager.users.ivv = (import ./home-manager/home.nix) inputs; # TODO: make configurable
-                }
-              ];
-          };
+          modules = [({ networking.hostName = hostname; })]
+            ++ extraModules
+            ++ [( extraConfig )]
+            ++ ((configFromProfile profile).modules or [])
+            ++ lib.optionals (homeManager.enable or false) [
+              home-manager.nixosModules.home-manager {
+                home-manager.useGlobalPkgs = true;
+                home-manager.useUserPackages = true;
+                home-manager.extraSpecialArgs = {
+                  sm64Rom = null;
+                } // hardwareArgs // homeManager;
+                home-manager.users.ivv = (import ./home-manager/home.nix) inputs; # TODO: make configurable
+              }
+            ];
+        };
     };
 
+    # TODO: split up configuration.nix and create proper profiles
     testProfile = {
       modules = [
         ./configuration.nix
+        ./modules/hardware.nix
       ];
     };
 
     nixosConfigurations = {
       nixos-pc = lib.nixosConfigFromProfile testProfile {
         system = "x86_64-linux";
+        hostname = "nixos-pc";
+
+        hardware = {
+          cpu = "intel";
+          gpu = "nvidia";
+        };
 
         homeManager = {
           enable = true;
           sm64Rom = /mnt/hdd/roms/n64/baserom.us.z64;
         };
-
-        # TODO: remove the { ... } part when nvidia shit is factored out.
-        extraConfig = { config, ...}: {
-          networking.hostName = "nixos-pc";
-
-          services.xserver = {
-            videoDrivers = [ "nvidia" ];
-            screenSection = '' # Fixes screentearing on nvidia GPUs
-              Option "metamodes" "nvidia-auto-select +0+0 { ForceCompositionPipeline = On }"
-            '';
-          };
-
-          hardware = {
-            nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
-            cpu.intel.updateMicrocode = true;
-          };
-        };
       };
 
       nixos-laptop = lib.nixosConfigFromProfile testProfile {
         system = "x86_64-linux";
+        hostname = "nixos-laptop";
+
+        hardware = {
+          gpu = "amd";
+          cpu = "amd";
+          touchpad = true;
+          battery = true;
+        };
 
         homeManager = {
           enable = true;
-          hasBattery = true;
           sm64Rom = /home/ivv/misc/roms/n64/sm64.z64;
         };
 
         extraConfig = { config, ... }: {
-          networking.hostName = "nixos-laptop";
-
           boot = {
             kernelParams = [ "acpi_backlight=vendor" ]; # Fixes backlight
             extraModulePackages = with config.boot.kernelPackages; [ rtl8821ce ];
           };
-
-          services.xserver = {
-            videoDrivers = [ "amdgpu" ];
-            libinput = {
-              enable = true;
-              touchpad = {
-                tapping = false;
-                naturalScrolling = true;
-                accelProfile = "flat";
-              };
-            };
-          };
-          hardware.cpu.amd.updateMicrocode = true;
         };
       };
     };

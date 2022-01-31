@@ -1,4 +1,4 @@
-{ pkgs, config, hasBattery ? false, ... }:
+{ pkgs, config, battery, ... }:
 
 {
   programs.i3status-rust = {
@@ -20,7 +20,7 @@
         block = "memory";
         format_mem = "{mem_used}";
         interval = 1;
-      } ] ++ pkgs.lib.optionals hasBattery [ {
+      } ] ++ pkgs.lib.optionals battery [ {
         block = "custom"; # Battery percentage, the default keeps breaking.
         command = "echo \"$(cat /sys/class/power_supply/BAT0/capacity)%\"";
         interval = 5;

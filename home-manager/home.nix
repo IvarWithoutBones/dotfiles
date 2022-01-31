@@ -38,9 +38,9 @@ flakes: { pkgs, config, sm64Rom, ... }:
       enable = true;
       nix-direnv.enable = true;
     };
-    sm64ex = {
+    sm64ex = pkgs.lib.optionalAttrs (sm64Rom != null) {
       enable = true;
-      baserom = pkgs.lib.optional (sm64Rom != null) sm64Rom;
+      baserom =  sm64Rom;
     };
   };
   
