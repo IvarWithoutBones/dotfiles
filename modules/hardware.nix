@@ -38,5 +38,5 @@ in
   };
 
   # Fixes tty resolution
-  boot.loader.systemd-boot.consoleMode = lib.optionalString (gpu == "nvidia") "max";
+  boot.loader.systemd-boot.consoleMode = if (gpu == "nvidia") then "max" else "keep";
 }

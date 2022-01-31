@@ -50,7 +50,7 @@
 
         homeManager = {
           enable = true;
-          sm64Rom = /home/ivv/misc/roms/n64/sm64.z64;
+          sm64Rom = /home/ivv/misc/games/roms/n64/sm64.z64;
         };
 
         extraConfig = { config, ... }: {
