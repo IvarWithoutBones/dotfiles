@@ -53,7 +53,7 @@ in
 
   services = {
     openssh.enable = true;
-    blueman.enable = lib.optional bluetooth true;
+    blueman.enable = if bluetooth then true else false;
     fstrim.enable = true;
     udev.packages = [ pkgs.qmk-udev-rules ];
 
@@ -95,13 +95,14 @@ in
     opengl = {
       enable = true;
       driSupport32Bit = true;
-      extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
+      extraPackages32 = [ pkgs.pkgsi686Linux.libva ];
     };
     pulseaudio = {
       enable = true;
       support32Bit = true;
+    } // lib.optionalAttrs bluetooth { # For bluetooth headphones
       package = pkgs.pulseaudioFull;
-      extraModules = [ pkgs.pulseaudio-modules-bt ]; # For bluetooth headphones
+      extraModules = [ pkgs.pulseaudio-modules-bt ];
       extraConfig = "
         load-module module-switch-on-connect
       ";
@@ -110,7 +111,7 @@ in
       enable = true;
       daemon.enable = true;
     };
-    bluetooth = {
+    bluetooth = lib.optionalAttrs bluetooth {
       enable = true;
       settings.General.Enable = "Source,Sink,Media,Socket";
     };

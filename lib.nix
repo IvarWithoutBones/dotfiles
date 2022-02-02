@@ -20,6 +20,7 @@ rec {
         gpu = null;
         touchpad = false;
         battery = false;
+        bluetooth = false;
       } // hardware;
     in
     nixpkgs.lib.nixosSystem {
