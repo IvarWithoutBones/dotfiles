@@ -1,11 +1,17 @@
 { nixpkgs, home-manager, ... } @ inputs:
 
 rec {
+  mkLaptop = {
+    touchpad = true;
+    battery = true;
+    bluetooth = true;
+  };
+
   configFromProfile = profile: {
     nixpkgs.overlays = [];
   } // profile;
 
-  nixosConfigFromProfile = profile:
+  createSystem = profile:
     { system
     , hostname
     , hardware ? {}
@@ -37,7 +43,7 @@ rec {
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = {
               sm64Rom = null;
-            } // hardwareArgs // homeManager;
+            } // homeManager // hardwareArgs;
             home-manager.users.ivv = (import ./home-manager/home.nix) inputs; # TODO: make configurable
           }
         ];

@@ -22,7 +22,7 @@
     };
 
     nixosConfigurations = {
-      nixos-pc = lib.nixosConfigFromProfile testProfile {
+      nixos-pc = lib.createSystem testProfile {
         system = "x86_64-linux";
         hostname = "nixos-pc";
 
@@ -37,15 +37,13 @@
         };
       };
 
-      nixos-laptop = lib.nixosConfigFromProfile testProfile {
+      nixos-laptop = lib.createSystem testProfile {
         system = "x86_64-linux";
         hostname = "nixos-laptop";
 
-        hardware = {
+        hardware = lib.mkLaptop // {
           gpu = "amd";
           cpu = "amd";
-          touchpad = true;
-          battery = true;
         };
 
         homeManager = {
