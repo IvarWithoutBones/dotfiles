@@ -1,5 +1,13 @@
-{ config, pkgs, ... }:
+{ config
+, pkgs
+, bluetooth
+, ...
 
+}:
+
+let
+  inherit (pkgs) lib;
+in
 {
   # TODO: do this cleanly
   imports = [ /etc/nixos/hardware-configuration.nix ];
@@ -45,7 +53,7 @@
 
   services = {
     openssh.enable = true;
-    blueman.enable = true;
+    blueman.enable = lib.optional bluetooth true;
     fstrim.enable = true;
     udev.packages = [ pkgs.qmk-udev-rules ];
 
@@ -64,7 +72,7 @@
       desktopManager.session = [ {
         name = "home-manager";
         start = ''
-          ${pkgs.runtimeShell} ${pkgs.lib.optionalString config.services.xserver.displayManager.startx.enable "startx"} $HOME/.hm-xsession &
+          ${pkgs.runtimeShell} ${lib.optionalString config.services.xserver.displayManager.startx.enable "startx"} $HOME/.hm-xsession &
           waitPID=$!
         '';
       } ];
