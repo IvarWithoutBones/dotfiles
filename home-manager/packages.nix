@@ -1,44 +1,11 @@
 { pkgs, config, ... }:
 
 let
-  update-system = pkgs.writeShellScriptBin "dotfiles" ''
-    set -e
-
-    DOTFILES_DIR="${config.home.homeDirectory}/nix/dotfiles"
-
-    while getopts ":lghf" arg; do
-      case $arg in
-        l)
-          DONT_UPDATE=1 ;;
-        g)
-          DONT_COLLECT_GARBAGE=1 ;;
-        f)
-          FAST_REBUILD=1 DONT_UPDATE=1 DONT_COLLECT_GARBAGE=1 ;;
-        h)
-          printf "Usage: "$(basename "$0")" [-lgf]\n  [-l] Don't update flake\n  [-g] Don't collect garbage\n  [-f] Pass \"--fast\" to nixos-rebuild, and set \"-lg\"\n" && exit 0 ;;
-      esac
-    done
-
-    runColored() {
-      printf "\e[32m\$ "%s"\n\e[0m" "$1"
-      $1
-    }
-
-    if [ -z "$DONT_UPDATE" ]; then
-      pushd "$DOTFILES_DIR" 1>/dev/null
-      runColored "nix flake update"
-      popd 1>/dev/null
-    fi
-
-    rebuild_cmd="sudo nixos-rebuild switch --impure"
-
-    if [ ! -z "$FAST_REBUILD" ]; then
-      rebuild_cmd+=" --fast"
-    fi
-
-    runColored "$rebuild_cmd"
-
-    [[ -z "$DONT_COLLECT_GARBAGE" ]] && runColored "nix-collect-garbage"
+  dotfiles-tool = pkgs.runCommand "dotfiles-tool" {
+    src = ../scripts/dotfiles.sh;
+  } ''
+    mkdir -p $out/bin
+    install -Dm755 $src $out/bin/dotfiles
   '';
 in {
   home.packages = with pkgs; [
@@ -65,7 +32,7 @@ in {
     nix-index
     nix-prefetch-git
     comma
-    update-system
+    dotfiles-tool
   
     # Media
     ncspot spotify
