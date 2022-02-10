@@ -7,7 +7,7 @@
     bars.top = {
       blocks = [ {
         block = "custom"; # Ping
-        command = "echo \"Ping: $(${pkgs.unixtools.ping}/bin/ping google.com -c 1 | ${pkgs.gnugrep}/bin/grep time= | ${pkgs.coreutils}/bin/cut -d'=' -f4)\"";
+        command = "echo \"Ping: $(${pkgs.unixtools.ping}/bin/ping store.steampowered.com -c 1 | ${pkgs.gnugrep}/bin/grep time= | ${pkgs.coreutils}/bin/cut -d'=' -f4)\"";
         interval = 1;
       } {
         block = "sound";
