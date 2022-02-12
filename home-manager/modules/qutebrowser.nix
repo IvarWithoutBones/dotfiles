@@ -32,6 +32,7 @@ in {
       nix-manual = "https://nixos.org/manual/nix/unstable";
       nixpkgs = "https://github.com/NixOS/nixpkgs";
       nixpkgs-prs = "https://github.com/NixOS/nixpkgs/pulls";
+      nixpkgs-tracker = "https://nixpk.gs/pr-tracker.html";
       nixpkgs-manual = "https://nixos.org/manual/nixpkgs/unstable";
       hydra-trunk = "https://hydra.nixos.org/jobset/nixpkgs/trunk";
       nixos-manual = "https://nixos.org/nixos/manual";
