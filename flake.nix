@@ -2,7 +2,7 @@
   description = "My NixOS configuration, using home-manager";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     home-manager = { 
       url = "github:nix-community/home-manager";

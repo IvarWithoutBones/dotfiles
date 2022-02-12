@@ -14,7 +14,8 @@ in {
     capitaine-cursors
     
     # General utils
-    wget git
+    git github-cli
+    wget
     ripgrep
     htop
     unar
@@ -24,16 +25,16 @@ in {
     file
     feh
   
-    # Graphical utils
-    alacritty
-    pavucontrol
-
     # Nix specific utils
     nix-index
     nix-prefetch-git
     comma
     dotfiles-tool
   
+    # Graphical utils
+    alacritty
+    pavucontrol
+
     # Media
     ncspot spotify
     mpv
