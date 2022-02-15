@@ -12,64 +12,87 @@ runColored() {
     $1
 }
 
-if [ -z "$DOTFILES_DIR" ]; then
-    DOTFILES_DIR="$HOME/nix/dotfiles"
+if [ -z "${DOTFILES_DIR-}" ]; then
+    DOTFILES_DIR="${HOME}/nix/dotfiles"
+fi
+if [ ! -d "${DOTFILES_DIR-}" ]; then
+    error "Dotfiles directory \"${DOTFILES_DIR-}\" is not a directory!"
 fi
 
-if [ ! -d "$DOTFILES_DIR" ]; then
-    error "Dotfiles directory \""$DOTFILES_DIR"\" was not found!"
-fi
+flags="ugGlfdeh"
 
-while getopts ":lgfeh" arg; do
+while getopts ":$flags" arg; do
     case $arg in
-        l)
-          DONT_UPDATE=1
-          ;;
+        u)
+          DONT_UPDATE=1 ;;
         g)
-          DONT_COLLECT_GARBAGE=1
-          ;;
+          DONT_COLLECT_GARBAGE=1 ;;
+        G)
+          COLLECT_ALL_GARBAGE=1 ;;
+        l)
+          PRINT_BUILD_LOGS=1 ;;
         f)
-          export {FAST_REBUILD,DONT_UPDATE,DONT_COLLECT_GARBAGE}=1
-          ;;
+          FAST_REBUILD=1 ;;
+        d)
+          export {DONT_UPDATE,DONT_COLLECT_GARBAGE,PRINT_BUILD_LOGS,FAST_REBUILD}=1 ;;
         e)
-          if [ -z "$EDITOR" ]; then
-            error "This flag requires the environment variable \"\$EDITOR\" to be set."
+          if [ -z "${EDITOR-}" ]; then
+              error "This flag requires the environment variable \"\$EDITOR\" to be set."
+          elif [ ! -f "${DOTFILES_DIR-}/flake.nix" ]; then
+              error "Flake \"${DOTFILES_DIR-}/flake.nix\" was not found!"
           fi
-          OPEN_EDITOR=1
-          ;;
+
+          OPEN_EDITOR=1 ;;
         h)
-          printf \
-            "Usage: "$(basename "$0")" [-lgfeh]\n%s\n%s\n%s\n%s\n%s\n" \
-            "[-l] Don't update the flake, just do a local rebuild" \
-            "[-g] Don't collect garbage" \
-            "[-f] Pass \"--fast\" to nixos-rebuild, and set \"-lg\"" \
-            "[-e] Open the flake \""$DOTFILES_DIR"/flake.nix\" in \""$EDITOR"\"" \
-            "[-h] Print out the message you're seeing right now" \
-          && exit 0 ;;
+          usage_text="Usage: "$(basename "$0")" [-$flags]\n"
+          usage_text+="[-u] Don't update the flake\n"
+          usage_text+="[-g] Don't collect garbage\n"
+          usage_text+="[-G] Run nix-collect-garbage as root, and pass it \"-d\"\n"
+          usage_text+="[-l] Print more verbose logs\n"
+          usage_text+="[-f] Pass \"--fast\" to nixos-rebuild\n"
+          usage_text+="[-d] Set the flags \"-uglf\". This is useful when you're making small changes\n"
+          usage_text+="[-e] Open the flake \"${DOTFILES_DIR-}/flake.nix\" in ${EDITOR-}\n"
+          usage_text+="[-h] Print out the message you're seeing right now\n"
+          printf "${usage_text-}"
+
+          exit 0 ;;
+        ?)
+          error "Invalid option: \"-${OPTARG-}\"" ;;
     esac
 done
 
-if [[ ! -f ""$DOTFILES_DIR"/flake.nix" && ! -z "$OPEN_EDITOR" ]]; then
-    error "Flake \""$DOTFILES_DIR"/flake.nix\" could not be found!"
-fi
-
-if [ ! -z "$OPEN_EDITOR" ]; then
-    "$EDITOR" ""$DOTFILES_DIR"/flake.nix"
+if [ "${OPEN_EDITOR-}" ]; then
+    "${EDITOR-}" "${DOTFILES_DIR-}/flake.nix"
     exit 0
 fi
 
-if [ -z "$DONT_UPDATE" ]; then
-    pushd "$DOTFILES_DIR" 1>/dev/null
-    runColored "nix flake update"
+if [ "${PRINT_BUILD_LOGS-}" ]; then
+    printLogs="--print-build-logs"
+fi
+
+dontWarnDirty="--option warn-dirty false"
+
+if [ -z "${DONT_UPDATE-}" ]; then
+    pushd "${DOTFILES_DIR-}" 1>/dev/null
+    runColored "nix flake update ${dontWarnDirty} ${printLogs-}"
     popd 1>/dev/null
 fi
 
-rebuild_cmd="sudo nixos-rebuild switch --impure"
-
-if [ ! -z "$FAST_REBUILD" ]; then
+rebuild_cmd="sudo nixos-rebuild switch --impure ${dontWarnDirty} ${printLogs-}"
+if [ "${FAST_REBUILD-}" ]; then
     rebuild_cmd+=" --fast"
 fi
+runColored "${rebuild_cmd}"
 
-runColored "$rebuild_cmd"
+if [ -z "${DONT_COLLECT_GARBAGE-}" ]; then
+    garbage_cmd="nix store gc"
 
-[[ -z "$DONT_COLLECT_GARBAGE" ]] && runColored "nix-collect-garbage"
+    if [ "${PRINT_BUILD_LOGS-}" ]; then
+        garbage_cmd+=" --verbose"
+    fi
+    if [ "${COLLECT_ALL_GARBAGE-}" ]; then
+        garbage_cmd="sudo nix-collect-garbage --delete-older-than 10d"
+    fi
+
+    runColored "${garbage_cmd}"
+fi
