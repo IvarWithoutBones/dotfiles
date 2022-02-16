@@ -136,15 +136,10 @@
 
       map <silent> <c-b> :call Toggle_NERDTree()<CR>
       map <silent> <c-n> :wincmd p<CR>
-
-      autocmd VimEnter * NERDTree | wincmd p
   
       " Close the tab if NERDTree is the only window remaining in it.
       autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
   
-      " Open the existing NERDTree on each new tab.
-      autocmd BufWinEnter * if getcmdwintype() == ${"''"} | silent NERDTreeMirror | endif
-      
       " Pop up terminal config
       nnoremap <silent> <c-o> :ToggleTerm<CR>
       autocmd TermEnter term://*toggleterm#*
