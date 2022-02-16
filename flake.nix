@@ -73,6 +73,7 @@
         unar
         python3
         file
+        jq
       ];
     };
   }));

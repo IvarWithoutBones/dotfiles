@@ -24,6 +24,7 @@ in {
     python3
     file
     feh
+    jq
   
     # Nix specific utils
     nix-index
