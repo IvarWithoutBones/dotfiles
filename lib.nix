@@ -1,5 +1,8 @@
 { nixpkgs, home-manager, ... } @ inputs:
 
+let
+  inherit (nixpkgs) lib;
+in
 rec {
   mkLaptop = {
     touchpad = true;
@@ -8,10 +11,12 @@ rec {
   };
 
   configFromProfile = profile: {
-    nixpkgs.overlays = [];
+    extraConfig = {
+      nixpkgs.overlays = [];
+    };
   } // profile;
 
-  createSystem = profile:
+  createSystem = _profile:
     { system
     , hostname
     , hardware ? {}
@@ -21,29 +26,31 @@ rec {
     , ... }:
 
     let
-      hardwareArgs = {
-        cpu = null;
-        gpu = null;
+      profile = configFromProfile _profile;
+
+      _hardware = {
+        cpu = "";
+        gpu = "";
         touchpad = false;
         battery = false;
         bluetooth = false;
       } // hardware;
     in
-    nixpkgs.lib.nixosSystem {
-      specialArgs = inputs // hardwareArgs;
+    nixpkgs.lib.nixosSystem rec {
+      specialArgs = inputs // _hardware;
       inherit system;
 
       modules = [({ networking.hostName = hostname; })]
         ++ extraModules
-        ++ [( extraConfig )]
-        ++ ((configFromProfile profile).modules or [])
-        ++ nixpkgs.lib.optionals (homeManager.enable or false) [
+        ++ (profile.modules or [])
+        ++ [((profile.extraConfig or {} // extraConfig ))]
+        ++ lib.optionals (homeManager.enable or false) [
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = {
               sm64Rom = null;
-            } // homeManager // hardwareArgs;
+            } // homeManager // _hardware;
             home-manager.users.ivv = (import ./home-manager/home.nix) inputs; # TODO: make configurable
           }
         ];
