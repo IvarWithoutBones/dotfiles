@@ -1,0 +1,89 @@
+commit 3282f496499db995b1cd56564df88319cd3a4b96
+Author: Ivar Scholten <ivar.scholten@protonmail.com>
+Date:   Wed Feb 16 21:05:18 2022 +0100
+
+    Add "Leave game" button
+    
+    Used to exit to titlescreen at any time
+
+diff --git a/include/text_options_strings.h.in b/include/text_options_strings.h.in
+index 8c6732e..b6f8caf 100644
+--- a/include/text_options_strings.h.in
++++ b/include/text_options_strings.h.in
+@@ -10,6 +10,7 @@
+ #define TEXT_OPT_CONTROLS  _("CONTROLS")
+ #define TEXT_OPT_VIDEO     _("DISPLAY")
+ #define TEXT_OPT_AUDIO     _("SOUND")
++#define TEXT_LEAVE_GAME    _("LEAVE GAME")
+ #define TEXT_OPT_CHEATS    _("CHEATS")
+ 
+ // Markers
+diff --git a/src/game/ingame_menu.c b/src/game/ingame_menu.c
+index 7ae9f1e..48b25df 100644
+--- a/src/game/ingame_menu.c
++++ b/src/game/ingame_menu.c
+@@ -1851,6 +1851,13 @@ void set_menu_mode(s16 mode) {
+     }
+ }
+ 
++void go_to_main_menu() {
++    level_set_transition(0, NULL);
++    gDialogBoxState = 0;
++    gMenuMode = -1;
++    fade_into_special_warp(-2, 0);
++}
++
+ void reset_cutscene_msg_fade(void) {
+     gCutsceneMsgFade = 0;
+ }
+diff --git a/src/game/ingame_menu.h b/src/game/ingame_menu.h
+index 1435e16..a94b87c 100644
+--- a/src/game/ingame_menu.h
++++ b/src/game/ingame_menu.h
+@@ -139,6 +139,7 @@ void create_dialog_inverted_box(s16 dialog);
+ void create_dialog_box_with_response(s16 dialog);
+ void reset_dialog_render_state(void);
+ void set_menu_mode(s16 mode);
++void go_to_main_menu(void);
+ void reset_cutscene_msg_fade(void);
+ void dl_rgba16_begin_cutscene_msg_fade(void);
+ void dl_rgba16_stop_cutscene_msg_fade(void);
+diff --git a/src/game/options_menu.c b/src/game/options_menu.c
+index 56ebdeb..8d23ea8 100644
+--- a/src/game/options_menu.c
++++ b/src/game/options_menu.c
+@@ -58,6 +58,7 @@ static const u8 menuStr[][32] = {
+     { TEXT_OPT_CONTROLS },
+     { TEXT_OPT_VIDEO },
+     { TEXT_OPT_AUDIO },
++    { TEXT_LEAVE_GAME },
+     { TEXT_EXIT_GAME },
+     { TEXT_OPT_CHEATS },
+ };
+@@ -206,6 +207,13 @@ static void optmenu_act_exit(UNUSED struct Option *self, s32 arg) {
+     if (!arg) game_exit(); // only exit on A press and not directions
+ }
+ 
++static void optmenu_act_leave(UNUSED struct Option *self, s32 arg) {
++    if (!arg) {
++        optmenu_toggle();
++        go_to_main_menu();
++    };
++}
++
+ static void optvideo_reset_window(UNUSED struct Option *self, s32 arg) {
+     if (!arg) {
+         // Restrict reset to A press and not directions
+@@ -304,9 +312,10 @@ static struct Option optsMain[] = {
+     DEF_OPT_SUBMENU( menuStr[2], &menuControls ),
+     DEF_OPT_SUBMENU( menuStr[3], &menuVideo ),
+     DEF_OPT_SUBMENU( menuStr[4], &menuAudio ),
+-    DEF_OPT_BUTTON ( menuStr[5], optmenu_act_exit ),
++    DEF_OPT_BUTTON ( menuStr[5], optmenu_act_leave ),
++    DEF_OPT_BUTTON ( menuStr[6], optmenu_act_exit ),
+     // NOTE: always keep cheats the last option here because of the half-assed way I toggle them
+-    DEF_OPT_SUBMENU( menuStr[6], &menuCheats )
++    DEF_OPT_SUBMENU( menuStr[7], &menuCheats )
+ };
+ 
+ static struct SubMenu menuMain = DEF_SUBMENU( menuStr[0], optsMain );

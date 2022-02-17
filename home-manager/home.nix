@@ -41,6 +41,9 @@ flakes: { pkgs, config, sm64Rom, ... }:
     sm64ex = pkgs.lib.optionalAttrs (sm64Rom != null) {
       enable = true;
       baserom =  sm64Rom;
+      package = pkgs.sm64ex.overrideAttrs (attrs: {
+        patches = attrs.patches or [] ++ [ ../misc/sm64ex-leave-game.patch ];
+      });
     };
   };
   
