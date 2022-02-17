@@ -5,7 +5,7 @@ let
   i3-swallow = pkgs.python3Packages.callPackage ./modules/i3/swallow.nix { };
 
   dotfiles-tool = pkgs.runCommand "dotfiles-tool" {
-    src = ../scripts/dotfiles.sh;
+    src = ../misc/dotfiles.sh;
   } ''
     mkdir -p $out/bin
     install -Dm755 $src $out/bin/dotfiles
