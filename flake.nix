@@ -14,15 +14,17 @@
     lib = import ./lib.nix { inherit (inputs) nixpkgs home-manager; };
 
     # TODO: split up configuration.nix and create proper profiles
-    testProfile = {
-      modules = [
-        ./configuration.nix
-        ./modules/hardware.nix
-      ];
+    profiles = {
+      ivv = {
+        modules = [
+          ./configuration.nix
+          ./modules/hardware.nix
+        ];
+      };
     };
 
     nixosConfigurations = {
-      nixos-pc = lib.createSystem testProfile {
+      nixos-pc = lib.createSystem profiles.ivv {
         system = "x86_64-linux";
         hostname = "nixos-pc";
 
@@ -37,7 +39,7 @@
         };
       };
 
-      nixos-laptop = lib.createSystem testProfile {
+      nixos-laptop = lib.createSystem profiles.ivv {
         system = "x86_64-linux";
         hostname = "nixos-laptop";
 
