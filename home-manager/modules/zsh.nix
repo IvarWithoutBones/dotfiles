@@ -15,7 +15,6 @@
     shellAliases = rec {
       ls = "ls --color=auto";
       cat = "bat -p";
-      grep = "${pkgs.ripgrep}/bin/rg -p --with-filename";
       diff = "diff --color=auto -u";
       dirdiff = "diff --color=auto -ENwbur";
       speedtest = "printf 'Ping: ' && ping google.com -c 1 | grep time= | cut -d'=' -f4 && ${pkgs.speedtest-cli}/bin/speedtest | grep -E 'Download|Upload'";
