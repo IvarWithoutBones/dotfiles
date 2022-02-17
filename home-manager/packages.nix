@@ -1,6 +1,9 @@
 { pkgs, config, ... }:
 
 let
+  # TODO: remove this once https://github.com/NixOS/nixpkgs/pull/160352 gets merged
+  i3-swallow = pkgs.python3Packages.callPackage ./modules/i3/swallow.nix { };
+
   dotfiles-tool = pkgs.runCommand "dotfiles-tool" {
     src = ../scripts/dotfiles.sh;
   } ''
@@ -35,6 +38,7 @@ in {
     # Graphical utils
     alacritty
     pavucontrol
+    i3-swallow
 
     # Media
     ncspot spotify
