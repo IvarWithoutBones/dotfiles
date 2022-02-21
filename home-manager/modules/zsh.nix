@@ -6,8 +6,12 @@
   
     defaultKeymap = "viins";
     history.path = "$HOME/.cache/zsh/history";
+
+    enableAutosuggestions = true;
+    enableSyntaxHighlighting = true;
+    autocd = true;
   
-    sessionVariables = {
+    localVariables = {
       PS1 = "%F{magenta}%~%f > ";
       LESSHISTFILE = "/dev/null";
     };
@@ -25,11 +29,6 @@
     };
   
     plugins = [ {
-      name = "zsh-syntax-highlighting";
-      src = pkgs.zsh-syntax-highlighting;
-       file = "share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh";
-     } {
-      # TODO: upstream this
       name = "zsh-vi-mode";
       file = "zsh-vi-mode.plugin.zsh";
       src = pkgs.fetchFromGitHub {
