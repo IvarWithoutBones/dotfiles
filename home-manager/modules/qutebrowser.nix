@@ -13,12 +13,16 @@ in {
     # Apply theme
     extraConfig = (builtins.readFile dracula-theme) + "blood(c)";
 
-    settings.downloads.location.directory = "$HOME/downloads";
+    settings = {
+      colors.webpage.preferred_color_scheme = "dark";
+      downloads.location.directory = "$HOME/downloads";
+      content.javascript.can_access_clipboard = true;
+    };
   
     searchEngines = {
       DEFAULT = "https://duckduckgo.com/?q={}";
       git = "https://github.com/search?q={}";
-      nix = "https://search.nixos.org/packages?query={}&sort=relevance&channel=unstable";
+      nix = "https://search.nixos.org/packages?query={}&channel=unstable";
       pip = "https://pypi.org/search/?q={}";
       yt = "https://www.youtube.com/results?search_query={}";
       proton = "https://www.protondb.com/search?q={}";
@@ -26,9 +30,13 @@ in {
   
     quickmarks = {
       protonmail = "https://mail.protonmail.com/inbox";
+      dotfiles = "https://github.com/ivarWithoutBones/dotfiles";
+      nur-actions = "https://github.com/IvarWithoutBones/NUR/actions";
+      youtube = "https://www.youtube.com/";
+      catan = "https://colonist.io";
+
       github = "https://github.com";
       github-notifications = "https://github.com/notifications";
-
       nix-manual = "https://nixos.org/manual/nix/unstable";
       nixpkgs = "https://github.com/NixOS/nixpkgs";
       nixpkgs-prs = "https://github.com/NixOS/nixpkgs/pulls";
@@ -40,12 +48,6 @@ in {
       home-manager = "https://github.com/nix-community/home-manager";
       home-manager-manual = "https://nix-community.github.io/home-manager";
       home-manager-options = "https://rycee.gitlab.io/home-manager/options.html";
-
-      dotfiles = "https://github.com/ivarWithoutBones/dotfiles";
-      nur-actions = "https://github.com/IvarWithoutBones/NUR/actions";
-
-      youtube = "https://www.youtube.com/";
-      catan = "https://colonist.io";
     };
   };
 }
