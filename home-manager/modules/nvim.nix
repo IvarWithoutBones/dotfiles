@@ -10,9 +10,9 @@
   
     plugins = with pkgs.vimPlugins; [
       barbar-nvim
-      nerdtree
       toggleterm-nvim
       coc-nvim
+      editorconfig-nvim
 
       vim-rooter
       vim-nix
@@ -22,12 +22,42 @@
       telescope-nvim
       plenary-nvim # Dependency of telescope
       {
-        plugin = telescope-frecency-nvim;
-        type = "lua";
-        config = ''require"telescope".load_extension("frecency")'';
-      } {
         plugin = sqlite-lua;
         config = "let g:sqlite_clib_path = '${pkgs.sqlite.out}/lib/libsqlite3.so'";
+      }
+      {
+        plugin = nvim-tree-lua;
+        config = ''
+          map <silent> <c-b> :NvimTreeToggle<CR>
+
+          let g:nvim_tree_show_icons = {
+            \ 'git': 1,
+            \ 'folders': 0,
+            \ 'files': 0,
+            \ 'folder_arrows': 0,
+          \ }
+
+          let g:nvim_tree_group_empty = 1
+
+          lua << EOF
+            require'nvim-tree'.setup {
+              auto_close = true,
+
+              update_focused_file = {
+                enable      = true,
+                update_cwd  = true,
+              },
+
+              filters = {
+                dotfiles = true,
+              },
+
+              view = {
+                signcolumn = "no",
+              },
+            }
+          EOF
+        '';
       }
     ];
 
@@ -35,9 +65,9 @@
       nodejs_latest
       lua
       ripgrep # For :Telescope live_grep
+      xclip # For clipboard support
       ccls
       rnix-lsp
-      xclip # For clipboard support
     ];
 
     coc = {
@@ -51,7 +81,7 @@
         client.snippetSupport = true;
         languageserver = {
           nix = {
-            command = "rnix-lsp";
+            command = "${pkgs.rnix-lsp}/bin/rnix-lsp";
             filetypes = [ "nix" ];
             rootPatterns = [
               "flake.lock"
@@ -59,7 +89,7 @@
             ];
           };
           cpp = {
-            command = "ccls";
+            command = "${pkgs.ccls}/bin/ccls";
             filetypes = [
               "c"
               "cpp"
@@ -87,6 +117,20 @@
       set updatetime=300
       set signcolumn=yes
       set clipboard+=unnamedplus " For system clipboard support, needs xclip
+
+      " use `ALT+{h,j,k,l}` to navigate windows from any mode
+      tnoremap <A-h> <C-\><C-N><C-w>h
+      tnoremap <A-j> <C-\><C-N><C-w>j
+      tnoremap <A-k> <C-\><C-N><C-w>k
+      tnoremap <A-l> <C-\><C-N><C-w>l
+      inoremap <A-h> <C-\><C-N><C-w>h
+      inoremap <A-j> <C-\><C-N><C-w>j
+      inoremap <A-k> <C-\><C-N><C-w>k
+      inoremap <A-l> <C-\><C-N><C-w>l
+      nnoremap <A-h> <C-w>h
+      nnoremap <A-j> <C-w>j
+      nnoremap <A-k> <C-w>k
+      nnoremap <A-l> <C-w>l
 
       " various fixes for the tab key
       set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
@@ -117,35 +161,13 @@
       " Telescope config
       nnoremap <silent> tg :Telescope live_grep theme=ivy<CR>
       nnoremap <silent> tk :Telescope find_files theme=ivy<CR>
-      nnoremap <silent> th :Telescope frecency frecency theme=ivy<CR> # History files
-
-      " NERDTree config
-      let NERDTreeMinimalUI = v:true
-      let NERDTreeStatusline="" " Removes the statusline
-      let NERDTreeIgnore=['\.pyc$', '\~$', '__pycache__']
-      let NERDTreeWinSize=21
-
-      " NERDTree sometimes won't let you close it when its focused, so we need to unfocus it first.
-      " We can probably do this from the mapping, but I have no clue how.
-      function Toggle_NERDTree()
-        if &filetype ==# 'nerdtree'
-          :wincmd p
-        endif
-        :NERDTreeToggle
-      endfunction
-
-      map <silent> <c-b> :call Toggle_NERDTree()<CR>
-      map <silent> <c-n> :wincmd p<CR>
-  
-      " Close the tab if NERDTree is the only window remaining in it.
-      autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
   
       " Pop up terminal config
       nnoremap <silent> <c-o> :ToggleTerm<CR>
       autocmd TermEnter term://*toggleterm#*
         \ tnoremap <silent> <c-o> <Cmd>exe v:count1 . "ToggleTerm"<CR>
 
-      " Automatically cd's into project root, as to
+      " Automatically changes pwd to git trees root
       let g:rooter_patterns = ['.git', '=${config.home.homeDirectory}/nix/nixpkgs' ]
 
       " Coc config
