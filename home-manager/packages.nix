@@ -2,7 +2,7 @@
 
 let
   dotfiles-tool = pkgs.runCommand "dotfiles-tool" {
-    src = ../misc/dotfiles.sh;
+    src = ../scripts/dotfiles.sh;
   } ''
     mkdir -p $out/bin
     install -Dm755 $src $out/bin/dotfiles
@@ -10,7 +10,7 @@ let
 
   nixpkgs-pr = pkgs.runCommand "nixpkgs-pr" {
     src = pkgs.substituteAll {
-      src = ../misc/nixpkgs-pr.sh;
+      src = ../scripts/nixpkgs-pr.sh;
       binPath = with pkgs; lib.makeBinPath [
         nix
         curl
