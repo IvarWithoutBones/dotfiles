@@ -42,6 +42,10 @@
     initExtra = ''
       ${pkgs.lib.optionalString config.programs.direnv.enable ''eval "$(direnv hook zsh)"''}
 
+      cd-git-root() {
+        cd $(${pkgs.git}/bin/git rev-parse --show-toplevel 2>/dev/null)
+      }
+
       callPackage() {
         if [ -z "$1" ]; then
           FILE="default.nix"
