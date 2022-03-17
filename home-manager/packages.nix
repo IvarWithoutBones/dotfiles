@@ -7,6 +7,29 @@ let
     mkdir -p $out/bin
     install -Dm755 $src $out/bin/dotfiles
   '';
+
+  nixpkgs-pr = pkgs.runCommand "nixpkgs-pr" {
+    src = pkgs.substituteAll {
+      src = ../misc/nixpkgs-pr.sh;
+      binPath = with pkgs; lib.makeBinPath [
+        nix
+        curl
+        git
+        pandoc
+        gnused
+        pandoc
+        jq
+        coreutils
+        python3
+        curl
+        xdg_utils
+      ];
+      inherit (pkgs) runtimeShell;
+    };
+  } ''
+    mkdir -p $out/bin
+    install -Dm755 $src $out/bin/nixpkgs-pr
+  '';
 in {
   home.packages = with pkgs; [
     arc-theme
@@ -30,7 +53,10 @@ in {
     nix-index
     nix-prefetch-git
     comma
+
+    # custom tools
     dotfiles-tool
+    nixpkgs-pr
   
     # Graphical utils
     alacritty
