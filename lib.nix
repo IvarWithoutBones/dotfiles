@@ -43,7 +43,7 @@ rec {
       modules = [({ networking.hostName = hostname; })]
         ++ extraModules
         ++ (profile.modules or [])
-        ++ [((profile.extraConfig or {} // extraConfig ))]
+        ++ [(( profile.extraConfig or {} // extraConfig ))] # TODO: this line is causing errors when profile.extraConfig is defined as a function
         ++ lib.optionals (homeManager.enable or false) [
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;

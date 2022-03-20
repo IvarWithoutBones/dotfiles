@@ -1,13 +1,10 @@
 { config
 , pkgs
+, lib
 , bluetooth
 , ...
-
 }:
 
-let
-  inherit (pkgs) lib;
-in
 {
   # TODO: do this cleanly
   imports = [ /etc/nixos/hardware-configuration.nix ];

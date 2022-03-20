@@ -39,7 +39,7 @@
         };
       };
 
-      nixos-laptop = lib.createSystem profiles.ivv {
+      nixos-laptop = lib.createSystem profiles.ivv rec {
         system = "x86_64-linux";
         hostname = "nixos-laptop";
 
@@ -53,10 +53,10 @@
           sm64Rom = /home/ivv/misc/games/roms/n64/sm64.z64;
         };
 
-        extraConfig = { config, ... }: {
+        extraConfig = {
           boot = {
             kernelParams = [ "acpi_backlight=vendor" ]; # Fixes backlight
-            extraModulePackages = with config.boot.kernelPackages; [ rtl8821ce ];
+            extraModulePackages = with nixpkgs.legacyPackages.${system}.linuxPackages_latest; [ rtl8821ce ];
           };
         };
       };

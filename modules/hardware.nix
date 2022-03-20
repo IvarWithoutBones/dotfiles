@@ -1,14 +1,12 @@
 { config
 , pkgs
+, lib
 , cpu
 , gpu
 , touchpad
 , ...
 }:
 
-let
-  inherit (pkgs) lib;
-in
 {
   services.xserver = {
     videoDrivers = [(
