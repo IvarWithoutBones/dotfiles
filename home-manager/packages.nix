@@ -48,6 +48,7 @@ in {
     file
     feh
     jq
+    killall
   
     # Nix specific utils
     nix-index
