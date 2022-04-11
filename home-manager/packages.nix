@@ -32,10 +32,6 @@ let
   '';
 in {
   home.packages = with pkgs; [
-    arc-theme
-    arc-icon-theme
-    capitaine-cursors
-    
     # General utils
     git github-cli
     wget
