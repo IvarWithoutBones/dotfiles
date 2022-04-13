@@ -9,6 +9,18 @@
     vimdiffAlias = true;
   
     plugins = with pkgs.vimPlugins; [
+      # Logging in did not work for me on 2022-02-15
+      (copilot-vim.overrideAttrs (attrs: {
+        version = "2022-04-09";
+
+        src = pkgs.fetchFromGitHub {
+          owner = "github";
+          repo = "copilot.vim";
+          rev = "573da1aaadd7402c3ab22fb1ae6853db1dc82acb";
+          sha256 = "sha256-BEWrW28JUZGJTa8qEv2e3NkOlPkjmAUQsRPRDIraWcg=";
+        };
+      }))
+
       barbar-nvim
       toggleterm-nvim
       coc-nvim
