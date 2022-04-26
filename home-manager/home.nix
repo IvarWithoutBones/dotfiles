@@ -1,4 +1,9 @@
-flakes: { pkgs, config, sm64Rom, ... }:
+{ pkgs
+, config
+, username
+, sm64Rom
+, ...
+}:
 
 {
   imports = [
@@ -22,9 +27,10 @@ flakes: { pkgs, config, sm64Rom, ... }:
   };
 
   home = {
-    username = "ivv";
-    homeDirectory = "/home/ivv";
+    inherit username;
+    homeDirectory = "/home/${username}";
     stateVersion = "22.05";
+
     sessionVariables = rec {
       EDITOR = "nvim";
       VISUAL = "nvim";

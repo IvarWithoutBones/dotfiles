@@ -35,6 +35,7 @@ rec {
       inherit system;
 
       specialArgs = {
+        inherit (profile) username;
         inherit system;
       } // inputs // _hardware;
 
@@ -43,14 +44,16 @@ rec {
         ++ (profile.modules or [])
         ++ [(( profile.extraConfig or {} // extraConfig ))] # TODO: this line is causing errors when profile.extraConfig is defined as a function
         ++ lib.optionals (homeManager.enable or false) [
-          home-manager.nixosModules.home-manager {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs = {
-              sm64Rom = null;
-            } // homeManager // _hardware;
-            home-manager.users.ivv = (import ./home-manager/home.nix) inputs; # TODO: make configurable
-          }
+             home-manager.nixosModules.home-manager {
+               home-manager.useGlobalPkgs = true;
+               home-manager.useUserPackages = true;
+
+               home-manager.extraSpecialArgs = specialArgs // {
+                 sm64Rom = null;
+               } // homeManager;
+
+               home-manager.users.${profile.username} = ./home-manager/home.nix; # TODO: make configurable
+             }
         ];
     };
 }

@@ -2,6 +2,7 @@
 , pkgs
 , lib
 , bluetooth
+, username
 , ...
 }:
 
@@ -114,7 +115,7 @@
     };
   };
 
-  users.users.ivv = {
+  users.users.${username} = {
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" "audio" ];
     shell = pkgs.zsh;

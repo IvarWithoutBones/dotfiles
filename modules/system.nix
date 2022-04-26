@@ -2,6 +2,7 @@
 , pkgs
 , agenix
 , system
+, username
 , ...
 }:
 
@@ -12,7 +13,7 @@
     cachix-dhall = {
       name = "cachix-dhall";
       file = ../secrets/cachix-dhall.age;
-      owner = "ivv";
+      owner = username;
     };
   };
 
@@ -21,7 +22,7 @@
 
     settings = rec {
       experimental-features = [ "nix-command" "flakes" ];
-      trusted-users = [ "@wheel" "ivv" ];
+      trusted-users = [ "@wheel" username ];
       allowed-users = trusted-users;
       auto-optimise-store = true;
 

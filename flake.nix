@@ -26,6 +26,8 @@
     # TODO: split up configuration.nix and create proper profiles
     profiles = {
       ivv = {
+        username = "ivv";
+
         modules = [
           ./configuration.nix
           ./modules/hardware.nix
