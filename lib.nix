@@ -17,7 +17,7 @@ rec {
     { system
     , hostname
     , hardware ? {}
-    , extraModules ? []
+    , modules ? []
     , extraConfig ? {}
     , homeManager ? {}
     , ... }:
@@ -30,6 +30,8 @@ rec {
         battery = false;
         bluetooth = false;
       } // hardware;
+
+      _modules = modules;
     in
     nixpkgs.lib.nixosSystem rec {
       inherit system;
@@ -40,7 +42,7 @@ rec {
       } // inputs // _hardware;
 
       modules = [({ networking.hostName = hostname; })]
-        ++ extraModules
+        ++ _modules
         ++ (profile.modules or [])
         ++ [(( profile.extraConfig or {} // extraConfig ))] # TODO: this line is causing errors when profile.extraConfig is defined as a function
         ++ lib.optionals (homeManager.enable or false) [

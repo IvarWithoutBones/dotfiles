@@ -7,9 +7,6 @@
 }:
 
 {
-  # TODO: do this cleanly
-  imports = [ /etc/nixos/hardware-configuration.nix ];
-
   # links paths from derivations to /run/current-system/sw
   environment.pathsToLink = [ "/libexec" "/share/zsh" ];
 

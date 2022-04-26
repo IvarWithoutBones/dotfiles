@@ -46,6 +46,10 @@
           gpu = "nvidia";
         };
 
+        modules = [
+          ./modules/hardware-config/nixos-pc.nix
+        ];
+
         homeManager = {
           enable = true;
           sm64Rom = /home/ivv/misc/games/roms/n64/baserom.us.z64;
@@ -60,6 +64,10 @@
           gpu = "amd";
           cpu = "amd";
         };
+
+        modules = [
+          ./modules/hardware-config/nixos-laptop.nix
+        ];
 
         homeManager = {
           enable = true;
