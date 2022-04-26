@@ -2,7 +2,7 @@
   description = "My NixOS configuration, using home-manager";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable-small";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     home-manager = { 
       url = "github:nix-community/home-manager";
@@ -35,7 +35,7 @@
 
         homeManager = {
           enable = true;
-          sm64Rom = /mnt/hdd/roms/n64/baserom.us.z64;
+          sm64Rom = /home/ivv/misc/games/roms/n64/baserom.us.z64;
         };
       };
 
