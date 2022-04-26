@@ -12,16 +12,6 @@
   # links paths from derivations to /run/current-system/sw
   environment.pathsToLink = [ "/libexec" "/share/zsh" ];
 
-  nix = {
-    package = pkgs.nixUnstable;
-    settings = rec {
-      experimental-features = [ "nix-command" "flakes" ];
-      trusted-users = [ "@wheel" "ivv" ];
-      allowed-users = trusted-users;
-      auto-optimise-store = true;
-    };
-  };
-
   nixpkgs.config.allowUnfree = true;
 
   boot = {

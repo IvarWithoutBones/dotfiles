@@ -1,4 +1,7 @@
-{ nixpkgs, home-manager, ... } @ inputs:
+{ nixpkgs
+, home-manager
+, agenix
+, ... } @ inputs:
 
 let
   inherit (nixpkgs) lib;
@@ -10,13 +13,7 @@ rec {
     bluetooth = true;
   };
 
-  configFromProfile = profile: {
-    extraConfig = {
-      nixpkgs.overlays = [];
-    };
-  } // profile;
-
-  createSystem = _profile:
+  createSystem = profile:
     { system
     , hostname
     , hardware ? {}
@@ -26,8 +23,6 @@ rec {
     , ... }:
 
     let
-      profile = configFromProfile _profile;
-
       _hardware = {
         cpu = "";
         gpu = "";
@@ -37,8 +32,11 @@ rec {
       } // hardware;
     in
     nixpkgs.lib.nixosSystem rec {
-      specialArgs = inputs // _hardware;
       inherit system;
+
+      specialArgs = {
+        inherit system;
+      } // inputs // _hardware;
 
       modules = [({ networking.hostName = hostname; })]
         ++ extraModules

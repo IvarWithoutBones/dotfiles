@@ -3,15 +3,25 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
+
+    flake-utils = {
+      url = "github:numtide/flake-utils";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     home-manager = { 
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = inputs @ { self, nixpkgs, home-manager, flake-utils }: rec {
-    lib = import ./lib.nix { inherit (inputs) nixpkgs home-manager; };
+  outputs = inputs @ { self, nixpkgs, home-manager, flake-utils, agenix }: rec {
+    lib = import ./lib.nix { inherit (inputs) nixpkgs home-manager agenix; };
 
     # TODO: split up configuration.nix and create proper profiles
     profiles = {
@@ -19,6 +29,7 @@
         modules = [
           ./configuration.nix
           ./modules/hardware.nix
+          ./modules/system.nix
         ];
       };
     };
