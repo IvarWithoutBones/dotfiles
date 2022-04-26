@@ -78,7 +78,7 @@ if [ -z "${DONT_UPDATE-}" ]; then
     popd 1>/dev/null
 fi
 
-rebuild_cmd="sudo nixos-rebuild switch --impure ${dontWarnDirty} ${printLogs-}"
+rebuild_cmd="nixos-rebuild switch --impure --use-remote-sudo ${dontWarnDirty} ${printLogs-}"
 if [ "${FAST_REBUILD-}" ]; then
     rebuild_cmd+=" --fast"
 fi
