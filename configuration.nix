@@ -100,7 +100,6 @@
       support32Bit = true;
     } // lib.optionalAttrs bluetooth { # For bluetooth headphones
       package = pkgs.pulseaudioFull;
-      extraModules = [ pkgs.pulseaudio-modules-bt ];
       extraConfig = "
         load-module module-switch-on-connect
       ";
