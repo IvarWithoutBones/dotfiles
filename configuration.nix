@@ -55,6 +55,16 @@
     fstrim.enable = true;
     udev.packages = [ pkgs.qmk-udev-rules ];
 
+    zerotierone = {
+      enable = true;
+      joinNetworks = [
+         # Personal network
+        "12ac4a1e719ff42c"
+        # queens & co
+        "8286ac0e47868413"
+      ];
+    };
+
     xserver = {
       enable = true;
       libinput = {
