@@ -76,7 +76,21 @@
         "agenix": "agenix",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "sm64Rom": "sm64Rom"
+      }
+    },
+    "sm64Rom": {
+      "flake": false,
+      "locked": {
+        "lastModified": 950533684,
+        "narHash": "sha256-17QwWB78jo5cu8iihsoVSirUhToywHMmKL2zPNYgerM=",
+        "path": "/home/ivv/misc/games/roms/n64/sm64.z64",
+        "type": "path"
+      },
+      "original": {
+        "path": "/home/ivv/misc/games/roms/n64/sm64.z64",
+        "type": "path"
       }
     }
   },

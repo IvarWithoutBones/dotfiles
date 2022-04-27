@@ -18,9 +18,14 @@
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    sm64Rom = {
+      url = "path:/home/ivv/misc/games/roms/n64/sm64.z64";
+      flake = false;
+    };
   };
 
-  outputs = inputs @ { self, nixpkgs, home-manager, flake-utils, agenix }: rec {
+  outputs = inputs @ { self, nixpkgs, home-manager, flake-utils, agenix, sm64Rom }: rec {
     lib = import ./lib.nix { inherit (inputs) nixpkgs home-manager agenix; };
 
     # TODO: split up configuration.nix and create proper profiles
@@ -52,7 +57,7 @@
 
         homeManager = {
           enable = true;
-          sm64Rom = /home/ivv/misc/games/roms/n64/baserom.us.z64;
+          inherit sm64Rom;
         };
       };
 
@@ -71,7 +76,7 @@
 
         homeManager = {
           enable = true;
-          sm64Rom = /home/ivv/misc/games/roms/n64/sm64.z64;
+          inherit sm64Rom;
         };
 
         extraConfig = {
