@@ -3,29 +3,28 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-
     flake-utils = {
       url = "github:numtide/flake-utils";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     home-manager = { 
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     sm64Rom = {
       url = "path:/home/ivv/misc/games/roms/n64/sm64.z64";
       flake = false;
     };
   };
 
-  outputs = inputs @ { self, nixpkgs, home-manager, flake-utils, agenix, sm64Rom }: rec {
+  outputs = inputs @ { self, nixpkgs, home-manager, flake-utils, agenix, sm64Rom }: let
+    # TODO: add multi platform support
+    pkgs = nixpkgs.legacyPackages.x86_64-linux;
+  in rec {
     lib = import ./lib.nix { inherit (inputs) nixpkgs home-manager agenix; };
 
     # TODO: split up configuration.nix and create proper profiles
@@ -82,14 +81,12 @@
         extraConfig = {
           boot = {
             kernelParams = [ "acpi_backlight=vendor" ]; # Fixes backlight
-            extraModulePackages = with nixpkgs.legacyPackages.${system}.linuxPackages_latest; [ rtl8821ce ];
+            extraModulePackages = with pkgs.linuxPackages_latest; [ rtl8821ce ];
           };
         };
       };
     };
-  } // (flake-utils.lib.eachDefaultSystem (system: let
-    pkgs = nixpkgs.legacyPackages.${system};
- in {
+
     devShell = pkgs.mkShell {
       nativeBuildInputs = with pkgs; [
         coreutils
@@ -104,5 +101,34 @@
         jq
       ];
     };
-  }));
+
+    deploy = pkgs.writeShellScriptBin "deploy-to-cachix" ''
+      set -e
+
+      logMessage() {
+        echo -e "\e[1;32minfo:\e[0m $1"
+      }
+
+      rebuild() {
+        logMessage "Building \"$1\"..."
+        nixos-rebuild build --flake ''${DOTFILES_DIR}#$1 --use-remote-sudo --print-build-logs --option warn-dirty false
+        logMessage "Pushing outputs of \"$1\" to cachix..."
+        cachix push ivar-personal ./result
+        rm -rf ./result
+      }
+
+      NIXOS_SYSTEMS="${toString(builtins.attrNames nixosConfigurations)}"
+      if [ -z "''${DOTFILES_DIR}" ]; then
+        DOTFILES_DIR=$HOME/nix/dotfiles
+      fi
+
+      TMPDIR=$(mktemp -d)
+      trap "rm -rf ''${TMPDIR}" EXIT
+      cd ''${TMPDIR}
+
+      for i in ''${NIXOS_SYSTEMS[@]}; do
+        rebuild "$i"
+      done
+    '';
+  };
 }
