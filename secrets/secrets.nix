@@ -4,5 +4,6 @@ let
 
   systems = [ nixos-pc nixos-laptop ];
 in {
-  "cachix-dhall.age".publicKeys = systems;
+  "cachix-config.age".publicKeys = systems;
+  "sm64.age".publicKeys = systems;
 }

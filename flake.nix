@@ -3,25 +3,24 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
     flake-utils = {
       url = "github:numtide/flake-utils";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     home-manager = { 
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    sm64Rom = {
-      url = "path:/home/ivv/misc/games/roms/n64/sm64.z64";
-      flake = false;
-    };
   };
 
-  outputs = inputs @ { self, nixpkgs, home-manager, flake-utils, agenix, sm64Rom }: let
+  outputs = inputs @ { self, nixpkgs, home-manager, flake-utils, agenix }: let
     # TODO: add multi platform support
     pkgs = nixpkgs.legacyPackages.x86_64-linux;
   in rec {
@@ -56,7 +55,6 @@
 
         homeManager = {
           enable = true;
-          inherit sm64Rom;
         };
       };
 
@@ -75,7 +73,6 @@
 
         homeManager = {
           enable = true;
-          inherit sm64Rom;
         };
 
         extraConfig = {

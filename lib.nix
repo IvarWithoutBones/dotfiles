@@ -1,6 +1,5 @@
 { nixpkgs
 , home-manager
-, agenix
 , ... } @ inputs:
 
 let
@@ -50,10 +49,7 @@ rec {
                home-manager.useGlobalPkgs = true;
                home-manager.useUserPackages = true;
 
-               home-manager.extraSpecialArgs = specialArgs // {
-                 sm64Rom = null;
-               } // homeManager;
-
+               home-manager.extraSpecialArgs = specialArgs // homeManager;
                home-manager.users.${profile.username} = ./home-manager/home.nix; # TODO: make configurable
              }
         ];
