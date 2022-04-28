@@ -84,21 +84,6 @@
       };
     };
 
-    devShell = pkgs.mkShell {
-      nativeBuildInputs = with pkgs; [
-        coreutils
-        neovim
-        bat
-        wget
-        git
-        htop
-        unar
-        python3
-        file
-        jq
-      ];
-    };
-
     deploy = pkgs.writeShellScriptBin "deploy-to-cachix" ''
       set -e
 
