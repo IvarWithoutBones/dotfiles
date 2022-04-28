@@ -70,15 +70,13 @@ if [ "${PRINT_BUILD_LOGS-}" ]; then
     printLogs="--print-build-logs"
 fi
 
-dontWarnDirty="--option warn-dirty false"
-
 if [ -z "${DONT_UPDATE-}" ]; then
     pushd "${DOTFILES_DIR-}" 1>/dev/null
     runColored "nix flake update ${dontWarnDirty} ${printLogs-}"
     popd 1>/dev/null
 fi
 
-rebuild_cmd="nixos-rebuild switch --use-remote-sudo ${printLogs-} ${dontWarnDirty}"
+rebuild_cmd="nixos-rebuild switch --use-remote-sudo ${printLogs-}"
 if [ "${FAST_REBUILD-}" ]; then
     rebuild_cmd+=" --fast"
 fi

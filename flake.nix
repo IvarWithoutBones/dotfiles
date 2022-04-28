@@ -93,7 +93,7 @@
 
       rebuild() {
         logMessage "Building \"$1\"..."
-        nixos-rebuild build --flake ''${DOTFILES_DIR}#$1 --use-remote-sudo --print-build-logs --option warn-dirty false
+        nixos-rebuild build --flake ''${DOTFILES_DIR}#$1 --use-remote-sudo --print-build-logs
         logMessage "Pushing outputs of \"$1\" to cachix..."
         cachix push ivar-personal ./result
         rm -rf ./result

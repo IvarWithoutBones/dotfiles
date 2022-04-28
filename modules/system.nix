@@ -28,9 +28,10 @@
     package = pkgs.nixUnstable;
 
     settings = rec {
-      experimental-features = [ "nix-command" "flakes" ];
       auto-optimise-store = true;
+      warn-dirty = false;
 
+      experimental-features = [ "nix-command" "flakes" ];
       trusted-users = [ "@wheel" username ];
       allowed-users = trusted-users;
 
