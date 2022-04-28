@@ -53,7 +53,7 @@
           ./modules/hardware-config/nixos-pc.nix
         ];
 
-        homeManager = {
+        home-manager = {
           enable = true;
         };
       };
@@ -71,7 +71,7 @@
           ./modules/hardware-config/nixos-laptop.nix
         ];
 
-        homeManager = {
+        home-manager = {
           enable = true;
         };
 
@@ -87,7 +87,7 @@
         system = "x86_64-linux";
         hostname = "vm";
 
-        homeManager = {
+        home-manager = {
           enable = true;
         };
 
@@ -110,8 +110,14 @@
       NIXOS_SYSTEMS="${toString(builtins.attrNames nixosConfigurations)}"
 
       rebuild() {
+        if [[ "$1" = "vm" ]]; then
+          SWITCH="build-vm"
+        else
+          SWITCH="build"
+        fi
+
         logMessage "Building \"$1\"..."
-        nixos-rebuild build --flake ''${DOTFILES_DIR}#$1 --use-remote-sudo --print-build-logs
+        nixos-rebuild ''${SWITCH} --flake ''${DOTFILES_DIR}#$1 --use-remote-sudo --print-build-logs
 
         logMessage "Pushing outputs of \"$1\" to cachix..."
         cachix push ivar-personal ./result

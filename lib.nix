@@ -34,8 +34,8 @@ rec {
     , hardware ? {}
     , modules ? []
     , extraConfig ? {}
-    , homeManager ? {}
-    , ... }:
+    , home-manager ? {}
+    , ... } @ args:
 
     let
       _hardware = {
@@ -60,12 +60,12 @@ rec {
         ++ _modules
         ++ (profile.modules or [])
         ++ [(( profile.extraConfig or {} // extraConfig ))] # TODO: this line is causing errors when profile.extraConfig is defined as a function
-        ++ lib.optionals (homeManager.enable or false) [
-             home-manager.nixosModules.home-manager {
+        ++ lib.optionals (args.home-manager.enable or false) [
+             inputs.home-manager.nixosModules.home-manager {
                home-manager.useGlobalPkgs = true;
                home-manager.useUserPackages = true;
 
-               home-manager.extraSpecialArgs = specialArgs // homeManager;
+               home-manager.extraSpecialArgs = specialArgs // args.home-manager;
                home-manager.users.${profile.username} = ./home-manager/home.nix; # TODO: make configurable
              }
         ];
