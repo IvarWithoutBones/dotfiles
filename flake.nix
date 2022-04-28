@@ -84,22 +84,32 @@
       };
     };
 
-    deploy = pkgs.writeShellScriptBin "deploy-to-cachix" ''
-      set -e
+    build = pkgs.writeShellScriptBin "build-all-systems" ''
+      ${lib.shell-functions}
 
-      logMessage() {
-        echo -e "\e[1;32minfo:\e[0m $1"
-      }
+      NIXOS_SYSTEMS="${toString(builtins.attrNames nixosConfigurations)}"
+
+      for i in ''${NIXOS_SYSTEMS[@]}; do
+        logMessage "Building \"''${i}\"..."
+        ${pkgs.nixos-rebuild}/bin/nixos-rebuild build --flake ''${DOTFILES_DIR}#''${i} --use-remote-sudo --print-build-logs
+      done
+    '';
+
+    deploy = pkgs.writeShellScriptBin "deploy-to-cachix" ''
+      ${lib.shell-functions}
 
       rebuild() {
         logMessage "Building \"$1\"..."
         nixos-rebuild build --flake ''${DOTFILES_DIR}#$1 --use-remote-sudo --print-build-logs
+
         logMessage "Pushing outputs of \"$1\" to cachix..."
         cachix push ivar-personal ./result
+
         rm -rf ./result
       }
 
       NIXOS_SYSTEMS="${toString(builtins.attrNames nixosConfigurations)}"
+
       if [ -z "''${DOTFILES_DIR}" ]; then
         DOTFILES_DIR=$HOME/nix/dotfiles
       fi

@@ -1,11 +1,24 @@
 { nixpkgs
 , home-manager
-, ... } @ inputs:
+, ...
+} @ inputs:
 
 let
   inherit (nixpkgs) lib;
 in
 rec {
+  shell-functions = ''
+    set -e
+
+    logMessage() {
+      echo -e "\e[1;32minfo:\e[0m $1"
+    }
+
+    if [ -z "''${DOTFILES_DIR}" ]; then
+      DOTFILES_DIR=$HOME/nix/dotfiles
+    fi
+  '';
+
   mkLaptop = {
     touchpad = true;
     battery = true;
