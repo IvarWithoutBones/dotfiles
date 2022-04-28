@@ -12,7 +12,7 @@
     videoDrivers = [(
       if (gpu == "nvidia") then "nvidia"
       else if (gpu == "amd") then "amdgpu"
-      else null
+      else ""
     )];
 
     # Fixes screentearing
