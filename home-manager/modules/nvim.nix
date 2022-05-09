@@ -9,17 +9,7 @@
     vimdiffAlias = true;
   
     plugins = with pkgs.vimPlugins; [
-      # Logging in did not work for me on 2022-02-15
-      (copilot-vim.overrideAttrs (attrs: {
-        version = "2022-04-09";
-
-        src = pkgs.fetchFromGitHub {
-          owner = "github";
-          repo = "copilot.vim";
-          rev = "573da1aaadd7402c3ab22fb1ae6853db1dc82acb";
-          sha256 = "sha256-BEWrW28JUZGJTa8qEv2e3NkOlPkjmAUQsRPRDIraWcg=";
-        };
-      }))
+      copilot-vim
 
       barbar-nvim
       toggleterm-nvim
@@ -78,17 +68,21 @@
       xclip # For clipboard support
       ccls
       rnix-lsp
+      clang-tools
     ];
 
     coc = {
       enable = true;
+
       settings = {
+        client.snippetSupport = true;
+
         suggest = {
           enablePreview = true;
           noselect = true;
           enablePreselect = false;
         };
-        client.snippetSupport = true;
+
         languageserver = {
           nix = {
             command = "${pkgs.rnix-lsp}/bin/rnix-lsp";
@@ -98,19 +92,26 @@
               ".git"
             ];
           };
-          cpp = {
-            command = "${pkgs.ccls}/bin/ccls";
+
+          clangd = {
+            command = "${pkgs.clang-tools}/bin/clangd";
+            compilationDatabasePath = "build/compile_commands.json";
+
+            extraArgs = [
+              "--background-index"
+            ];
+
             filetypes = [
               "c"
               "cpp"
               "objc"
               "objcpp"
             ];
+
             rootPatterns = [
               "CMakeLists.txt"
               "build"
               "src"
-              ".git"
             ];
           };
         };
@@ -183,6 +184,30 @@
       " Coc config
       set signcolumn=number
       autocmd CursorHold * silent call CocActionAsync('highlight')
+
+      " Mappings for CoCList
+      " Show all diagnostics.
+      nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+      " Manage extensions.
+      nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
+      " Show commands.
+      nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
+      " Find symbol of current document.
+      nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
+      " Search workspace symbols.
+      nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
+      " Do default action for next item.
+      nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
+      " Do default action for previous item.
+      nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
+      " Resume latest coc list.
+      nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+
+      nmap <silent> gd <Plug>(coc-definition)
+      nmap <silent> gy <Plug>(coc-type-definition)
+      nmap <silent> gi <Plug>(coc-implementation)
+      nmap <silent> gr <Plug>(coc-references)
+      nmap <silent> rn <Plug>(coc-rename)
 
       inoremap <silent><expr> <TAB>
         \ pumvisible() ? "\<C-n>" :
