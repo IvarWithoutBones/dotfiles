@@ -24,6 +24,7 @@
       speedtest = "printf 'Ping: ' && ping google.com -c 1 | grep time= | cut -d'=' -f4 && ${pkgs.speedtest-cli}/bin/speedtest | grep -E 'Download|Upload'";
       mp3 = "mpv --no-video";
       battery-left = "${pkgs.acpi}/bin/acpi | cut -d' ' -f5";
+      viewimg = "${pkgs.i3-swallow}/bin/swallow ${pkgs.feh}/bin/feh \"$@\"";
       caps = "${pkgs.xdotool}/bin/xdotool key Caps_Lock";
       CAPS = caps;
     };
@@ -42,8 +43,35 @@
     initExtra = ''
       ${pkgs.lib.optionalString config.programs.direnv.enable ''eval "$(direnv hook zsh)"''}
 
+      get-git-root() {
+        echo "$(${pkgs.git}/bin/git rev-parse --show-toplevel 2>/dev/null)"
+      }
+
       cd-git-root() {
-        cd $(${pkgs.git}/bin/git rev-parse --show-toplevel 2>/dev/null)
+        cd "$(get-git-root)"
+      }
+
+      mkscript() {
+        if (( $# > 1 )); then
+          echo "error: more than one argument supplied!"
+          return
+        fi
+
+        touch "$1"
+        chmod +x "$1"
+        $EDITOR "$1"
+      }
+
+      cleanbuild() {
+        if [ "''${get-git-root}" ]; then
+          cd-git-root
+        fi
+
+        rm -rf build
+        mkdir build
+        cd build
+        cmake ..
+        make -j
       }
 
       callPackage() {

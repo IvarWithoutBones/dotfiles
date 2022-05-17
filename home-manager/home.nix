@@ -17,6 +17,7 @@
   
   nixpkgs.config = {
     allowUnfree = true;
+    allowUnfreePredicate = (pkg: true);
     experimental-features = "nix-command flakes";
     packageOverrides = pkgs: {
       discord = (pkgs.discord.overrideAttrs (attrs: { # Use the latest version because upstream updates break old versions

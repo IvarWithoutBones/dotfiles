@@ -50,6 +50,7 @@ in {
     nix-index
     nix-prefetch-git
     comma
+    manix
 
     # custom tools
     dotfiles-tool
