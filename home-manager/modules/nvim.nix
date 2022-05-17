@@ -9,20 +9,45 @@
     vimdiffAlias = true;
   
     plugins = with pkgs.vimPlugins; [
-      copilot-vim
+      # Using the latest revision as of 2022-05-14 as previous versions now fail to start:
+      # Unhandled status from server: Please upgrade your Copilot extension to continue using this service.
+      (copilot-vim.overrideAttrs (attrs: {
+        version = "unstable-2022-05-09";
+
+        src = pkgs.fetchFromGitHub {
+          owner = "github";
+          repo = "copilot.vim";
+          rev = "df203c1356b72032df32d7b0b5facb4895139b6e";
+          sha256 = "18v21b314p4firiz0xhqnfl45g5wbcigiqq4ypnhf1lgwd6ngpqd";
+        };
+      }))
 
       barbar-nvim
       toggleterm-nvim
       coc-nvim
       editorconfig-nvim
+      nvim-web-devicons
 
       vim-rooter
       vim-nix
 
-      airline
       tender-vim
       telescope-nvim
       plenary-nvim # Dependency of telescope
+      {
+        plugin = lualine-nvim;
+        config = ''
+          lua << EOF
+            require('lualine').setup {
+              options = {
+                theme = "auto",
+                section_separators = "|",
+                component_separators = "|"
+              }
+            }
+          EOF
+        '';
+      }
       {
         plugin = sqlite-lua;
         config = "let g:sqlite_clib_path = '${pkgs.sqlite.out}/lib/libsqlite3.so'";
@@ -62,13 +87,12 @@
     ];
 
     extraPackages = with pkgs; [
-      nodejs_latest
       lua
       ripgrep # For :Telescope live_grep
       xclip # For clipboard support
       ccls
-      rnix-lsp
       clang-tools
+      rnix-lsp
     ];
 
     coc = {
@@ -143,6 +167,8 @@
       nnoremap <A-k> <C-w>k
       nnoremap <A-l> <C-w>l
 
+      "autocmd FileType nix set tabstop=2 softtabstop=0 shiftwidth=2 expandtab
+
       " various fixes for the tab key
       set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
 
@@ -154,7 +180,6 @@
       let $NVIM_TUI_ENABLE_TRUE_COLOR=1
       set termguicolors
       colorscheme tender
-      let g:airline_theme = 'tender'
 
       " Tab config
       let bufferline = get(g:, 'bufferline', {})
