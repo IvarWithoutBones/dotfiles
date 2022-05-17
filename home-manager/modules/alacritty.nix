@@ -17,7 +17,10 @@ in {
 
     settings = {
       inherit (dracula-theme) colors;
-      font.size = 8.0;
+      font = {
+        normal.family = "FiraCode Nerd Font";
+        size = 10.0;
+      };
 
       key_bindings = let
         mod = "Alt";

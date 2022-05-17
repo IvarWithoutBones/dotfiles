@@ -45,7 +45,9 @@ in {
     feh
     jq
     killall
-  
+
+    (nerdfonts.override { fonts = [ "FiraCode" ]; })
+
     # Nix specific utils
     nix-index
     nix-prefetch-git

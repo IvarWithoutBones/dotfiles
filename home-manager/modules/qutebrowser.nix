@@ -17,10 +17,15 @@ in {
       colors.webpage.preferred_color_scheme = "dark";
       downloads.location.directory = "$HOME/downloads";
       content.javascript.can_access_clipboard = true;
+
+      url = {
+        start_pages = "https://www.google.com";
+        default_page = "https://www.google.com";
+      };
     };
   
     searchEngines = {
-      DEFAULT = "https://duckduckgo.com/?q={}";
+      DEFAULT = "https://www.google.com/search?q={}";
       git = "https://github.com/search?q={}";
       nix = "https://search.nixos.org/packages?query={}&channel=unstable";
       pip = "https://pypi.org/search/?q={}";

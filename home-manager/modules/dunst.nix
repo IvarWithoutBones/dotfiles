@@ -9,7 +9,7 @@
         color = "#ffffff";
         frame_color = "#565d6d";
         separator_color = "#565d6d";
-        font = "System San Francisco Display 8";
+        font = "FiraCode Nerd Font";
       };
   
       # TODO: doesn't seem to work?

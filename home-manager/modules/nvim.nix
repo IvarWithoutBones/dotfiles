@@ -3,7 +3,8 @@
 {
   programs.neovim = {
     enable = true;
-  
+    withNodeJs = true;
+
     viAlias = true;
     vimAlias = true;
     vimdiffAlias = true;
@@ -40,29 +41,20 @@
           lua << EOF
             require('lualine').setup {
               options = {
-                theme = "auto",
+                theme = "gruvbox_dark",
                 section_separators = "|",
                 component_separators = "|"
               }
             }
           EOF
         '';
-      }
-      {
+      } {
         plugin = sqlite-lua;
         config = "let g:sqlite_clib_path = '${pkgs.sqlite.out}/lib/libsqlite3.so'";
-      }
-      {
+      } {
         plugin = nvim-tree-lua;
         config = ''
           map <silent> <c-b> :NvimTreeToggle<CR>
-
-          let g:nvim_tree_show_icons = {
-            \ 'git': 1,
-            \ 'folders': 0,
-            \ 'files': 0,
-            \ 'folder_arrows': 0,
-          \ }
 
           let g:nvim_tree_group_empty = 1
 
@@ -92,7 +84,6 @@
       xclip # For clipboard support
       ccls
       clang-tools
-      rnix-lsp
     ];
 
     coc = {
@@ -148,10 +139,13 @@
       set relativenumber
       set tabstop=2
       set mouse=a
-      set cmdheight=2
       set updatetime=300
-      set signcolumn=yes
       set clipboard+=unnamedplus " For system clipboard support, needs xclip
+      set signcolumn=number
+
+      " Colorscheme options
+      set termguicolors
+      colorscheme tender
 
       " use `ALT+{h,j,k,l}` to navigate windows from any mode
       tnoremap <A-h> <C-\><C-N><C-w>h
@@ -167,7 +161,7 @@
       nnoremap <A-k> <C-w>k
       nnoremap <A-l> <C-w>l
 
-      "autocmd FileType nix set tabstop=2 softtabstop=0 shiftwidth=2 expandtab
+      autocmd FileType nix set tabstop=2 softtabstop=0 shiftwidth=2 expandtab
 
       " various fixes for the tab key
       set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
@@ -175,11 +169,6 @@
       " Maps to insert a new line without going into insert mode
       nmap <S-Enter> O<Esc>
       nmap <CR> o<Esc>
-
-      " Colorscheme options
-      let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-      set termguicolors
-      colorscheme tender
 
       " Tab config
       let bufferline = get(g:, 'bufferline', {})
@@ -207,7 +196,6 @@
       let g:rooter_patterns = ['.git', '=${config.home.homeDirectory}/nix/nixpkgs' ]
 
       " Coc config
-      set signcolumn=number
       autocmd CursorHold * silent call CocActionAsync('highlight')
 
       " Mappings for CoCList

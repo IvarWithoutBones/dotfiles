@@ -33,7 +33,7 @@ in {
       modifier = mod;
       keybindings = import ./keybindings.nix { inherit config pkgs mod workspaces; };
       fonts = {
-        names = [ "Liberation Sans" ];
+        names = [ "FiraCode Nerd Font" ];
         size = 10.0;
       };
       defaultWorkspace = "workspace ${workspaces.ws1}";
@@ -78,7 +78,7 @@ in {
         position = "top";
 
         fonts = {
-          names = [ "Liberation Sans" ];
+          names = [ "FiraCode Nerd Font" ];
           size = 10.0;
         };
 
