@@ -25,6 +25,7 @@
       mp3 = "mpv --no-video";
       battery-left = "${pkgs.acpi}/bin/acpi | cut -d' ' -f5";
       viewimg = "${pkgs.i3-swallow}/bin/swallow ${pkgs.feh}/bin/feh \"$@\"";
+      weather = "curl -S 'https://wttr.in/?1F'";
       caps = "${pkgs.xdotool}/bin/xdotool key Caps_Lock";
       CAPS = caps;
     };

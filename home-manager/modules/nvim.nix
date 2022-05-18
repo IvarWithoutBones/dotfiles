@@ -195,6 +195,7 @@
       set updatetime=300
       set clipboard+=unnamedplus " For system clipboard support, needs xclip
       set signcolumn=number
+      set noshowmode
 
       " Colorscheme options
       set termguicolors
