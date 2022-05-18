@@ -8,7 +8,7 @@
     viAlias = true;
     vimAlias = true;
     vimdiffAlias = true;
-  
+
     plugins = with pkgs.vimPlugins; [
       # Using the latest revision as of 2022-05-14 as previous versions now fail to start:
       # Unhandled status from server: Please upgrade your Copilot extension to continue using this service.
@@ -23,7 +23,6 @@
         };
       }))
 
-      barbar-nvim
       toggleterm-nvim
       coc-nvim
       editorconfig-nvim
@@ -35,24 +34,73 @@
       tender-vim
       telescope-nvim
       plenary-nvim # Dependency of telescope
+
+      {
+        plugin = with pkgs.tree-sitter-grammars; (nvim-treesitter.withPlugins (plugins: [
+          tree-sitter-bash
+          tree-sitter-python
+          tree-sitter-nix
+          tree-sitter-cmake
+          tree-sitter-cpp
+          tree-sitter-c
+        ]));
+
+        config = ''
+          lua << EOF
+            require'nvim-treesitter.configs'.setup {
+              highlight = {
+                enable = true,
+              },
+
+              indent = {
+                enable = true,
+              },
+
+              incremental_selection = {
+                enable = true,
+                keymaps = {
+                  init_selection = "gn",
+                  scope_incremental = "gs",
+                  node_incremental = "gl",
+                  node_decremental = "gh",
+                },
+              },
+            }
+          EOF
+        '';
+      }
+      {
+        # Tab configurations
+        plugin = barbar-nvim;
+
+        config = ''
+          let bufferline = get(g:, 'bufferline', {})
+          let bufferline.animation = v:false
+
+          nnoremap <silent> <s-f> :BufferPick<CR>
+          nnoremap <silent> fw :BufferClose<CR>
+          nnoremap <silent> fl :BufferNext<CR>
+          nnoremap <silent> fh :BufferPrevious<CR>
+          nnoremap <silent> fml :BufferMoveNext<CR>
+          nnoremap <silent> fmh :BufferMovePrevious<CR>
+        '';
+      }
       {
         plugin = lualine-nvim;
+
         config = ''
           lua << EOF
             require('lualine').setup {
               options = {
                 theme = "gruvbox_dark",
-                section_separators = "|",
-                component_separators = "|"
               }
             }
           EOF
         '';
-      } {
-        plugin = sqlite-lua;
-        config = "let g:sqlite_clib_path = '${pkgs.sqlite.out}/lib/libsqlite3.so'";
-      } {
+      }
+      {
         plugin = nvim-tree-lua;
+
         config = ''
           map <silent> <c-b> :NvimTreeToggle<CR>
 
@@ -61,8 +109,8 @@
           lua << EOF
             require'nvim-tree'.setup {
               update_focused_file = {
-                enable      = true,
-                update_cwd  = true,
+                enable = true,
+                update_cwd = true,
               },
 
               filters = {
@@ -75,6 +123,11 @@
             }
           EOF
         '';
+      }
+      {
+        # Dependency
+        plugin = sqlite-lua;
+        config = "let g:sqlite_clib_path = '${pkgs.sqlite.out}/lib/libsqlite3.so'";
       }
     ];
 
@@ -132,7 +185,7 @@
         };
       };
     };
-  
+
     extraConfig = ''
       syntax enable
       set number
@@ -164,24 +217,11 @@
       autocmd FileType nix set tabstop=2 softtabstop=0 shiftwidth=2 expandtab
 
       " various fixes for the tab key
-      set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
+      set tabstop=4 softtabstop=0 expandtab shiftwidth=4 smarttab
 
       " Maps to insert a new line without going into insert mode
       nmap <S-Enter> O<Esc>
       nmap <CR> o<Esc>
-
-      " Tab config
-      let bufferline = get(g:, 'bufferline', {})
-      let bufferline.animation = v:false
-      let bufferline.icons = v:false
-      let bufferline.icon_close_tab = '●'
-
-      nnoremap <silent> <s-f> :BufferPick<CR>
-      nnoremap <silent> fw :BufferClose<CR>
-      nnoremap <silent> fl :BufferNext<CR>
-      nnoremap <silent> fh :BufferPrevious<CR>
-      nnoremap <silent> fml :BufferMoveNext<CR>
-      nnoremap <silent> fmh :BufferMovePrevious<CR>
 
       " Telescope config
       nnoremap <silent> tg :Telescope live_grep theme=ivy<CR>
@@ -215,6 +255,8 @@
       nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
       " Resume latest coc list.
       nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+      " Format the currently open buffer
+      nnoremap <silent><nowait> <space>f  :<C-u>CocCommand editor.action.formatDocument<cr>
 
       nmap <silent> gd <Plug>(coc-definition)
       nmap <silent> gy <Plug>(coc-type-definition)
