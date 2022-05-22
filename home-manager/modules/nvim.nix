@@ -36,6 +36,14 @@
       plenary-nvim # Dependency of telescope
 
       {
+        plugin = git-blame-nvim;
+        config = ''
+          let g:gitblame_date_format = '%r'
+          let g:gitblame_enabled = 0
+          nnoremap gb :GitBlameToggle<CR>
+        '';
+      }
+      {
         plugin = with pkgs.tree-sitter-grammars; (nvim-treesitter.withPlugins (plugins: [
           tree-sitter-bash
           tree-sitter-python
@@ -258,6 +266,8 @@
       nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
       " Format the currently open buffer
       nnoremap <silent><nowait> <space>f  :<C-u>CocCommand editor.action.formatDocument<cr>
+      " Run the suggested action
+      nnoremap <silent><nowait> <space><space>  :<C-u>CocAction<cr>
 
       nmap <silent> gd <Plug>(coc-definition)
       nmap <silent> gy <Plug>(coc-type-definition)
