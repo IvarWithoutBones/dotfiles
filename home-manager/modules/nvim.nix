@@ -9,7 +9,19 @@
     vimAlias = true;
     vimdiffAlias = true;
 
+    extraPackages = with pkgs; [
+      lua
+      clang-tools
+      ripgrep # For :Telescope live_grep
+      xclip # For clipboard support
+    ];
+
     plugins = with pkgs.vimPlugins; [
+      plenary-nvim # Dependency of telescope
+      vim-nix
+      editorconfig-nvim
+      nvim-web-devicons
+
       # Using the latest revision as of 2022-05-14 as previous versions now fail to start:
       # Unhandled status from server: Please upgrade your Copilot extension to continue using this service.
       (copilot-vim.overrideAttrs (attrs: {
@@ -22,20 +34,49 @@
           sha256 = "18v21b314p4firiz0xhqnfl45g5wbcigiqq4ypnhf1lgwd6ngpqd";
         };
       }))
-
-      toggleterm-nvim
-      coc-nvim
-      editorconfig-nvim
-      nvim-web-devicons
-
-      vim-rooter
-      vim-nix
-
-      tender-vim
-      telescope-nvim
-      plenary-nvim # Dependency of telescope
-
       {
+        plugin = toggleterm-nvim;
+        config = ''
+          lua << EOF
+            require("toggleterm").setup()
+          EOF
+
+          " Pop up terminal config
+          nnoremap <silent> <c-o> :ToggleTerm<CR>
+          autocmd TermEnter term://*toggleterm#*
+            \ tnoremap <silent> <c-o> <Cmd>exe v:count1 . "ToggleTerm"<CR>
+        '';
+      }
+      {
+        # Fuzzy file search/grep
+        plugin = telescope-nvim;
+        config = ''
+          nnoremap <silent> tg :Telescope live_grep theme=ivy<CR>
+          nnoremap <silent> tk :Telescope find_files theme=ivy<CR>
+        '';
+      }
+      {
+        # Theme and related options
+        plugin = catppuccin-nvim;
+        config = ''
+          lua << EOF
+            vim.g.catppuccin_flavour = "mocha" -- latte, frappe, macchiato, mocha
+            require('catppuccin').setup {
+              styles = {
+                functions = "italic",
+                keywords = "italic",
+                variables = "italic",
+              },
+            }
+          EOF
+
+          set termguicolors
+          set cursorline
+          colorscheme catppuccin
+        '';
+      }
+      {
+        # Inline git blame
         plugin = git-blame-nvim;
         config = ''
           let g:gitblame_date_format = '%r'
@@ -44,6 +85,14 @@
         '';
       }
       {
+        # Automatically changes pwd to git trees root
+        plugin = vim-rooter;
+        config = ''
+          let g:rooter_patterns = ['.git', '=${config.home.homeDirectory}/nix/nixpkgs' ]
+        '';
+      }
+      {
+        # Better syntax highlighting and indentation
         plugin = with pkgs.tree-sitter-grammars; (nvim-treesitter.withPlugins (plugins: [
           tree-sitter-bash
           tree-sitter-python
@@ -58,6 +107,9 @@
             require'nvim-treesitter.configs'.setup {
               highlight = {
                 enable = true,
+                disable = {
+                  'nix'
+                },
               },
 
               indent = {
@@ -78,9 +130,8 @@
         '';
       }
       {
-        # Tab configurations
+        # Buffer management with nice looking tabs
         plugin = barbar-nvim;
-
         config = ''
           let bufferline = get(g:, 'bufferline', {})
           let bufferline.animation = v:false
@@ -94,25 +145,23 @@
         '';
       }
       {
+        # Status line
         plugin = lualine-nvim;
-
         config = ''
           lua << EOF
             require('lualine').setup {
               options = {
-                theme = "gruvbox_dark",
+                theme = "catppuccin",
               }
             }
           EOF
         '';
       }
       {
+        # Tree-like file manager
         plugin = nvim-tree-lua;
-
         config = ''
           map <silent> <c-b> :NvimTreeToggle<CR>
-
-          let g:nvim_tree_group_empty = 1
 
           lua << EOF
             require'nvim-tree'.setup {
@@ -122,7 +171,11 @@
               },
 
               filters = {
-                dotfiles = true,
+                dotfiles = false,
+              },
+
+              renderer = {
+                group_empty = true,
               },
 
               view = {
@@ -133,22 +186,27 @@
         '';
       }
       {
-        # Dependency
+        # Dependency of some plugins
         plugin = sqlite-lua;
         config = "let g:sqlite_clib_path = '${pkgs.sqlite.out}/lib/libsqlite3.so'";
       }
     ];
 
-    extraPackages = with pkgs; [
-      lua
-      ripgrep # For :Telescope live_grep
-      xclip # For clipboard support
-      ccls
-      clang-tools
-    ];
-
     coc = {
       enable = true;
+
+      # The version in nixpkgs as of 2022-05-30 fails when rebuilding whenever nodejs is enabled
+      package = pkgs.vimUtils.buildVimPluginFrom2Nix {
+        pname = "coc.nvim";
+        version = "2022-05-21";
+
+        src = pkgs.fetchFromGitHub {
+          owner = "neoclide";
+          repo = "coc.nvim";
+          rev = "791c9f673b882768486450e73d8bda10e391401d";
+          sha256 = "sha256-MobgwhFQ1Ld7pFknsurSFAsN5v+vGbEFojTAYD/kI9c=";
+        };
+      };
 
       settings = {
         client.snippetSupport = true;
@@ -205,10 +263,6 @@
       set signcolumn=number
       set noshowmode
 
-      " Colorscheme options
-      set termguicolors
-      colorscheme tender
-
       " use `ALT+{h,j,k,l}` to navigate windows from any mode
       tnoremap <A-h> <C-\><C-N><C-w>h
       tnoremap <A-j> <C-\><C-N><C-w>j
@@ -223,31 +277,16 @@
       nnoremap <A-k> <C-w>k
       nnoremap <A-l> <C-w>l
 
-      autocmd FileType nix set tabstop=2 softtabstop=0 shiftwidth=2 expandtab
-
       " various fixes for the tab key
       set tabstop=4 softtabstop=0 expandtab shiftwidth=4 smarttab
+      autocmd FileType nix set tabstop=2 softtabstop=0 shiftwidth=2 expandtab
 
       " Maps to insert a new line without going into insert mode
       nmap <S-Enter> O<Esc>
       nmap <CR> o<Esc>
 
-      " Telescope config
-      nnoremap <silent> tg :Telescope live_grep theme=ivy<CR>
-      nnoremap <silent> tk :Telescope find_files theme=ivy<CR>
-  
-      " Pop up terminal config
-      nnoremap <silent> <c-o> :ToggleTerm<CR>
-      autocmd TermEnter term://*toggleterm#*
-        \ tnoremap <silent> <c-o> <Cmd>exe v:count1 . "ToggleTerm"<CR>
 
-      " Automatically changes pwd to git trees root
-      let g:rooter_patterns = ['.git', '=${config.home.homeDirectory}/nix/nixpkgs' ]
-
-      " Coc config
-      autocmd CursorHold * silent call CocActionAsync('highlight')
-
-      " Mappings for CoCList
+      " CoC config. Since i use the home-manager module this cannot be inside of an attrset like the others plugins configuration.
       " Show all diagnostics.
       nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
       " Manage extensions.
@@ -284,6 +323,8 @@
         \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
   
       inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+      autocmd CursorHold * silent call CocActionAsync('highlight')
 
       " Use K to show documentation in preview window.
       nnoremap <silent> K :call <SID>show_documentation()<CR>
