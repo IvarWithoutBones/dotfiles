@@ -13,6 +13,12 @@
   nixpkgs.config.allowUnfree = true;
 
   boot = {
+    binfmt.emulatedSystems = [ "aarch64-linux" ];
+    supportedFilesystems = [ "ntfs" ];
+
+    # Kernel 5.18 is broken with nvidia drivers
+    kernelPackages = pkgs.linuxPackages_5_17;
+
     loader = {
       systemd-boot = {
         enable = true;
@@ -20,8 +26,6 @@
       };
       efi.canTouchEfiVariables = false;
     };
-    kernelPackages = pkgs.linuxPackages_latest;
-    binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
 
   console = {
