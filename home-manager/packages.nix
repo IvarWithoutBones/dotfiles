@@ -75,7 +75,6 @@ in {
   
     # Emulators/games
     citra
-    steam
     minecraft
   ]; 
 }
