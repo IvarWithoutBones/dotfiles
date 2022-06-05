@@ -9,7 +9,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    home-manager = { 
+    home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
@@ -21,20 +21,27 @@
   };
 
   outputs = inputs @ { self, nixpkgs, home-manager, flake-utils, agenix }: let
-    # TODO: add multi platform support
-    pkgs = nixpkgs.legacyPackages.x86_64-linux;
+    pkgs = flake-utils.lib.eachDefaultSystem (system: nixpkgs.legacyPackages.${system});
   in rec {
     lib = import ./lib.nix { inherit (inputs) nixpkgs home-manager agenix; };
 
     # TODO: split up configuration.nix and create proper profiles
     profiles = {
+      laptop = {
+        touchpad = true;
+        battery = true;
+        bluetooth = true;
+      };
+
       ivv = {
         username = "ivv";
+        stateVersion = "22.11";
 
         modules = [
-          ./configuration.nix
           ./modules/hardware.nix
           ./modules/system.nix
+          ./modules/xserver.nix
+          ./modules/networking.nix
         ];
       };
     };
@@ -45,40 +52,44 @@
         hostname = "nixos-pc";
 
         hardware = {
+          sound = true;
           cpu = "intel";
           gpu = "nvidia";
         };
 
+	      home-manager = {
+	        enable = true;
+ 	        modules = [ ./home-manager/home.nix ];
+	      };
+
         modules = [
           ./modules/hardware-config/nixos-pc.nix
         ];
-
-        home-manager = {
-          enable = true;
-        };
       };
 
       nixos-laptop = lib.createSystem profiles.ivv rec {
         system = "x86_64-linux";
         hostname = "nixos-laptop";
 
-        hardware = lib.mkLaptop // {
+        hardware = profiles.laptop // {
+          sound = true;
           gpu = "amd";
           cpu = "amd";
+        };
+
+        home-manager = {
+          enable = true;
+          modules = [ ./home-manager/home.nix ];
         };
 
         modules = [
           ./modules/hardware-config/nixos-laptop.nix
         ];
 
-        home-manager = {
-          enable = true;
-        };
-
-        extraConfig = {
+        extraConfig = { config, ... }: {
           boot = {
             kernelParams = [ "acpi_backlight=vendor" ]; # Fixes backlight
-            extraModulePackages = with pkgs.linuxPackages_latest; [ rtl8821ce ];
+            extraModulePackages = with config.boot.kernelPackages; [ rtl8821ce ];
           };
         };
       };
@@ -98,14 +109,14 @@
     };
 
     start-vm = pkgs.writeShellScriptBin "start-nixos-vm" ''
-      ${lib.shell-functions}
+      ${lib.shell-hook}
 
       nixos-rebuild build-vm --flake ''${DOTFILES_DIR}#vm $@
       ./result/bin/run-vm-vm
     '';
 
     deploy = pkgs.writeShellScriptBin "deploy-to-cachix" ''
-      ${lib.shell-functions}
+      ${lib.shell-hook}
 
       NIXOS_SYSTEMS="${toString(builtins.attrNames nixosConfigurations)}"
 

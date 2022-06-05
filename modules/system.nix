@@ -9,14 +9,6 @@
 {
   imports = [ agenix.nixosModule ];
 
-  age.secrets = {
-    cachix-config = {
-      name = "cachix-config";
-      file = ../secrets/cachix-config.age;
-      owner = username;
-    };
-  };
-
   nix = {
     package = pkgs.nixUnstable;
 
@@ -38,21 +30,71 @@
         "ivar-personal.cachix.org-1:xcf/K8QYcw2XR7Qz8QXNVVWxufSb6Lw5+rkh+CN4cTM="
       ];
     };
-
   };
 
   environment = {
+    # links paths from derivations to /run/current-system/sw
+    pathsToLink = [ "/libexec" "/share/zsh" ];
+
     systemPackages = with pkgs; [
       agenix.defaultPackage.${system}
+      neovim
 
-      (pkgs.runCommand "cachix-configured" {
-        nativeBuildInputs = [ makeWrapper ];
-      } ''
+      (pkgs.runCommand "cachix-configured"
+        {
+          nativeBuildInputs = [ makeWrapper ];
+        } ''
         mkdir -p $out/bin
 
         makeWrapper ${pkgs.cachix}/bin/cachix $out/bin/cachix \
           --add-flags "--config ${config.age.secrets.cachix-config.path}"
       '')
     ];
+  };
+
+  age.secrets = {
+    cachix-config = {
+      name = "cachix-config";
+      file = ../secrets/cachix-config.age;
+      owner = username;
+    };
+  };
+
+  nixpkgs.config.allowUnfree = true;
+
+  boot = {
+    # Kernel 5.18 is broken with nvidia drivers
+    kernelPackages = pkgs.linuxPackages_5_17;
+
+    loader = {
+      systemd-boot = {
+        enable = true;
+        configurationLimit = 10; # See https://github.com/NixOS/nixpkgs/issues/23926
+      };
+
+      efi.canTouchEfiVariables = false;
+    };
+
+    binfmt.emulatedSystems = [ "aarch64-linux" ];
+    supportedFilesystems = [ "ntfs" ];
+  };
+
+  console = {
+    keyMap = "us";
+    font = "Lat2-Terminus16";
+  };
+
+  time.timeZone = "Europe/Amsterdam";
+  programs.zsh.enable = true;
+
+  services = {
+    fstrim.enable = true;
+    udev.packages = [ pkgs.qmk-udev-rules ];
+  };
+
+  users.users.${username} = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" ];
+    shell = pkgs.zsh;
   };
 }

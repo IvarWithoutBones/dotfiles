@@ -27,10 +27,6 @@
   };
 
   home = {
-    inherit username;
-    homeDirectory = "/home/${username}";
-    stateVersion = "22.05";
-
     sessionVariables = rec {
       EDITOR = "nvim";
       VISUAL = "nvim";

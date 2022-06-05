@@ -1,12 +1,13 @@
 { nixpkgs
 , home-manager
-, ... } @ inputs:
+, ...
+} @ inputs:
 
 let
   inherit (nixpkgs) lib;
 in
 rec {
-  shell-functions = ''
+  shell-hook = ''
     set -e
 
     logMessage() {
@@ -22,29 +23,30 @@ rec {
     cd ''${TMPDIR}
   '';
 
-  mkLaptop = {
-    touchpad = true;
-    battery = true;
-    bluetooth = true;
-  };
-
   createSystem = profile:
     { system
     , hostname
-    , hardware ? {}
-    , modules ? []
-    , extraConfig ? {}
-    , home-manager ? {}
-    , ... } @ args:
+    , hardware ? { }
+    , modules ? [ ]
+    , extraConfig ? { }
+    , home-manager ? { }
+    , ...
+    } @ args:
 
     let
       _hardware = {
         cpu = "intel";
         gpu = "";
+        sound = false;
         touchpad = false;
         battery = false;
         bluetooth = false;
       } // hardware;
+
+      _home-manager = {
+        enable = false;
+        modules = [ ];
+      } // home-manager;
 
       _modules = modules;
     in
@@ -56,18 +58,28 @@ rec {
         inherit system;
       } // inputs // _hardware;
 
-      modules = [({ networking.hostName = hostname; })]
-        ++ _modules
-        ++ (profile.modules or [])
-        ++ [(( profile.extraConfig or {} // extraConfig ))] # TODO: this line is causing errors when profile.extraConfig is defined as a function
-        ++ lib.optionals (args.home-manager.enable or false) [
-             inputs.home-manager.nixosModules.home-manager {
-               home-manager.useGlobalPkgs = true;
-               home-manager.useUserPackages = true;
-
-               home-manager.extraSpecialArgs = specialArgs // args.home-manager;
-               home-manager.users.${profile.username} = ./home-manager/home.nix; # TODO: make configurable
-             }
-        ];
+      modules = [
+        ({
+          networking.hostName = hostname;
+          system.stateVersion = profile.stateVersion or "";
+        })
+      ]
+      ++ _modules
+      ++ (profile.modules or [ ])
+      ++ [ ((profile.extraConfig or { })) ]
+      ++ [ (extraConfig) ]
+      ++ lib.optionals (_home-manager.enable or profile.home-manager.enable or false) [
+        inputs.home-manager.nixosModules.home-manager
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.extraSpecialArgs = specialArgs // args.home-manager;
+          home-manager.sharedModules = _home-manager.modules;
+          home-manager.users.${profile.username} = {
+            home.stateVersion = profile.stateVersion or "";
+            imports = _home-manager.modules ++ profile.home-manager.modules or [ ];
+          };
+        }
+      ];
     };
 }
