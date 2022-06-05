@@ -63,15 +63,31 @@
         $EDITOR "$1"
       }
 
+      find-in-store() {
+        STORE_PATHS="$(find /nix/store -maxdepth 1 -name "*$1*" -not -name "*.drv")"
+
+        if [[ -z "''${STORE_PATHS}" ]]; then
+          echo "error: no results found!"
+          return
+        fi
+
+        STORE_PATH="$(echo "''${STORE_PATHS}" | ${pkgs.fzf}/bin/fzf --preview 'tree {}')"
+
+        if [[ -d "''${STORE_PATH}" ]]; then
+          pushd "''${STORE_PATH}"
+        else
+          echo "''${STORE_PATH}"
+        fi
+      }
+
       cleanbuild() {
         if [ "''${get-git-root}" ]; then
           cd-git-root
         fi
 
         rm -rf build
-        mkdir build
+        cmake -B build
         cd build
-        cmake ..
         make -j
       }
 
