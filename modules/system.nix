@@ -9,8 +9,23 @@
 {
   imports = [ agenix.nixosModule ];
 
+  age.secrets = {
+    cachix-config = {
+      name = "cachix-config";
+      file = ../secrets/cachix-config.age;
+      owner = username;
+    };
+  };
+
+  nixpkgs.config.allowUnfree = true;
+
   nix = {
     package = pkgs.nixUnstable;
+
+    gc = {
+      automatic = true;
+      dates = "weekly";
+    };
 
     settings = rec {
       auto-optimise-store = true;
@@ -39,6 +54,7 @@
     systemPackages = with pkgs; [
       agenix.defaultPackage.${system}
       neovim
+      git
 
       (pkgs.runCommand "cachix-configured"
         {
@@ -52,20 +68,7 @@
     ];
   };
 
-  age.secrets = {
-    cachix-config = {
-      name = "cachix-config";
-      file = ../secrets/cachix-config.age;
-      owner = username;
-    };
-  };
-
-  nixpkgs.config.allowUnfree = true;
-
   boot = {
-    # Kernel 5.18 is broken with nvidia drivers
-    kernelPackages = pkgs.linuxPackages_5_17;
-
     loader = {
       systemd-boot = {
         enable = true;
@@ -75,13 +78,15 @@
       efi.canTouchEfiVariables = false;
     };
 
+    # Kernel 5.18 is broken with nvidia drivers
+    kernelPackages = pkgs.linuxPackages_5_17;
+    kernelParams = [
+      "quiet"
+      "boot.shell_on_fail"
+    ];
+
     binfmt.emulatedSystems = [ "aarch64-linux" ];
     supportedFilesystems = [ "ntfs" ];
-  };
-
-  console = {
-    keyMap = "us";
-    font = "Lat2-Terminus16";
   };
 
   time.timeZone = "Europe/Amsterdam";
@@ -94,7 +99,7 @@
 
   users.users.${username} = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ];
+    extraGroups = [ "wheel" "plugdev" ];
     shell = pkgs.zsh;
   };
 }
