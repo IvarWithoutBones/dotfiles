@@ -12,7 +12,7 @@ let
     ws2 = "2: Media";
     ws3 = "3: Discord";
     ws4 = "4: Music";
-    ws5 = "5";
+    ws5 = "5: Games";
     ws6 = "6";
     ws7 = "7";
     ws8 = "8";
@@ -61,7 +61,12 @@ in
         "${workspaces.ws2}" = [{ class = "electronplayer"; }];
         "${workspaces.ws3}" = [{ class = "discord"; }];
         "${workspaces.ws10}" = [{ class = "Transmission-gtk"; }];
+        "${workspaces.ws5}" = [{ class = "Steam"; }];
       };
+
+      floating.criteria = [
+        { class = "Steam"; title = "Friends List"; }
+      ];
     };
   };
 }
