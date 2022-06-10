@@ -34,17 +34,13 @@ in {
     };
   
     quickmarks = {
-      protonmail = "https://mail.protonmail.com/inbox";
-      dotfiles = "https://github.com/ivarWithoutBones/dotfiles";
-      nur-actions = "https://github.com/IvarWithoutBones/NUR/actions";
-      youtube = "https://www.youtube.com/";
-      catan = "https://colonist.io";
-
       github = "https://github.com";
       github-notifications = "https://github.com/notifications";
+      github-gists = "https://gist.github.com";
       nix-manual = "https://nixos.org/manual/nix/unstable";
       nixpkgs = "https://github.com/NixOS/nixpkgs";
       nixpkgs-prs = "https://github.com/NixOS/nixpkgs/pulls";
+      nixpkgs-issues = "https://github.com/NixOS/nixpkgs/issues";
       nixpkgs-tracker = "https://nixpk.gs/pr-tracker.html";
       nixpkgs-manual = "https://nixos.org/manual/nixpkgs/unstable";
       hydra-trunk = "https://hydra.nixos.org/jobset/nixpkgs/trunk";
@@ -53,6 +49,13 @@ in {
       home-manager = "https://github.com/nix-community/home-manager";
       home-manager-manual = "https://nix-community.github.io/home-manager";
       home-manager-options = "https://rycee.gitlab.io/home-manager/options.html";
+      dotfiles = "https://github.com/ivarWithoutBones/dotfiles";
+      ashley-dotfiles = "https://github.com/kira64xyz/ashley-nix";
+      protonmail = "https://mail.protonmail.com/inbox";
+      nur-actions = "https://github.com/IvarWithoutBones/NUR/actions";
+      youtube = "https://www.youtube.com/";
+      catan = "https://colonist.io";
     };
   };
+
 }
