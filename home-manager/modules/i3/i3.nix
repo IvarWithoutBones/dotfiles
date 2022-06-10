@@ -1,6 +1,10 @@
-{ pkgs, config, ... }: 
+{ lib
+, pkgs
+, config
+, ...
+}:
 
-let 
+let
   mod = "Mod4";
 
   workspaces = {
@@ -15,14 +19,11 @@ let
     ws9 = "9";
     ws10 = "10";
   };
-
-  # Colors
-  backgroundColor = "#2f343f";
-  textColor = "#ffffff";
-  inactiveTextColor = "#676e7d";
-in {
+in
+{
   imports = [
     ./bar.nix
+    ./theme.nix
   ];
 
   xsession.windowManager.i3 = {
@@ -30,13 +31,9 @@ in {
     package = pkgs.i3-gaps;
 
     config = {
+      defaultWorkspace = "workspace ${workspaces.ws1}";
       modifier = mod;
       keybindings = import ./keybindings.nix { inherit config pkgs mod workspaces; };
-      fonts = {
-        names = [ "FiraCode Nerd Font" ];
-        size = 10.0;
-      };
-      defaultWorkspace = "workspace ${workspaces.ws1}";
 
       gaps = {
         inner = 4;
@@ -44,7 +41,7 @@ in {
       };
 
       # Disable default resize mode
-      modes = {};
+      modes = { };
 
       terminal = config.home.sessionVariables.TERMINAL;
 
@@ -61,36 +58,10 @@ in {
       ];
 
       assigns = {
-        "${workspaces.ws2}" = [ { class = "electronplayer"; } ];
-        "${workspaces.ws3}" = [ { class = "discord"; } ];
-        "${workspaces.ws10}" = [ { class = "Transmission-gtk"; } ];
+        "${workspaces.ws2}" = [{ class = "electronplayer"; }];
+        "${workspaces.ws3}" = [{ class = "discord"; }];
+        "${workspaces.ws10}" = [{ class = "Transmission-gtk"; }];
       };
-
-      colors = {
-        focused = { background = "#81848c"; border = "#81848c"; childBorder = "#81848c"; text = textColor; indicator = "#81848c"; };
-        focusedInactive = { background = backgroundColor; border = backgroundColor; childBorder = backgroundColor; text = inactiveTextColor; indicator = backgroundColor; };
-        unfocused = { background = backgroundColor; border = backgroundColor; childBorder = backgroundColor; text = inactiveTextColor; indicator = backgroundColor; };
-        urgent = { background = "#e53935"; border = "e53935"; childBorder = "e53935"; text = textColor; indicator = backgroundColor; };
-      };
-
-      bars = [ {
-        statusCommand = "${pkgs.i3status-rust}/bin/i3status-rs ${config.xdg.configHome}/i3status-rust/config-top.toml";
-        position = "top";
-
-        fonts = {
-          names = [ "FiraCode Nerd Font" ];
-          size = 10.0;
-        };
-
-        colors = {
-          background = backgroundColor;
-          separator = "757575";
-          focusedWorkspace = { background = backgroundColor; border = backgroundColor; text = textColor; };
-          activeWorkspace = { background = backgroundColor; border = backgroundColor; text = textColor; };
-          inactiveWorkspace = { background = backgroundColor; border = backgroundColor; text = inactiveTextColor; };
-          urgentWorkspace = { background = "#e53935"; border = "e53935"; text = textColor; };
-        };
-      } ];
     };
-  }; 
+  };
 }
