@@ -1,5 +1,6 @@
 { nixpkgs
 , home-manager
+, self
 , ...
 } @ inputs:
 
@@ -62,6 +63,7 @@ rec {
         ({
           networking.hostName = hostname;
           system.stateVersion = profile.stateVersion or "";
+          nixpkgs.overlays = [ (self.overlays.default or (final: prev: { })) ];
         })
       ]
       ++ _modules

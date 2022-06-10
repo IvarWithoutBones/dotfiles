@@ -22,10 +22,7 @@
 
   outputs = inputs @ { self, nixpkgs, home-manager, flake-utils, agenix }: let
     pkgs = flake-utils.lib.eachDefaultSystem (system: nixpkgs.legacyPackages.${system});
-  in rec {
-    lib = import ./lib.nix { inherit (inputs) nixpkgs home-manager agenix; };
 
-    # TODO: split up configuration.nix and create proper profiles
     profiles = {
       laptop = {
         touchpad = true;
@@ -45,6 +42,9 @@
         ];
       };
     };
+  in rec {
+    lib = import ./lib.nix { inherit (inputs) nixpkgs home-manager agenix; inherit self; };
+    overlays.default = import ./scripts/overlay.nix;
 
     nixosConfigurations = {
       nixos-pc = lib.createSystem profiles.ivv {
