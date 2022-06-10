@@ -14,21 +14,23 @@ let
     urgent = "#e53935";
   };
 
-  mkColor =
-    { ... } @ args: {
-      background = colors.base;
-      border = colors.base;
-      childBorder = colors.base;
-      text = colors.base;
-      indicator = colors.base;
-    } // args;
+  mkDefaultColor = color: attrNames: lib.genAttrs attrNames (name: color);
 
-  mkBarColor =
-    { ... } @ args: {
-      background = colors.base;
-      border = colors.base;
-      text = colors.base;
-    } // args;
+  mkColor = { ... } @ args:
+    (mkDefaultColor colors.base [
+      "background"
+      "border"
+      "childBorder"
+      "text"
+      "indicator"
+    ]) // args;
+
+  mkBarColor = { ... } @ args:
+    (mkDefaultColor colors.base [
+      "background"
+      "border"
+      "text"
+    ]) // args;
 in
 {
   xsession.windowManager.i3.config = {
@@ -36,13 +38,12 @@ in
       unfocused = mkColor { border = colors.mauve; text = colors.text; };
       focusedInactive = mkColor { indicator = colors.mauve; };
       urgent = mkColor { text = colors.text; };
-
-      focused = mkColor {
-        background = colors.mauve;
-        border = colors.mauve;
-        childBorder = colors.mauve;
-        indicator = colors.mauve;
-      };
+      focused = (mkDefaultColor colors.mauve [
+        "background"
+        "border"
+        "childBorder"
+        "indicator"
+      ]) // { text = colors.text; };
     };
 
     bars = [{
@@ -59,19 +60,20 @@ in
         background = colors.base;
         focusedWorkspace = mkBarColor { background = colors.mauve; };
         urgentWorkspace = mkBarColor { background = colors.urgent; };
+        inactiveWorkspace = mkBarColor { text = colors.text; };
         activeWorkspace = mkBarColor { };
-        inactiveWorkspace = mkBarColor { };
       };
     }];
   };
 
   programs.i3status-rust = {
     bars.top.settings = {
-      theme.overrides = {
-        warning_bg = colors.base;
-        good_bg = colors.base;
-        idle_bg = colors.base;
-      };
+      theme.overrides = mkDefaultColor colors.base [
+        "warning_bg"
+        "good_bg"
+        "idle_bg"
+        "separator_bg"
+      ];
 
       icons.overrides = {
         volume_full = "";
