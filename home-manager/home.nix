@@ -8,6 +8,7 @@
   imports = [
     ./packages.nix
     ./modules/alacritty.nix
+    ./modules/discord.nix
     ./modules/zsh.nix
     ./modules/nvim.nix
     ./modules/qutebrowser.nix

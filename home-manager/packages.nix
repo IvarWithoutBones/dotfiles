@@ -42,7 +42,6 @@
     # Applications
     krita
     _1password-gui
-    discord
     transmission-gtk
   
     # Emulators/games
