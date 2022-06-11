@@ -1,6 +1,7 @@
 { config
 , lib
 , pkgs
+, gpu
 , ...
 }:
 
@@ -12,6 +13,11 @@ let
     base = "#12121c";
     text = "#cdd6f4";
     urgent = "#e53935";
+  };
+
+  fonts = {
+    names = [ "FiraCode Nerd Font" ];
+    size = 10.0;
   };
 
   mkDefaultColor = color: attrNames: lib.genAttrs attrNames (name: color);
@@ -31,9 +37,14 @@ let
       "border"
       "text"
     ]) // args;
+
+  displayServer = if (gpu == "amd") then "wayland" else "xsession";
+  windowManager = if (gpu == "amd") then "sway" else "i3";
 in
 {
-  xsession.windowManager.i3.config = {
+  ${displayServer}.windowManager.${windowManager}.config = {
+    inherit fonts;
+
     colors = {
       unfocused = mkColor { border = colors.mauve; text = colors.text; };
       focusedInactive = mkColor { indicator = colors.mauve; };
@@ -43,18 +54,14 @@ in
         "border"
         "childBorder"
         "indicator"
-      ]) // { text = colors.text; };
+      ]) // { text = colors.base; };
     };
 
     bars = [{
       # TODO: move this to i3.nix, this file should only contain the colors and the font
       statusCommand = "${pkgs.i3status-rust}/bin/i3status-rs ${config.xdg.configHome}/i3status-rust/config-top.toml";
       position = "top";
-
-      fonts = {
-        names = [ "FiraCode Nerd Font" ];
-        size = 10.0;
-      };
+      inherit fonts;
 
       colors = {
         background = colors.base;

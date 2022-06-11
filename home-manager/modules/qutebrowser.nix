@@ -51,6 +51,7 @@ in {
       home-manager-options = "https://rycee.gitlab.io/home-manager/options.html";
       dotfiles = "https://github.com/ivarWithoutBones/dotfiles";
       ashley-dotfiles = "https://github.com/kira64xyz/ashley-nix";
+      cppreference = "https://en.cppreference.com/w/cpp";
       protonmail = "https://mail.protonmail.com/inbox";
       nur-actions = "https://github.com/IvarWithoutBones/NUR/actions";
       youtube = "https://www.youtube.com/";

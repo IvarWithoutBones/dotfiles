@@ -1,22 +1,25 @@
-{ pkgs, config, mod, workspaces }:
+{ pkgs
+, lib
+, config
+, mod
+, workspaces
+, windowManager
+}:
 
 {
   "${mod}+Shift+e" = "exec [ \"$(printf \"No\\nYes\" | ${pkgs.dmenu}/bin/dmenu -i -p \"Would you like to exit i3?\")\" = \"Yes\" ] && ${pkgs.i3-gaps}/bin/i3-msg exit";
-  "${mod}+Shift+r" = "exec i3-msg restart";
 
   # Colors from dracula. TODO: set this from the fetched theme?
   "${mod}+d" = "exec --no-startup-id ${pkgs.dmenu}/bin/dmenu_run -nf '#F8F8F2' -nb '#282A36' -sb '#6272A4' -sf '#F8F8F2'";
 
   # General programs
   "${mod}+Return" = "exec --no-startup-id ${config.home.sessionVariables.TERMINAL}";
-  "--release Print" = "exec --no-startup-id ${pkgs.maim}/bin/maim -su /tmp/screenshot.png && ${pkgs.xclip}/bin/xclip -selection clipboard -t image/png < /tmp/screenshot.png";
   "${mod}+Shift+w" = "exec \"${pkgs.i3-gaps}/bin/i3-msg 'workspace ${workspaces.ws2}; exec ${pkgs.qutebrowser}/bin/qutebrowser --qt-flag ignore-gpu-blacklist --qt-flag enable-gpu-rasterization --qt-flag enable-native-gpu-memory-buffers --qt-flag num-raster-threads=2'\"";
   "${mod}+Shift+d" = "exec ${pkgs.discord}/bin/Discord";
   "${mod}+Shift+Ctrl+d" = "exec pkill Discord && pkill Discord";
-  "${mod}+Shift+s" = "exec \"${pkgs.i3-gaps}/bin/i3-msg 'workspace ${workspaces.ws4}; exec ${pkgs.st}/bin/st -e ncspot'\"";
+  "${mod}+Shift+s" = "exec \"${pkgs.i3-gaps}/bin/i3-msg 'workspace ${workspaces.ws4}; exec ${config.home.sessionVariables.TERMINAL} -e ncspot'\"";
   "${mod}+Shift+t" = "exec ${pkgs.transmission-gtk}/bin/transmission-gtk";
   "${mod}+Shift+n" = "exec ${pkgs.electronplayer}/bin/electronplayer";
-  "${mod}+Shift+x" = "exec ${pkgs.i3lock-fancy}/bin/i3lock-fancy";
 
   # Navigation
   "${mod}+h" = "focus left";
@@ -32,6 +35,7 @@
   "${mod}+Ctrl+k" = "resize shrink height 10 px or 10 ppt";
   "${mod}+Ctrl+j" = "resize grow height 10 px or 10 ppt";
   "${mod}+Shift+Ctrl" = "split h";
+  "${mod}+n" = "move workspace to output right";
   "${mod}+v" = "split v";
   "${mod}+s" = "layout stacking";
   "${mod}+w" = "layout tabbed";
@@ -62,8 +66,6 @@
   "${mod}+Shift+9" = "move container to workspace ${workspaces.ws9}";
   "${mod}+Shift+0" = "move container to workspace ${workspaces.ws10}";
 
-  "${mod}+n" = "move workspace to output right";
-
   # Volume control
   "XF86AudioMute" = "exec amixer set Master toggle";
   "XF86AudioRaiseVolume" = "exec amixer set Master 5%+";
@@ -78,4 +80,12 @@
   # Brightness control
   "XF86MonBrightnessUp" = "exec ${pkgs.brightnessctl}/bin/brightnessctl set 10%+";
   "XF86MonBrightnessDown" = "exec ${pkgs.brightnessctl}/bin/brightnessctl set 10%-";
+} // lib.optionalAttrs (windowManager == "i3") {
+  "${mod}+Shift+r" = "exec i3-msg restart";
+  "${mod}+Shift+x" = "exec ${pkgs.i3lock-fancy}/bin/i3lock-fancy";
+  "--release Print" = "exec --no-startup-id ${pkgs.maim}/bin/maim -su /tmp/screenshot.png && ${pkgs.xclip}/bin/xclip -selection clipboard -t image/png < /tmp/screenshot.png";
+} // lib.optionalAttrs (windowManager == "sway") {
+  "${mod}+Shift+r" = "exec swaymsg reload";
+  "--release Print" = "exec --no-startup-id ${pkgs.sway-contrib.grimshot}/bin/grimshot copy area";
+  "${mod}+Shift+x" = "exec ${pkgs.swaylock-fancy}/bin/swaylock-fancy";
 }

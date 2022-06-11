@@ -12,7 +12,7 @@
     ./modules/nvim.nix
     ./modules/qutebrowser.nix
     ./modules/dunst.nix
-    ./modules/i3/i3.nix
+    ./modules/i3-sway
   ];
   
   nixpkgs.config = {
@@ -63,9 +63,4 @@
   };
   
   fonts.fontconfig.enable = true;
-  
-  xsession = {
-    enable = true;
-    scriptPath = ".hm-xsession";
-  };
 }

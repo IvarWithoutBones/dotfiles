@@ -2,6 +2,10 @@
 
 {
   home.packages = with pkgs; [
+    # Fonts
+    noto-fonts-emoji
+    (nerdfonts.override { fonts = [ "FiraCode" ]; })
+
     # General utils
     git github-cli
     wget
@@ -15,8 +19,6 @@
     feh
     jq
     killall
-
-    (nerdfonts.override { fonts = [ "FiraCode" ]; })
 
     # Nix specific utils
     nix-index
