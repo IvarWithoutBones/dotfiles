@@ -46,7 +46,7 @@
     in
     rec {
       lib = import ./lib.nix { inherit (inputs) nixpkgs home-manager agenix; inherit self; };
-      overlays.default = import ./scripts/overlay.nix;
+      overlays.default = import ./pkgs/overlay.nix;
 
       nixosConfigurations = {
         nixos-pc = lib.createSystem profiles.ivv {

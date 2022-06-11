@@ -29,4 +29,13 @@ final: prev: {
     mkdir -p $out/bin
     install -Dm755 $src $out/bin/nixpkgs-pr
   '';
+
+  # Previous version does not start anymore
+  discord = prev.discord.overrideAttrs (attrs: rec {
+    version = "0.0.18";
+    src = final.fetchurl {
+      url = "https://dl.discordapp.net/apps/linux/${version}/discord-${version}.tar.gz";
+      sha256 = "sha256-BBc4n6Q3xuBE13JS3gz/6EcwdOWW57NLp2saOlwOgMI=";
+    };
+  });
 }
