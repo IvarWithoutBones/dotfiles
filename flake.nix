@@ -31,7 +31,7 @@
           bluetooth = true;
         };
 
-        ivv = {
+        ivv = rec {
           username = "ivv";
           stateVersion = "22.11";
 
@@ -40,6 +40,17 @@
             ./modules/system.nix
             ./modules/graphical.nix
             ./modules/networking.nix
+            ({
+              networking.extraHosts = ''
+                192.168.1.44 pc
+                192.168.1.37 laptop
+              '';
+
+              users.users.${username}.openssh.authorizedKeys.keys = [
+                "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFzp7kYG8wHjoU1Ski/hABNuT3puOT3icW9DYnweJdR0 ivv@nixos-pc"
+                "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEZS38w38lOTIkwTWwnZHFpKIhTKFbj90iDsMjFK7E2G ivv@nixos-laptop"
+              ];
+            })
           ];
         };
       };
@@ -57,6 +68,11 @@
             sound = true;
             cpu = "intel";
             gpu = "nvidia";
+          };
+
+          network = {
+            interface = "enp0s31f6";
+            address = "192.168.1.44";
           };
 
           home-manager = {
@@ -77,6 +93,11 @@
             sound = true;
             gpu = "amd";
             cpu = "amd";
+          };
+
+          network = {
+            interface = "wlp1s0";
+            address = "192.168.1.37";
           };
 
           home-manager = {

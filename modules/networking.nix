@@ -8,8 +8,10 @@
   users.users.${username}.extraGroups = [ "networkmanager" ];
 
   services = {
-    # TODO: declarative config
-    openssh.enable = true;
+    openssh = {
+      enable = true;
+      forwardX11 = true;
+    };
 
     zerotierone = {
       enable = true;
