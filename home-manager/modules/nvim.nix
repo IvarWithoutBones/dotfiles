@@ -21,34 +21,32 @@
       vim-nix
       editorconfig-nvim
       nvim-web-devicons
+      copilot-vim
 
-      # Using the latest revision as of 2022-05-14 as previous versions now fail to start:
-      # Unhandled status from server: Please upgrade your Copilot extension to continue using this service.
-      (copilot-vim.overrideAttrs (attrs: {
-        version = "unstable-2022-05-09";
-
-        src = pkgs.fetchFromGitHub {
-          owner = "github";
-          repo = "copilot.vim";
-          rev = "df203c1356b72032df32d7b0b5facb4895139b6e";
-          sha256 = "18v21b314p4firiz0xhqnfl45g5wbcigiqq4ypnhf1lgwd6ngpqd";
-        };
-      }))
       {
+        # Automatically insert a comment with keybindings
+        plugin = comment-nvim;
+        config = ''
+          lua << EOF
+            require('Comment').setup()
+          EOF
+        '';
+      }
+      {
+        # Pop up terminal
         plugin = toggleterm-nvim;
         config = ''
           lua << EOF
             require("toggleterm").setup()
           EOF
 
-          " Pop up terminal config
           nnoremap <silent> <c-o> :ToggleTerm<CR>
           autocmd TermEnter term://*toggleterm#*
             \ tnoremap <silent> <c-o> <Cmd>exe v:count1 . "ToggleTerm"<CR>
         '';
       }
       {
-        # Fuzzy file search/grep
+        # Fuzzy file search and live grep
         plugin = telescope-nvim;
         config = ''
           nnoremap <silent> tg :Telescope live_grep theme=ivy<CR>
@@ -195,19 +193,6 @@
     coc = {
       enable = true;
 
-      # The version in nixpkgs as of 2022-05-30 fails when rebuilding whenever nodejs is enabled
-      package = pkgs.vimUtils.buildVimPluginFrom2Nix {
-        pname = "coc.nvim";
-        version = "2022-05-21";
-
-        src = pkgs.fetchFromGitHub {
-          owner = "neoclide";
-          repo = "coc.nvim";
-          rev = "791c9f673b882768486450e73d8bda10e391401d";
-          sha256 = "sha256-MobgwhFQ1Ld7pFknsurSFAsN5v+vGbEFojTAYD/kI9c=";
-        };
-      };
-
       settings = {
         client.snippetSupport = true;
 
@@ -277,11 +262,20 @@
       nnoremap <A-k> <C-w>k
       nnoremap <A-l> <C-w>l
 
+      " use `Alt+Shift+{h,j,k,l}` to resize splits
+      nmap <silent><A-J> :resize +1<CR>
+      nmap <silent><A-K> :resize -1<CR>
+      nmap <silent><A-L> :vertical resize +1<CR>
+      nmap <silent><A-H> :vertical resize -1<CR>
+
       " various fixes for the tab key
       set tabstop=4 softtabstop=0 expandtab shiftwidth=4 smarttab
       autocmd FileType nix set tabstop=2 softtabstop=0 shiftwidth=2 expandtab
 
-      " Maps to insert a new line without going into insert mode
+      " Dont insert a comment when creating a newline from a comment
+      autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+
+      " Insert a newline without going into insert mode
       nmap <S-Enter> O<Esc>
       nmap <CR> o<Esc>
 
