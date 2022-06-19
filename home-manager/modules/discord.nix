@@ -61,12 +61,10 @@ in
       ${betterdiscordctl} status | grep -E 'installed|injected' | grep -q "no" && \
         $DRY_RUN_CMD ${betterdiscordctl} install
 
-      pushd "${config.xdg.configHome}/BetterDiscord" >/dev/null
+      $DRY_RUN_CMD mkdir -p "${config.xdg.configHome}/BetterDiscord{,/themes,/plugins}"
+      $DRY_RUN_CMD pushd "${config.xdg.configHome}/BetterDiscord" >/dev/null
 
       # Copy the themes to their folder
-      if ! [ -d "themes" ]; then
-        $DRY_RUN_CMD mkdir "themes"
-      fi
       $DRY_RUN_CMD cd "themes"
 
       ${lib.concatMapStrings (theme: ''
@@ -77,9 +75,6 @@ in
       $DRY_RUN_CMD cd ..
 
       # Copy the plugins to their folder
-      if ! [ -d "plugins" ]; then
-        $DRY_RUN_CMD mkdir "plugins"
-      fi
       $DRY_RUN_CMD cd "plugins"
 
       ${lib.concatMapStrings (plugin: ''
@@ -88,6 +83,6 @@ in
       fi
       '') plugins}
 
-      popd >/dev/null
+      $DRY_RUN_CMD popd >/dev/null
     '';
 }
