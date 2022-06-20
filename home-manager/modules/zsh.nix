@@ -1,21 +1,24 @@
-{ pkgs, config, ... }:
+{ pkgs
+, config
+, ...
+}:
 
 {
   programs.zsh = {
     enable = true;
-  
+
     defaultKeymap = "viins";
     history.path = "$HOME/.cache/zsh/history";
 
     enableAutosuggestions = true;
     enableSyntaxHighlighting = true;
     autocd = true;
-  
+
     localVariables = {
       PS1 = "%F{magenta}%~%f > ";
       LESSHISTFILE = "/dev/null";
     };
-  
+
     shellAliases = rec {
       ls = "ls --color=auto";
       cat = "bat -p";
@@ -29,8 +32,8 @@
       caps = "${pkgs.xdotool}/bin/xdotool key Caps_Lock";
       CAPS = caps;
     };
-  
-    plugins = [ {
+
+    plugins = [{
       name = "zsh-vi-mode";
       file = "zsh-vi-mode.plugin.zsh";
       src = pkgs.fetchFromGitHub {
@@ -39,10 +42,12 @@
         rev = "3eeca1bc6db172edee5a2ca13d9ff588b305b455";
         sha256 = "0na6b5b46k4473c53mv1wkb009i6b592gxpjq94bdnlz1kkcqwg6";
       };
-    } ];
+    }];
 
     initExtra = ''
       ${pkgs.lib.optionalString config.programs.direnv.enable ''eval "$(direnv hook zsh)"''}
+
+      source ${pkgs.cd-file}/bin/cd-file
 
       get-git-root() {
         echo "$(${pkgs.git}/bin/git rev-parse --show-toplevel 2>/dev/null)"

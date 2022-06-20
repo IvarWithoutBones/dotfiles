@@ -30,6 +30,13 @@ final: prev: {
     install -Dm755 $src $out/bin/nixpkgs-pr
   '';
 
+  cd-file = final.runCommand "cd-file" {
+    src = ./cd-file.sh;
+  } ''
+    mkdir -p $out/bin
+    install -Dm755 $src $out/bin/cd-file
+  '';
+
   # Previous version does not start anymore
   discord = prev.discord.overrideAttrs (attrs: rec {
     version = "0.0.18";
