@@ -13,6 +13,7 @@
     ./modules/nvim.nix
     ./modules/qutebrowser.nix
     ./modules/dunst.nix
+    ./modules/mpv.nix
     ./modules/i3-sway
   ];
   

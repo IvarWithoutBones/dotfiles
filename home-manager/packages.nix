@@ -37,7 +37,6 @@
 
     # Media
     ncspot spotify
-    mpv
   
     # Applications
     krita
