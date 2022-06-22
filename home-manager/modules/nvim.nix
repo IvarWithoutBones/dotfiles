@@ -279,6 +279,8 @@
       nmap <S-Enter> O<Esc>
       nmap <CR> o<Esc>
 
+      " Without this space mappings do not work
+      nnoremap <SPACE> <Nop>
 
       " CoC config. Since i use the home-manager module this cannot be inside of an attrset like the others plugins configuration.
       " Show all diagnostics.
@@ -300,7 +302,7 @@
       " Format the currently open buffer
       nnoremap <silent><nowait> <space>f  :<C-u>CocCommand editor.action.formatDocument<cr>
       " Run the suggested action
-      nnoremap <silent><nowait> <space><space>  :<C-u>CocAction<cr>
+      nnoremap <silent><nowait> <space> <Plug>(coc-codeaction-selected)
 
       nmap <silent> gd <Plug>(coc-definition)
       nmap <silent> gy <Plug>(coc-type-definition)
