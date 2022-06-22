@@ -23,8 +23,8 @@ let
       name = "translator";
       src = pkgs.fetchurl {
         name = "translator-discord-plugin";
-        url = "https://raw.githubusercontent.com/mwittrien/BetterDiscordAddons/a711d71105fe5f8bae243f4a7a85eb2bc62d57a4/Plugins/Translator/Translator.plugin.js";
-        sha256 = "sha256-MmPD/w4lDsT89fVAlEVOQK41UjelfSGaGGSOl+V290Y=";
+        url = "https://raw.githubusercontent.com/mwittrien/BetterDiscordAddons/b1229ba8175d74d2da6dec6c061e584dcf66f000/Plugins/Translator/Translator.plugin.js";
+        sha256 = "sha256-Fjo7KIXXYeTF1r+KdjB9h37zj5XLcQMKMEZVyFSfLFw=";
       };
     }
     {
@@ -41,8 +41,8 @@ let
       name = "0bdfdb";
       src = pkgs.fetchurl {
         name = "0bdfdb-discord-plugin";
-        url = "https://raw.githubusercontent.com/mwittrien/BetterDiscordAddons/724e4047c86a616546d6e8e59fdca4d4be3ac0dc/Library/0BDFDB.plugin.js";
-        sha256 = "sha256-4KP9EaS3h5dbzSjngF9PqGmnyJ9rMKqHc+TN3Y1k6ac=";
+        url = "https://raw.githubusercontent.com/mwittrien/BetterDiscordAddons/b1229ba8175d74d2da6dec6c061e584dcf66f000/Plugins/BDFDB/BDFDB.plugin.js";
+        sha256 = "sha256-eCDX4L89Xq3djdFjN/weIFe4m5RpGfNuVXmqzwYafRI=";
       };
     }
   ];
