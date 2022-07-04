@@ -24,11 +24,11 @@
       cat = "bat -p";
       diff = "diff --color=auto -u";
       dirdiff = "diff --color=auto -ENwbur";
-      speedtest = "printf 'Ping: ' && ping google.com -c 1 | grep time= | cut -d'=' -f4 && ${pkgs.speedtest-cli}/bin/speedtest | grep -E 'Download|Upload'";
       mp3 = "mpv --no-video";
       battery-left = "${pkgs.acpi}/bin/acpi | cut -d' ' -f5";
       viewimg = "${pkgs.i3-swallow}/bin/swallow ${pkgs.feh}/bin/feh \"$@\"";
       weather = "curl -S 'https://wttr.in/?1F'";
+      diskusage = "df -ht ext4";
       caps = "${pkgs.xdotool}/bin/xdotool key Caps_Lock";
       CAPS = caps;
     };

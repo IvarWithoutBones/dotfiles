@@ -19,6 +19,7 @@
     feh
     jq
     killall
+    speedtest
 
     # Nix specific utils
     nix-index
