@@ -212,6 +212,11 @@
             ];
           };
 
+          python = {
+            command = "${pkgs.python3Packages.python-lsp-server}/bin/pylsp";
+            filetypes = [ "python" ];
+          };
+
           clangd = {
             command = "${pkgs.clang-tools}/bin/clangd";
             compilationDatabasePath = "build/compile_commands.json";
@@ -232,6 +237,20 @@
               "build"
               "src"
             ];
+          };
+
+          cmake = {
+            command = "${pkgs.cmake-language-server}/bin/cmake-language-server";
+            filetypes = [ "cmake" ];
+
+            rootPatterns = [
+              "CMakeLists.txt"
+              "build/"
+            ];
+
+            initializationOptions = {
+              buildDirectory = "build";
+            };
           };
         };
       };
