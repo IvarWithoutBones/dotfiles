@@ -78,8 +78,7 @@
       efi.canTouchEfiVariables = false;
     };
 
-    # Kernel 5.18 is broken with nvidia drivers
-    kernelPackages = pkgs.linuxPackages_5_17;
+    kernelPackages = pkgs.linuxPackages_latest;
     kernelParams = [
       "quiet"
       "boot.shell_on_fail"
