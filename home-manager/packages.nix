@@ -20,6 +20,8 @@
     jq
     killall
     speedtest
+    gnome.ghex
+    fzf
 
     # Nix specific utils
     nix-index
@@ -27,9 +29,10 @@
     comma
     manix
 
-    # custom tools
+    # my own tools
     dotfiles-tool
     nixpkgs-pr
+    nix-search-fzf
   
     # Graphical utils
     alacritty

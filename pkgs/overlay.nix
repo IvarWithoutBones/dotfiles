@@ -6,6 +6,25 @@ final: prev: {
     install -Dm755 $src $out/bin/dotfiles
   '';
 
+  nix-search-fzf = final.runCommand "nix-search-fzf" {
+    script = final.substituteAll {
+      src = ./nix-search-fzf.sh;
+      inherit (final) runtimeShell;
+
+      binPath = with final; lib.makeBinPath [
+        gnused
+        jq
+        fzf
+        nix
+        coreutils
+        bash
+      ];
+    };
+  } ''
+    mkdir -p $out/bin
+    install -Dm755 $script $out/bin/nix-search-fzf
+  '';
+
   nixpkgs-pr = final.runCommand "nixpkgs-pr" {
     src = final.substituteAll {
       src = ./nixpkgs-pr.sh;
