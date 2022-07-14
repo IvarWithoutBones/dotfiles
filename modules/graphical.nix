@@ -2,6 +2,7 @@
 , pkgs
 , lib
 , gpu
+, wayland
 , ...
 }:
 
@@ -11,10 +12,13 @@
     dconf.enable = true;
   };
 
+  # Without this swaylock cannot authenticate the user
+  security.pam.services.swaylock = lib.mkIf wayland { };
+
   services = {
+
     xserver = {
-      # On AMD we use wayland
-      enable = lib.mkIf (gpu != "amd") true;
+      enable = !(wayland);
 
       libinput = {
         enable = true;
@@ -25,11 +29,6 @@
         };
       };
 
-      displayManager = {
-        lightdm.enable = !(config.services.greetd.enable);
-        startx.enable = config.services.xserver.enable; # Required for greetd, it doesn't start the xserver
-      };
-
       # A session for whatever desktop environment is configured in home-manager, for both xorg and wayland.
       desktopManager.session = [{
         name = "home-manager";
@@ -38,6 +37,11 @@
           waitPID=$!
         '';
       }];
+
+      displayManager = {
+        lightdm.enable = !(config.services.greetd.enable);
+        startx.enable = config.services.xserver.enable; # Required for greetd, it doesn't start the xserver
+      };
     };
 
     # Desktop manager
@@ -50,7 +54,4 @@
       };
     };
   };
-
-  # Without this swaylock cannot authenticate the user
-  security.pam.services.swaylock = lib.mkIf (gpu == "amd") {};
 }

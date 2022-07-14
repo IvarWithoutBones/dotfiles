@@ -1,7 +1,7 @@
 { lib
 , pkgs
 , config
-, gpu
+, wayland
 , ...
 }:
 
@@ -18,16 +18,17 @@ let
     ws7 = "7";
     ws8 = "8";
     ws9 = "9";
-    ws10 = "10";
+    ws10= "10";
   };
 
-  displayServer = if (gpu == "amd") then "wayland" else "xsession";
-  windowManager = if (gpu == "amd") then "sway" else "i3";
+  displayServer = if wayland then "wayland" else "xsession";
+  windowManager = if wayland then "sway" else "i3";
 in
 {
   imports = [
     ./bar.nix
     ./theme.nix
+    ./lockscreen.nix
   ];
 
   ${displayServer} = {

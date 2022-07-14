@@ -1,7 +1,7 @@
 { config
 , lib
 , pkgs
-, gpu
+, wayland
 , ...
 }:
 
@@ -38,8 +38,8 @@ let
       "text"
     ]) // args;
 
-  displayServer = if (gpu == "amd") then "wayland" else "xsession";
-  windowManager = if (gpu == "amd") then "sway" else "i3";
+  displayServer = if wayland then "wayland" else "xsession";
+  windowManager = if wayland then "sway" else "i3";
 in
 {
   ${displayServer}.windowManager.${windowManager}.config = {
