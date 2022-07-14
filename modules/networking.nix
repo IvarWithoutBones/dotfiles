@@ -1,11 +1,29 @@
 { pkgs
+, lib
 , username
+, hostname
+, network
 , ...
 }:
 
 {
-  networking.networkmanager.enable = true;
   users.users.${username}.extraGroups = [ "networkmanager" ];
+
+  networking = {
+    hostName = hostname;
+    networkmanager.enable = true;
+
+    interfaces = {
+      ${network.interface}.ipv4.addresses = [{
+        address = network.address;
+        prefixLength = 28;
+      }];
+    };
+  };
+
+  programs.ssh = {
+    setXAuthLocation = true;
+  };
 
   services = {
     openssh = {

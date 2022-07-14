@@ -62,17 +62,6 @@ rec {
 
       modules = [
         ({
-          networking = {
-            hostName = hostname;
-
-            interfaces = lib.optionalAttrs (network != { }) {
-              ${network.interface}.ipv4.addresses = [{
-                address = network.address;
-                prefixLength = 28;
-              }];
-            };
-          };
-
           system.stateVersion = profile.stateVersion or "";
           nixpkgs.overlays = [ (self.overlays.default or (final: prev: { })) ];
         })
