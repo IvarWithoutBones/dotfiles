@@ -22,14 +22,6 @@
     experimental-features = "nix-command flakes";
   };
 
-  home = {
-    sessionVariables = rec {
-      EDITOR = "nvim";
-      VISUAL = "nvim";
-      TERMINAL = "alacritty";
-    };
-  };
-
   programs = {
     command-not-found.enable = true;
 

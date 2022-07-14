@@ -26,13 +26,14 @@ in
     enable = true;
 
     bars.top = {
-      blocks = [{
-        # Current temperature
-        block = "custom";
-        command = "curl -S 'wttr.in/?format=1' | tr -d '+' | xargs";
-        on_click = "$TERMINAL --hold -e curl 'https://wttr.in/?F'";
-        interval = 200;
-      }
+      blocks = [
+        {
+          # Current temperature
+          block = "custom";
+          command = "curl -S 'wttr.in/?format=1' | tr -d '+' | xargs";
+          on_click = "$TERMINAL --hold -e curl 'https://wttr.in/?F'";
+          interval = 200;
+        }
         {
           # Ping time
           block = "custom";
@@ -60,7 +61,8 @@ in
           block = "custom";
           command = "echo \"$(${timeEmoji}) $(date +'%H:%M:%S')\"";
           interval = 1;
-        }] ++ pkgs.lib.optionals battery [rec {
+        }
+      ] ++ lib.optionals battery [rec {
         block = "battery";
         interval = 10;
         format = " {percentage}";
