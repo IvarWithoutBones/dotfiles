@@ -1,8 +1,10 @@
 { config
+, lib
 , pkgs
 , agenix
 , system
 , username
+, gpu
 , ...
 }:
 
@@ -52,7 +54,9 @@
     kernelParams = [
       "quiet"
       "boot.shell_on_fail"
-    ];
+    ] ++ lib.optional (gpu == "nvidia")
+      # Required for wayland support with propietary nvidia drivers
+      "nvidia-drm.modeset=1";
 
     binfmt.emulatedSystems = [ "aarch64-linux" ];
     supportedFilesystems = [ "ntfs" ];

@@ -2,6 +2,7 @@
 , pkgs
 , config
 , wayland
+, gpu
 , ...
 }:
 
@@ -64,7 +65,7 @@ in
           { command = "--no-startup-id ${pkgs.xwallpaper}/bin/xwallpaper --daemon --zoom ${config.xdg.configHome}/wallpapers/spirited_away.png"; always = false; }
 
           {
-            # Swap the keybindings of capslock and escape
+            # Bind capslock to escape, and vise versa
             command =
               let
                 xmodmap = "${pkgs.xorg.xmodmap}/bin/xmodmap";
@@ -108,6 +109,11 @@ in
   };
 
   home.file.".hm-graphical-session".text = lib.optionalString (windowManager == "sway") ''
-    exec ${pkgs.sway}/bin/sway
+    ${lib.optionalString (gpu == "nvidia") ''
+      # Required for propietary nvidia drivers
+      export GBM_BACKEND=nvidia-drm_gbm.so __GLX_VENDOR_LIBRARY_NAME=nvidia WLR_NO_HARDWARE_CURSORS=1 MOZ_ENABLE_WAYLAND=1 SDL_VIDEODRIVER=wayland
+    ''}
+
+    ${pkgs.sway}/bin/sway ${lib.optionalString (gpu == "nvidia") "--unsupported-gpu"}
   '';
 }
