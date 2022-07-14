@@ -1,4 +1,7 @@
-{ pkgs, config, ... }:
+{ config
+, pkgs
+, ...
+}:
 
 {
   programs.qutebrowser = {
@@ -29,7 +32,8 @@
       nix = "https://search.nixos.org/packages?query={}&channel=unstable";
       pip = "https://pypi.org/search/?q={}";
       yt = "https://www.youtube.com/results?search_query={}";
-      proton = "https://www.protondb.com/search?q={}";
+      protondb = "https://www.protondb.com/search?q={}";
+      repology = "https://repology.org/projects/?search={}";
     };
 
     quickmarks = {
@@ -48,6 +52,7 @@
       home-manager = "https://github.com/nix-community/home-manager";
       home-manager-manual = "https://nix-community.github.io/home-manager";
       home-manager-options = "https://rycee.gitlab.io/home-manager/options.html";
+      repology = "https://repology.org/projects";
       dotfiles = "https://github.com/ivarWithoutBones/dotfiles";
       ashley-dotfiles = "https://github.com/kira64xyz/ashley-nix";
       cppreference = "https://en.cppreference.com/w/cpp";
@@ -66,18 +71,34 @@
       }) + "blood(c)";
   };
 
+  # Skip sponsor segments on YouTube
+  xdg.configFile."qutebrowser/greasemonkey/youtube-sponsorblock.js".source = pkgs.fetchurl {
+    name = "qute-youtube-sponsorblock.js";
+    url = "https://raw.githubusercontent.com/afreakk/greasemonkeyscripts/1d1be041a65c251692ee082eda64d2637edf6444/youtube_sponsorblock.js";
+    sha256 = "sha256-e3QgDPa3AOpPyzwvVjPQyEsSUC9goisjBUDMxLwg8ZE=";
+  };
+
+  # Remove ads on YouTube more reliably than with the default adblock
+  xdg.configFile."qutebrowser/greasemonkey/youtube-adblock.js".source = pkgs.fetchurl {
+    name = "qute-youtube-adblock.js";
+    url = "https://raw.githubusercontent.com/afreakk/greasemonkeyscripts/1d1be041a65c251692ee082eda64d2637edf6444/youtube_adblock.js";
+    sha256 = "sha256-EuGTJ9Am5C6g3MeTsjBQqyNFBiGAIWh+f6cUtEHu3iI=";
+  };
+
+  # Dark mode for pages that do not natively support it
   xdg.configFile."qutebrowser/greasemonkey/dark-reader.js".text = ''
     // ==UserScript==
     // @name          Dark Reader (Unofficial)
     // @icon          https://darkreader.org/images/darkreader-icon-256x256.png
     // @namespace     DarkReader
     // @description	  Inverts the brightness of pages to reduce eye strain
-    // @version       4.7.15
+    // @version       4.9.52
     // @author        https://github.com/darkreader/darkreader#contributors
     // @homepageURL   https://darkreader.org/ | https://github.com/darkreader/darkreader
     // @run-at        document-end
     // @grant         none
     // @include       http*
+    // @exclude       *://*google*.*/*
     // @require       https://cdn.jsdelivr.net/npm/darkreader/darkreader.min.js
     // @noframes
     // ==/UserScript==
