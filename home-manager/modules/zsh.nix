@@ -1,5 +1,5 @@
-{ pkgs
-, config
+{ config
+, pkgs
 , ...
 }:
 
@@ -20,6 +20,7 @@
     };
 
     shellAliases = rec {
+      nixfzf = "${pkgs.nix-search-fzf}/bin/nix-search-fzf";
       ls = "ls --color=auto";
       cat = "bat -p";
       diff = "diff --color=auto -u";
