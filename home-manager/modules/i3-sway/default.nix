@@ -18,7 +18,7 @@ let
     ws7 = "7";
     ws8 = "8";
     ws9 = "9";
-    ws10= "10";
+    ws10 = "10";
   };
 
   displayServer = if wayland then "wayland" else "xsession";
@@ -58,10 +58,26 @@ in
         startup = [
           { command = "--no-startup-id ${pkgs.alsaUtils}/bin/amixer set Master 35%"; always = false; }
           { command = "--no-startup-id ${pkgs.redshift}/bin/redshift -l 50.77083:3.57361 -t 6500K:3000K"; always = false; }
-        ] ++ lib.optionals (displayServer == "xsession") [
-          { command = "--no-startup-id ${pkgs.xwallpaper}/bin/xwallpaper --daemon --zoom ${config.xdg.configHome}/wallpapers/spirited_away.png"; always = false; }
         ] ++ lib.optionals (displayServer == "wayland") [
           { command = "--no-startup-id ${pkgs.swaybg}/bin/swaybg -i ${config.xdg.configHome}/wallpapers/spirited_away.png"; always = false; }
+        ] ++ lib.optionals (displayServer == "xsession") [
+          { command = "--no-startup-id ${pkgs.xwallpaper}/bin/xwallpaper --daemon --zoom ${config.xdg.configHome}/wallpapers/spirited_away.png"; always = false; }
+
+          {
+            # Swap the keybindings of capslock and escape
+            command =
+              let
+                xmodmap = "${pkgs.xorg.xmodmap}/bin/xmodmap";
+              in
+              ''
+                --no-startup-id \
+                  ${xmodmap} -e "clear lock" && \
+                  ${xmodmap} -e "keycode 9 = Caps_Lock NoSymbol Caps_Lock" && \
+                  ${xmodmap} -e "keycode 66 = Escape NoSymbol Escape"
+              '';
+
+            always = true;
+          }
         ];
 
         assigns = {
