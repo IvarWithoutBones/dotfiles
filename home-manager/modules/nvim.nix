@@ -139,12 +139,13 @@
           let bufferline = get(g:, 'bufferline', {})
           let bufferline.animation = v:false
 
-          nnoremap <silent> <s-f> :BufferPick<CR>
           nnoremap <silent> fw :BufferClose<CR>
+          nnoremap <silent> Fw :BufferClose!<CR>
           nnoremap <silent> fl :BufferNext<CR>
           nnoremap <silent> fh :BufferPrevious<CR>
           nnoremap <silent> fml :BufferMoveNext<CR>
           nnoremap <silent> fmh :BufferMovePrevious<CR>
+          nnoremap <silent> <s-f> :BufferPick<CR>
         '';
       }
       {
