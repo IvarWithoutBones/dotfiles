@@ -16,7 +16,7 @@
     ./modules/mpv.nix
     ./modules/i3-sway
   ];
-  
+
   nixpkgs.config = {
     allowUnfree = true;
     experimental-features = "nix-command flakes";
@@ -29,25 +29,6 @@
       TERMINAL = "alacritty";
     };
   };
-  
-  gtk = {
-    enable = true;
-
-    theme = {
-      name = "Arc-Dark";
-      package = pkgs.arc-theme;
-    };
-
-    iconTheme = {
-      name = "Arc";
-      package = pkgs.arc-icon-theme;
-    };
-
-    cursorTheme = {
-      name = "capitaine-cursors";
-      package = pkgs.capitaine-cursors;
-    };
-  };
 
   programs = {
     command-not-found.enable = true;
@@ -57,6 +38,4 @@
       nix-direnv.enable = true;
     };
   };
-  
-  fonts.fontconfig.enable = true;
 }

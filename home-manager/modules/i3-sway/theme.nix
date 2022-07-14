@@ -6,7 +6,7 @@
 }:
 
 let
-  # A nice looking dark purple theme made by https://github.com/kira64xyz
+  # A nice looking dark purple theme based off of catppuccin made by https://github.com/kira64xyz
   colors = {
     rosewater = "#f5e0dc";
     mauve = "#cba6f7";
@@ -42,6 +42,8 @@ let
   windowManager = if wayland then "sway" else "i3";
 in
 {
+  fonts.fontconfig.enable = true;
+
   ${displayServer}.windowManager.${windowManager}.config = {
     inherit fonts;
 
@@ -97,6 +99,25 @@ in
         memory_mem = "";
         bat = "Battery:";
       };
+    };
+  };
+
+  gtk = {
+    enable = true;
+
+    theme = {
+      name = "Catppuccin-purple-dark";
+      package = pkgs.catppuccin-gtk;
+    };
+
+    iconTheme = {
+      name = "Arc";
+      package = pkgs.arc-icon-theme;
+    };
+
+    cursorTheme = {
+      name = "capitaine-cursors";
+      package = pkgs.capitaine-cursors;
     };
   };
 }
