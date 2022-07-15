@@ -56,6 +56,21 @@
         "type": "github"
       }
     },
+    "nix-index-database": {
+      "locked": {
+        "lastModified": 1657425481,
+        "narHash": "sha256-b1mkwAjb5QpYZh+y6SxA3eXI5Lp0pcSyVHeU+zJzvDU=",
+        "owner": "mic92",
+        "repo": "nix-index-database",
+        "rev": "ad72b2b28c730ec0c18d9607aadb0c266d41d6c5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mic92",
+        "repo": "nix-index-database",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1657802959,
@@ -77,6 +92,7 @@
         "agenix": "agenix",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
+        "nix-index-database": "nix-index-database",
         "nixpkgs": "nixpkgs"
       }
     },

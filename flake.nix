@@ -18,9 +18,11 @@
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nix-index-database.url = "github:mic92/nix-index-database";
   };
 
-  outputs = inputs @ { self, nixpkgs, home-manager, flake-utils, agenix }:
+  outputs = inputs @ { self, nixpkgs, home-manager, flake-utils, agenix, nix-index-database }:
     let
       pkgs = flake-utils.lib.eachDefaultSystem (system: nixpkgs.legacyPackages.${system});
 
@@ -58,7 +60,7 @@
     in
     rec {
       lib = import ./lib.nix { inherit (inputs) nixpkgs home-manager agenix; inherit self; };
-      overlays.default = import ./pkgs/overlay.nix;
+      overlays.default = import ./pkgs/overlay.nix { inherit (inputs) nix-index-database; };
 
       nixosConfigurations = {
         nixos-pc = lib.createSystem profiles.ivv {

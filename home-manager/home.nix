@@ -15,6 +15,7 @@
     ./modules/dunst.nix
     ./modules/mpv.nix
     ./modules/i3-sway
+    ./modules/nix-index.nix
   ];
 
   nixpkgs.config = {

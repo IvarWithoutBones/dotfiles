@@ -22,7 +22,6 @@
     speedtest
     gnome.ghex
     fd
-    nix-index
     nix-prefetch-git
     comma
     manix
