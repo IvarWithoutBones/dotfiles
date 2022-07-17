@@ -1,7 +1,9 @@
 { nix-index-database, ... }:
 
-final: prev: {
-  dotfiles-tool = final.runCommand "dotfiles-tool"
+final: prev: let
+  pkgs = final;
+in {
+  dotfiles-tool = pkgs.runCommand "dotfiles-tool"
     {
       src = ./dotfiles.sh;
     } ''
@@ -10,20 +12,20 @@ final: prev: {
   '';
 
   nix-index-database =
-    if final.stdenv.isLinux then
+    if pkgs.stdenv.isLinux then
       nix-index-database.legacyPackages.x86_64-linux.database
-    else if final.stdenv.isDarwin then
+    else if pkgs.stdenv.isDarwin then
       nix-index-database.legacyPackages.x86_64-darwin.database
     else
       throw "Unsupported platform";
 
-  nix-search-fzf = final.runCommand "nix-search-fzf"
+  nix-search-fzf = pkgs.runCommand "nix-search-fzf"
     {
-      script = final.substituteAll {
+      script = pkgs.substituteAll {
         src = ./nix-search-fzf.sh;
-        inherit (final) runtimeShell;
+        inherit (pkgs) runtimeShell;
 
-        binPath = with final; lib.makeBinPath [
+        binPath = with pkgs; lib.makeBinPath [
           gnused
           jq
           fzf
@@ -37,13 +39,13 @@ final: prev: {
     install -Dm755 $script $out/bin/nix-search-fzf
   '';
 
-  nixpkgs-pr = final.runCommand "nixpkgs-pr"
+  nixpkgs-pr = pkgs.runCommand "nixpkgs-pr"
     {
-      src = final.substituteAll {
+      src = pkgs.substituteAll {
         src = ./nixpkgs-pr.sh;
-        inherit (final) runtimeShell;
+        inherit (pkgs) runtimeShell;
 
-        binPath = with final; final.lib.makeBinPath [
+        binPath = with pkgs; lib.makeBinPath [
           nix
           curl
           git
@@ -62,7 +64,7 @@ final: prev: {
     install -Dm755 $src $out/bin/nixpkgs-pr
   '';
 
-  cd-file = final.runCommand "cd-file"
+  cd-file = pkgs.runCommand "cd-file"
     {
       src = ./cd-file.sh;
     } ''
@@ -70,13 +72,13 @@ final: prev: {
     install -Dm755 $src $out/bin/cd-file
   '';
 
-  speedtest = final.runCommand "speedtest"
+  speedtest = pkgs.runCommand "speedtest"
     {
-      script = final.substituteAll {
+      script = pkgs.substituteAll {
         src = ./speedtest.sh;
-        inherit (final) runtimeShell;
+        inherit (pkgs) runtimeShell;
 
-        binPath = with final; final.lib.makeBinPath [
+        binPath = with pkgs; lib.makeBinPath [
           python3Packages.speedtest-cli
           iputils
           coreutils
@@ -86,5 +88,18 @@ final: prev: {
     } ''
     mkdir -p $out/bin
     install -Dm755 $script $out/bin/speedtest
+  '';
+
+  dmenu = pkgs.runCommand "dmenu-configured"
+    {
+      dmenu = prev.dmenu;
+      nativeBuildInputs = [ pkgs.makeWrapper ];
+    } ''
+    mkdir -p $out/bin
+    for bin in $dmenu/bin/*; do
+      # TODO: dont hardcode the colors and font
+      makeWrapper $bin $out/bin/$(basename ''${bin}) \
+        --add-flags "-nf '#cdd6f4' -nb '#12121c' -sb '#cba6f7' -sf '#12121c' -fn 'FiraCode-13'"
+    done
   '';
 }

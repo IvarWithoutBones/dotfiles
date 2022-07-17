@@ -8,9 +8,7 @@
 
 {
   "${mod}+Shift+e" = "exec [ \"$(printf \"No\\nYes\" | ${pkgs.dmenu}/bin/dmenu -i -p \"Would you like to exit i3?\")\" = \"Yes\" ] && ${pkgs.i3-gaps}/bin/i3-msg exit";
-
-  # Colors from dracula. TODO: set this from the fetched theme?
-  "${mod}+d" = "exec --no-startup-id ${pkgs.dmenu}/bin/dmenu_run -nf '#F8F8F2' -nb '#282A36' -sb '#6272A4' -sf '#F8F8F2'";
+  "${mod}+d" = "exec --no-startup-id ${pkgs.dmenu}/bin/dmenu_run";
 
   # General programs
   "${mod}+Return" = "exec --no-startup-id ${config.home.sessionVariables.TERMINAL}";
