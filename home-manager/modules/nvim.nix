@@ -1,4 +1,9 @@
-{ pkgs, config, ... }:
+{ config
+, lib
+, pkgs
+, wayland
+, ...
+}:
 
 {
   home.sessionVariables = rec {
@@ -18,8 +23,10 @@
       lua
       clang-tools
       ripgrep # For :Telescope live_grep
-      xclip # For clipboard support
-    ];
+
+    # For clipboard support
+    ] ++ lib.optional wayland wl-clipboard
+    ++ lib.optional (!wayland) xclip;
 
     plugins = with pkgs.vimPlugins; [
       plenary-nvim # Dependency of telescope
