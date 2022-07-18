@@ -7,8 +7,8 @@
 }:
 
 {
-  "${mod}+Shift+e" = "exec [ \"$(printf \"No\\nYes\" | ${pkgs.dmenu}/bin/dmenu -i -p \"Would you like to exit i3?\")\" = \"Yes\" ] && ${pkgs.i3-gaps}/bin/i3-msg exit";
-  "${mod}+d" = "exec --no-startup-id ${pkgs.dmenu}/bin/dmenu_run";
+  "${mod}+Shift+e" = "exec [ \"$(printf \"No\\nYes\" | ${pkgs.dmenu-configured}/bin/dmenu -i -p \"Would you like to exit i3?\")\" = \"Yes\" ] && ${pkgs.i3-gaps}/bin/i3-msg exit";
+  "${mod}+d" = "exec --no-startup-id ${pkgs.dmenu-configured}/bin/dmenu_run";
 
   # General programs
   "${mod}+Return" = "exec --no-startup-id ${config.home.sessionVariables.TERMINAL}";
