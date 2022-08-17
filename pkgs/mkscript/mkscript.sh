@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Quickly create an executable script with a nix-shell shebang
+
 set -euo pipefail
 
 if [ -z "${1-}" ]; then

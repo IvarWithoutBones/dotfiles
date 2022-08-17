@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Shortcuts for NixOS system management
+
 set -e
 
 error() {

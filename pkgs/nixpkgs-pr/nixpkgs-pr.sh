@@ -1,10 +1,8 @@
-#!@runtimeShell@
+#! /usr/bin/env bash
 
-# TODO: should probably rewrite this in python
+# Automatically open a PR to nixpkgs for the current branch, and ping maintainers of the modified package.
 
 set -e
-
-export PATH="$PATH:@binPath@"
 
 GITHUB_NAME="IvarWithoutBones"
 

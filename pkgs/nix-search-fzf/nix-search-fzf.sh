@@ -1,11 +1,9 @@
-
-#!@runtimeShell@
+#!/usr/bin/env bash
 
 # An fzf script with autocomplete from "nix search" which allows for interactive fuzzy searching of derivations.
 # After the search a nix subcommand is executed on the selected derivation(s), e.g. "nix shell" or "nix run".
 
 set -eou pipefail
-PATH="$PATH:@binPath@"
 
 FLAKE="nixpkgs" # The default flake to use. TODO: make this configurable
 NIX_SUBCOMMAND="shell" # The default nix subcommand to execute

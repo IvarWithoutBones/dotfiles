@@ -77,7 +77,7 @@
     in
     rec {
       lib = import ./lib.nix { inherit (inputs) nixpkgs home-manager agenix nix-darwin; inherit self; };
-      overlays.default = import ./pkgs/overlay.nix { inherit (inputs) nix-index-database; };
+      overlays.default = import ./pkgs/all-packages.nix { inherit (inputs) nix-index-database; };
 
       darwinConfigurations = {
         ivvs-MacBook-Pro = lib.createSystem profiles.ivv-darwin {
