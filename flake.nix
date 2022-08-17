@@ -90,54 +90,6 @@
             };
           };
         };
-
-        vm = lib.createSystem profiles.ivv-linux rec {
-          system = "x86_64-linux";
-          hostname = "vm";
-
-          home-manager = {
-            enable = true;
-          };
-
-          extraConfig = {
-            users.users.ivv.initialPassword = "test";
-          };
-        };
       };
-
-      # TODO: move these scripts to the overlay
-
-      start-vm = pkgs.writeShellScriptBin "start-nixos-vm" ''
-        ${lib.shell-hook}
-
-        nixos-rebuild build-vm --flake ''${DOTFILES_DIR}#vm $@
-        ./result/bin/run-vm-vm
-      '';
-
-      deploy = pkgs.writeShellScriptBin "deploy-to-cachix" ''
-        ${lib.shell-hook}
-
-        NIXOS_SYSTEMS="${toString(builtins.attrNames nixosConfigurations)}"
-
-        rebuild() {
-          if [[ "$1" = "vm" ]]; then
-            SWITCH="build-vm"
-          else
-            SWITCH="build"
-          fi
-
-          logMessage "Building \"$1\"..."
-          nixos-rebuild ''${SWITCH} --flake ''${DOTFILES_DIR}#$1 --use-remote-sudo --print-build-logs
-
-          logMessage "Pushing outputs of \"$1\" to cachix..."
-          cachix push ivar-personal ./result
-
-          rm -rf ./result
-        }
-
-        for i in ''${NIXOS_SYSTEMS[@]}; do
-          rebuild "$i"
-        done
-      '';
     };
 }

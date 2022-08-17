@@ -9,22 +9,6 @@ let
   inherit (nixpkgs) lib;
 in
 rec {
-  shell-hook = ''
-    set -e
-
-    logMessage() {
-      echo -e "\e[1;32minfo:\e[0m $1"
-    }
-
-    if [ -z "''${DOTFILES_DIR}" ]; then
-      DOTFILES_DIR=$HOME/nix/dotfiles
-    fi
-
-    TMPDIR=$(mktemp -d)
-    trap "rm -rf ''${TMPDIR}" EXIT
-    cd ''${TMPDIR}
-  '';
-
   createSystem = profile:
     { system
     , hostname

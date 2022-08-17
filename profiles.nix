@@ -13,12 +13,12 @@ rec {
       enable = true;
 
       modules = [
+        ./home-manager/default.nix
         ./home-manager/packages.nix
         ./home-manager/modules/nix-index.nix
         ./home-manager/modules/mpv.nix
         ./home-manager/modules/zsh.nix
         ./home-manager/modules/nvim.nix
-        ./home-manager/home.nix # TODO: refactor away
       ];
     };
   };
