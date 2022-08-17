@@ -5,15 +5,15 @@
 }:
 
 {
+  # TODO: there seem to be some flickerig issues, not sure whats causing it.
   services.yabai = {
     enable = true;
-    package = pkgs.yabai; # Why isnt this the default?
+    package = pkgs.yabai; # TODO: make this the default
+
     enableScriptingAddition = true;
 
     config = {
       layout = "bsp";
-      window_shadow = false;
-      status_bar = false; # Seems to fix flickering issues
 
       top_padding = 10;
       bottom_padding = 10;

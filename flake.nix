@@ -87,6 +87,8 @@
           home-manager = {
             enable = true;
             modules = [
+              ./home-manager/modules/nix-index.nix
+              ./home-manager/modules/mpv.nix
               ./home-manager/modules/zsh.nix
               ./home-manager/modules/nvim.nix
               ./home-manager/packages.nix
