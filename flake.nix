@@ -2,7 +2,7 @@
   description = "My NixOS configuration, using home-manager";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     flake-utils = {
       url = "github:numtide/flake-utils";
@@ -19,10 +19,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    darwin = {
+      url = "github:LnL7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nix-index-database.url = "github:mic92/nix-index-database";
   };
 
-  outputs = inputs @ { self, nixpkgs, home-manager, flake-utils, agenix, nix-index-database }:
+  outputs = inputs @ { self, nixpkgs, darwin, home-manager, flake-utils, agenix, nix-index-database }:
     let
       pkgs = flake-utils.lib.eachDefaultSystem (system: nixpkgs.legacyPackages.${system});
 
@@ -62,6 +67,35 @@
     rec {
       lib = import ./lib.nix { inherit (inputs) nixpkgs home-manager agenix; inherit self; };
       overlays.default = import ./pkgs/overlay.nix { inherit (inputs) nix-index-database; };
+
+      darwinConfigurations."ivvs-MacBook-Pro" = darwin.lib.darwinSystem {
+        system = "x86_64-darwin";
+        inputs = { inherit darwin self nixpkgs; };
+        specialArgs = { inherit nixpkgs; };
+        modules = [
+          ./modules/darwin
+          ./modules/darwin/yabai.nix
+          ./modules/nix.nix
+          ({ config, ... }: {
+            nixpkgs.overlays = [ (self.overlays.default) ];
+          })
+          home-manager.darwinModule
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.ivv.imports = [
+                ({ config, self, ... }: {
+                  home.stateVersion = "21.11";
+                })
+                ./home-manager/modules/zsh.nix
+                ./home-manager/modules/nvim.nix
+                ./home-manager/packages.nix
+              ];
+            };
+          }
+        ];
+      };
 
       nixosConfigurations = {
         nixos-pc = lib.createSystem profiles.ivv {
