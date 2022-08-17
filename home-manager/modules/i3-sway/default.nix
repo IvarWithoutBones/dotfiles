@@ -63,22 +63,6 @@ in
           { command = "--no-startup-id ${pkgs.swaybg}/bin/swaybg -i ${config.xdg.configHome}/wallpapers/spirited_away.png"; always = false; }
         ] ++ lib.optionals (displayServer == "xsession") [
           { command = "--no-startup-id ${pkgs.xwallpaper}/bin/xwallpaper --daemon --zoom ${config.xdg.configHome}/wallpapers/spirited_away.png"; always = false; }
-
-          {
-            # Bind capslock to escape, and vise versa
-            command =
-              let
-                xmodmap = "${pkgs.xorg.xmodmap}/bin/xmodmap";
-              in
-              ''
-                --no-startup-id \
-                  ${xmodmap} -e "clear lock" && \
-                  ${xmodmap} -e "keycode 9 = Caps_Lock NoSymbol Caps_Lock" && \
-                  ${xmodmap} -e "keycode 66 = Escape NoSymbol Escape"
-              '';
-
-            always = true;
-          }
         ];
 
         assigns = {
