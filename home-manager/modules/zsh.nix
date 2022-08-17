@@ -1,5 +1,6 @@
 { config
 , pkgs
+, lib
 , ...
 }:
 
@@ -15,21 +16,26 @@
     autocd = true;
 
     localVariables = {
+      # Looks like this: '~/some/path > '
       PS1 = "%F{magenta}%~%f > ";
+      # Gets pushed to the home directory otherwise
       LESSHISTFILE = "/dev/null";
+      # Make Vi mode transitions faster (in hundredths of a second)
+      KEYTIMEOUT = 1;
     };
 
-    shellAliases = rec {
+    shellAliases = {
       nixfzf = "${pkgs.nix-search-fzf}/bin/nix-search-fzf";
       ls = "ls --color=auto";
-      cat = "bat -p";
+      cat = "${pkgs.bat}/bin/bat -p";
       diff = "diff --color=auto -u";
       dirdiff = "diff --color=auto -ENwbur";
       mp3 = "mpv --no-video";
-      battery-left = "${pkgs.acpi}/bin/acpi | cut -d' ' -f5";
-      viewimg = "${pkgs.i3-swallow}/bin/swallow ${pkgs.feh}/bin/feh \"$@\"";
       weather = "curl -S 'https://wttr.in/?1F'";
       diskusage = "df -ht ext4";
+    } // lib.optionalAttrs pkgs.stdenvNoCC.isLinux rec {
+      battery-left = "${pkgs.acpi}/bin/acpi | cut -d' ' -f5";
+      viewimg = "${pkgs.i3-swallow}/bin/swallow ${pkgs.feh}/bin/feh \"$@\"";
       caps = "${pkgs.xdotool}/bin/xdotool key Caps_Lock";
       CAPS = caps;
     };
@@ -48,7 +54,18 @@
     initExtra = ''
       ${pkgs.lib.optionalString config.programs.direnv.enable ''eval "$(direnv hook zsh)"''}
 
+      # Changes working directory so has to be sourced upon shell init
       source ${pkgs.cd-file}/bin/cd-file
+
+      # Show vim mode on the right side of the prompt
+      function zle-line-init zle-keymap-select {
+        RPS1="''${''${KEYMAP/vicmd/NORMAL}/(main|viins)/INSERT}"
+        RPS2=$RPS1
+        zle reset-prompt
+      }
+      zle -N zle-line-init
+      zle -N zle-keymap-select
+      export RPS1="" # On Darwin PWD is set by default otherwise
 
       get-git-root() {
         echo "$(${pkgs.git}/bin/git rev-parse --show-toplevel 2>/dev/null)"
