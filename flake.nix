@@ -30,50 +30,7 @@
   outputs = inputs @ { self, nixpkgs, nix-darwin, home-manager, flake-utils, agenix, nix-index-database }:
     let
       pkgs = flake-utils.lib.eachDefaultSystem (system: nixpkgs.legacyPackages.${system});
-
-      # TODO: move to its own file.
-      profiles = {
-        laptop = {
-          touchpad = true;
-          battery = true;
-          bluetooth = true;
-        };
-
-        ivv = rec {
-          username = "ivv";
-          stateVersion = "22.11";
-
-          modules = [
-            ./modules/hardware.nix
-            ./modules/nix.nix
-            ./modules/system.nix
-            ./modules/steam.nix
-            ./modules/graphical.nix
-            ./modules/networking.nix
-            ({
-              networking.extraHosts = ''
-                192.168.1.44 pc
-                192.168.1.37 laptop
-              '';
-
-              users.users.${username}.openssh.authorizedKeys.keys = [
-                "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFzp7kYG8wHjoU1Ski/hABNuT3puOT3icW9DYnweJdR0 ivv@nixos-pc"
-                "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEZS38w38lOTIkwTWwnZHFpKIhTKFbj90iDsMjFK7E2G ivv@nixos-laptop"
-              ];
-            })
-          ];
-        };
-
-        ivv-darwin = {
-          username = "ivv";
-          stateVersion = "22.11";
-
-          modules = [
-            ./modules/darwin
-            ./modules/darwin/yabai.nix
-          ];
-        };
-      };
+      profiles = import ./profiles.nix;
     in
     rec {
       lib = import ./lib.nix { inherit (inputs) nixpkgs home-manager agenix nix-darwin; inherit self; };
@@ -83,22 +40,11 @@
         ivvs-MacBook-Pro = lib.createSystem profiles.ivv-darwin {
           system = "x86_64-darwin";
           hostname = "darwin-macbook-pro";
-
-          home-manager = {
-            enable = true;
-            modules = [
-              ./home-manager/modules/nix-index.nix
-              ./home-manager/modules/mpv.nix
-              ./home-manager/modules/zsh.nix
-              ./home-manager/modules/nvim.nix
-              ./home-manager/packages.nix
-            ];
-          };
         };
       };
 
       nixosConfigurations = {
-        nixos-pc = lib.createSystem profiles.ivv {
+        nixos-pc = lib.createSystem profiles.ivv-linux {
           system = "x86_64-linux";
           hostname = "nixos-pc";
 
@@ -113,17 +59,12 @@
             address = "192.168.1.44";
           };
 
-          home-manager = {
-            enable = true;
-            modules = [ ./home-manager/home.nix ];
-          };
-
           modules = [
             ./modules/hardware-config/nixos-pc.nix
           ];
         };
 
-        nixos-laptop = lib.createSystem profiles.ivv rec {
+        nixos-laptop = lib.createSystem profiles.ivv-linux rec {
           system = "x86_64-linux";
           hostname = "nixos-laptop";
 
@@ -138,11 +79,6 @@
             address = "192.168.1.37";
           };
 
-          home-manager = {
-            enable = true;
-            modules = [ ./home-manager/home.nix ];
-          };
-
           modules = [
             ./modules/hardware-config/nixos-laptop.nix
           ];
@@ -155,7 +91,7 @@
           };
         };
 
-        vm = lib.createSystem profiles.ivv rec {
+        vm = lib.createSystem profiles.ivv-linux rec {
           system = "x86_64-linux";
           hostname = "vm";
 
