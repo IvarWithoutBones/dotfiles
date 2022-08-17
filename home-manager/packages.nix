@@ -25,6 +25,7 @@
     nixpkgs-pr
     nix-search-fzf
     mkscript
+    cat-command
   ] ++ lib.optionals pkgs.stdenvNoCC.isLinux [
     # Package from my overlay
     speedtest

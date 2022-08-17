@@ -3,9 +3,10 @@
 final: prev:
 let
   pkgs = final;
-  lib = pkgs.lib;
 in
 with pkgs; {
+  cat-command = callPackage ./cat-command { };
+
   cd-file = callPackage ./cd-file { };
 
   createScript = callPackage ./createScript { };
