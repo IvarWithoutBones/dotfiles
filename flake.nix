@@ -41,6 +41,7 @@
             ./modules/hardware.nix
             ./modules/nix.nix
             ./modules/system.nix
+            ./modules/steam.nix
             ./modules/graphical.nix
             ./modules/networking.nix
             ({

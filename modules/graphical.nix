@@ -8,7 +8,7 @@
 
 {
   programs = {
-    steam.enable = true;
+    # Required for some GTK prorams
     dconf.enable = true;
   };
 
@@ -16,7 +16,6 @@
   security.pam.services.swaylock = lib.mkIf wayland { };
 
   services = {
-
     xserver = {
       enable = !(wayland);
 
