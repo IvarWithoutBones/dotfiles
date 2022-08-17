@@ -71,13 +71,7 @@
         config = ''
           lua << EOF
             vim.g.catppuccin_flavour = "mocha" -- latte, frappe, macchiato, mocha
-            require('catppuccin').setup {
-              styles = {
-                functions = "italic",
-                keywords = "italic",
-                variables = "italic",
-              },
-            }
+            require('catppuccin').setup()
           EOF
 
           set termguicolors
@@ -162,7 +156,7 @@
           lua << EOF
             require('lualine').setup {
               options = {
-                theme = "catppuccin",
+                theme = "catppuccin"
               }
             }
           EOF
@@ -199,7 +193,9 @@
       {
         # Dependency of some plugins
         plugin = sqlite-lua;
-        config = "let g:sqlite_clib_path = '${pkgs.sqlite.out}/lib/libsqlite3.so'";
+        config = ''
+          let g:sqlite_clib_path = '${pkgs.sqlite.out}/lib/libsqlite3.so'
+        '';
       }
     ];
 
