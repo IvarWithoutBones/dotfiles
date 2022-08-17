@@ -2,10 +2,6 @@
 
 {
   home.packages = with pkgs; [
-    # Fonts
-    noto-fonts-emoji
-    (nerdfonts.override { fonts = [ "FiraCode" ]; })
-
     git
     github-cli
     wget
@@ -19,23 +15,29 @@
     feh
     jq
     killall
-    speedtest
-    gnome.ghex
     fd
     nix-prefetch-git
     comma
     manix
+
+    # Packages from my overlay
     dotfiles-tool
     nixpkgs-pr
     nix-search-fzf
-    alacritty
-    pavucontrol
+  ] ++ lib.optionals pkgs.stdenvNoCC.isLinux [
+    # Fonts. TODO: manage this from a module option?
+    noto-fonts-emoji
+    (nerdfonts.override { fonts = [ "FiraCode" ]; })
+
+    gnome.ghex
+    speedtest
     i3-swallow
-    ncspot spotify
+    ncspot
+    spotify
     krita
     _1password-gui
     transmission-gtk
     citra
     minecraft
-  ]; 
+  ];
 }
