@@ -33,13 +33,17 @@ rec {
       ./modules/networking.nix
     ];
 
-    home-manager.modules = [
-      ./home-manager/modules/alacritty.nix
-      ./home-manager/modules/discord.nix
-      ./home-manager/modules/qutebrowser.nix
-      ./home-manager/modules/dunst.nix
-      ./home-manager/modules/i3-sway
-    ];
+    home-manager = {
+      enable = true;
+
+      modules = [
+        ./home-manager/modules/alacritty.nix
+        ./home-manager/modules/discord.nix
+        ./home-manager/modules/qutebrowser.nix
+        ./home-manager/modules/dunst.nix
+        ./home-manager/modules/i3-sway
+      ] ++ ivv.home-manager.modules;
+    };
 
     # TODO: enable networking config for darwin too
     extraConfig = {

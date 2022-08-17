@@ -33,9 +33,9 @@ rec {
       } // hardware;
 
       _home-manager = {
-        enable = false;
-        modules = [ ];
-      } // (profile.home-manager or { }) // home-manager;
+        enable = if ((profile.home-manager.enable or false) || (home-manager.enable or false)) then true else false;
+        modules = [] ++ (profile.home-manager.modules or []) ++ (home-manager.modules or []);
+      };
 
       isDarwin = if (system == "x86_64-darwin" || system == "aarch64-darwin") then true else false;
       systemFunc = if isDarwin then nix-darwin.lib.darwinSystem else nixpkgs.lib.nixosSystem;
@@ -57,7 +57,7 @@ rec {
           system.stateVersion = profile.stateVersion or "";
         })
       ]
-      ++ lib.optionals (_home-manager.enable or false) [
+      ++ lib.optionals _home-manager.enable [
         homeManagerFunc
         {
           home-manager.useGlobalPkgs = true;
@@ -65,7 +65,7 @@ rec {
           home-manager.sharedModules = _home-manager.modules;
           home-manager.users.${profile.username} = {
             home.stateVersion = profile.stateVersion or "";
-            imports = _home-manager.modules ++ profile.home-manager.modules or [ ];
+            imports = _home-manager.modules;
           };
 
           home-manager.extraSpecialArgs = {
