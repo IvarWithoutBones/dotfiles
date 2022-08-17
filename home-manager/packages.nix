@@ -24,13 +24,16 @@
     dotfiles-tool
     nixpkgs-pr
     nix-search-fzf
+    mkscript
   ] ++ lib.optionals pkgs.stdenvNoCC.isLinux [
+    # Package from my overlay
+    speedtest
+
     # Fonts. TODO: manage this from a module option?
     noto-fonts-emoji
     (nerdfonts.override { fonts = [ "FiraCode" ]; })
 
     gnome.ghex
-    speedtest
     i3-swallow
     ncspot
     spotify

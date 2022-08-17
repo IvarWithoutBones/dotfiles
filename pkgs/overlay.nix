@@ -5,6 +5,14 @@ let
   pkgs = final;
 in
 {
+  nix-index-database =
+    if pkgs.stdenv.isLinux then
+      nix-index-database.legacyPackages.x86_64-linux.database
+    else if pkgs.stdenv.isDarwin then
+      nix-index-database.legacyPackages.x86_64-darwin.database
+    else
+      throw "Unsupported platform";
+
   dotfiles-tool = pkgs.runCommand "dotfiles-tool"
     {
       src = ./dotfiles.sh;
@@ -13,13 +21,14 @@ in
     install -Dm755 $src $out/bin/dotfiles
   '';
 
-  nix-index-database =
-    if pkgs.stdenv.isLinux then
-      nix-index-database.legacyPackages.x86_64-linux.database
-    else if pkgs.stdenv.isDarwin then
-      nix-index-database.legacyPackages.x86_64-darwin.database
-    else
-      throw "Unsupported platform";
+  mkscript = pkgs.runCommand "mkscript"
+    {
+      src = ./mkscript.sh;
+    } ''
+    mkdir -p $out/bin
+    install -Dm755 $src $out/bin/mkscript
+    patchShebangs $out/bin/mkscript
+  '';
 
   nix-search-fzf = pkgs.runCommand "nix-search-fzf"
     {

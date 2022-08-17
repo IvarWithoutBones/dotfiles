@@ -75,17 +75,6 @@
         cd "$(get-git-root)"
       }
 
-      mkscript() {
-        if (( $# > 1 )); then
-          echo "error: more than one argument supplied!"
-          return
-        fi
-
-        touch "$1"
-        chmod +x "$1"
-        $EDITOR "$1"
-      }
-
       find-in-store() {
         STORE_PATHS="$(find /nix/store -maxdepth 1 -name "*$1*" -not -name "*.drv")"
 
