@@ -51,7 +51,7 @@ rec {
       _home-manager = {
         enable = false;
         modules = [ ];
-      } // home-manager;
+      } // (profile.home-manager or { }) // home-manager;
 
       isDarwin = if (system == "x86_64-darwin" || system == "aarch64-darwin") then true else false;
       systemFunc = if isDarwin then nix-darwin.lib.darwinSystem else nixpkgs.lib.nixosSystem;
@@ -73,7 +73,7 @@ rec {
           system.stateVersion = profile.stateVersion or "";
         })
       ]
-      ++ lib.optionals (_home-manager.enable or profile.home-manager.enable or false) [
+      ++ lib.optionals (_home-manager.enable or false) [
         homeManagerFunc
         {
           home-manager.useGlobalPkgs = true;
@@ -86,7 +86,7 @@ rec {
 
           home-manager.extraSpecialArgs = {
             inherit wayland;
-          } // specialArgs // args.home-manager;
+          } // specialArgs // _home-manager;
         }
       ]
       ++ _modules
