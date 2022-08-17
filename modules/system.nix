@@ -50,13 +50,12 @@
       efi.canTouchEfiVariables = false;
     };
 
-    kernelPackages = pkgs.linuxPackages_latest;
+    kernelPackages = pkgs.linuxPackages_5_18; # Nvidia drivers fail to build on 5.19
     kernelParams = [
       "quiet"
       "boot.shell_on_fail"
     ] ++ lib.optional (gpu == "nvidia")
-      # Required for wayland support with propietary nvidia drivers
-      "nvidia-drm.modeset=1";
+      "nvidia-drm.modeset=1"; # Required for wayland support with propietary nvidia drivers
 
     binfmt.emulatedSystems = [ "aarch64-linux" ];
     supportedFilesystems = [ "ntfs" ];
