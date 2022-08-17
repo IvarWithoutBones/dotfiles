@@ -19,7 +19,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    darwin = {
+    nix-darwin = {
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
@@ -27,10 +27,11 @@
     nix-index-database.url = "github:mic92/nix-index-database";
   };
 
-  outputs = inputs @ { self, nixpkgs, darwin, home-manager, flake-utils, agenix, nix-index-database }:
+  outputs = inputs @ { self, nixpkgs, nix-darwin, home-manager, flake-utils, agenix, nix-index-database }:
     let
       pkgs = flake-utils.lib.eachDefaultSystem (system: nixpkgs.legacyPackages.${system});
 
+      # TODO: move to its own file.
       profiles = {
         laptop = {
           touchpad = true;
@@ -62,39 +63,36 @@
             })
           ];
         };
+
+        ivv-darwin = {
+          username = "ivv";
+          stateVersion = "22.11";
+
+          modules = [
+            ./modules/darwin
+            ./modules/darwin/yabai.nix
+          ];
+        };
       };
     in
     rec {
-      lib = import ./lib.nix { inherit (inputs) nixpkgs home-manager agenix; inherit self; };
+      lib = import ./lib.nix { inherit (inputs) nixpkgs home-manager agenix nix-darwin; inherit self; };
       overlays.default = import ./pkgs/overlay.nix { inherit (inputs) nix-index-database; };
 
-      darwinConfigurations."ivvs-MacBook-Pro" = darwin.lib.darwinSystem {
-        system = "x86_64-darwin";
-        inputs = { inherit darwin self nixpkgs; };
-        specialArgs = { inherit nixpkgs; };
-        modules = [
-          ./modules/darwin
-          ./modules/darwin/yabai.nix
-          ./modules/nix.nix
-          ({ config, ... }: {
-            nixpkgs.overlays = [ (self.overlays.default) ];
-          })
-          home-manager.darwinModule
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users.ivv.imports = [
-                ({ config, self, ... }: {
-                  home.stateVersion = "21.11";
-                })
-                ./home-manager/modules/zsh.nix
-                ./home-manager/modules/nvim.nix
-                ./home-manager/packages.nix
-              ];
-            };
-          }
-        ];
+      darwinConfigurations = {
+        ivvs-MacBook-Pro = lib.createSystem profiles.ivv-darwin {
+          system = "x86_64-darwin";
+          hostname = "darwin-macbook-pro";
+
+          home-manager = {
+            enable = true;
+            modules = [
+              ./home-manager/modules/zsh.nix
+              ./home-manager/modules/nvim.nix
+              ./home-manager/packages.nix
+            ];
+          };
+        };
       };
 
       nixosConfigurations = {
@@ -168,6 +166,8 @@
           };
         };
       };
+
+      # TODO: move these scripts to the overlay
 
       start-vm = pkgs.writeShellScriptBin "start-nixos-vm" ''
         ${lib.shell-hook}

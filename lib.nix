@@ -1,5 +1,6 @@
 { nixpkgs
 , home-manager
+, nix-darwin
 , self
 , ...
 } @ inputs:
@@ -28,7 +29,7 @@ rec {
     { system
     , hostname
     , hardware ? { }
-    , wayland ? if (hardware.gpu == "amd") then true else false
+    , wayland ? if (hardware.gpu or "" == "amd") then true else false
     , network ? { }
     , modules ? [ ]
     , extraConfig ? { }
@@ -51,8 +52,12 @@ rec {
         enable = false;
         modules = [ ];
       } // home-manager;
+
+      isDarwin = if (system == "x86_64-darwin" || system == "aarch64-darwin") then true else false;
+      systemFunc = if isDarwin then nix-darwin.lib.darwinSystem else nixpkgs.lib.nixosSystem;
+      homeManagerFunc = if isDarwin then inputs.home-manager.darwinModule else inputs.home-manager.nixosModules.home-manager;
     in
-    nixpkgs.lib.nixosSystem rec {
+    systemFunc rec {
       inherit system;
 
       specialArgs = {
@@ -62,12 +67,14 @@ rec {
 
       modules = [
         ({
-          system.stateVersion = profile.stateVersion or "";
           nixpkgs.overlays = [ (self.overlays.default or (final: prev: { })) ];
+        } // lib.optionalAttrs (!isDarwin) {
+          # For some reason system.stateVersion doesnt seem to work with nix-darwin
+          system.stateVersion = profile.stateVersion or "";
         })
       ]
       ++ lib.optionals (_home-manager.enable or profile.home-manager.enable or false) [
-        inputs.home-manager.nixosModules.home-manager
+        homeManagerFunc
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
