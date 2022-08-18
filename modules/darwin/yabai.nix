@@ -26,6 +26,10 @@
     '';
   };
 
+  environment.systemPackages = with pkgs; [
+    yabai-zsh-completions
+  ];
+
   services.skhd = {
     enable = true;
     skhdConfig = ''

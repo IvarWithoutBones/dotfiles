@@ -37,4 +37,6 @@ with pkgs; {
     inherit (darwin.apple_sdk.frameworks) Cocoa Carbon ScriptingBridge;
     inherit (darwin.apple_sdk_11_0.frameworks) SkyLight;
   };
+
+  yabai-zsh-completions = callPackage ./yabai-zsh-completions { };
 }
