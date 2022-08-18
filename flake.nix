@@ -44,44 +44,53 @@
       };
 
       nixosConfigurations = {
-        nixos-pc = lib.createSystem profiles.ivv-linux {
+        nixos-pc = lib.createSystem profiles.ivv-linux rec {
           system = "x86_64-linux";
-          hostname = "nixos-pc";
-
-          hardware = {
-            sound = true;
-            cpu = "intel";
-            gpu = "nvidia";
-          };
-
-          network = {
-            interface = "enp0s31f6";
-            address = "192.168.1.44";
-          };
 
           modules = [
             ./modules/hardware-config/nixos-pc.nix
           ];
+
+          commonSpecialArgs = {
+            hostname = "nixos-pc";
+            wayland = false; # TODO: make this not required, currently there are eval errors when unset
+
+            hardware = {
+              sound = true;
+              cpu = "intel";
+              gpu = "nvidia";
+            };
+
+            network = {
+              interface = "enp0s31f6";
+              address = "192.168.1.44";
+            };
+          };
         };
 
         nixos-laptop = lib.createSystem profiles.ivv-linux rec {
           system = "x86_64-linux";
           hostname = "nixos-laptop";
 
-          hardware = profiles.laptop // {
-            sound = true;
-            gpu = "amd";
-            cpu = "amd";
-          };
-
-          network = {
-            interface = "wlp1s0";
-            address = "192.168.1.37";
-          };
-
           modules = [
             ./modules/hardware-config/nixos-laptop.nix
           ];
+
+          commonSpecialArgs = {
+            hostname = "nixos-pc";
+            wayland = true;
+
+            hardware = profiles.laptop // {
+              sound = true;
+              gpu = "amd";
+              cpu = "amd";
+            };
+
+            network = {
+              interface = "wlp1s0";
+              address = "192.168.1.37";
+            };
+          };
 
           extraConfig = { config, ... }: {
             boot = {

@@ -2,7 +2,7 @@
 , pkgs
 , config
 , wayland
-, gpu
+, hardware
 , ...
 }:
 
@@ -93,11 +93,11 @@ in
   };
 
   home.file.".hm-graphical-session".text = lib.optionalString (windowManager == "sway") ''
-    ${lib.optionalString (gpu == "nvidia") ''
+    ${lib.optionalString (hardware.gpu or "" == "nvidia") ''
       # Required for propietary nvidia drivers
       export GBM_BACKEND=nvidia-drm_gbm.so __GLX_VENDOR_LIBRARY_NAME=nvidia WLR_NO_HARDWARE_CURSORS=1 MOZ_ENABLE_WAYLAND=1 SDL_VIDEODRIVER=wayland
     ''}
 
-    ${pkgs.sway}/bin/sway ${lib.optionalString (gpu == "nvidia") "--unsupported-gpu"}
+    ${pkgs.sway}/bin/sway ${lib.optionalString (hardware.gpu or "" == "nvidia") "--unsupported-gpu"}
   '';
 }

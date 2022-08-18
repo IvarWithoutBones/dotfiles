@@ -68,34 +68,29 @@ rec {
          nixosConfigurations.nixos-machine = lib.createSystem profile { system = "x86_64-linux"; };
          darwinConfigurations.darwin-machine = lib.createSystem profile { system = "x86_64-darwin"; };
   */
-  # TODO: dont hardcode arguments, instead pass anything unknown to this function as specialArgs
   createSystem = profile:
     { system
-    , hostname ? null
-    , hardware ? { }
-    , wayland ? if (hardware.gpu or "" == "amd") then true else false
-    , network ? { }
     , modules ? [ ]
     , extraConfig ? { }
     , home-manager ? { }
+    , specialArgs ? { }
+    , commonSpecialArgs ? { }
+    , ...
     } @ args:
 
     let
-      _modules = modules;
+      _modules = modules; # Avoid infinite recursion
+      _specialArgs = lib.mergeAttrs specialArgs (profile.specialArgs or { });
+      _homeManagerSpecialArgs = lib.mergeAttrs (home-manager.specialArgs or { }) (profile.home-manager.specialArgs or { });
+      _commonSpecialArgs = lib.mergeAttrs commonSpecialArgs (profile.commonSpecialArgs or { });
 
-      _hardware = {
-        cpu = "intel";
-        gpu = "";
-        sound = false;
-        touchpad = false;
-        battery = false;
-        bluetooth = false;
-      } // hardware;
-
-      _home-manager = {
+      _home-manager = rec {
         enable = if ((profile.home-manager.enable or false) || (home-manager.enable or false)) then true else false;
-        modules = [ ] ++ (profile.home-manager.modules or [ ]) ++ (home-manager.modules or [ ]);
+        _extraConfig = lib.mergeAttrs (profile.home-manager.extraConfig or { }) (home-manager.extraConfig or { });
+        modules = [ ] ++ (profile.home-manager.modules or [ ]) ++ (home-manager.modules or [ ]) ++ [ _extraConfig ];
       };
+
+      _username = lib.optionalString _home-manager.enable (home-manager.username or profile.home-manager.username);
 
       isDarwin = if (system == "x86_64-darwin" || system == "aarch64-darwin") then true else false;
       systemFunc = if isDarwin then nix-darwin.lib.darwinSystem else nixpkgs.lib.nixosSystem;
@@ -103,11 +98,7 @@ rec {
     in
     systemFunc rec {
       inherit system;
-
-      specialArgs = {
-        inherit (profile) username;
-        inherit system network hostname wayland;
-      } // inputs // _hardware;
+      specialArgs = { inherit system; } // inputs // _commonSpecialArgs // _specialArgs;
 
       modules = [
         ({
@@ -122,20 +113,14 @@ rec {
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
+          home-manager.extraSpecialArgs = { inherit system; } // inputs // _homeManagerSpecialArgs // _commonSpecialArgs;
           home-manager.sharedModules = _home-manager.modules;
-          home-manager.users.${profile.username} = {
-            home.stateVersion = profile.stateVersion or "";
-            imports = _home-manager.modules;
-          };
-
-          home-manager.extraSpecialArgs = {
-            inherit wayland;
-          } // specialArgs // _home-manager;
+          home-manager.users.${_username}.imports = _home-manager.modules;
         }
       ]
       ++ _modules
       ++ (profile.modules or [ ])
-      ++ [ ((profile.extraConfig or { })) ]
-      ++ [ (extraConfig) ];
+      ++ [ (extraConfig) ]
+      ++ [ ((profile.extraConfig or { })) ];
     };
 }

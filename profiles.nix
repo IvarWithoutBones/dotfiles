@@ -5,12 +5,16 @@ rec {
     bluetooth = true;
   };
 
-  ivv = {
+  ivv = rec {
     username = "ivv";
-    stateVersion = "22.11";
+
+    commonSpecialArgs = {
+      inherit username;
+    };
 
     home-manager = {
       enable = true;
+      inherit username;
 
       modules = [
         ./home-manager/default.nix
@@ -20,6 +24,10 @@ rec {
         ./home-manager/modules/zsh.nix
         ./home-manager/modules/nvim.nix
       ];
+
+      extraConfig = {
+        home.stateVersion = "21.11";
+      };
     };
   };
 
@@ -33,7 +41,7 @@ rec {
       ./modules/networking.nix
     ];
 
-    home-manager = {
+    home-manager = ivv.home-manager // {
       enable = true;
 
       modules = [

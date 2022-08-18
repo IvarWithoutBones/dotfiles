@@ -1,34 +1,30 @@
 { config
 , pkgs
 , lib
-, cpu
-, gpu
-, sound
-, touchpad
-, bluetooth
+, hardware
 , username
 , ...
 }:
 
 {
   services = {
-    blueman.enable = if bluetooth then true else false;
+    blueman.enable = if (hardware.bluetooth or false) then true else false;
 
     xserver = {
       videoDrivers = [
         (
-          if (gpu == "nvidia") then "nvidia"
-          else if (gpu == "amd") then "amdgpu"
+          if (hardware.gpu == "nvidia") then "nvidia"
+          else if (hardware.gpu == "amd") then "amdgpu"
           else ""
         )
       ];
 
       # Fixes screentearing
-      screenSection = lib.optionalString (gpu == "nvidia") ''
+      screenSection = lib.optionalString (hardware.gpu == "nvidia") ''
         Option "metamodes" "nvidia-auto-select +0+0 { ForceCompositionPipeline = On }"
       '';
 
-      libinput = lib.optionalAttrs touchpad {
+      libinput = lib.optionalAttrs (hardware.touchpad or false) {
         enable = true;
 
         touchpad = {
@@ -41,29 +37,25 @@
   };
 
   # Fixes tty resolution
-  boot.loader.systemd-boot.consoleMode = if (gpu == "nvidia") then "max" else "keep";
+  boot.loader.systemd-boot.consoleMode = if (hardware.gpu == "nvidia") then "max" else "keep";
+
+  sound.enable = hardware.sound or false;
+  users.users.${username}.extraGroups = lib.optionals hardware.sound [ "audio" ];
 
   hardware = {
-    nvidia.package = lib.optionals (gpu == "nvidia") config.boot.kernelPackages.nvidiaPackages.beta;
-    cpu.${cpu}.updateMicrocode = true;
-  };
-
-  sound.enable = sound;
-  users.users.${username}.extraGroups = lib.optionals sound [ "audio" ];
-
-  hardware = {
+    nvidia.package = lib.optionals (hardware.gpu == "nvidia") config.boot.kernelPackages.nvidiaPackages.beta;
     enableRedistributableFirmware = true;
 
     opengl = {
       enable = true;
       driSupport32Bit = true;
-      extraPackages32 = lib.optionals (gpu == "nvidia") [ pkgs.pkgsi686Linux.libva ];
+      extraPackages32 = lib.optionals (hardware.gpu == "nvidia") [ pkgs.pkgsi686Linux.libva ];
     };
 
     pulseaudio = {
-      enable = sound;
-      support32Bit = sound;
-    } // lib.optionalAttrs bluetooth {
+      enable = hardware.sound;
+      support32Bit = hardware.sound;
+    } // lib.optionalAttrs (hardware.bluetooth or false) {
       # For bluetooth headphones
       package = pkgs.pulseaudioFull;
       extraConfig = "
@@ -76,9 +68,11 @@
       daemon.enable = true;
     };
 
-    bluetooth = lib.optionalAttrs bluetooth {
+    bluetooth = lib.optionalAttrs (hardware.bluetooth or false) {
       enable = true;
       settings.General.Enable = "Source,Sink,Media,Socket";
     };
+  } // lib.optionalAttrs (hardware.cpu or "" != "") {
+    cpu.${hardware.cpu}.updateMicrocode = true;
   };
 }
