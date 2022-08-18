@@ -12,6 +12,9 @@
     config = {
       layout = "bsp";
 
+      focus_follows_mouse = "autofocus";
+      auto_balance = "on";
+
       top_padding = 10;
       bottom_padding = 10;
       left_padding = 10;
@@ -44,6 +47,15 @@
       shift + alt - j : yabai -m window --warp south
       shift + alt - k : yabai -m window --warp north
       shift + alt - l : yabai -m window --warp east
+
+      # Window toggles
+      shift + alt - space : yabai -m window --toggle float
+      shift + alt - f : yabai -m window --toggle native-fullscreen
+      alt - f : yabai -m window --toggle zoom-fullscreen
+      alt - q : yabai -m window --close
+
+      # Restart
+      shift + alt - r : launchctl kickstart -k "gui/''${UID}/org.nixos.yabai"
     '';
   };
 }
