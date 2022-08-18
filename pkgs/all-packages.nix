@@ -32,4 +32,9 @@ with pkgs; {
   speedtest = callPackage ./speedtest {
     inherit (python3Packages) speedtest-cli;
   };
+
+  yabai = callPackage ./yabai {
+    inherit (darwin.apple_sdk.frameworks) Cocoa Carbon ScriptingBridge;
+    inherit (darwin.apple_sdk_11_0.frameworks) SkyLight;
+  };
 }
