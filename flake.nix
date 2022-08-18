@@ -29,12 +29,12 @@
 
   outputs = inputs @ { self, nixpkgs, nix-darwin, home-manager, flake-utils, agenix, nix-index-database }:
     let
-      pkgs = flake-utils.lib.eachDefaultSystem (system: nixpkgs.legacyPackages.${system});
       profiles = import ./profiles.nix;
     in
     rec {
-      lib = import ./lib.nix { inherit (inputs) nixpkgs home-manager agenix nix-darwin; inherit self; };
+      lib = import ./lib.nix { inherit (inputs) nixpkgs home-manager agenix nix-darwin flake-utils; inherit self; };
       overlays.default = import ./pkgs/all-packages.nix { inherit (inputs) nix-index-database; };
+      packages = lib.packagesFromOverlay self.overlays.default;
 
       darwinConfigurations = {
         ivvs-MacBook-Pro = lib.createSystem profiles.ivv-darwin {

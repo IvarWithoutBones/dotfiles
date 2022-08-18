@@ -1,6 +1,7 @@
 { nixpkgs
 , home-manager
 , nix-darwin
+, flake-utils
 , self
 , ...
 } @ inputs:
@@ -9,9 +10,68 @@ let
   inherit (nixpkgs) lib;
 in
 rec {
+  /* Generate a list of packages for the specified system with an overlay applied.
+
+     Example:
+        lib.pkgsWithOverlay "x86_64-linux" overlays.default
+        => { ... } # The resulting package set
+  */
+  pkgsWithOverlay = system: overlay: import nixpkgs {
+    overlays = [ overlay ];
+    inherit system;
+  };
+
+  /* Generate a list of packages with an overlay applied, to be used as a flake output.
+     For convienience, attributes for all platforms in nixpkgs are generated.
+
+     Example:
+        lib.packagesFromOverlay overlays.default
+        => { x86_64-linux = { ... }; x86_64-darwin = { ... }; ... }
+
+        In a flake:
+          packages = lib.packagesFromOverlay overlays.default;
+  */
+  packagesFromOverlay = overlay: {
+    inherit (flake-utils.lib.eachSystem lib.platforms.all (system: rec {
+      packages = pkgsWithOverlay system overlay;
+    })) packages;
+  }.packages;
+
+  /* Generate a NixOS/nix-darwin configuration based on a profile, with optional home-manager support.
+     A common configuration (refered to as a "profile") is used to share code between flakes.
+     This is used to avoid code repetition for flakes that configure multiple machines.
+
+     Example:
+       lib.createSystem
+       {
+         # The profile, usually defined elsewhere
+         modules = [ ./modules/graphical.nix ];
+         home-manager = {
+           enable = true;
+           modules = [ ./home-manager/modules/zsh.nix ];
+         };
+       }
+       # System definition, usually configured in the flake output
+       { system = "x86_64-linux"; }
+       => {
+            _module = { ... };
+            config = { ... };
+            extendModules = «lambda»;
+            extraArgs = { ... };
+            options = { ... };
+            pkgs = { ... };
+            type = { ... };
+          }
+
+       In a flake:
+         profile = { home-manager = { enable = true; modules = [ ./home-manager/modules/zsh.nix ]; }; };
+         nixosConfigurations.nixos-machine = lib.createSystem profile { system = "x86_64-linux"; };
+         darwinConfigurations.darwin-machine = lib.createSystem profile { system = "x86_64-darwin"; };
+  */
+  # TODO: dont hardcode arguments, instead pass anything unknown to this function as specialArgs
   createSystem = profile:
     { system
-    , hostname
+    , hostname ? null
     , hardware ? { }
     , wayland ? if (hardware.gpu or "" == "amd") then true else false
     , network ? { }
@@ -34,7 +94,7 @@ rec {
 
       _home-manager = {
         enable = if ((profile.home-manager.enable or false) || (home-manager.enable or false)) then true else false;
-        modules = [] ++ (profile.home-manager.modules or []) ++ (home-manager.modules or []);
+        modules = [ ] ++ (profile.home-manager.modules or [ ]) ++ (home-manager.modules or [ ]);
       };
 
       isDarwin = if (system == "x86_64-darwin" || system == "aarch64-darwin") then true else false;
