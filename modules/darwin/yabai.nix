@@ -5,12 +5,9 @@
 }:
 
 {
-  # TODO: there seem to be some flickerig issues, not sure whats causing it.
   services.yabai = {
     enable = true;
     package = pkgs.yabai; # TODO: make this the default
-
-    enableScriptingAddition = true;
 
     config = {
       layout = "bsp";

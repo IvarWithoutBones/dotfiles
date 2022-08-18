@@ -72,5 +72,9 @@ rec {
       ./modules/darwin
       ./modules/darwin/yabai.nix
     ];
+
+    commonSpecialArgs = ivv.commonSpecialArgs // {
+      wayland = false;
+    };
   };
 }
