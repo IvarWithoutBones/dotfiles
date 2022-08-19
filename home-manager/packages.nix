@@ -26,6 +26,8 @@
     nix-search-fzf
     mkscript
     cat-command
+    callpackage-cli
+    copy-nix-derivation
   ] ++ lib.optionals pkgs.stdenvNoCC.isLinux [
     # Package from my overlay
     speedtest

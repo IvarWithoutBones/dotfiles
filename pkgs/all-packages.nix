@@ -5,6 +5,8 @@ let
   pkgs = final;
 in
 with pkgs; {
+  callpackage-cli = callPackage ./callpackage-cli { };
+
   cat-command = callPackage ./cat-command { };
 
   cd-file = callPackage ./cd-file { };

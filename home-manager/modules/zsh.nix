@@ -91,27 +91,6 @@
           echo "''${STORE_PATH}"
         fi
       }
-
-      cleanbuild() {
-        if [ "''${get-git-root}" ]; then
-          cd-git-root
-        fi
-
-        rm -rf build
-        cmake -B build
-        cd build
-        make -j
-      }
-
-      callPackage() {
-        if [ -z "$1" ]; then
-          FILE="default.nix"
-        else
-          FILE="$1"
-        fi
-
-        nix-build -E "((import <nixpkgs> {}).callPackage (import $(realpath "$FILE")) { })"
-      }
     '';
   };
 }
