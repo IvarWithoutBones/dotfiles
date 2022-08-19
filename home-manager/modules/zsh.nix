@@ -112,24 +112,6 @@
 
         nix-build -E "((import <nixpkgs> {}).callPackage (import $(realpath "$FILE")) { })"
       }
-
-      copy-nix-derivation() {
-        if [ -z "$2" ]; then
-          FILE="default.nix"
-        else
-          FILE=$2
-        fi
-        if [ -f "$FILE" ]; then
-          PNAME=$(grep pname $FILE | head -1 | cut -d'"' -f2)
-          read ANSWER\?"$FILE exists, which most likely contains a derivation for $PNAME. Do you wish to override? [Y/N] "
-          case $ANSWER in
-            [yY]* ) echo "Overwriting $FILE...";;
-            [nN]* ) return;;
-            * )     echo "Not a valid answer, exiting..."; return;;
-          esac
-        fi
-        EDITOR=cat nix edit nixpkgs#$1 > $FILE && nvim $FILE
-      }
     '';
   };
 }

@@ -9,6 +9,8 @@ with pkgs; {
 
   cd-file = callPackage ./cd-file { };
 
+  copy-nix-derivation = callPackage ./copy-nix-derivation { };
+
   createScript = callPackage ./createScript { };
 
   dotfiles-tool = callPackage ./dotfiles-tool { };
