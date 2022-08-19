@@ -15,6 +15,8 @@ with pkgs; {
 
   dmenu-configured = callPackage ./dmenu-configured { };
 
+  git-add-fuzzy = callPackage ./git-add-fuzzy { };
+
   mkscript = callPackage ./mkscript { };
 
   nix-index-database =
