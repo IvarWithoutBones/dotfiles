@@ -39,6 +39,7 @@ rec {
       ./modules/steam.nix
       ./modules/graphical.nix
       ./modules/networking.nix
+      ./modules/gpg.nix
     ];
 
     home-manager = ivv.home-manager // {
