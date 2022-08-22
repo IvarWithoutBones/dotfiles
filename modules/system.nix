@@ -28,7 +28,8 @@
       efi.canTouchEfiVariables = false;
     };
 
-    kernelPackages = pkgs.linuxPackages_5_18; # Nvidia drivers fail to build on 5.19
+    kernelPackages = pkgs.linuxPackages_latest;
+
     kernelParams = [
       "quiet"
       "boot.shell_on_fail"
