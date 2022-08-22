@@ -26,7 +26,6 @@ rec {
         ./home-manager/modules/zsh.nix
         ./home-manager/modules/nvim.nix
         ./home-manager/modules/bat.nix
-        ./home-manager/modules/gtk.nix
       ];
 
       extraConfig = {
@@ -56,6 +55,7 @@ rec {
         ./home-manager/modules/discord.nix
         ./home-manager/modules/qutebrowser.nix
         ./home-manager/modules/dunst.nix
+        ./home-manager/modules/gtk.nix
         ./home-manager/modules/i3-sway
       ] ++ ivv.home-manager.modules;
     };
@@ -78,6 +78,7 @@ rec {
     modules = [
       ./modules/darwin
       ./modules/darwin/yabai.nix
+      ./modules/nix.nix
     ];
 
     commonSpecialArgs = ivv.commonSpecialArgs // {

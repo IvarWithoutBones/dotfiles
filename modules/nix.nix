@@ -13,10 +13,7 @@
 
     registry.nixpkgs.flake = nixpkgs;
 
-    gc = {
-      automatic = true;
-      dates = "weekly";
-    };
+    gc.automatic = true;
 
     settings = rec {
       auto-optimise-store = true;
