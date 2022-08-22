@@ -8,7 +8,6 @@
     htop
     unar
     tree
-    bat
     python3
     file
     feh
