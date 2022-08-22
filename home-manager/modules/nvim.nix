@@ -24,7 +24,7 @@
       clang-tools
       ripgrep # For :Telescope live_grep
 
-    # For clipboard support
+      # For clipboard support
     ] ++ lib.optional wayland wl-clipboard
     ++ lib.optional (!wayland) xclip;
 
@@ -33,8 +33,14 @@
       vim-nix
       editorconfig-nvim
       nvim-web-devicons
-      copilot-vim
 
+      {
+        plugin = copilot-vim;
+        config = ''
+          imap <silent><script><expr> <C-J> copilot#Accept("\<CR>")
+          let g:copilot_no_tab_map = v:true
+        '';
+      }
       {
         # Automatically insert a comment with keybindings
         plugin = comment-nvim;
@@ -339,14 +345,21 @@
       nmap <silent> rn <Plug>(coc-rename)
 
       inoremap <silent><expr> <TAB>
-        \ pumvisible() ? "\<C-n>" :
-        \ <SID>check_back_space() ? "\<TAB>" :
-        \ coc#refresh()
+      \ coc#pum#visible() ? coc#pum#next(1):
+      \ CheckBackspace() ? "\<Tab>" :
+      \ coc#refresh()
+      inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-      inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
-        \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-  
-      inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+      function! CheckBackspace() abort
+        let col = col('.') - 1
+        return !col || getline('.')[col - 1]  =~# '\s'
+      endfunction
+
+      " Make <CR> to accept selected completion item or notify coc.nvim to format
+      " <C-g>u breaks current undo, please make your own choice.
+      inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
 
       autocmd CursorHold * silent call CocActionAsync('highlight')
 
@@ -354,11 +367,6 @@
       nnoremap <silent> K :call <SID>show_documentation()<CR>
       inoremap <silent><expr> <c-space> coc#refresh()
 
-      function! s:check_back_space() abort
-        let col = col('.') - 1
-        return !col || getline('.')[col - 1]  =~# '\s'
-      endfunction
-  
       function! s:show_documentation()
         if (index(['vim','help'], &filetype) >= 0)
           execute 'h '.expand('<cword>')
