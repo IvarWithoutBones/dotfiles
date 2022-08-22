@@ -26,6 +26,7 @@
       yabai -m rule --add app='System Preferences' manage=off
       yabai -m rule --add app='Boot Camp Assistant' manage=off
       yabai -m rule --add app='Widgets Manager' manage=off # From pock
+      yabai -m rule --add app='System Information' manage=off
     '';
   };
 
