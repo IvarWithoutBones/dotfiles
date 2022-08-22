@@ -43,6 +43,7 @@ rec {
       ./modules/networking.nix
       ./modules/gpg.nix
       ./modules/agenix.nix
+      ./modules/docker.nix
     ];
 
     home-manager = ivv.home-manager // {
