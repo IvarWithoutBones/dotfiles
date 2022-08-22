@@ -24,6 +24,7 @@ rec {
         ./home-manager/modules/git.nix
         ./home-manager/modules/zsh.nix
         ./home-manager/modules/nvim.nix
+        ./home-manager/modules/gtk.nix
       ];
 
       extraConfig = {
