@@ -67,12 +67,31 @@
       zle -N zle-keymap-select
       export RPS1="" # On Darwin PWD is set by default otherwise
 
+      # Change the working directory to a git trees root with a keybinding
+      pushd-git-root-widget() {
+	      setopt localoptions pipefail no_aliases 2> /dev/null
+	      local dir="$(eval "get-git-root")"
+	      if [[ -z "$dir" ]]; then
+	      	zle redisplay
+	      	return 0
+	      fi
+	      zle push-line
+	      BUFFER="builtin pushd -- ''${(q)dir}"
+	      zle accept-line
+	      local ret=$?
+	      unset dir
+	      zle reset-prompt
+	      return $ret
+      }
+      zle -N pushd-git-root-widget
+      bindkey -M viins '^g' pushd-git-root-widget
+
       get-git-root() {
         echo "$(${pkgs.git}/bin/git rev-parse --show-toplevel 2>/dev/null)"
       }
 
       cd-git-root() {
-        cd "$(get-git-root)"
+        pushd "$(get-git-root)"
       }
 
       find-in-store() {
