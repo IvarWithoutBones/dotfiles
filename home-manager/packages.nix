@@ -2,7 +2,6 @@
 
 {
   home.packages = with pkgs; [
-    git
     github-cli
     wget
     ripgrep
@@ -19,6 +18,8 @@
     nix-prefetch-git
     comma
     manix
+    binutils
+    act
 
     # Packages from my overlay
     dotfiles-tool
