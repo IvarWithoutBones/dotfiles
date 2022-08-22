@@ -28,13 +28,16 @@
       };
 
       # A session for whatever desktop environment is configured in home-manager, for both xorg and wayland.
-      desktopManager.session = [{
-        name = "home-manager";
-        start = ''
-          ${pkgs.runtimeShell} ${lib.optionalString config.services.xserver.displayManager.startx.enable "startx"} $HOME/.hm-graphical-session &
-          waitPID=$!
-        '';
-      }];
+      desktopManager = {
+        xterm.enable = false; # Otherwise we get a non-functional desktop session in the closure
+        session = [{
+          name = "home-manager";
+          start = ''
+            ${pkgs.runtimeShell} ${lib.optionalString config.services.xserver.displayManager.startx.enable "startx"} $HOME/.hm-graphical-session &
+            waitPID=$!
+          '';
+        }];
+      };
 
       displayManager = {
         lightdm.enable = !(config.services.greetd.enable);
