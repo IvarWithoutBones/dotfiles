@@ -1,7 +1,6 @@
 { config
 , lib
 , pkgs
-, agenix
 , system
 , username
 , hardware
@@ -9,34 +8,13 @@
 }:
 
 {
-  imports = [ agenix.nixosModule ];
-
-  age.secrets = {
-    cachix-config = {
-      name = "cachix-config";
-      file = ../secrets/cachix-config.age;
-      owner = username;
-    };
-  };
-
   environment = {
     # links paths from derivations to /run/current-system/sw
     pathsToLink = [ "/libexec" "/share/zsh" ];
 
     systemPackages = with pkgs; [
-      agenix.defaultPackage.${system}
       neovim
       git
-
-      (pkgs.runCommand "cachix-configured"
-        {
-          nativeBuildInputs = [ makeWrapper ];
-        } ''
-        mkdir -p $out/bin
-
-        makeWrapper ${pkgs.cachix}/bin/cachix $out/bin/cachix \
-          --add-flags "--config ${config.age.secrets.cachix-config.path}"
-      '')
     ];
   };
 

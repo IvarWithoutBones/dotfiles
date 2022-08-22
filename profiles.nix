@@ -42,6 +42,7 @@ rec {
       ./modules/graphical.nix
       ./modules/networking.nix
       ./modules/gpg.nix
+      ./modules/agenix.nix
     ];
 
     home-manager = ivv.home-manager // {
