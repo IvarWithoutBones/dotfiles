@@ -78,6 +78,7 @@ rec {
     modules = [
       ./modules/darwin
       ./modules/darwin/yabai.nix
+      ./modules/darwin/swiftbar.nix
       ./modules/nix.nix
     ];
 
