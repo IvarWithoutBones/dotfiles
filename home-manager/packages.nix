@@ -28,6 +28,7 @@
     cat-command
     callpackage-cli
     copy-nix-derivation
+    read-macos-alias
   ] ++ lib.optionals pkgs.stdenvNoCC.isLinux [
     # Package from my overlay
     speedtest

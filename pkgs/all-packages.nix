@@ -35,6 +35,8 @@ with pkgs; {
 
   nixpkgs-pr = callPackage ./nixpkgs-pr { };
 
+  read-macos-alias = callPackage ./read-macos-alias { };
+
   speedtest = callPackage ./speedtest {
     inherit (python3Packages) speedtest-cli;
   };
