@@ -14,35 +14,6 @@
 , SkyLight
 }:
 
-let
-  loadScriptingAddition = writeShellScript "yabai-load-sa" ''
-
-    # For whatever reason the regular commands to load the scripting addition do not work, yabai will throw an error.
-    # The installation command mutably installs binaries to '/System', but then fails to start them. Manually running
-    # the bins as root does start the scripting addition, so this serves as a more user-friendly way to do that.
-
-    set -euo pipefail
-
-    if [[ "$EUID" != 0 ]]; then
-        echo "error: the scripting-addition loader must ran as root. try 'sudo $0'"
-        exit 1
-    fi
-
-    loaderPath="/Library/ScriptingAdditions/yabai.osax/Contents/MacOS/mach_loader";
-
-    if ! test -f "$loaderPath" || ! test -f "$loaderPath"; then
-        echo "could not locate the scripting-addition loader at '$loaderPath', installing it..."
-        echo "note: this may display an error"
-
-        eval "$(dirname "''${BASH_SOURCE[0]}")/yabai --install-sa" || true
-        sleep 1
-    fi
-
-    echo "executing loader..."
-    eval "$loaderPath"
-    echo "scripting-addition started"
-  '';
-in
 stdenv.mkDerivation rec {
   pname = "yabai";
   version = "4.0.2";
@@ -100,6 +71,35 @@ stdenv.mkDerivation rec {
     package = yabai;
     version = "yabai-v${version}";
   };
+
+  # Defining this here exposes it as a passthru attribute, which is useful because it allows us to run `builtins.hashFile` on it in pure-eval mode.
+  # With that we can programatically generate an `/etc/sudoers.d` entry which disables the password requirement, so that a user-agent can run it at login.
+  loadScriptingAddition = writeShellScript "yabai-load-sa" ''
+    # For whatever reason the regular commands to load the scripting addition do not work, yabai will throw an error.
+    # The installation command mutably installs binaries to '/System', but then fails to start them. Manually running
+    # the bins as root does start the scripting addition, so this serves as a more user-friendly way to do that.
+
+    set -euo pipefail
+
+    if [[ "$EUID" != 0 ]]; then
+        echo "error: the scripting-addition loader must ran as root. try 'sudo $0'"
+        exit 1
+    fi
+
+    loaderPath="/Library/ScriptingAdditions/yabai.osax/Contents/MacOS/mach_loader";
+
+    if ! test -f "$loaderPath" || ! test -f "$loaderPath"; then
+        echo "could not locate the scripting-addition loader at '$loaderPath', installing it..."
+        echo "note: this may display an error"
+
+        eval "$(dirname "''${BASH_SOURCE[0]}")/yabai --install-sa" || true
+        sleep 1
+    fi
+
+    echo "executing loader..."
+    eval "$loaderPath"
+    echo "scripting-addition started"
+  '';
 
   meta = with lib; {
     description = "A tiling window manager for macOS based on binary space partitioning";

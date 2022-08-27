@@ -1,10 +1,13 @@
 { lib
 , pkgs
 , config
+, username
 , ...
 }:
 
 {
+  environment.systemPackages = [ pkgs.yabai-zsh-completions ];
+
   services.yabai = {
     enable = true;
     package = pkgs.yabai; # TODO: make this the default
@@ -25,19 +28,32 @@
       yabai -m rule --add app='System Preferences' manage=off
       yabai -m rule --add app='Boot Camp Assistant' manage=off
       yabai -m rule --add app='System Information' manage=off
+      yabai -m rule --add app='SwiftBar' manage=off
       yabai -m rule --add app='Widgets Manager' manage=off # From pock
     '';
   };
 
-  environment.systemPackages = with pkgs; [
-    yabai-zsh-completions
-  ];
+  # The scripting addition needs root access to load, which we want to do automatically when logging in.
+  # This disables the password requirement for it, so that a user-agent can launch it.
+  environment.etc."sudoers.d/yabai-load-sa".text = ''
+    ${username} ALL = (root) NOPASSWD: sha256:${builtins.hashFile "sha256" pkgs.yabai.loadScriptingAddition} ${pkgs.yabai.loadScriptingAddition}
+  '';
 
+  launchd.user.agents.yabai-load-sa = {
+    path = [ pkgs.yabai config.environment.systemPath ];
+    command = "/usr/bin/sudo ${pkgs.yabai.loadScriptingAddition}";
+    serviceConfig = {
+      RunAtLoad = true;
+      KeepAlive.SuccessfulExit = true;
+    };
+  };
+
+  # Keybindings
   services.skhd = {
     enable = true;
     skhdConfig =
       let
-        # Number 10 is created manually because of the conflicting hotkey (0) and space number
+        # Number 10 is created manually because of the conflicting hotkey (0) and the space index (10)
         spaces = [ 1 2 3 4 5 6 7 8 9 ];
 
         navigateWindow = stack: bsp: pkgs.writeShellScript "yabai-navigate" ''
