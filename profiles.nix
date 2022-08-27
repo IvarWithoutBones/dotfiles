@@ -77,10 +77,17 @@ rec {
   ivv-darwin = ivv // {
     modules = [
       ./modules/darwin
+      ./modules/darwin/applications.nix
       ./modules/darwin/yabai
       ./modules/darwin/swiftbar.nix
       ./modules/nix.nix
     ];
+
+    home-manager = ivv.home-manager // {
+      modules = [
+        ./home-manager/modules/darwin/applications.nix
+      ] ++ ivv.home-manager.modules;
+    };
 
     commonSpecialArgs = ivv.commonSpecialArgs // {
       wayland = false;
