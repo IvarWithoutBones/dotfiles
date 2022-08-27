@@ -77,7 +77,7 @@ rec {
   ivv-darwin = ivv // {
     modules = [
       ./modules/darwin
-      ./modules/darwin/yabai.nix
+      ./modules/darwin/yabai
       ./modules/darwin/swiftbar.nix
       ./modules/nix.nix
     ];
