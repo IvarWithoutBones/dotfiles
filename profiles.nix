@@ -79,6 +79,7 @@ rec {
       ./modules/darwin
       ./modules/darwin/applications.nix
       ./modules/darwin/yabai
+      ./modules/darwin/skhd
       ./modules/darwin/swiftbar.nix
       ./modules/nix.nix
     ];

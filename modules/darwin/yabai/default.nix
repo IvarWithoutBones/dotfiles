@@ -6,9 +6,6 @@
 }:
 
 {
-  # Keybindings
-  imports = [ ./skhd.nix ];
-
   services.yabai = {
     enable = true;
     package = pkgs.yabai; # TODO: make this the default
@@ -31,6 +28,7 @@
       yabai -m rule --add app='System Information' manage=off
       yabai -m rule --add app='SwiftBar' manage=off
       yabai -m rule --add app='Widgets Manager' manage=off # From pock
+      yabai -m rule --add app="Discord" space=3
     '';
   };
 
