@@ -26,6 +26,7 @@ rec {
         ./home-manager/modules/zsh.nix
         ./home-manager/modules/nvim.nix
         ./home-manager/modules/bat.nix
+        ./home-manager/modules/discord.nix
       ];
 
       extraConfig = {
@@ -52,7 +53,6 @@ rec {
 
       modules = [
         ./home-manager/modules/alacritty.nix
-        ./home-manager/modules/discord.nix
         ./home-manager/modules/qutebrowser.nix
         ./home-manager/modules/dunst.nix
         ./home-manager/modules/gtk.nix

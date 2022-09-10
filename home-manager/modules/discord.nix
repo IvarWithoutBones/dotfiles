@@ -56,7 +56,7 @@ in
     let
       betterdiscordctl = "${pkgs.betterdiscordctl}/bin/betterdiscordctl";
     in
-    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    lib.mkIf pkgs.stdenv.isLinux (lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       # Install BetterDiscord if it isnt already
       ${betterdiscordctl} status | grep -E 'installed|injected' | grep -q "no" && \
         $DRY_RUN_CMD ${betterdiscordctl} install
@@ -84,5 +84,5 @@ in
       '') plugins}
 
       $DRY_RUN_CMD popd >/dev/null
-    '';
+    '');
 }
