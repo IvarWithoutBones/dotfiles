@@ -14,16 +14,9 @@
       extraPkgs = pkgs: with pkgs; [
         # Elden Ring enhancement patches
         (er-patcher.overrideAttrs (attrs: {
-          version = "1.04-1+date=2022-06-16";
+          name = "er-patcher-1.06-1+date=2022-08-04";
 
-          # Set this manually for now until the next release is in nixpkgs
-          src = fetchFromGitHub rec {
-            owner = "gurrgur";
-            repo = "er-patcher";
-            rev = "fd1a1a4f99fdb9c9ff684ef1591a56da977ecb41";
-            sha256 = "1vz1kc4gzq0kipwsh9xkc1cyk26kz018zmanv4bpdg6dw8rsycdn";
-          };
-
+          # TODO: reomve when https://github.com/gurrgur/er-patcher/pull/41 is merged
           patches = [
             (fetchpatch {
               name = "disable-runeloss.patch";
