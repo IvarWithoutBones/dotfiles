@@ -80,13 +80,13 @@ rec {
       ./modules/darwin/applications.nix
       ./modules/darwin/yabai
       ./modules/darwin/skhd
-      ./modules/darwin/swiftbar.nix
       ./modules/nix.nix
     ];
 
     home-manager = ivv.home-manager // {
       modules = [
         ./home-manager/modules/darwin/applications.nix
+        ./home-manager/modules/darwin/swiftbar
       ] ++ ivv.home-manager.modules;
     };
 
