@@ -21,6 +21,7 @@
       # Fetch a branch from a remote and rebase it on the current branch
       frb = "!git fetch $1 && git rebase $1/$2 && :";
 
+      new = "checkout -b";
       rb = "rebase --interactive";
       last = "show HEAD";
       cim = "commit --amend";
