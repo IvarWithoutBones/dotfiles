@@ -11,6 +11,14 @@ with pkgs; {
 
   cd-file = callPackage ./cd-file { };
 
+  cinny-desktop = import ./cinny-desktop {
+    inherit
+      lib
+      stdenvNoCC
+      callPackage
+      fetchurl;
+  };
+
   copy-nix-derivation = callPackage ./copy-nix-derivation { };
 
   createScript = callPackage ./createScript { };

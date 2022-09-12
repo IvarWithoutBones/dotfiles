@@ -1,4 +1,7 @@
-{ pkgs, config, ... }:
+{ pkgs
+, config
+, ...
+}:
 
 {
   home.packages = with pkgs; [
@@ -19,6 +22,7 @@
     manix
     binutils
     act
+    cinny-desktop
 
     # Packages from my overlay
     dotfiles-tool
