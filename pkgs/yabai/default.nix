@@ -16,13 +16,13 @@
 
 stdenv.mkDerivation rec {
   pname = "yabai";
-  version = "4.0.2";
+  version = "4.0.4";
 
   src = fetchFromGitHub {
     owner = "koekeishiya";
     repo = "yabai";
     rev = "v${version}";
-    sha256 = "sha256-DXDdjI4kkLcRUNtMoSu7fJ0f3fUty88o5ZS6lJz0cGU=";
+    sha256 = "sha256-TeT+8UAV2jR60XvTs4phkp611Gi0nzLmQnezLA0xb44=";
   };
 
   nativeBuildInputs = [
