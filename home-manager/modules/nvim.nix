@@ -22,6 +22,9 @@
     extraPackages = with pkgs; [
       lua
       clang-tools
+      cargo
+      rustfmt
+      rustc
       ripgrep # For :Telescope live_grep
 
       # For clipboard support
@@ -223,13 +226,22 @@
             filetypes = [ "nix" ];
             rootPatterns = [
               "flake.lock"
-              ".git"
+              "flake.nix"
             ];
           };
 
           python = {
             command = "${pkgs.python3Packages.python-lsp-server}/bin/pylsp";
             filetypes = [ "python" ];
+          };
+
+          rust = {
+            command = "${pkgs.rust-analyzer}/bin/rust-analyzer";
+            filetypes = [ "rust" ];
+            rootPatterns = [
+              "Cargo.toml"
+              "Cargo.lock"
+            ];
           };
 
           clangd = {
