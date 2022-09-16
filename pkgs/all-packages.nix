@@ -1,4 +1,7 @@
-{ nix-index-database, ... }:
+{ nix-index-database
+, nil-language-server
+, ...
+}:
 
 final: prev:
 let
@@ -31,13 +34,11 @@ with pkgs; {
 
   mkscript = callPackage ./mkscript { };
 
-  nix-index-database =
-    if stdenv.isLinux then
-      nix-index-database.legacyPackages.x86_64-linux.database
-    else if stdenv.isDarwin then
-      nix-index-database.legacyPackages.x86_64-darwin.database
-    else
-      throw "Unsupported platform";
+  nil-language-server = nil-language-server.packages.${stdenvNoCC.hostPlatform.system
+    or (throw "Unsupported platform ${stdenvNoCC.hostPlatform.system}")}.nil;
+
+  nix-index-database = nix-index-database.legacyPackages.${stdenvNoCC.hostPlatform.system
+    or (throw "Unsupported platform ${stdenvNoCC.hostPlatform.system}")}.database;
 
   nix-search-fzf = callPackage ./nix-search-fzf { };
 

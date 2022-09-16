@@ -3,16 +3,11 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
     nix-index-database.url = "github:mic92/nix-index-database";
+    nil-language-server.url = "github:oxalica/nil";
 
     home-manager = {
       url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    agenix = {
-      url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -20,15 +15,20 @@
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = inputs @ { self, nixpkgs, nix-darwin, home-manager, flake-utils, agenix, nix-index-database }:
+  outputs = { self, nixpkgs, nix-darwin, home-manager, flake-utils, agenix, nix-index-database, nil-language-server } @ inputs:
     let
       profiles = import ./profiles.nix;
     in
     rec {
       lib = import ./lib.nix { inherit (inputs) nixpkgs home-manager agenix nix-darwin flake-utils; inherit self; };
-      overlays.default = import ./pkgs/all-packages.nix { inherit (inputs) nix-index-database; };
+      overlays.default = import ./pkgs/all-packages.nix { inherit (inputs) nix-index-database nil-language-server; };
       packages = lib.packagesFromOverlay self.overlays.default;
 
       darwinConfigurations = {
