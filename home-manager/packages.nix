@@ -44,7 +44,7 @@
     gnome.ghex
     i3-swallow
     ncspot
-    spotify
+    psst
     krita
     _1password-gui
     transmission-gtk

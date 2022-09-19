@@ -53,7 +53,6 @@ in
 
         window.commands = [
           { command = "border pixel 1"; criteria.class = "^.*"; }
-          { command = "move to workspace ${workspaces.ws4}"; criteria.class = "Spotify"; }
         ];
 
         startup = [
@@ -68,6 +67,7 @@ in
         assigns = {
           "${workspaces.ws2}" = [{ class = "electronplayer"; }];
           "${workspaces.ws3}" = [{ class = "discord"; }];
+          "${workspaces.ws4}" = [{ class = "Psst-gui"; }];
           "${workspaces.ws10}" = [{ class = "Transmission-gtk"; }];
           "${workspaces.ws5}" = [{ class = "Steam"; }];
         };

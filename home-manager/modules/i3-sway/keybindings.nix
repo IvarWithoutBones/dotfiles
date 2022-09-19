@@ -15,7 +15,7 @@
   "${mod}+Shift+w" = "exec \"${pkgs.i3-gaps}/bin/i3-msg 'workspace ${workspaces.ws2}; exec ${pkgs.qutebrowser}/bin/qutebrowser --qt-flag ignore-gpu-blacklist --qt-flag enable-gpu-rasterization --qt-flag enable-native-gpu-memory-buffers --qt-flag num-raster-threads=2'\"";
   "${mod}+Shift+d" = "exec ${pkgs.discord}/bin/Discord";
   "${mod}+Shift+Ctrl+d" = "exec pkill Discord && pkill Discord";
-  "${mod}+Shift+s" = "exec \"${pkgs.i3-gaps}/bin/i3-msg 'workspace ${workspaces.ws4}; exec ${config.home.sessionVariables.TERMINAL} -e ncspot'\"";
+  "${mod}+Shift+s" = "exec \"${pkgs.i3-gaps}/bin/i3-msg 'workspace ${workspaces.ws4}; exec ${pkgs.psst}/bin/psst-gui'\"";
   "${mod}+Shift+t" = "exec ${pkgs.transmission-gtk}/bin/transmission-gtk";
   "${mod}+Shift+n" = "exec ${pkgs.electronplayer}/bin/electronplayer";
 
