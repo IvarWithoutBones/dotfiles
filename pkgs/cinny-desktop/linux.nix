@@ -8,7 +8,7 @@
 , wrapGAppsHook
 , dpkg
 , glib-networking
-, openssl
+, openssl_1_1
 , webkitgtk
 }:
 
@@ -24,7 +24,7 @@ stdenvNoCC.mkDerivation {
 
   buildInputs = [
     glib-networking
-    openssl
+    openssl_1_1
     webkitgtk
   ];
 

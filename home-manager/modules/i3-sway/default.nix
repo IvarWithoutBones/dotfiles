@@ -12,7 +12,7 @@ let
   workspaces = {
     ws1 = "1";
     ws2 = "2: Media";
-    ws3 = "3: Discord";
+    ws3 = "3: Chatting";
     ws4 = "4: Music";
     ws5 = "5: Games";
     ws6 = "6";
@@ -52,6 +52,7 @@ in
         };
 
         window.commands = [
+          # Disable titlebar
           { command = "border pixel 1"; criteria.class = "^.*"; }
         ];
 
@@ -66,7 +67,10 @@ in
 
         assigns = {
           "${workspaces.ws2}" = [{ class = "electronplayer"; }];
-          "${workspaces.ws3}" = [{ class = "discord"; }];
+          "${workspaces.ws3}" = [
+            { class = "discord"; }
+            { class = "Cinny"; }
+          ];
           "${workspaces.ws4}" = [{ class = "Psst-gui"; }];
           "${workspaces.ws10}" = [{ class = "Transmission-gtk"; }];
           "${workspaces.ws5}" = [{ class = "Steam"; }];
