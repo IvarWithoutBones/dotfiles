@@ -76,29 +76,11 @@ in
   };
 
   programs.i3status-rust = {
-    bars.top.settings = {
-      theme.overrides = mkDefaultColor colors.base [
-        "warning_bg"
-        "good_bg"
-        "idle_bg"
-        "separator_bg"
-      ];
-
-      icons.overrides = {
-        volume_full = "";
-        volume_half = "墳";
-        volume_empty = "";
-        volume_muted = "";
-        bat_charging = "";
-        bat_quarter = "";
-        bat_half = "";
-        bat_three_quarters = "";
-        bat_full = "";
-        bat_empty = "";
-        cpu = "";
-        memory_mem = "";
-        bat = "Battery:";
-      };
-    };
+    bars.top.settings.theme.overrides = mkDefaultColor colors.base [
+      "warning_bg"
+      "good_bg"
+      "idle_bg"
+      "separator_bg"
+    ];
   };
 }

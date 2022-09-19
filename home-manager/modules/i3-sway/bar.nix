@@ -28,6 +28,13 @@ in
     bars.top = {
       blocks = [
         {
+          # Display the currently playing song from an MPRIS instance
+          block = "custom";
+          command = "${pkgs.mpris-statusbar}/bin/mpris-statusbar";
+          hide_when_empty = true;
+          interval = 1;
+        }
+        {
           # Current temperature
           block = "custom";
           command = "curl -S 'wttr.in/?format=1' | tr -d '+' | xargs";
@@ -68,6 +75,24 @@ in
         format = " {percentage}";
         full_format = format;
       }];
+
+      settings = {
+        icons.overrides = {
+          volume_full = "";
+          volume_half = "墳";
+          volume_empty = "";
+          volume_muted = "";
+          bat_charging = "";
+          bat_quarter = "";
+          bat_half = "";
+          bat_three_quarters = "";
+          bat_full = "";
+          bat_empty = "";
+          cpu = "";
+          memory_mem = "";
+          bat = "Battery:";
+        };
+      };
     };
   };
 }
