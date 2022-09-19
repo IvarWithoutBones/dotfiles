@@ -2,9 +2,9 @@
 , version
 , src
 , meta
-
-, stdenv
+, stdenvNoCC
 , autoPatchelfHook
+, makeWrapper
 , wrapGAppsHook
 , dpkg
 , glib-networking
@@ -12,11 +12,12 @@
 , webkitgtk
 }:
 
-stdenv.mkDerivation {
+stdenvNoCC.mkDerivation {
   inherit pname version src meta;
 
   nativeBuildInputs = [
     wrapGAppsHook
+    makeWrapper
     autoPatchelfHook
     dpkg
   ];
@@ -28,13 +29,20 @@ stdenv.mkDerivation {
   ];
 
   unpackCmd = "dpkg-deb -x $src source";
-
   dontConfigure = true;
   dontBuild = true;
+  dontWrapGApps = true;
 
   installPhase = ''
     runHook preInstall
     cp -r usr $out
+
+    # Environment variable fixes a blank window on nvidia:
+    # https://github.com/tauri-apps/tauri/issues/4315#issuecomment-1207755694
+    wrapProgram $out/bin/cinny \
+      --set WEBKIT_DISABLE_COMPOSITING_MODE 1 \
+      ''${gappsWrapperArgs[@]}
+
     runHook postInstall
   '';
 }

@@ -2,7 +2,6 @@
 , version
 , src
 , meta
-
 , stdenvNoCC
 , undmg
 }:
@@ -10,26 +9,21 @@
 stdenvNoCC.mkDerivation {
   inherit pname version src meta;
 
+  sourceRoot = "Cinny.app";
+
   nativeBuildInputs = [
     undmg
   ];
-
-  unpackPhase = ''
-    runHook preUnpack
-    undmg $src
-    runHook postUnpack
-  '';
 
   dontConfigure = true;
   dontBuild = true;
 
   installPhase = ''
     runHook preInstall
-
-    mkdir -p $out/{bin,Applications}
-    cp -r ./Cinny.app $out/Applications
+    mkdir -p $out/{Applications/Cinny.app,bin}
+    cp -r ./* $out/Applications/Cinny.app
     ln -s $out/Applications/Cinny.app/Contents/MacOS/Cinny $out/bin
-
     runHook postInstall
   '';
 }
+
