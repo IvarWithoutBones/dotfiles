@@ -135,6 +135,30 @@ in
         }
       })
 
+      languageServer("sumneko_lua", {
+        cmd = { "${pkgs.sumneko-lua-language-server}/bin/lua-language-server" },
+        filetypes = { "lua" },
+        settings = {
+          Lua = {
+            runtime = {
+              version = 'LuaJIT'
+            },
+
+            diagnostics = {
+              globals = { 'vim' }
+            },
+
+            workspace = {
+              library = vim.api.nvim_get_runtime_file("", true)
+            },
+
+            telemetry = {
+              enable = false
+            }
+          }
+        }
+      })
+
       languageServer("pylsp", {
         cmd = { "${pkgs.python3Packages.python-lsp-server}/bin/pylsp" },
         filetypes = { "python" },
