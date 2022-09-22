@@ -70,13 +70,6 @@ in
             key = "U";
             action = "ScrollPageUp";
           }
-
-          {
-            mods = mod;
-            key = "F";
-            mode = "~Search";
-            action = "SearchForward";
-          }
         ];
     };
   };
