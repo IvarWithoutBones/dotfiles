@@ -12,6 +12,10 @@ rec {
       inherit username;
     };
 
+    modules = [
+      ./modules/nix.nix
+    ];
+
     home-manager = {
       enable = true;
       inherit username;
@@ -37,26 +41,25 @@ rec {
 
   ivv-linux = ivv // {
     modules = [
-      ./modules/hardware.nix
-      ./modules/nix.nix
-      ./modules/system.nix
-      ./modules/steam.nix
-      ./modules/graphical.nix
-      ./modules/networking.nix
-      ./modules/gpg.nix
-      ./modules/agenix.nix
-      ./modules/docker.nix
-    ];
+      ./modules/linux/hardware.nix
+      ./modules/linux/system.nix
+      ./modules/linux/steam.nix
+      ./modules/linux/graphical.nix
+      ./modules/linux/networking.nix
+      ./modules/linux/gpg.nix
+      ./modules/linux/agenix.nix
+      ./modules/linux/docker.nix
+    ] ++ ivv.modules;
 
     home-manager = ivv.home-manager // {
       enable = true;
 
       modules = [
-        ./home-manager/modules/alacritty.nix
-        ./home-manager/modules/qutebrowser.nix
-        ./home-manager/modules/dunst.nix
-        ./home-manager/modules/gtk.nix
-        ./home-manager/modules/i3-sway
+        ./home-manager/modules/linux/alacritty.nix
+        ./home-manager/modules/linux/qutebrowser.nix
+        ./home-manager/modules/linux/dunst.nix
+        ./home-manager/modules/linux/gtk.nix
+        ./home-manager/modules/linux/i3-sway
       ] ++ ivv.home-manager.modules;
     };
 
@@ -80,8 +83,7 @@ rec {
       ./modules/darwin/applications.nix
       ./modules/darwin/yabai
       ./modules/darwin/skhd
-      ./modules/nix.nix
-    ];
+    ] ++ ivv.modules;
 
     home-manager = ivv.home-manager // {
       modules = [

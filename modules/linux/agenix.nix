@@ -25,7 +25,7 @@
   age.secrets = {
     cachix-config = {
       name = "cachix-config";
-      file = ../secrets/cachix-config.age;
+      file = ../../secrets/cachix-config.age;
       owner = username;
     };
   };

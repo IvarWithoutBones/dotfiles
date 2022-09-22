@@ -43,7 +43,7 @@
           system = "x86_64-linux";
 
           modules = [
-            ./modules/hardware-config/nixos-pc.nix
+            ./modules/linux/hardware-config/nixos-pc.nix
           ];
 
           commonSpecialArgs = {
@@ -68,7 +68,7 @@
           hostname = "nixos-laptop";
 
           modules = [
-            ./modules/hardware-config/nixos-laptop.nix
+            ./modules/linux/hardware-config/nixos-laptop.nix
           ];
 
           commonSpecialArgs = {
