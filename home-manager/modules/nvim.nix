@@ -21,13 +21,16 @@
 
     extraPackages = with pkgs; [
       lua
-      clang-tools
+      ripgrep # Needed by :Telescope live_grep
+      clang-tools # C/C++ LSP support
+      shellcheck # Bash LSP support
+
+      # Rust LSP support
       cargo
       rustfmt
       rustc
-      ripgrep # For :Telescope live_grep
 
-      # For clipboard support
+      # Clipboard support
     ] ++ lib.optional wayland wl-clipboard
     ++ lib.optional (!wayland) xclip;
 
@@ -233,6 +236,12 @@
           python = {
             command = "${pkgs.python3Packages.python-lsp-server}/bin/pylsp";
             filetypes = [ "python" ];
+          };
+
+          bash = {
+            command = "${pkgs.nodePackages.bash-language-server}/bin/bash-language-server";
+            filetypes = [ "sh" "bash" ];
+            args = [ "start" ];
           };
 
           rust = {
