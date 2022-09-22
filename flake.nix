@@ -62,38 +62,6 @@
             };
           };
         };
-
-        nixos-laptop = lib.createSystem profiles.ivv-linux rec {
-          system = "x86_64-linux";
-          hostname = "nixos-laptop";
-
-          modules = [
-            ./modules/linux/hardware-config/nixos-laptop.nix
-          ];
-
-          commonSpecialArgs = {
-            hostname = "nixos-pc";
-            wayland = true;
-
-            hardware = profiles.laptop // {
-              sound = true;
-              gpu = "amd";
-              cpu = "amd";
-            };
-
-            network = {
-              interface = "wlp1s0";
-              address = "192.168.1.37";
-            };
-          };
-
-          extraConfig = { config, ... }: {
-            boot = {
-              kernelParams = [ "acpi_backlight=vendor" ]; # Fixes backlight
-              extraModulePackages = with config.boot.kernelPackages; [ rtl8821ce ];
-            };
-          };
-        };
       };
     };
 }
