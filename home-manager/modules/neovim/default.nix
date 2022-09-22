@@ -25,7 +25,6 @@ in
 
   programs.neovim = {
     enable = true;
-    withNodeJs = true;
 
     viAlias = true;
     vimAlias = true;

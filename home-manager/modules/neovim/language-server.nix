@@ -1,14 +1,24 @@
-{ config
+{ lib
+, config
 , pkgs
-, lib
 , ...
 }:
 
+let
+  mkLua = lua: ''
+    lua << EOF
+      ${lua}
+    EOF
+  '';
+in
 {
   programs.neovim = {
     extraPackages = with pkgs; [
-      clang-tools # C/C++
       shellcheck # Bash
+
+      # C/C++
+      clang-tools
+      clang
 
       # Rust
       cargo
@@ -16,135 +26,134 @@
       rustc
     ];
 
-    coc = {
-      enable = true;
+    plugins = with pkgs.vimPlugins; [
+      nvim-lspconfig # Language server presets
+      coq_nvim # Completion engine
+      trouble-nvim # Diagnostics in bottom bar
 
-      settings = {
-        client.snippetSupport = true;
+      # Snippets & more
+      coq-artifacts
+      coq-thirdparty
+    ];
 
-        suggest = {
-          enablePreview = true;
-          noselect = true;
-          enablePreselect = false;
-        };
+    extraConfig = mkLua ''
+      -- Always show the signcolumn, otherwise text would be shifted upon errors
+      vim.opt.signcolumn = "yes"
 
-        languageserver = {
-          nix = {
-            command = "${pkgs.rnix-lsp}/bin/rnix-lsp";
-            filetypes = [ "nix" ];
-            rootPatterns = [ "flake.lock" "flake.nix" ];
-          };
+      local signs = {
+        Error = "",
+        Warn = "",
+        Hint = "",
+        Info = ""
+      }
 
-          python = {
-            command = "${pkgs.python3Packages.python-lsp-server}/bin/pylsp";
-            filetypes = [ "python" ];
-          };
+      -- Replace existing signs for diagnostics with our icons
+      for type, icon in pairs(signs) do
+          local hl = "DiagnosticSign" .. type
+          vim.fn.sign_define(hl, {text = icon, texthl = hl, numhl = hl})
+      end
 
-          bash = {
-            command = "${pkgs.nodePackages.bash-language-server}/bin/bash-language-server";
-            filetypes = [ "sh" "bash" ];
-            args = [ "start" ];
-          };
+      -- Rounded corners for popup boxes
+      vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
+        vim.lsp.handlers.hover,
+        {border = 'rounded'}
+      )
 
-          rust = {
-            command = "${pkgs.rust-analyzer}/bin/rust-analyzer";
-            filetypes = [ "rust" ];
-            rootPatterns = [
-              "Cargo.toml"
-              "Cargo.lock"
-            ];
-          };
+      vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
+        vim.lsp.handlers.signature_help,
+        {border = 'rounded'}
+      )
 
-          clangd = {
-            command = "${pkgs.clang-tools}/bin/clangd";
-            rootPatterns = [ "CMakeLists.txt" ];
-            extraArgs = [ "--background-index" ];
-            compilationDatabasePath = "build/compile_commands.json";
+      -- Coq settings
+      vim.g.coq_settings = {
+        auto_start = 'shut-up', -- Automatically start coq, the completion engine
+        xdg = true, -- Dont try to install dependencies to the nix store
+        ["display.pum.fast_close"] = false -- Stops some flickering
+      }
 
-            filetypes = [
-              "c"
-              "cpp"
-              "objc"
-              "objcpp"
-            ];
-          };
+      -- Mappings. See `:help vim.lsp.*` for documentation on the below functions
+      local options = function(client, bufnr)
+        local bufopts = { noremap=true, silent=true, buffer=bufnr }
+        vim.keymap.set('n', '<space>a', "<cmd>TroubleToggle workspace_diagnostics<cr>", bufopts) -- Open a list with all diagnostics
+        vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)                     -- Jump to declaration
+        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)                      -- Jump to definition
+        vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)                            -- Show hover information
+        vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)                  -- Show implementation (?)
+        vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)                      -- Show symbol references. TODO: make interactive
+        vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)               -- Show information about signature
+        vim.keymap.set('n', '<space>d', vim.lsp.buf.type_definition, bufopts)           -- Jump to type definition
+        vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)                   -- Rename symbol
+        vim.keymap.set('n', '<space>f', vim.lsp.buf.formatting, bufopts)                -- Run formatter
+        vim.keymap.set('n', '<space>c', vim.lsp.buf.code_action, bufopts)               -- Run code action
+        vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)     -- Add workspace folder
+        vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)  -- Remove workspace folder
+        vim.keymap.set('n', '<space>wl', function()                                     -- List workspace folders
+          print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+        end, bufopts)
+      end
 
-          cmake = {
-            command = "${pkgs.cmake-language-server}/bin/cmake-language-server";
-            filetypes = [ "cmake" ];
-            rootPatterns = [ "CMakeLists.txt" ];
+      -- Merge the provided `settings` with `options` and construct an LSP object
+      local lspconfig = require('lspconfig')
+      function languageServer(name, settings)
+        flags = { on_attach = options }
+        for key,value in pairs(settings) do flags[key] = value end
+        lspconfig[name].setup(require('coq').lsp_ensure_capabilities(flags))
+      end
 
-            initializationOptions = {
-              buildDirectory = "build";
-            };
-          };
-        };
-      };
-    };
+      -- Language servers. For a list of available options see the documentation:
+      -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
 
-    extraConfig = ''
-      set signcolumn=number
-      set updatetime=300
+      languageServer("rnix", {
+        cmd = { "${pkgs.rnix-lsp}/bin/rnix-lsp" },
+        filetypes = { "nix" }
+      })
 
-      " Show all diagnostics.
-      nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
-      " Manage extensions.
-      nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
-      " Show commands.
-      nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
-      " Find symbol of current document.
-      nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
-      " Search workspace symbols.
-      nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
-      " Do default action for next item.
-      nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
-      " Do default action for previous item.
-      nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
-      " Resume latest coc list.
-      nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
-      " Format the currently open buffer
-      nnoremap <silent><nowait> <space>f  :<C-u>CocCommand editor.action.formatDocument<cr>
-      " Run the suggested action
-      nnoremap <silent><nowait> <space> <Plug>(coc-codeaction-selected)
+      languageServer("bashls", {
+        cmd = { "${pkgs.nodePackages.bash-language-server}/bin/bash-language-server", "start" },
+        filetypes = { "sh" }
+      })
 
-      nmap <silent> gd <Plug>(coc-definition)
-      nmap <silent> gy <Plug>(coc-type-definition)
-      nmap <silent> gi <Plug>(coc-implementation)
-      nmap <silent> gr <Plug>(coc-references)
-      nmap <silent> rn <Plug>(coc-rename)
+      languageServer("rust_analyzer", {
+        cmd = { "${pkgs.rust-analyzer}/bin/rust-analyzer" },
+        filetypes = { "rust" }
+      })
 
-      inoremap <silent><expr> <TAB>
-      \ coc#pum#visible() ? coc#pum#next(1):
-      \ CheckBackspace() ? "\<Tab>" :
-      \ coc#refresh()
-      inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+      languageServer("ccls", {
+        cmd = { "${pkgs.ccls}/bin/ccls" },
+        filetypes = { "c", "cpp", "objc", "objcpp" },
+        offset_encoding = "utf-8",
+        init_options = {
+          compilationDatabaseDirectory = "build"
+        }
+      })
 
-      function! CheckBackspace() abort
-        let col = col('.') - 1
-        return !col || getline('.')[col - 1]  =~# '\s'
-      endfunction
+      languageServer("cmake", {
+        cmd = { "${pkgs.cmake-language-server}/bin/cmake-language-server" },
+        filetypes = { "cmake" },
+        init_options = {
+          buildDirectory = "build"
+        }
+      })
 
-      " Make <CR> to accept selected completion item or notify coc.nvim to format
-      " <C-g>u breaks current undo, please make your own choice.
-      inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-
-
-      autocmd CursorHold * silent call CocActionAsync('highlight')
-
-      " Use K to show documentation in preview window.
-      nnoremap <silent> K :call <SID>show_documentation()<CR>
-      inoremap <silent><expr> <c-space> coc#refresh()
-
-      function! s:show_documentation()
-        if (index(['vim','help'], &filetype) >= 0)
-          execute 'h '.expand('<cword>')
-        elseif (coc#rpc#ready())
-          call CocActionAsync('doHover')
-        else
-          execute '!' . &keywordprg . " " . expand('<cword>')
-        endif
-      endfunction
+      languageServer("pylsp", {
+        cmd = { "${pkgs.python3Packages.python-lsp-server}/bin/pylsp" },
+        filetypes = { "python" },
+        settings = {
+          pylsp = {
+            plugins = {
+              pycodestyle = {
+                ignore = {
+                  "E201", -- Whitespace after opening bracket
+                  "E202", -- Whitespace before closing bracket
+                  "E302", -- Two newlines after imports
+                  "E305", -- Two newlines after class/function
+                  "E501"  -- Line too long
+                }
+              }
+            }
+          }
+        }
+      })
     '';
   };
 }

@@ -12,7 +12,10 @@ let
 in
 {
   programs.neovim = {
+    withNodeJs = false; # Provide an older version manually, Github Copilot does not support the latest
+
     extraPackages = with pkgs; [
+      nodejs-16_x # For Github Copilot
       ripgrep # Needed by :Telescope live_grep
       lua
     ];
