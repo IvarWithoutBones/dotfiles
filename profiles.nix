@@ -28,7 +28,7 @@ rec {
         ./home-manager/modules/fzf.nix
         ./home-manager/modules/git.nix
         ./home-manager/modules/zsh.nix
-        ./home-manager/modules/nvim.nix
+        ./home-manager/modules/neovim
         ./home-manager/modules/bat.nix
         ./home-manager/modules/discord.nix
       ];
