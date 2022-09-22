@@ -95,6 +95,9 @@ in
       nmap("<A-L>", ":vertical resize +2<CR>")
       nmap("<A-H>", ":vertical resize -2<CR>")
 
+      -- Find and replace a string in the current buffer based on user input
+      nmap("<A-f>", ":luafile ${./scripts/find-and-replace.lua}<CR>")
+
       -- use `ALT+{h,j,k,l}` to navigate windows from any mode
       ${lib.concatStringsSep "\n" (map (key: ''
         tmap("<A-${key}>", "<C-\\><C-N><C-w>${key}")
