@@ -78,11 +78,13 @@ in
         vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)                     -- Jump to declaration
         vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)                      -- Jump to definition
         vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)                            -- Show hover information
+        vim.keymap.set('i', '<C-c>', vim.lsp.buf.completion, bufopts)                   -- Show completion
         vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)                  -- Show implementation (?)
         vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)                      -- Show symbol references. TODO: make interactive
         vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)               -- Show information about signature
         vim.keymap.set('n', '<space>d', vim.lsp.buf.type_definition, bufopts)           -- Jump to type definition
-        vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)                   -- Rename symbol
+        vim.keymap.set('n', 'rn', vim.lsp.buf.rename, bufopts)                          -- Rename symbol
+        vim.keymap.set('n', '<space><space>', vim.lsp.buf.code_action, bufopts)         -- Run code actions
         vim.keymap.set('n', '<space>f', vim.lsp.buf.formatting, bufopts)                -- Run formatter
         vim.keymap.set('n', '<space>c', vim.lsp.buf.code_action, bufopts)               -- Run code action
         vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)     -- Add workspace folder
@@ -118,13 +120,17 @@ in
         filetypes = { "rust" }
       })
 
-      languageServer("ccls", {
-        cmd = { "${pkgs.ccls}/bin/ccls" },
-        filetypes = { "c", "cpp", "objc", "objcpp" },
-        offset_encoding = "utf-8",
-        init_options = {
-          compilationDatabaseDirectory = "build"
-        }
+      languageServer("clangd", {
+        cmd = {
+          "${pkgs.clang-tools}/bin/clangd",
+          "--background-index",
+          "--suggest-missing-includes",
+          "--completion-style=detailed",
+          "--compile-commands-dir=build",
+          "--clang-tidy"
+        },
+
+        filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" }
       })
 
       languageServer("cmake", {
