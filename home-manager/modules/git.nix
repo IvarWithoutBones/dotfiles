@@ -41,6 +41,7 @@
 
     extraConfig = {
       pull.rebase = true;
+      push.autoSetupRemote = "main";
     };
 
     # Prettier pager, adds syntax highlighting and line numbers
