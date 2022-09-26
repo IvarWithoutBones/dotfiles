@@ -41,7 +41,7 @@
 
     extraConfig = {
       pull.rebase = true;
-      push.autoSetupRemote = "main";
+      init.defaultBranch = "main";
     };
 
     # Prettier pager, adds syntax highlighting and line numbers
