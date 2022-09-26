@@ -45,6 +45,7 @@ rec {
       ./modules/linux/system.nix
       ./modules/linux/steam.nix
       ./modules/linux/graphical.nix
+      ./modules/linux/flatpak.nix
       ./modules/linux/networking.nix
       ./modules/linux/gpg.nix
       ./modules/linux/agenix.nix
