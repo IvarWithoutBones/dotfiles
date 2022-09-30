@@ -37,8 +37,9 @@ in
         {
           # Current temperature
           block = "custom";
-          command = "curl -S 'wttr.in/?format=1' | tr -d '+' | xargs";
+          command = ''weather="$(curl -S "wttr.in/?format=1" | tr -d "+" | xargs)"; (( wc -l <<< "$weather" < 5 )) && echo "$weather"'';
           on_click = "$TERMINAL --hold -e curl 'https://wttr.in/?F'";
+          hide_when_empty = true;
           interval = 200;
         }
         {
