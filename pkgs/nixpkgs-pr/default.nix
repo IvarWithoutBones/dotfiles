@@ -7,7 +7,7 @@
 , jq
 , coreutils
 , python3
-, xdg_utils
+, xdg-utils
 }:
 
 createScript "nixpkgs-pr" ./nixpkgs-pr.sh {
@@ -20,7 +20,7 @@ createScript "nixpkgs-pr" ./nixpkgs-pr.sh {
     coreutils
     python3
     curl
-    xdg_utils
+    xdg-utils
   ];
 
   meta.description = "automatically open a PR to nixpkgs and ping maintainers of the modified package";

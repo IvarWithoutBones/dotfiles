@@ -57,7 +57,7 @@ in
         ];
 
         startup = [
-          { command = "--no-startup-id ${pkgs.alsaUtils}/bin/amixer set Master 35%"; always = false; }
+          { command = "--no-startup-id ${pkgs.alsa-utils}/bin/amixer set Master 35%"; always = false; }
           { command = "--no-startup-id ${pkgs.redshift}/bin/redshift -l 50.77083:3.57361 -t 6500K:3000K"; always = false; }
         ] ++ lib.optionals (displayServer == "wayland") [
           { command = "--no-startup-id ${pkgs.swaybg}/bin/swaybg -i ${config.xdg.configHome}/wallpapers/spirited_away.png"; always = false; }

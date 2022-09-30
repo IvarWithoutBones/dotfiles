@@ -1,11 +1,11 @@
 { lib
-, runCommandNoCC
+, runCommand
 , fetchFromGitHub
 , installShellFiles
 , yabai
 }:
 
-runCommandNoCC "yabai-zsh-completions" {
+runCommand "yabai-zsh-completions" {
   pname = "yabai-zsh-completions";
   version = "0.pre+date=2022-05-25";
 

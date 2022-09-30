@@ -1,5 +1,5 @@
 { lib
-, runCommandNoCC
+, runCommand
 , makeWrapper
 }:
 
@@ -11,7 +11,7 @@ src:
 , ...
 } @ attrs:
 
-runCommandNoCC name ({
+runCommand name ({
   inherit src;
   nativeBuildInputs = lib.optionals (dependencies != [ ])
     (attrs.nativeBuildInputs or [ ]) ++ [ makeWrapper ];

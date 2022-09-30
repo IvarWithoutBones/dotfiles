@@ -1,11 +1,11 @@
-{ runCommandNoCC
+{ runCommand
 , dmenu
 , fetchpatch
 , makeWrapper
 }:
 
 # A wrapped version of dmenu configured to match the theme used by i3/sway, and with the size configured to be the same as my bar
-runCommandNoCC "dmenu-configured"
+runCommand "dmenu-configured"
 {
   _dmenu = dmenu.override {
     patches = [
