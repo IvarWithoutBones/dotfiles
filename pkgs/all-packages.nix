@@ -64,6 +64,8 @@ with pkgs; {
 
   nixpkgs-pr = callPackage ./nixpkgs-pr { };
 
+  qute-nixpkgs-tracker = callPackage ./qute-nixpkgs-tracker { };
+
   read-macos-alias = callPackage ./read-macos-alias { };
 
   speedtest = callPackage ./speedtest {
