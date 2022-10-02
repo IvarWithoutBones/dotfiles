@@ -18,12 +18,19 @@
       };
     };
 
-    keyBindings = {
-      normal = {
-        # Open videos in mpv
-        "<Alt-o>" = "hint links spawn --verbose --detach ${pkgs.mpv}/bin/mpv {hint-url}";
-        "<Alt-Shift-o>" = "spawn --verbose --detach ${pkgs.mpv}/bin/mpv {url}";
-      };
+    keyBindings.normal = {
+      # Open videos in mpv
+      "<Alt-o>" = "hint links spawn --verbose --detach ${pkgs.mpv}/bin/mpv {hint-url}";
+      "<Alt-Shift-o>" = "spawn --verbose --detach ${pkgs.mpv}/bin/mpv {url}";
+
+      # Open the tracker for a nixpkgs PR, script from my overlay
+      "<Alt-n>" = "spawn --userscript ${pkgs.qute-nixpkgs-tracker}/bin/qute-nixpkgs-tracker {url}";
+      "<Alt-Shift-n>" = "hint links spawn --userscript ${pkgs.qute-nixpkgs-tracker}/bin/qute-nixpkgs-tracker {hint-url}";
+    };
+
+    aliases = {
+      "mpv" = "spawn --verbose --detach ${pkgs.mpv}/bin/mpv {url}";
+      "nixpkgs-tracker" = "spawn --userscript ${pkgs.qute-nixpkgs-tracker}/bin/qute-nixpkgs-tracker {url}";
     };
 
     searchEngines = {
