@@ -31,6 +31,7 @@ rec {
         ./home-manager/modules/neovim
         ./home-manager/modules/bat.nix
         ./home-manager/modules/discord.nix
+        ./home-manager/modules/qutebrowser.nix
       ];
 
       extraConfig = {
@@ -58,7 +59,6 @@ rec {
 
       modules = [
         ./home-manager/modules/linux/alacritty.nix
-        ./home-manager/modules/linux/qutebrowser.nix
         ./home-manager/modules/linux/dunst.nix
         ./home-manager/modules/linux/gtk.nix
         ./home-manager/modules/linux/i3-sway

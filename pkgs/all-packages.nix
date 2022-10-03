@@ -66,6 +66,12 @@ with pkgs; {
 
   qute-nixpkgs-tracker = callPackage ./qute-nixpkgs-tracker { };
 
+  qutebrowser =
+    if stdenvNoCC.isDarwin && stdenvNoCC.isx86_64 then
+      callPackage ./qutebrowser { }
+    else
+      prev.qutebrowser;
+
   read-macos-alias = callPackage ./read-macos-alias { };
 
   speedtest = callPackage ./speedtest {
