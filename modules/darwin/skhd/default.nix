@@ -64,8 +64,7 @@ in
       "alt - return" = "open -n ${pkgs.kitty}/Applications/kitty.app";
       "shift + alt - d" = "open -n ${pkgs.discord}/Applications/Discord.app";
       "ctrl + shift + alt - d" = "killall discord";
-      # TODO: switch to purely provided firefox until qtwebengine builds on darwin :/
-      "shift + alt - w" = "yabai -m space --focus 2 && open -F /Applications/Firefox.app";
+      "shift + alt - w" = "yabai -m space --focus 2 && open -n ${pkgs.qutebrowser}/Applications/qutebrowser.app";
 
       # Moving focus and windows to different spaces
     } // mkSpaceShortcut "alt" "${yabai} -m space --focus"
