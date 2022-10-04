@@ -9,20 +9,20 @@ let
   greasemonkeyScripts = pkgs.linkFarmFromDrvs "qutebrowser-greasemonkey-scripts" [
     # Skip sponsor segments on YouTube
     (pkgs.fetchurl {
-      name = "qute-youtube-sponsorblock.js";
+      name = "youtube-sponsorblock.js";
       url = "https://raw.githubusercontent.com/afreakk/greasemonkeyscripts/1d1be041a65c251692ee082eda64d2637edf6444/youtube_sponsorblock.js";
       sha256 = "sha256-e3QgDPa3AOpPyzwvVjPQyEsSUC9goisjBUDMxLwg8ZE=";
     })
 
     # Remove ads on YouTube more reliably than with the default adblock
     (pkgs.fetchurl {
-      name = "qute-youtube-adblock.js";
+      name = "youtube-adblock.js";
       url = "https://raw.githubusercontent.com/afreakk/greasemonkeyscripts/1d1be041a65c251692ee082eda64d2637edf6444/youtube_adblock.js";
       sha256 = "sha256-EuGTJ9Am5C6g3MeTsjBQqyNFBiGAIWh+f6cUtEHu3iI=";
     })
 
     # Dark mode for pages that do not natively support it
-    (pkgs.writeText "qute-dark-reader.js" ''
+    (pkgs.writeText "dark-reader.js" ''
       // ==UserScript==
       // @name          Dark Reader (Unofficial)
       // @icon          https://darkreader.org/images/darkreader-icon-256x256.png
@@ -54,7 +54,17 @@ in
     settings = {
       colors.webpage.preferred_color_scheme = "dark";
       downloads.location.directory = "$HOME/downloads";
-      content.javascript.can_access_clipboard = true;
+
+      content = {
+        javascript.can_access_clipboard = true;
+
+        # Disable scrolling past the end of the page, which is an issue with gesture navigation
+        user_stylesheets = lib.toList (pkgs.writeText "qutebrowser-user-stylesheet.css" ''
+          * {
+            overscroll-behavior: none;
+          }
+        '').outPath;
+      };
 
       url = {
         start_pages = "https://www.google.com";
