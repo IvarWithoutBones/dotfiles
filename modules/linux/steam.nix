@@ -13,17 +13,15 @@
     steam = pkgs.steam.override {
       extraPkgs = pkgs: with pkgs; [
         # Elden Ring enhancement patches
-        (er-patcher.overrideAttrs (attrs: {
-          name = "er-patcher-1.06-1+date=2022-08-04";
+        (er-patcher.overrideAttrs (attrs: rec {
+          version = "1.06-3";
 
-          # TODO: reomve when https://github.com/gurrgur/er-patcher/pull/41 is merged
-          patches = [
-            (fetchpatch {
-              name = "disable-runeloss.patch";
-              url = "https://github.com/gurrgur/er-patcher/pull/41/commits/0f39247ab7bf0da6b77cac34aed6db969076b8d5.patch";
-              sha256 = "sha256-HpVA+WRt0Tpg86lAom3Kzcfkf1w9zhGJYTZV5V0mbGc=";
-            })
-          ];
+          src = fetchFromGitHub {
+            owner = "gurrgur";
+            repo = "er-patcher";
+            rev = "v${version}";
+            sha256 = "sha256-w/5cXxY4ua5Xo1BSz3MYRV+SdvVGFAx53KMIORS1uWE=";
+          };
         }))
       ];
     };
