@@ -35,9 +35,13 @@ in
           interval = 1;
         }
         {
-          # Current temperature
+          # Temperature
           block = "custom";
-          command = ''weather="$(curl -S "wttr.in/?format=1" | tr -d "+" | xargs)"; (( wc -l <<< "$weather" < 5 )) && echo "$weather"'';
+          command = pkgs.writeShellScript "temperature" ''
+            weather="$(${pkgs.curl}/bin/curl -S "wttr.in/?format=1" 2>/dev/null | tr -d "+" | xargs)"
+            # This might contain long error codes if the service is down
+            (( "''${#weather}" < 10 )) && echo "$weather"
+          '';
           on_click = "$TERMINAL --hold -e curl 'https://wttr.in/?F'";
           hide_when_empty = true;
           interval = 200;
@@ -45,7 +49,12 @@ in
         {
           # Ping time
           block = "custom";
-          command = "echo \"  $(${pkgs.unixtools.ping}/bin/ping store.steampowered.com -c 1 | ${pkgs.gnugrep}/bin/grep time= | ${pkgs.coreutils}/bin/cut -d'=' -f4)\"";
+          command = pkgs.writeShellScript "ping-time" ''
+            time="$(${pkgs.unixtools.ping}/bin/ping store.steampowered.com -c 1 -w 1 2>/dev/null | ${pkgs.gnugrep}/bin/grep time= | ${pkgs.coreutils}/bin/cut -d'=' -f4)"
+            # This might contain long error codes if the service is down
+            (( "''${#time}" < 15 )) && (( "''${#time}" > 1 )) && echo "  $time"
+          '';
+          hide_when_empty = true;
           interval = 1;
         }
         {
