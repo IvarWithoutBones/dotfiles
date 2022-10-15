@@ -1,3 +1,8 @@
+{ self
+, nixpkgs
+, agenix
+}:
+
 rec {
   laptop = {
     touchpad = true;
@@ -5,42 +10,56 @@ rec {
     bluetooth = true;
   };
 
-  ivv = rec {
-    username = "ivv";
-
-    commonSpecialArgs = {
+  ivv =
+    let
+      username = "ivv";
+      stateVersion = "21.11";
+    in
+    {
       inherit username;
-    };
 
-    modules = [
-      ./modules/nix.nix
-    ];
-
-    home-manager = {
-      enable = true;
-      inherit username;
+      commonSpecialArgs = {
+        inherit username nixpkgs;
+      };
 
       modules = [
-        ./home-manager/default.nix
-        ./home-manager/packages.nix
-        ./home-manager/modules/nix-index.nix
-        ./home-manager/modules/mpv.nix
-        ./home-manager/modules/fzf.nix
-        ./home-manager/modules/git.nix
-        ./home-manager/modules/zsh.nix
-        ./home-manager/modules/neovim
-        ./home-manager/modules/bat.nix
-        ./home-manager/modules/discord.nix
-        ./home-manager/modules/qutebrowser.nix
+        ./modules/nix.nix
       ];
 
+      home-manager = {
+        enable = true;
+        inherit username;
+
+        modules = [
+          ./home-manager/default.nix
+          ./home-manager/packages.nix
+          ./home-manager/modules/nix-index.nix
+          ./home-manager/modules/mpv.nix
+          ./home-manager/modules/fzf.nix
+          ./home-manager/modules/git.nix
+          ./home-manager/modules/zsh.nix
+          ./home-manager/modules/neovim
+          ./home-manager/modules/bat.nix
+          ./home-manager/modules/discord.nix
+          ./home-manager/modules/qutebrowser.nix
+        ];
+
+        extraConfig = {
+          home.stateVersion = stateVersion;
+        };
+      };
+
       extraConfig = {
-        home.stateVersion = "21.11";
+        system.stateVersion = stateVersion;
+        nixpkgs.overlays = [ self.overlays.default ];
       };
     };
-  };
 
   ivv-linux = ivv // {
+    specialArgs = {
+      inherit agenix;
+    };
+
     modules = [
       ./modules/linux/hardware.nix
       ./modules/linux/system.nix
@@ -76,7 +95,7 @@ rec {
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFzp7kYG8wHjoU1Ski/hABNuT3puOT3icW9DYnweJdR0 ivv@nixos-pc"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEZS38w38lOTIkwTWwnZHFpKIhTKFbj90iDsMjFK7E2G ivv@nixos-laptop"
       ];
-    };
+    } // ivv.extraConfig;
   };
 
   ivv-darwin = ivv // {

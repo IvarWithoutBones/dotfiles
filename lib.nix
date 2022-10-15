@@ -2,7 +2,6 @@
 , home-manager
 , nix-darwin
 , flake-utils
-, self
 , ...
 } @ inputs:
 
@@ -10,6 +9,16 @@ let
   inherit (nixpkgs) lib;
 in
 rec {
+  inherit (lib) optional optionals optionalAttrs;
+
+  /* Check if a hostPlatform.system is Darwin.
+
+     Example:
+        lib.isDarwin "x86_64-darwin"
+        => true
+  */
+  isDarwin = system: lib.hasSuffix "darwin" system;
+
   /* Generate a list of packages for the specified system with an overlay applied.
 
      Example:
@@ -79,48 +88,46 @@ rec {
     } @ args:
 
     let
-      _modules = modules; # Avoid infinite recursion
+      _username = lib.optionalString _home-manager.enable (home-manager.username or profile.home-manager.username);
+      _modules = modules ++ (profile.modules or [ ]);
+      _extraConfig = lib.toList (lib.mergeAttrs (profile.extraConfig or { }) extraConfig);
+
       _specialArgs = lib.mergeAttrs specialArgs (profile.specialArgs or { });
       _homeManagerSpecialArgs = lib.mergeAttrs (home-manager.specialArgs or { }) (profile.home-manager.specialArgs or { });
       _commonSpecialArgs = lib.mergeAttrs commonSpecialArgs (profile.commonSpecialArgs or { });
 
-      _home-manager = rec {
+      _home-manager = let
+        __extraConfig = lib.toList (lib.mergeAttrs (profile.home-manager.extraConfig or { }) (home-manager.extraConfig or { }));
+      in {
         enable = if ((profile.home-manager.enable or false) || (home-manager.enable or false)) then true else false;
-        _extraConfig = lib.mergeAttrs (profile.home-manager.extraConfig or { }) (home-manager.extraConfig or { });
-        modules = [ ] ++ (profile.home-manager.modules or [ ]) ++ (home-manager.modules or [ ]) ++ [ _extraConfig ];
+        modules = (profile.home-manager.modules or [ ]) ++ (home-manager.modules or [ ]) ++ __extraConfig;
       };
 
-      _username = lib.optionalString _home-manager.enable (home-manager.username or profile.home-manager.username);
+      systemFunc =
+        if (isDarwin system)
+        then nix-darwin.lib.darwinSystem
+        else nixpkgs.lib.nixosSystem;
 
-      isDarwin = if (system == "x86_64-darwin" || system == "aarch64-darwin") then true else false;
-      systemFunc = if isDarwin then nix-darwin.lib.darwinSystem else nixpkgs.lib.nixosSystem;
-      homeManagerFunc = if isDarwin then inputs.home-manager.darwinModule else inputs.home-manager.nixosModules.home-manager;
+      homeManagerFunc =
+        if (isDarwin system)
+        then inputs.home-manager.darwinModule
+        else inputs.home-manager.nixosModules.home-manager;
     in
-    systemFunc rec {
+    systemFunc {
       inherit system;
-      specialArgs = { inherit system; } // inputs // _commonSpecialArgs // _specialArgs;
+      specialArgs = { inherit system; } // _commonSpecialArgs // _specialArgs;
 
-      modules = [
-        ({
-          nixpkgs.overlays = [ (self.overlays.default or (final: prev: { })) ];
-        } // lib.optionalAttrs (!isDarwin) {
-          # For some reason system.stateVersion doesnt seem to work with nix-darwin
-          system.stateVersion = profile.stateVersion or "";
-        })
-      ]
-      ++ lib.optionals _home-manager.enable [
+      modules = lib.optionals _home-manager.enable [
         homeManagerFunc
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = { inherit system; } // inputs // _homeManagerSpecialArgs // _commonSpecialArgs;
+          home-manager.extraSpecialArgs = { inherit system; } // commonSpecialArgs // _homeManagerSpecialArgs;
           home-manager.sharedModules = _home-manager.modules;
           home-manager.users.${_username}.imports = _home-manager.modules;
         }
       ]
       ++ _modules
-      ++ (profile.modules or [ ])
-      ++ [ (extraConfig) ]
-      ++ [ ((profile.extraConfig or { })) ];
+      ++ _extraConfig;
     };
 }

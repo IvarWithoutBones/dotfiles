@@ -22,14 +22,32 @@
     };
   };
 
-  outputs = { self, nixpkgs, nix-darwin, home-manager, flake-utils, agenix, nix-index-database, nil-language-server } @ inputs:
+  outputs =
+    { self
+    , nixpkgs
+    , nix-darwin
+    , home-manager
+    , flake-utils
+    , agenix
+    , nix-index-database
+    , nil-language-server
+    } @ inputs:
     let
-      profiles = import ./profiles.nix;
+      lib = import ./lib.nix {
+        inherit nixpkgs home-manager nix-darwin flake-utils;
+      };
+
+      profiles = import ./profiles.nix {
+        inherit self nixpkgs agenix;
+      };
     in
-    rec {
-      lib = import ./lib.nix { inherit (inputs) nixpkgs home-manager agenix nix-darwin flake-utils; inherit self; };
-      overlays.default = import ./pkgs/all-packages.nix { inherit (inputs) nix-index-database nil-language-server; };
+    {
       packages = lib.packagesFromOverlay self.overlays.default;
+      inherit lib;
+
+      overlays.default = import ./pkgs/all-packages.nix {
+        inherit nix-index-database nil-language-server;
+      };
 
       darwinConfigurations = {
         ivvs-MacBook-Pro = lib.createSystem profiles.ivv-darwin {
@@ -39,7 +57,7 @@
       };
 
       nixosConfigurations = {
-        nixos-pc = lib.createSystem profiles.ivv-linux rec {
+        nixos-pc = lib.createSystem profiles.ivv-linux {
           system = "x86_64-linux";
 
           modules = [
