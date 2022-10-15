@@ -26,6 +26,10 @@ with pkgs; {
 
   createScript = callPackage ./createScript { };
 
+  discord-with-openasar = callPackage ./discord-with-openasar {
+    inherit (nodePackages) asar;
+  };
+
   dotfiles-tool = callPackage ./dotfiles-tool { };
 
   dmenu-configured = callPackage ./dmenu-configured { };

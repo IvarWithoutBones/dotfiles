@@ -18,30 +18,33 @@ let
   ];
 in
 {
-  home.packages = lib.toList (pkgs.discord.override {
-    withOpenASAR = true;
-  });
+  # Package from my overlay
+  home.packages = lib.toList pkgs.discord-with-openasar;
 
-  # A activation script which installs BetterDiscord and the themes/plugins.
-  # These cannot be symlinked because of a bug in BetterDiscord, so we have to copy them instead.
+  # Install BetterDiscord and themes for it. Themes cannot be symlinked because of a bug in BetterDiscord,
+  # so they are copied them instead.
   home.activation.betterdiscord =
     let
       betterdiscordctl = "${pkgs.betterdiscordctl}/bin/betterdiscordctl";
+      themesPath = "${config.xdg.configHome}/BetterDiscord/themes";
     in
     lib.mkIf pkgs.stdenv.isLinux (lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       # Install BetterDiscord if it isnt already
       ${betterdiscordctl} status | grep -E 'installed|injected' | grep -q "no" && \
           $DRY_RUN_CMD ${betterdiscordctl} install
 
-      $DRY_RUN_CMD mkdir -p "${config.xdg.configHome}/BetterDiscord/themes"
-      $DRY_RUN_CMD pushd "${config.xdg.configHome}/BetterDiscord/themes" >/dev/null
-
+      $DRY_RUN_CMD mkdir -p "${themesPath}"
       ${lib.concatMapStrings (theme: ''
-      if ! [ -f "${theme.name}.theme.css" ]; then
-          $DRY_RUN_CMD cp "${theme.src}" "${theme.name}.theme.css";
+      if ! [ -f "${themesPath}/${theme.name}.theme.css" ]; then
+          $DRY_RUN_CMD cp "${theme.src}" "${themesPath}/${theme.name}.theme.css";
       fi
       '') themes}
+    '');
 
-      $DRY_RUN_CMD popd >/dev/null
+  # This fixes an issue with Discord where being in a call for a long time causes the client to become unresponsive.
+  # For more information see https://gist.github.com/Shika-B/fc15c63d66716347df8627c0d42959b5.
+  home.activation.discord = lib.mkIf pkgs.stdenv.isLinux
+    (lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      eval "${pkgs.discord-with-openasar.noVoicechatLag.outPath}" 1>/dev/null
     '');
 }
