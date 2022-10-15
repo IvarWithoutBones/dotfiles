@@ -34,24 +34,6 @@ with pkgs; {
 
   dmenu-configured = callPackage ./dmenu-configured { };
 
-  # Revert https://github.com/NixOS/nixpkgs/pull/193341 to fix a malloc error, as described in the comments.
-  fzf =
-    let
-      version = "0.33.0";
-      src = fetchFromGitHub {
-        owner = "junegunn";
-        repo = "fzf";
-        rev = version;
-        sha256 = "sha256-3ZRU5fyb9fG09hG5RkajUW9fl3ukRLN3md+J6O6HosE=";
-      };
-      vendorSha256 = "sha256-U9cttigqzyy+kQ0YJoV0/2tZJHipNgSSkZyuXGVLoPw=";
-    in
-    callPackage "${path}/pkgs/tools/misc/fzf" {
-      buildGoModule = args: buildGoModule (args // {
-        inherit src version vendorSha256;
-      });
-    };
-
   git-add-fuzzy = callPackage ./git-add-fuzzy { };
 
   mkscript = callPackage ./mkscript { };
