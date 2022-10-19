@@ -122,7 +122,7 @@ in
 
       languageServer("clangd", {
         cmd = {
-          "${pkgs.clang-tools}/bin/clangd",
+          "${pkgs.clang-tools_13}/bin/clangd",
           "--background-index",
           "--suggest-missing-includes",
           "--completion-style=detailed",
