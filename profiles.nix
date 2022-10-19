@@ -10,10 +10,11 @@ rec {
     bluetooth = true;
   };
 
+  stateVersion = "21.11";
+
   ivv =
     let
       username = "ivv";
-      stateVersion = "21.11";
     in
     {
       inherit username;
@@ -50,7 +51,6 @@ rec {
       };
 
       extraConfig = {
-        system.stateVersion = stateVersion;
         nixpkgs.overlays = [ self.overlays.default ];
       };
     };
@@ -95,6 +95,8 @@ rec {
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFzp7kYG8wHjoU1Ski/hABNuT3puOT3icW9DYnweJdR0 ivv@nixos-pc"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEZS38w38lOTIkwTWwnZHFpKIhTKFbj90iDsMjFK7E2G ivv@nixos-laptop"
       ];
+
+      system.stateVersion = stateVersion;
     } // ivv.extraConfig;
   };
 
