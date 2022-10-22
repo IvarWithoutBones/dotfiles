@@ -35,6 +35,7 @@ let
       // @grant         none
       // @include       http*
       // @exclude       *://*google*.*/*
+      // @exclude       *://ko-fi.com/*
       // @require       https://cdn.jsdelivr.net/npm/darkreader/darkreader.min.js
       // @noframes
       // ==/UserScript==
