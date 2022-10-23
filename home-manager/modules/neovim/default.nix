@@ -35,7 +35,6 @@ in
       lib.optional wayland wl-clipboard
       ++ lib.optional (!wayland) xclip);
 
-    # Apply this as early as possible so that other configuration options can inherit from this
     extraConfig = lib.mkBefore (mkLua ''
       local opt = vim.opt
       local api = vim.api
@@ -56,9 +55,11 @@ in
         map("t", shortcut, command)
       end
 
-      opt.syntax = "enable" -- Syntax highlighting
-      opt.mouse = "a" -- Mouse support
-      opt.clipboard = "unnamedplus" -- System clipboard support, needs xclip/wl-clipboard
+      opt.syntax = "enable"               -- Syntax highlighting
+      opt.mouse = "a"                     -- Mouse support
+      opt.clipboard = "unnamedplus"       -- System clipboard support, needs xclip/wl-clipboard
+      vim.cmd("set ignorecase smartcase") -- Ignore case when searching if there is no upper case character
+      opt.ruler = true                    -- Show line and column number when searching
 
       -- Line numbers
       opt.number = true
@@ -70,18 +71,6 @@ in
       opt.softtabstop = 0
       opt.expandtab = true
       opt.smarttab = true
-
-      -- Two spaces is the indentation standard for Nix
-      api.nvim_create_autocmd("FileType", {
-        pattern = "nix",
-        command = "set tabstop=2 shiftwidth=2",
-      })
-
-      -- Some languages automatically insert a comment when creating a newline if the current line has one. Disable that.
-      api.nvim_create_autocmd("FileType", {
-        pattern = "*",
-        command = "setlocal formatoptions-=c formatoptions-=r formatoptions-=o",
-      })
 
       -- Insert a newline without going into insert mode
       nmap("<Enter>", "o<Esc>")
@@ -104,6 +93,23 @@ in
         imap("<A-${key}>", "<C-\\><C-N><C-w>${key}")
         nmap("<A-${key}>", "<C-w>${key}")
       '') [ "h" "j" "k" "l" ])}
+
+      -- Some languages automatically insert a comment when creating a newline if the current line has one. Disable that.
+      api.nvim_create_autocmd("FileType", {
+        pattern = "*",
+        command = "setlocal formatoptions-=c formatoptions-=r formatoptions-=o",
+      })
+
+      -- Automatically change the working directory to a git repository's root
+      api.nvim_create_autocmd("VimEnter", {
+        pattern = "*",
+        callback = function()
+          local gitRoot = vim.fn.system("${pkgs.git}/bin/git rev-parse --show-toplevel 2>/dev/null")
+          if (gitRoot ~= nil and gitRoot ~= "") then
+            vim.cmd("cd " .. gitRoot)
+          end
+        end
+      })
     '');
   };
 }
