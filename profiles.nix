@@ -70,7 +70,7 @@ rec {
       ./modules/linux/gpg.nix
       ./modules/linux/agenix.nix
       ./modules/linux/docker.nix
-      ./modules/linux/android.nix
+      #./modules/linux/android.nix
     ] ++ ivv.modules;
 
     home-manager = ivv.home-manager // {
