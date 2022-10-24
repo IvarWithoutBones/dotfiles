@@ -36,6 +36,7 @@ in
       coq-thirdparty
     ];
 
+    # TODO: convert to lua file
     extraConfig = mkLua ''
       -- Always show the signcolumn, otherwise text would be shifted upon errors
       vim.opt.signcolumn = "yes"
@@ -55,12 +56,10 @@ in
 
       -- Rounded corners for popup boxes
       vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
-        vim.lsp.handlers.hover,
-        {border = 'rounded'}
+        vim.lsp.handlers.hover, {border = 'rounded'}
       )
       vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
-        vim.lsp.handlers.signature_help,
-        {border = 'rounded'}
+        vim.lsp.handlers.signature_help, {border = 'rounded'}
       )
 
       -- Use tab indentation size from the language server
@@ -151,8 +150,10 @@ in
           "--compile-commands-dir=build",
           "--clang-tidy"
         },
-
-        filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" }
+        filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
+        capabilities = {
+          offsetEncoding = "utf-8"
+        }
       })
 
       languageServer("cmake", {

@@ -1,8 +1,6 @@
 -- Search and replace text in the current buffer based on user input
 
-local M = {}
-
-function M.input()
+local function findAndReplace()
     vim.ui.input({
         prompt = "Value to find > "
     }, function(find)
@@ -26,5 +24,4 @@ function M.input()
     end)
 end
 
-M.input()
-return M
+findAndReplace()
