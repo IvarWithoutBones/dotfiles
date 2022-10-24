@@ -45,6 +45,6 @@ in
   # For more information see https://gist.github.com/Shika-B/fc15c63d66716347df8627c0d42959b5.
   home.activation.discord = lib.mkIf pkgs.stdenv.isLinux
     (lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      eval "${pkgs.discord-with-openasar.noVoicechatLag.outPath}" 1>/dev/null
+      $DRY_RUN_CMD eval "${pkgs.discord-with-openasar.noVoicechatLag.outPath}" 1>/dev/null
     '');
 }
