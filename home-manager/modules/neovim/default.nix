@@ -2,16 +2,10 @@
 , lib
 , pkgs
 , wayland
+, dotfiles-lib
 , ...
 }:
 
-let
-  mkLua = lua: ''
-    lua << EOF
-      ${lua}
-    EOF
-  '';
-in
 {
   imports = [
     ./language-server.nix
@@ -47,10 +41,10 @@ in
           git = "${pkgs.git}/bin/git";
         };
       in
-      lib.mkBefore (mkLua ''
+      dotfiles-lib.vim.mkLua ''
         dofile("${./scripts/options.lua}")
         dofile("${bindings}")
         dofile("${autocmds}")
-      '');
+      '';
   };
 }

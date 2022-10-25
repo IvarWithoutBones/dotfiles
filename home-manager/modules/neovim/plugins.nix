@@ -1,18 +1,11 @@
 { pkgs
 , config
+, dotfiles-lib
 , ...
 }:
 
 let
-  mkLua = lua: ''
-    lua << EOF
-      ${lua}
-    EOF
-  '';
-
-  mkLuaFile = file: mkLua ''
-    dofile("${file}")
-  '';
+  inherit (dotfiles-lib.vim) mkLua mkLuaFile;
 in
 {
   programs.neovim = {

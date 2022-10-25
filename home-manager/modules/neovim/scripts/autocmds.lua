@@ -9,8 +9,13 @@ vim.api.nvim_create_autocmd("VimEnter", {
     end
 })
 
--- Disable insertion of a comment when creating a newline if the current line has one.
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "*",
-    command = "setlocal formatoptions-=c formatoptions-=r formatoptions-=o",
+    callback = function()
+        -- Disable insertion of a comment when creating a newline if the current line has one
+        vim.cmd("setlocal formatoptions-=c formatoptions-=r formatoptions-=o")
+
+        -- Use tab indentation size from the language server, if available
+        vim.opt.tabstop = vim.lsp.util.get_effective_tabstop()
+    end
 })

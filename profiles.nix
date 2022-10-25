@@ -1,6 +1,7 @@
 { self
 , nixpkgs
 , agenix
+, lib
 }:
 
 rec {
@@ -21,6 +22,7 @@ rec {
 
       commonSpecialArgs = {
         inherit username nixpkgs;
+        dotfiles-lib = lib;
       };
 
       modules = [

@@ -38,7 +38,7 @@
       };
 
       profiles = import ./profiles.nix {
-        inherit self nixpkgs agenix;
+        inherit self nixpkgs agenix lib;
       };
     in
     {
