@@ -122,7 +122,7 @@ rec {
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = { inherit system; } // commonSpecialArgs // _homeManagerSpecialArgs;
+          home-manager.extraSpecialArgs = { inherit system; } // _commonSpecialArgs // _homeManagerSpecialArgs;
           home-manager.sharedModules = _home-manager.modules;
           home-manager.users.${_username}.imports = _home-manager.modules;
         }
@@ -130,4 +130,51 @@ rec {
       ++ _modules
       ++ _extraConfig;
     };
+
+  generators = {
+    /* Convert an attribute set to string containing a lua table.
+
+       Example:
+          lib.generators.toLua { foo = "bar"; set = { bool = true; list = [ 1 2 3.3 ]; }; }
+          => "foo = { \"bar\" }, set = { bool = true, list = { 1, 2, 3.300000 }, },"
+    */
+    toLua = attributes: (lib.concatMapStringsSep "\n"
+      (attrName:
+        let
+          generate = attrs:
+            let
+              toValue = value:
+                if builtins.isAttrs value then
+                  generate value
+                else if builtins.isList value then
+                  "{ ${lib.concatStringsSep ", " (map toValue value)} }"
+                else if builtins.isString value then
+                  "\"${builtins.toString value}\""
+                else if builtins.isBool value then
+                  if value then "true" else "false"
+                else if builtins.isInt value || builtins.isFloat value then
+                  builtins.toString value
+                else abort "generators.toLua: unsupported type ${builtins.typeOf value}";
+            in
+            if builtins.isAttrs attrs then
+              lib.concatStringsSep "\n" (lib.mapAttrsToList
+                (attr: value:
+                  let
+                    val =
+                      if builtins.isList attrs || builtins.isAttrs value then
+                        "{ ${toValue value} }"
+                      else
+                        toValue value;
+                  in
+                  "${attr} = ${val},")
+                attrs)
+            else toValue attrs;
+        in
+        ''
+          ${attrName} = {
+          ${generate attributes.${attrName}}
+          },
+        '')
+      (builtins.attrNames attributes));
+  };
 }
