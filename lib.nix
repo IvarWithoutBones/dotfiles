@@ -177,4 +177,30 @@ rec {
         '')
       (builtins.attrNames attributes));
   };
+
+  vim = {
+    /* Import a luafile inside of a vimrc.
+
+       Example:
+       lib.vim.mkLuaFile "foo.lua"
+       => "lua << EOF dofile(\"foo.lua\") EOF"
+    */
+    mkLuaFile = file: ''
+      lua << EOF
+        dofile("${file}")
+      EOF
+    '';
+
+    /* Generate a lua section for a vimrc file.
+
+       Example:
+       lib.vim.mkLua "print('hello world')"
+       => "lua << EOF print('hello world') EOF"
+    */
+    mkLua = lua: ''
+      lua << EOF
+        ${lua}
+      EOF
+    '';
+  };
 }
