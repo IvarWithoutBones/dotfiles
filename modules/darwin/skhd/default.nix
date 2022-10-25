@@ -37,16 +37,16 @@ in
     enable = true;
 
     keybindings = {
-      "alt - h" = "${yabai} -m window --focus west";
-      "alt - j" = navigateWindow "below" "south";
-      "alt - k" = navigateWindow "above" "north";
-      "alt - l" = "${yabai} -m window --focus east";
+      "shift + alt - h" = "${yabai} -m window --focus west";
+      "shift + alt - j" = navigateWindow "below" "south";
+      "shift + alt - k" = navigateWindow "above" "north";
+      "shift + alt - l" = "${yabai} -m window --focus east";
 
       # Change the window layout
-      "shift + alt - h" = "${yabai} -m window --warp west";
-      "shift + alt - j" = "${yabai} -m window --warp south";
-      "shift + alt - k" = "${yabai} -m window --warp north";
-      "shift + alt - l" = "${yabai} -m window --warp east";
+      "ctrl + shift + alt - h" = "${yabai} -m window --warp west";
+      "ctrl + shift + alt - j" = "${yabai} -m window --warp south";
+      "ctrl + shift + alt - k" = "${yabai} -m window --warp north";
+      "ctrl + shift + alt - l" = "${yabai} -m window --warp east";
       "alt - r" = "${yabai} -m space --balance";
       "alt - w" = "${yabai} -m space --layout stack";
       "shift + alt - v" = "${yabai} -m space --layout bsp";
