@@ -1,14 +1,6 @@
 -- Always show the signcolumn, otherwise text would be shifted upon errors
 vim.opt.signcolumn = "yes"
 
--- Rounded corners for popup boxes
-vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
-    vim.lsp.handlers.hover, { border = 'rounded' }
-)
-vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
-    vim.lsp.handlers.signature_help, { border = 'rounded' }
-)
-
 local signs = {
     Error = "",
     Warn = "",
@@ -22,13 +14,25 @@ for type, icon in pairs(signs) do
     vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
 
--- Interactive diagnostic settings
+-- Rounded corners for popup boxes
+vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
+    vim.lsp.handlers.hover, { border = 'rounded' }
+)
+vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
+    vim.lsp.handlers.signature_help, { border = 'rounded' }
+)
+
+-- Code actions
+vim.g.code_action_menu_show_details = false
+vim.g.code_action_menu_window_border = 'rounded'
+
+-- Interactive diagnostics
 require("trouble").setup {
     auto_close = true,
     use_diagnostic_signs = true,
 }
 
--- Completion settings
+-- Completion
 vim.g.coq_settings = {
     auto_start = 'shut-up', -- Load the completion engine on startup
     xdg = true, -- Dont try to install dependencies to the nix store
@@ -49,7 +53,7 @@ local options = function(_, bufnr)
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts) -- Show hover information
     vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts) -- Show information about signature
     vim.keymap.set('n', 'rn', vim.lsp.buf.rename, bufopts) -- Rename symbol
-    vim.keymap.set('n', '<space><space>', vim.lsp.buf.code_action, bufopts) -- Run code actions
+    vim.keymap.set('n', '<space><space>', "<cmd>CodeActionMenu<cr>", bufopts) -- Run code actions
     vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format({ async = true }) end, bufopts) -- Run formatter
     vim.keymap.set('n', '<space>c', vim.lsp.buf.code_action, bufopts) -- Run code action
     vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts) -- Add workspace folder

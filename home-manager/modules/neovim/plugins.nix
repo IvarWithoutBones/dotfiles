@@ -69,6 +69,10 @@ in
         '';
       }
       {
+        plugin = nvim-autopairs;
+        config = mkLuaFile ./scripts/plugins/autopairs.lua;
+      }
+      {
         # Pop up terminal
         plugin = toggleterm-nvim;
         config = mkLuaFile ./scripts/plugins/toggleterm.lua;

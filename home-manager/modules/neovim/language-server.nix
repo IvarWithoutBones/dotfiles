@@ -23,7 +23,8 @@
     plugins = with pkgs.vimPlugins; [
       nvim-lspconfig # Language server presets
       coq_nvim # Completion engine
-      trouble-nvim # Diagnostics in bottom bar
+      trouble-nvim # Interactive diagnostics in bottom bar
+      nvim-code-action-menu # Interactive code actions
 
       # Snippets & more
       coq-artifacts

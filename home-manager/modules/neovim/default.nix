@@ -31,6 +31,8 @@
 
     extraConfig =
       let
+        inherit (dotfiles-lib.vim) mkLuaFile;
+
         bindings = pkgs.substituteAll {
           src = ./scripts/bindings.lua;
           findAndReplace = ./scripts/find-and-replace.lua;
@@ -41,10 +43,10 @@
           git = "${pkgs.git}/bin/git";
         };
       in
-      dotfiles-lib.vim.mkLua ''
-        dofile("${./scripts/options.lua}")
-        dofile("${bindings}")
-        dofile("${autocmds}")
-      '';
+      (mkLuaFile ./scripts/options.lua) +
+      (mkLuaFile ./scripts/options.lua) +
+      (mkLuaFile bindings) +
+      (mkLuaFile autocmds);
   };
 }
+
