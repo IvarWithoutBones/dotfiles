@@ -36,6 +36,8 @@ with pkgs; {
 
   git-add-fuzzy = callPackage ./git-add-fuzzy { };
 
+  iterm2-shell-integration = callPackage ./iterm2-shell-integration { };
+
   mkscript = callPackage ./mkscript { };
 
   mpris-statusbar = callPackage ./mpris-statusbar { };

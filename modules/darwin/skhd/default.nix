@@ -55,13 +55,13 @@ in
       "shift + alt - f" = "${yabai} -m window --toggle native-fullscreen";
       "alt - f" = "${yabai} -m window --toggle zoom-fullscreen";
       "shift + alt - space" = "${yabai} -m window --toggle float";
-      "alt - q" = "${yabai} -m window --close";
+      "shift + alt - q" = "${yabai} -m window --close";
 
       # Restart the WM + hotkey daemon
       "shift + alt - r" = "launchctl kickstart -k gui/\${UID}/org.nixos.yabai && launchctl kickstart -k gui/\${UID}/org.nixos.skhd";
 
       # Application shortcuts
-      "alt - return" = "open -n ${pkgs.kitty}/Applications/kitty.app";
+      "alt - return" = "open -n ${pkgs.iterm2}/Applications/iTerm2.app";
       "shift + alt - d" = "open -n ${pkgs.discord}/Applications/Discord.app";
       "ctrl + shift + alt - d" = "killall discord";
       "shift + alt - w" = "yabai -m space --focus 2 && open -n ${pkgs.qutebrowser}/Applications/qutebrowser.app";

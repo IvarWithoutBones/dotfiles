@@ -50,5 +50,5 @@
     transmission-gtk
     citra
     minecraft
-  ];
+  ] ++ lib.optional pkgs.stdenvNoCC.isDarwin iterm2;
 }

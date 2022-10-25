@@ -52,7 +52,8 @@
     }];
 
     initExtra = ''
-      ${pkgs.lib.optionalString config.programs.direnv.enable ''eval "$(direnv hook zsh)"''}
+      ${lib.optionalString config.programs.direnv.enable ''eval "$(direnv hook zsh)"''}
+      ${lib.optionalString pkgs.stdenvNoCC.hostPlatform.isDarwin "source ${pkgs.iterm2-shell-integration}/share/zsh/iterm2.zsh"}
 
       # Changes working directory so has to be sourced upon shell init
       source ${pkgs.cd-file}/bin/cd-file
