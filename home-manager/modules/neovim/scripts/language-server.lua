@@ -15,22 +15,12 @@ for type, icon in pairs(signs) do
 end
 
 -- Rounded corners for popup boxes
-vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
-    vim.lsp.handlers.hover, { border = 'rounded' }
-)
-vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
-    vim.lsp.handlers.signature_help, { border = 'rounded' }
-)
-
--- Code actions
-vim.g.code_action_menu_show_details = false
-vim.g.code_action_menu_window_border = 'rounded'
-
--- Interactive diagnostics
-require("trouble").setup {
-    auto_close = true,
-    use_diagnostic_signs = true,
-}
+local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+  opts = opts or {}
+  opts.border = 'rounded'
+  return orig_util_open_floating_preview(contents, syntax, opts, ...)
+end
 
 -- Completion
 vim.g.coq_settings = {
@@ -41,23 +31,15 @@ vim.g.coq_settings = {
     ["keymap.manual_complete"] = '<C-c>', -- Manually trigger completion
 }
 
--- Mappings. See `:help vim.lsp.*` for documentation on the below functions
+-- Bindings
 local options = function(_, bufnr)
     local bufopts = { noremap = true, silent = true, buffer = bufnr }
-    vim.keymap.set('n', '<space>A', "<cmd>TroubleToggle workspace_diagnostics<cr>", bufopts) -- Open all diagnostics
-    vim.keymap.set('n', '<space>a', "<cmd>TroubleToggle document_diagnostics<cr>", bufopts) -- Open document diagnostics
-    vim.keymap.set('n', 'gD', "<cmd>TroubleToggle lsp_type_definitions<cr>", bufopts) -- Jump to type definitions
-    vim.keymap.set('n', 'gd', "<cmd>TroubleToggle lsp_definitions<cr>", bufopts) -- Jump to definitions
-    vim.keymap.set('n', 'gr', "<cmd>TroubleToggle lsp_references<cr>", bufopts) -- Show symbol references
-    vim.keymap.set('n', 'gi', "<cmd>TroubleToggle lsp_implementations<cr>", bufopts) -- Show implementations
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts) -- Show hover information
     vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts) -- Show information about signature
     vim.keymap.set('n', 'rn', vim.lsp.buf.rename, bufopts) -- Rename symbol
-    vim.keymap.set('n', '<space><space>', "<cmd>CodeActionMenu<cr>", bufopts) -- Run code actions
-    vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format({ async = true }) end, bufopts) -- Run formatter
-    vim.keymap.set('n', '<space>c', vim.lsp.buf.code_action, bufopts) -- Run code action
     vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts) -- Add workspace folder
     vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts) -- Remove workspace folder
+    vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format({ async = true }) end, bufopts) -- Run formatter
     vim.keymap.set('n', '<space>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, bufopts) -- List workspace folders
 end
 

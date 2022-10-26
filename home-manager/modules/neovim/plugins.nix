@@ -69,6 +69,22 @@ in
         '';
       }
       {
+        # Interactive code actions
+        plugin = nvim-code-action-menu;
+        config = mkLuaFile ./scripts/plugins/code-action-menu.lua;
+      }
+      {
+        # Interactive diagnostics
+        plugin = trouble-nvim;
+        config = mkLuaFile ./scripts/plugins/trouble.lua;
+      }
+      {
+        # Tree-based symbol viewer
+        plugin = symbols-outline-nvim;
+        config = mkLuaFile ./scripts/plugins/symbols-outline.lua;
+      }
+      {
+        # Automatically insert braces, brackets, etc
         plugin = nvim-autopairs;
         config = mkLuaFile ./scripts/plugins/autopairs.lua;
       }
