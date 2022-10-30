@@ -5,48 +5,11 @@
 }:
 
 let
-  # TODO: this should be integrated into the home-manager module
-  greasemonkeyScripts = pkgs.linkFarmFromDrvs "qutebrowser-greasemonkey-scripts" [
-    # Skip sponsor segments on YouTube
-    (pkgs.fetchurl {
-      name = "youtube-sponsorblock.js";
-      url = "https://raw.githubusercontent.com/afreakk/greasemonkeyscripts/1d1be041a65c251692ee082eda64d2637edf6444/youtube_sponsorblock.js";
-      sha256 = "sha256-e3QgDPa3AOpPyzwvVjPQyEsSUC9goisjBUDMxLwg8ZE=";
-    })
+  # All greasemonkey scripts provided by my overlay
+  greasemonkeyScripts = pkgs.linkFarmFromDrvs "qutebrowser-greasemonkey-scripts"
+    (lib.mapAttrsToList (name: value: value) pkgs.qutebrowser-scripts.greasemonkey);
 
-    # Remove ads on YouTube more reliably than with the default adblock
-    (pkgs.fetchurl {
-      name = "youtube-adblock.js";
-      url = "https://raw.githubusercontent.com/afreakk/greasemonkeyscripts/1d1be041a65c251692ee082eda64d2637edf6444/youtube_adblock.js";
-      sha256 = "sha256-EuGTJ9Am5C6g3MeTsjBQqyNFBiGAIWh+f6cUtEHu3iI=";
-    })
-
-    # Dark mode for pages that do not natively support it
-    (pkgs.writeText "dark-reader.js" ''
-      // ==UserScript==
-      // @name          Dark Reader (Unofficial)
-      // @icon          https://darkreader.org/images/darkreader-icon-256x256.png
-      // @namespace     DarkReader
-      // @description	  Inverts the brightness of pages to reduce eye strain
-      // @version       4.9.52
-      // @author        https://github.com/darkreader/darkreader#contributors
-      // @homepageURL   https://darkreader.org/ | https://github.com/darkreader/darkreader
-      // @run-at        document-end
-      // @grant         none
-      // @include       http*
-      // @exclude       *://*google*.*/*
-      // @exclude       *://ko-fi.com/*
-      // @require       https://cdn.jsdelivr.net/npm/darkreader/darkreader.min.js
-      // @noframes
-      // ==/UserScript==
-
-      DarkReader.enable({
-        brightness: 100,
-        contrast: 100,
-        sepia: 0
-      });
-    '')
-  ];
+  userscripts = pkgs.qutebrowser-scripts.userscripts;
 in
 {
   programs.qutebrowser = {
@@ -60,11 +23,12 @@ in
         javascript.can_access_clipboard = true;
 
         # Disable scrolling past the end of the page, which is an issue with gesture navigation
-        user_stylesheets = lib.toList (pkgs.writeText "qutebrowser-user-stylesheet.css" ''
-          * {
-            overscroll-behavior: none;
-          }
-        '').outPath;
+        user_stylesheets = lib.mkIf pkgs.stdenv.isDarwin (lib.toList
+          (pkgs.writeText "qutebrowser-user-stylesheet.css" ''
+            * {
+              overscroll-behavior: none;
+            }
+          '').outPath);
       };
 
       url = {
@@ -79,23 +43,29 @@ in
       "<Alt-Shift-o>" = "spawn --verbose --detach ${pkgs.mpv}/bin/mpv {url}";
 
       # Open the tracker for a nixpkgs PR, script from my overlay
-      "<Alt-n>" = "spawn --userscript ${pkgs.qute-nixpkgs-tracker}/bin/qute-nixpkgs-tracker {url}";
-      "<Alt-Shift-n>" = "hint links spawn --userscript ${pkgs.qute-nixpkgs-tracker}/bin/qute-nixpkgs-tracker {hint-url}";
+      "<Alt-n>" = "spawn --userscript ${userscripts.nixpkgs-tracker}/bin/qute-nixpkgs-tracker {url}";
+      "<Alt-Shift-n>" = "hint links spawn --userscript ${userscripts.nixpkgs-tracker}/bin/qute-nixpkgs-tracker {hint-url}";
+
+      # Enter fullscreen mode on a website while keeping qutebrowser windowed
+      "<Alt-f>" = "spawn --userscript ${userscripts.fake-fullscreen}/bin/qute-fake-fullscreen";
     };
 
     aliases = {
       "mpv" = "spawn --verbose --detach ${pkgs.mpv}/bin/mpv {url}";
-      "nixpkgs-tracker" = "spawn --userscript ${pkgs.qute-nixpkgs-tracker}/bin/qute-nixpkgs-tracker {url}";
+      "nixpkgs-tracker" = "spawn --userscript ${userscripts.nixpkgs-tracker}/bin/qute-nixpkgs-tracker {url}";
+      "fake-fullscreen" = "spawn --userscript ${userscripts.fake-fullscreen}/bin/qute-fake-fullscreen";
     };
 
     searchEngines = {
       DEFAULT = "https://www.google.com/search?q={}";
       git = "https://github.com/search?q={}";
       nix = "https://search.nixos.org/packages?query={}&channel=unstable";
+      nixpkgs-prs = "https://github.com/NixOS/nixpkgs/pulls?q=is%3Aopen+{}";
+      nixpkgs-issues = "https://github.com/NixOS/nixpkgs/issues?q=is%3Aopen+{}";
+      repology = "https://repology.org/projects/?search={}";
       pip = "https://pypi.org/search/?q={}";
       yt = "https://www.youtube.com/results?search_query={}";
       protondb = "https://www.protondb.com/search?q={}";
-      repology = "https://repology.org/projects/?search={}";
     };
 
     quickmarks = {
@@ -104,8 +74,6 @@ in
       github-gists = "https://gist.github.com";
       nix-manual = "https://nixos.org/manual/nix/unstable";
       nixpkgs = "https://github.com/NixOS/nixpkgs";
-      nixpkgs-prs = "https://github.com/NixOS/nixpkgs/pulls";
-      nixpkgs-issues = "https://github.com/NixOS/nixpkgs/issues";
       nixpkgs-tracker = "https://nixpk.gs/pr-tracker.html";
       nixpkgs-manual = "https://nixos.org/manual/nixpkgs/unstable";
       hydra-trunk = "https://hydra.nixos.org/jobset/nixpkgs/trunk";

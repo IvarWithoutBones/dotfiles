@@ -52,11 +52,11 @@ with pkgs; {
 
   nixpkgs-pr = callPackage ./nixpkgs-pr { };
 
-  qute-nixpkgs-tracker = callPackage ./qute-nixpkgs-tracker { };
+  qutebrowser-scripts = lib.recurseIntoAttrs (callPackage ./qutebrowser/scripts { });
 
   qutebrowser =
     if stdenvNoCC.isDarwin && stdenvNoCC.isx86_64 then
-      callPackage ./qutebrowser { }
+      callPackage ./qutebrowser/darwin.nix { }
     else
       prev.qutebrowser;
 
