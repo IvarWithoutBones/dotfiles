@@ -26,21 +26,44 @@ end
 vim.g.coq_settings = {
     auto_start = 'shut-up', -- Load the completion engine on startup
     xdg = true, -- Dont try to install dependencies to the nix store
-    ["clients.lsp.always_on_top"] = {}, -- Always show LSP completions above other sources
     ["display.pum.fast_close"] = false, -- Stops some flickering
     ["keymap.manual_complete"] = '<C-c>', -- Manually trigger completion
+
+    clients = {
+        -- Show paths based on file instead of working directory
+        ["paths.resolution"] =  { "file" },
+
+        -- Weight adjustments, these effect the ordering of completion
+        ["lsp.weight_adjust"] = 1.4,
+        ["buffers.weight_adjust"] = 0.8,
+    },
 }
 
 -- Bindings
 local options = function(_, bufnr)
-    local bufopts = { noremap = true, silent = true, buffer = bufnr }
-    vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts) -- Show hover information
-    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts) -- Show information about signature
-    vim.keymap.set('n', 'rn', vim.lsp.buf.rename, bufopts) -- Rename symbol
-    vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts) -- Add workspace folder
-    vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts) -- Remove workspace folder
-    vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format({ async = true }) end, bufopts) -- Run formatter
-    vim.keymap.set('n', '<space>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, bufopts) -- List workspace folders
+    local function binding(key, action, mode)
+        mode = mode or 'n'
+        vim.keymap.set(mode, key, action, {
+            noremap = true, silent = true, nowait = true, buffer = bufnr,
+        })
+    end
+
+    -- Show information about function signature
+    binding('<C-k>', vim.lsp.buf.signature_help)
+    binding('<C-k>', vim.lsp.buf.signature_help, 'i')
+
+    binding('K', vim.lsp.buf.hover) -- Show hover information
+    binding('rn', vim.lsp.buf.rename) -- Rename symbol
+    binding('<space>f', function() -- Run formatter
+        vim.lsp.buf.format({ async = true })
+    end)
+
+    -- Workspace manipulation
+    binding('<space>wa', vim.lsp.buf.add_workspace_folder) -- Add workspace folder
+    binding('<space>wr', vim.lsp.buf.remove_workspace_folder) -- Remove workspace folder
+    binding('<space>wl', function() -- List workspace folders
+        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end)
 end
 
 -- Merge the provided `settings` with extra `options` and construct an LSP object

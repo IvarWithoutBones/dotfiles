@@ -31,25 +31,10 @@ in
         '';
       }
       {
-        # Label-based code navigation
-        plugin = leap-nvim;
-        config = mkLua ''
-          require('leap').add_default_mappings()
-        '';
-      }
-      {
         # Automatically insert a comment with a keybinding
         plugin = comment-nvim;
         config = mkLua ''
           require('Comment').setup()
-        '';
-      }
-      {
-        # Fuzzy file search and live grep
-        plugin = telescope-nvim;
-        config = ''
-          nnoremap <silent> tg :Telescope live_grep theme=ivy<CR>
-          nnoremap <silent> tk :Telescope find_files theme=ivy<CR>
         '';
       }
       {
@@ -67,6 +52,16 @@ in
           let g:gitblame_enabled = 0
           nnoremap gb :GitBlameToggle<CR>
         '';
+      }
+      {
+        # Label-based code navigation
+        plugin = leap-nvim;
+        config = mkLuaFile ./scripts/plugins/leap.lua;
+      }
+      {
+        # Fuzzy finder for files, buffers, git branches, etc
+        plugin = telescope-nvim;
+        config = mkLuaFile ./scripts/plugins/telescope.lua;
       }
       {
         # Interactive code actions
@@ -116,12 +111,15 @@ in
       {
         # Better syntax highlighting and automatic indentation
         plugin = with pkgs.tree-sitter-grammars; (nvim-treesitter.withPlugins (plugins: [
+          tree-sitter-json
+          tree-sitter-rust
           tree-sitter-bash
           tree-sitter-python
           tree-sitter-nix
           tree-sitter-cmake
           tree-sitter-cpp
           tree-sitter-c
+          tree-sitter-lua
         ]));
 
         config = mkLuaFile ./scripts/plugins/treesitter.lua;

@@ -11,4 +11,4 @@ require "symbols-outline".setup {
 }
 
 local bufoptions = { noremap = true, silent = true }
-vim.api.nvim_set_keymap("n", "<space>s", "<cmd>SymbolsOutline<cr>", bufoptions)
+vim.api.nvim_set_keymap("n", "<space>S", "<cmd>SymbolsOutline<cr>", bufoptions)
