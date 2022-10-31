@@ -1,14 +1,24 @@
-require 'leap'.add_default_mappings()
+local function binding(key, action, mode)
+    mode = mode or 'n'
+    vim.keymap.set(mode, key, action, {
+        noremap = true, silent = true,
+    })
+end
 
--- Disable keys that are less quick to type for me
-require 'leap'.opts = {
-    safe_labels = { "s", "f", "n", "u", "t", "m" },
-    labels = {
-        "s", "f", "n", "j", "k", "l", "h", "o", "d",
-        "w", "e", "m", "b", "u", "y", "v", "r", "g",
-        "t", "c", "x", "z"
-    }
-}
+local leap = require 'leap'
+
+-- Bidirectional and cross-split search
+local function searchAnywhere()
+    leap.leap { target_windows = vim.tbl_filter(function(win)
+        return vim.api.nvim_win_get_config(win).focusable
+    end, vim.api.nvim_tabpage_list_wins(0)) }
+
+    -- For some reason insert mode is entered after the search sometimes
+    vim.cmd('stopinsert')
+end
+
+binding('s', function() searchAnywhere() end)
+binding('s', function() searchAnywhere() end, 'v')
 
 -- Fade the background while doing a motion, this makes it easier to see the labels
 vim.api.nvim_set_hl(0, 'LeapBackdrop', { link = 'Comment' })

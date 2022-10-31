@@ -35,3 +35,7 @@ end
 
 -- Find and replace a string in the current buffer based on user input
 nmap("<A-f>", ":luafile @findAndReplace@<cr>")
+
+-- Stay in visual mode while indenting a block
+map('v', '>', '>gv')
+map('v', '<', '<gv')

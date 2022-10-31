@@ -79,6 +79,24 @@
                 telemetry.enable = false;
               };
             };
+
+            # Spelling suggestions for markdown/git commit messages
+            ltex = {
+              cmd = [ "${pkgs.ltex-ls}/bin/ltex-ls" ];
+              completionEnabled = true;
+              settings.ltex = {
+                dictionary."en-US" = [
+                  "NixOS"
+                  "nixos"
+                  "Nix"
+                  "nix"
+                  "dotfiles"
+                  "nixpkgs"
+                  "neovim"
+                  "vim"
+                ];
+              };
+            };
           });
         };
       in

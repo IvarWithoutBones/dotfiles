@@ -9,6 +9,7 @@ opt.syntax = "enable" -- Syntax highlighting
 opt.termguicolors = true -- True color support
 opt.cursorline = true -- Highlight current line in insert mode
 opt.ruler = true -- Show line and column number when searching
+opt.scrolloff = 5 -- Start scrolling when the cursor is X lines away from the top/bottom
 
 -- Line numbers
 opt.number = true

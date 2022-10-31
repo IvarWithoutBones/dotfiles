@@ -158,15 +158,20 @@ rec {
             in
             if builtins.isAttrs attrs then
               lib.concatStringsSep "\n" (lib.mapAttrsToList
-                (attr: value:
+                (attr: attrValue:
                   let
-                    val =
-                      if builtins.isList attrs || builtins.isAttrs value then
-                        "{ ${toValue value} }"
+                    formattedAttr = if lib.hasInfix "-" attr then
+                      "[\"${attr}\"]"
+                    else
+                      attr;
+
+                    value =
+                      if builtins.isList attrs || builtins.isAttrs attrValue then
+                        "{ ${toValue attrValue} }"
                       else
-                        toValue value;
+                        toValue attrValue;
                   in
-                  "${attr} = ${val},")
+                  "${formattedAttr} = ${value},")
                 attrs)
             else toValue attrs;
         in

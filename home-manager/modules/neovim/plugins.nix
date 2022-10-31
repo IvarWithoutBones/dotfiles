@@ -45,23 +45,24 @@ in
         '';
       }
       {
-        # Inline git blame
-        plugin = git-blame-nvim;
-        config = ''
-          let g:gitblame_date_format = '%r'
-          let g:gitblame_enabled = 0
-          nnoremap gb :GitBlameToggle<CR>
-        '';
+        # Fuzzy finder for files, buffers, git branches, etc
+        plugin = telescope-nvim;
+        config = mkLuaFile ./scripts/plugins/telescope.lua;
+      }
+      {
+        # Show git information in signcolumn
+        plugin = gitsigns-nvim;
+        config = mkLuaFile ./scripts/plugins/gitsigns.lua;
+      }
+      {
+        # Show indentation guides
+        plugin = indent-blankline-nvim;
+        config = mkLuaFile ./scripts/plugins/indent-blankline.lua;
       }
       {
         # Label-based code navigation
         plugin = leap-nvim;
         config = mkLuaFile ./scripts/plugins/leap.lua;
-      }
-      {
-        # Fuzzy finder for files, buffers, git branches, etc
-        plugin = telescope-nvim;
-        config = mkLuaFile ./scripts/plugins/telescope.lua;
       }
       {
         # Interactive code actions
