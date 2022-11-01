@@ -4,15 +4,15 @@
 , makeWrapper
 }:
 
-# A wrapped version of dmenu configured to match the theme used by i3/sway, and with the size configured to be the same as my bar
+# A wrapped version of dmenu using the same theme used by i3/sway, using with the same height as the bar
 runCommand "dmenu-configured"
 {
   _dmenu = dmenu.override {
     patches = [
+      # Allow configuring the height of the window with "-h"
       (fetchpatch {
-        # Allow configuring the height of the window with "-h"
-        url = "https://tools.suckless.org/dmenu/patches/line-height/dmenu-lineheight-5.0.diff";
-        sha256 = "sha256-St1x4oZCqDnz7yxw7cQ0eUDY2GtL+4aqfUy8Oq5fWJk=";
+        url = "https://tools.suckless.org/dmenu/patches/line-height/dmenu-lineheight-5.2.diff";
+        sha256 = "sha256-QdY2T/hvFuQb4NAK7yfBgBrz7Ii7O7QmUv0BvVOdf00=";
       })
     ];
   };
