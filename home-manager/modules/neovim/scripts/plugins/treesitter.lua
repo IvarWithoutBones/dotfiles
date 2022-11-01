@@ -25,4 +25,7 @@ require 'nvim-treesitter.configs'.setup {
             node_decremental = "<C-h>",
         },
     },
+
+    -- Show AST and interactively query it, uses the `playground` plugin
+    ['playground.enable'] = true,
 }

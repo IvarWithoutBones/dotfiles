@@ -21,6 +21,7 @@ in
       vim-nix # Nix syntax highlighting
       nvim-web-devicons # Icon support
       editorconfig-nvim # Editorconfig support
+      playground # Show AST using treesitter
 
       {
         # Github copilot, requires nodejs-16_x

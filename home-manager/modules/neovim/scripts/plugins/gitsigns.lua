@@ -9,9 +9,14 @@ require 'gitsigns'.setup {
             })
         end
 
-        binding("gb", gs.toggle_current_line_blame)
-        binding("gd", gs.diffthis)
-        binding("gD", gs.toggle_word_diff)
-        binding("gr", gs.toggle_deleted)
+        binding("ml", gs.toggle_current_line_blame)
+        binding("ma", gs.stage_hunk)
+        binding("mA", gs.stage_buffer)
+        binding("mu", gs.undo_stage_hunk)
+        binding("mD", gs.diffthis) -- Diff in seperate buffer
+        binding("md", function() -- Inline diff
+            gs.toggle_deleted()
+            gs.toggle_linehl()
+        end)
     end
 }

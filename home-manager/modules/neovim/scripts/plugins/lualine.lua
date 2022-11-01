@@ -77,7 +77,7 @@ require('lualine').setup {
         lualine_a = {
             { 'mode', separator = { left = '' }, right_padding = 2 },
         },
-        lualine_b = { 'diagnostics' },
+        lualine_b = { "filename", 'diagnostics' },
         lualine_c = { 'branch', 'diff' },
         lualine_x = {},
         lualine_y = { getCurrentFunction, 'progress' },
