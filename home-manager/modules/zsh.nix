@@ -53,39 +53,13 @@
 
     initExtra = ''
       ${lib.optionalString config.programs.direnv.enable ''eval "$(direnv hook zsh)"''}
-      ${lib.optionalString pkgs.stdenvNoCC.hostPlatform.isDarwin "source ${pkgs.iterm2-shell-integration}/share/zsh/iterm2.zsh"}
+      ${lib.optionalString pkgs.stdenvNoCC.hostPlatform.isDarwin ''
+        source ${pkgs.iterm2-shell-integration}/share/zsh/iterm2.zsh
+        RPS1="" # Set by default
+      ''}
 
       # Changes working directory so has to be sourced upon shell init
       source ${pkgs.cd-file}/bin/cd-file
-
-      # Show vim mode on the right side of the prompt
-      function zle-line-init zle-keymap-select {
-        RPS1="''${''${KEYMAP/vicmd/NORMAL}/(main|viins)/INSERT}"
-        RPS2=$RPS1
-        zle reset-prompt
-      }
-      zle -N zle-line-init
-      zle -N zle-keymap-select
-      export RPS1="" # On Darwin PWD is set by default otherwise
-
-      # Change the working directory to a git trees root with a keybinding
-      pushd-git-root-widget() {
-	      setopt localoptions pipefail no_aliases 2> /dev/null
-	      local dir="$(eval "get-git-root")"
-	      if [[ -z "$dir" ]]; then
-	      	zle redisplay
-	      	return 0
-	      fi
-	      zle push-line
-	      BUFFER="builtin pushd -- ''${(q)dir}"
-	      zle accept-line
-	      local ret=$?
-	      unset dir
-	      zle reset-prompt
-	      return $ret
-      }
-      zle -N pushd-git-root-widget
-      bindkey -M viins '^g' pushd-git-root-widget
 
       get-git-root() {
         echo "$(${pkgs.git}/bin/git rev-parse --show-toplevel 2>/dev/null)"
@@ -94,6 +68,25 @@
       cd-git-root() {
         pushd "$(get-git-root)"
       }
+
+      # Change the working directory to a git trees root with a keybinding
+      pushd-git-root-widget() {
+        setopt localoptions pipefail no_aliases 2> /dev/null
+        local dir="$(eval "get-git-root")"
+        if [[ -z "$dir" ]]; then
+        	zle redisplay
+        	return 0
+        fi
+        zle push-line
+        BUFFER="builtin pushd -- ''${(q)dir}"
+        zle accept-line
+        local ret=$?
+        unset dir
+        zle reset-prompt
+        return $ret
+      }
+      zle -N pushd-git-root-widget
+      bindkey -M viins '^g' pushd-git-root-widget
 
       find-in-store() {
         STORE_PATHS="$(find /nix/store -maxdepth 1 -name "*$1*" -not -name "*.drv")"
