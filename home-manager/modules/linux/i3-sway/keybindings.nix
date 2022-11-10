@@ -65,7 +65,7 @@
   "${mod}+Shift+0" = "move container to workspace ${workspaces.ws10}";
 
   # Volume control
-  "XF86AudioMute" = "exec amixer set Master toggle";
+  "XF86AudioMute" = "exec amixer set Master toggle && amixer set Capture toggle";
   "XF86AudioRaiseVolume" = "exec amixer set Master 5%+";
   "XF86AudioLowerVolume" = "exec amixer set Master 5%-";
 
