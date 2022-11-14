@@ -51,11 +51,6 @@ in
           outer = 4;
         };
 
-        window.commands = [
-          # Disable titlebar
-          { command = "border pixel 1"; criteria.class = "^.*"; }
-        ];
-
         startup = [
           { command = "--no-startup-id ${pkgs.alsa-utils}/bin/amixer set Master 35%"; always = false; }
           { command = "--no-startup-id ${pkgs.redshift}/bin/redshift -l 50.77083:3.57361 -t 6500K:3000K"; always = false; }
@@ -77,7 +72,18 @@ in
         };
 
         floating.criteria = [
-          { class = "Steam"; title = "Friends List"; }
+          # https://github.com/ValveSoftware/steam-for-linux/issues/1040
+          { class = "^Steam$"; title = "^Steam - Self Updater$"; }
+          { class = "^Steam$"; title = "^Screenshot Uploader$"; }
+          { class = "^Steam$"; title = "^Steam Guard - Computer Authorization Required$"; }
+          { class = "^Steam$"; title = ".* - Chat"; }
+          { class = "^Steam$"; title = ".* - event started"; }
+          { class = "^Steam$"; title = ".* CD key"; }
+          { class = "^Steam$"; title = "^Settings$"; }
+          { class = "^Steam$"; title = "Friends List"; }
+          { class = "^Steam$"; title = "Steam - News"; }
+          { class = "^Steam$"; title = "Add a Game"; }
+          { title = "^Steam Keyboard$"; }
         ];
       } // lib.optionalAttrs (windowManager == "sway") {
         # Bind capslock to escape, and vise versa

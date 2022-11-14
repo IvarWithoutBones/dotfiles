@@ -64,6 +64,10 @@
             ./modules/linux/hardware-config/nixos-pc.nix
           ];
 
+          home-manager.modules = [
+            ./home-manager/modules/linux/i3-sway/monitor-layouts/pc.nix
+          ];
+
           commonSpecialArgs = {
             hostname = "nixos-pc";
             wayland = false; # TODO: make this not required, currently there are eval errors when unset
