@@ -22,6 +22,7 @@ in
       nvim-web-devicons # Icon support
       editorconfig-nvim # Editorconfig support
       playground # Show AST using treesitter
+      dressing-nvim # Better defaults for the basic UI
 
       {
         # Github copilot, requires nodejs-16_x
@@ -30,6 +31,11 @@ in
           imap <silent><script><expr> <C-J> copilot#Accept("\<CR>")
           let g:copilot_no_tab_map = v:true
         '';
+      }
+      {
+        # Compiler integration that shows you the generated assembly
+        plugin = compiler-explorer-nvim;
+        config = mkLuaFile ./scripts/plugins/compiler-explorer.lua;
       }
       {
         # Automatically insert a comment with a keybinding

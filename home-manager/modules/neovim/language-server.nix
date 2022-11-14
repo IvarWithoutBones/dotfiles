@@ -53,10 +53,13 @@
               cmd = [
                 "${pkgs.clang-tools_14}/bin/clangd"
                 "--background-index"
+                "--clang-tidy"
+                "--all-scopes-completion"
+                "--header-insertion=iwyu"
                 "--suggest-missing-includes"
                 "--completion-style=detailed"
                 "--compile-commands-dir=build"
-                "--clang-tidy"
+                "--fallback-style=llvm"
               ];
               capabilities.offsetEncoding = "utf-8";
             };

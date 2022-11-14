@@ -38,14 +38,10 @@ vim.api.nvim_create_autocmd("FileType", {
             local friendName = buffer.filenameWithoutExtension ..
                 (buffer.fileExtension == "cpp" and ".h" or ".cpp")
 
-            for name, type in vim.fs.dir(buffer.directory) do
-                if type == "file" and name == friendName then
-                    local friendPath = buffer.directory .. "/" .. friendName
-                    if vim.fn.filereadable(friendPath) == 1 then
-                        vim.cmd("edit " .. friendPath)
-                        return
-                    end
-                end
+            local friendPath = buffer.directory .. "/" .. friendName
+            if vim.fn.filereadable(friendPath) == 1 then
+                vim.cmd("edit " .. friendPath)
+                return
             end
 
             vim.notify("No matching .h/.cpp file found", vim.log.levels.WARN)
