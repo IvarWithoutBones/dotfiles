@@ -43,6 +43,12 @@
             rust_analyzer.cmd = [ "${pkgs.rust-analyzer}/bin/rust-analyzer" ];
             rnix.cmd = [ "${pkgs.rnix-lsp}/bin/rnix-lsp" ];
 
+            omnisharp = {
+              cmd = [ "${pkgs.omnisharp-roslyn}/bin/OmniSharp" ];
+              enable_roslyn_analyzers = true;
+              enable_import_completion = true;
+            };
+
             # Currently broken on darwin due to poetry failing
             cmake = lib.optionalAttrs (!pkgs.stdenvNoCC.hostPlatform.isDarwin) {
               cmd = [ "${pkgs.cmake-language-server}/bin/cmake-language-server" ];
