@@ -9,6 +9,7 @@
   programs.neovim = {
     extraPackages = with pkgs; [
       shellcheck # Bash
+      dotnet-sdk_6 # C#
 
       # C/C++
       clang-tools
@@ -42,12 +43,7 @@
             bashls.cmd = [ "${pkgs.nodePackages.bash-language-server}/bin/bash-language-server" "start" ];
             rust_analyzer.cmd = [ "${pkgs.rust-analyzer}/bin/rust-analyzer" ];
             rnix.cmd = [ "${pkgs.rnix-lsp}/bin/rnix-lsp" ];
-
-            omnisharp = {
-              cmd = [ "${pkgs.omnisharp-roslyn}/bin/OmniSharp" ];
-              enable_roslyn_analyzers = true;
-              enable_import_completion = true;
-            };
+            omnisharp.cmd = [ "${pkgs.omnisharp-roslyn}/bin/OmniSharp" ];
 
             # Currently broken on darwin due to poetry failing
             cmake = lib.optionalAttrs (!pkgs.stdenvNoCC.hostPlatform.isDarwin) {

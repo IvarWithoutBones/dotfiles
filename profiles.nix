@@ -112,7 +112,7 @@ rec {
 
     home-manager = ivv.home-manager // {
       modules = [
-        ./home-manager/modules/darwin/applications.nix
+        # ./home-manager/modules/darwin/applications.nix
         ./home-manager/modules/darwin/swiftbar
       ] ++ ivv.home-manager.modules;
     };

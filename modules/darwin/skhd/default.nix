@@ -42,6 +42,9 @@ in
       "shift + alt - k" = navigateWindow "above" "north";
       "shift + alt - l" = "${yabai} -m window --focus east";
 
+      # Focus a different monitor
+      "alt - n" = "${yabai} -m display --focus recent";
+
       # Change the window layout
       "ctrl + shift + alt - h" = "${yabai} -m window --warp west";
       "ctrl + shift + alt - j" = "${yabai} -m window --warp south";

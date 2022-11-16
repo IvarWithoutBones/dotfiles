@@ -48,3 +48,12 @@ vim.api.nvim_create_autocmd("FileType", {
         end, { buffer = 0, noremap = true, silent = true })
     end
 })
+
+-- The LSP server never kills rust-analyzer on MacOS, so we have to do it ourselves when exiting
+if vim.loop.os_uname().sysname == "Darwin" then
+    vim.api.nvim_create_autocmd("ExitPre", {
+        callback = function()
+            vim.fn.system("killall -QUIT rust-analyzer")
+        end
+    })
+end

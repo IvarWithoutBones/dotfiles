@@ -120,7 +120,7 @@ in
         # Better syntax highlighting and automatic indentation
         plugin = with pkgs.tree-sitter-grammars; (nvim-treesitter.withPlugins (plugins: [
           tree-sitter-json
-          tree-sitter-rust
+          # tree-sitter-rust
           tree-sitter-python
           tree-sitter-nix
           tree-sitter-cmake
