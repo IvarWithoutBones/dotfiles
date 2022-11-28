@@ -19,9 +19,6 @@
       auto-optimise-store = true;
       warn-dirty = false;
 
-      # Darwin fails to link the package from the binary cache sometimes
-      fallback = lib.mkIf pkgs.stdenv.isDarwin true;
-
       experimental-features = [ "nix-command" "flakes" ];
       trusted-users = [ "@wheel" username ];
       allowed-users = trusted-users;
