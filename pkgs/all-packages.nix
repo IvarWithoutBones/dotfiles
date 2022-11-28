@@ -66,5 +66,9 @@ with pkgs; {
     inherit (python3Packages) speedtest-cli;
   };
 
+  yabai = darwin.apple_sdk_11_0.callPackage ./yabai {
+    inherit (darwin.apple_sdk_11_0.frameworks) SkyLight Cocoa Carbon ScriptingBridge;
+  };
+
   yabai-zsh-completions = callPackage ./yabai-zsh-completions { };
 }
