@@ -21,7 +21,6 @@ in
       vim-nix # Nix syntax highlighting
       nvim-web-devicons # Icon support
       editorconfig-nvim # Editorconfig support
-      playground # Show AST using treesitter
       dressing-nvim # Better defaults for the basic UI
 
       {
@@ -31,11 +30,6 @@ in
           imap <silent><script><expr> <C-J> copilot#Accept("\<CR>")
           let g:copilot_no_tab_map = v:true
         '';
-      }
-      {
-        # Compiler integration that shows you the generated assembly
-        plugin = compiler-explorer-nvim;
-        config = mkLuaFile ./scripts/plugins/compiler-explorer.lua;
       }
       {
         # Automatically insert a comment with a keybinding
@@ -50,6 +44,16 @@ in
         config = ''
           let g:sqlite_clib_path = '${pkgs.sqlite.out}/lib/libsqlite3.so'
         '';
+      }
+      {
+        # Display possible keybindings as you type
+        plugin = which-key-nvim;
+        config = mkLuaFile ./scripts/plugins/which-key.lua;
+      }
+      {
+        # Compiler integration that shows you the generated assembly
+        plugin = compiler-explorer-nvim;
+        config = mkLuaFile ./scripts/plugins/compiler-explorer.lua;
       }
       {
         # Fuzzy finder for files, buffers, git branches, etc
@@ -116,11 +120,15 @@ in
         plugin = nvim-tree-lua;
         config = mkLuaFile ./scripts/plugins/nvim-tree.lua;
       }
+
+      # Extra plugins for treesitter
+      playground
+      nvim-treesitter-textobjects
       {
         # Better syntax highlighting and automatic indentation
         plugin = with pkgs.tree-sitter-grammars; (nvim-treesitter.withPlugins (plugins: [
           tree-sitter-json
-          # tree-sitter-rust
+          tree-sitter-rust
           tree-sitter-python
           tree-sitter-nix
           tree-sitter-cmake
