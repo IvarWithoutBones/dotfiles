@@ -41,7 +41,7 @@ rec {
           packages = lib.packagesFromOverlay overlays.default;
   */
   packagesFromOverlay = overlay: {
-    inherit (flake-utils.lib.eachSystem lib.platforms.all (system: rec {
+    inherit (flake-utils.lib.eachSystem lib.platforms.all (system: {
       packages = pkgsWithOverlay system overlay;
     })) packages;
   }.packages;
@@ -85,7 +85,7 @@ rec {
     , specialArgs ? { }
     , commonSpecialArgs ? { }
     , ...
-    } @ args:
+    }:
 
     let
       _username = lib.optionalString _home-manager.enable (home-manager.username or profile.home-manager.username);
@@ -160,7 +160,8 @@ rec {
               lib.concatStringsSep "\n" (lib.mapAttrsToList
                 (attr: attrValue:
                   let
-                    formattedAttr = if lib.hasInfix "-" attr then
+                    # TODO: check for all keywords
+                    formattedAttr = if lib.hasInfix "-" attr || attr == "nil" then
                       "[\"${attr}\"]"
                     else
                       attr;

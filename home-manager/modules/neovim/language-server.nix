@@ -42,11 +42,16 @@
           languageServers = (dotfiles-lib.generators.toLua {
             bashls.cmd = [ "${pkgs.nodePackages.bash-language-server}/bin/bash-language-server" "start" ];
             rust_analyzer.cmd = [ "${pkgs.rust-analyzer}/bin/rust-analyzer" ];
-            rnix.cmd = [ "${pkgs.rnix-lsp}/bin/rnix-lsp" ];
             omnisharp.cmd = [ "${pkgs.omnisharp-roslyn}/bin/OmniSharp" ];
 
-            # Currently broken on darwin due to poetry failing
-            cmake = lib.optionalAttrs (!pkgs.stdenvNoCC.hostPlatform.isDarwin) {
+            nil_ls = {
+              cmd = [ "${pkgs.nil-language-server}/bin/nil" ];
+              settings.nil = {
+                formatting.command = [ "${pkgs.nixpkgs-fmt}/bin/nixpkgs-fmt" ];
+              };
+            };
+
+            cmake = {
               cmd = [ "${pkgs.cmake-language-server}/bin/cmake-language-server" ];
               init_options.buildDirectory = "build";
             };
