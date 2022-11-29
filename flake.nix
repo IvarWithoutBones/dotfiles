@@ -31,7 +31,7 @@
     , agenix
     , nix-index-database
     , nil-language-server
-    } @ inputs:
+    }:
     let
       lib = import ./lib.nix {
         inherit nixpkgs home-manager nix-darwin flake-utils;
