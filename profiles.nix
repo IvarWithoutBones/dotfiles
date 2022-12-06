@@ -91,6 +91,7 @@ rec {
       networking.extraHosts = ''
         192.168.1.44 pc
         192.168.1.37 laptop
+        192.168.7.2 rpi
       '';
 
       users.users.${ivv.username}.openssh.authorizedKeys.keys = [
