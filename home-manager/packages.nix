@@ -23,6 +23,7 @@
     binutils
     act
     cinny-desktop
+    hexyl
 
     # Packages from my overlay
     dotfiles-tool
