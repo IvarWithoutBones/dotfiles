@@ -126,7 +126,7 @@ in
       nvim-treesitter-textobjects
       {
         # Better syntax highlighting and automatic indentation
-        plugin = with pkgs.tree-sitter-grammars; (nvim-treesitter.withPlugins (plugins: [
+        plugin = nvim-treesitter.withPlugins (plugins: with plugins; [
           tree-sitter-json
           tree-sitter-rust
           tree-sitter-python
@@ -135,7 +135,12 @@ in
           tree-sitter-cpp
           tree-sitter-c
           tree-sitter-lua
-        ]));
+          tree-sitter-css
+          tree-sitter-typescript
+          tree-sitter-tsx
+          # From my overlay
+          tree-sitter-astro
+        ]);
 
         config = mkLuaFile ./scripts/plugins/treesitter.lua;
       }

@@ -66,6 +66,9 @@ with pkgs; {
     inherit (python3Packages) speedtest-cli;
   };
 
+  tree-sitter-grammars = prev.tree-sitter-grammars //
+    lib.recurseIntoAttrs (import ./tree-sitter-grammars);
+
   yabai = darwin.apple_sdk_11_0.callPackage ./yabai {
     inherit (darwin.apple_sdk_11_0.frameworks) SkyLight Cocoa Carbon ScriptingBridge;
   };
