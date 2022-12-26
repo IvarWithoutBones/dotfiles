@@ -43,7 +43,7 @@
   users.users.${username}.extraGroups = lib.optionals hardware.sound [ "audio" ];
 
   hardware = {
-    nvidia.package = lib.optionals (hardware.gpu == "nvidia") config.boot.kernelPackages.nvidiaPackages.beta;
+    nvidia.package = lib.optionals (hardware.gpu == "nvidia") config.boot.kernelPackages.nvidiaPackages.stable;
     enableRedistributableFirmware = true;
 
     opengl = {
