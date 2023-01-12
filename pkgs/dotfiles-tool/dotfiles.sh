@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# Shortcuts for NixOS system management
+# Shortcuts for NixOS/Darwin system management
 
-set -e
+set -euo pipefail
 
 error() {
     printf "\e[1;31merror:\e[0m %s\n" "$1"
@@ -11,88 +11,87 @@ error() {
 
 runColored() {
     printf "\e[32m\$ %s\n\e[0m" "$1"
-    $1
+    eval "$1"
 }
 
-if [ -z "${DOTFILES_DIR-}" ]; then
-    DOTFILES_DIR="${HOME}/nix/dotfiles"
-fi
-if [ ! -d "${DOTFILES_DIR-}" ]; then
-    error "Dotfiles directory \"${DOTFILES_DIR-}\" is not a directory!"
-fi
+# Pick a rebuild command and handle platform differences
+rebuildCommand() {
+    local -r platform="$(uname -s)"
+    case "$platform" in
+        Darwin)
+            echo "darwin-rebuild"
+            ;;
+        Linux)
+            # '--use-remote-sudo' is required for NixOS but breaks on Darwin. This isn't the prettiest solution, but oh well.
+            echo "nixos-rebuild --use-remote-sudo"
+            ;;
+        *)
+            error "unsupported platform '$platform'"
+            ;;
+    esac
+}
 
-flags="ugGlfdeh"
+verboseLogs() {
+    REBUILD_FLAGS+=("--print-build-logs")
+    FLAKE_UPDATE_FLAGS+=("--print-build-logs")
+    COLLECT_GARBAGE_FLAGS+=("--verbose")
+}
 
-while getopts ":$flags" arg; do
-    case $arg in
-        u)
-          DONT_UPDATE=1 ;;
-        g)
-          DONT_COLLECT_GARBAGE=1 ;;
-        G)
-          COLLECT_ALL_GARBAGE=1 ;;
-        l)
-          PRINT_BUILD_LOGS=1 ;;
-        f)
-          FAST_REBUILD=1 ;;
-        d)
-          export {DONT_UPDATE,DONT_COLLECT_GARBAGE,PRINT_BUILD_LOGS,FAST_REBUILD}=1 ;;
-        e)
-          if [ -z "${EDITOR-}" ]; then
-              error "This flag requires the environment variable \"\$EDITOR\" to be set."
-          elif [ ! -f "${DOTFILES_DIR-}/flake.nix" ]; then
-              error "Flake \"${DOTFILES_DIR-}/flake.nix\" was not found!"
-          fi
-
-          OPEN_EDITOR=1 ;;
-        h)
-          usage_text="Usage: "$(basename "$0")" [-$flags]\n"
-          usage_text+="[-u] Don't update the flake\n"
-          usage_text+="[-g] Don't collect garbage\n"
-          usage_text+="[-G] Run nix-collect-garbage as root, and pass it \"-d\"\n"
-          usage_text+="[-l] Print more verbose logs\n"
-          usage_text+="[-f] Pass \"--fast\" to nixos-rebuild\n"
-          usage_text+="[-d] Set the flags \"-uglf\". This is useful when you're making small changes\n"
-          usage_text+="[-e] Open the flake \"${DOTFILES_DIR-}/flake.nix\" in ${EDITOR-}\n"
-          usage_text+="[-h] Print out the message you're seeing right now\n"
-          printf "${usage_text-}"
-
-          exit 0 ;;
-        ?)
-          error "Invalid option: \"-${OPTARG-}\"" ;;
+# Handle user input
+position=0
+for arg in "$@"; do
+    position=$((position + 1))
+    case "$arg" in
+        --dont-update|-u)
+            DONT_UPDATE=1
+            ;;
+        --dont-collect-garbage|-g)
+            DONT_COLLECT_GARBAGE=1
+            ;;
+        --print-build-logs|-l)
+            verboseLogs
+            ;;
+        --debug|-d)
+            DONT_UPDATE=1
+            DONT_COLLECT_GARBAGE=1
+            verboseLogs
+            ;;
+        --help|-h)
+            usage_text="usage: $(basename "$0") [OPTIONS]\n"
+            usage_text+="[-- FLAGS]                   pass all proceeding flags to the rebuild command\n"
+            usage_text+="[--dont-update,-u]           dont update the flake\n"
+            usage_text+="[--dont-collect-garbage,-g]  dont collect garbage\n"
+            usage_text+="[--print-build-logs,-l]      print more verbose logs\n"
+            usage_text+="[--debug,-d]                 shortcut for -u, -g and -l\n"
+            usage_text+="[--help,-h]                  print this help message\n"
+            echo -e "$usage_text"
+            exit 0
+            ;;
+        --)
+            REBUILD_FLAGS+=("${@:$((position + 1))}")
+            break
+            ;;
+        *)
+            error "Unknown argument \"$arg\""
+            ;;
     esac
 done
+unset position
 
-if [ "${OPEN_EDITOR-}" ]; then
-    "${EDITOR-}" "${DOTFILES_DIR-}/flake.nix"
-    exit 0
+DOTFILES_DIR="${DOTFILES_DIR:-"$HOME/nix/dotfiles"}"
+if [ ! -f "$DOTFILES_DIR/flake.nix" ]; then
+    error "\"$DOTFILES_DIR\" is not a directory containing a flake! set DOTFILES_DIR to overwrite"
 fi
 
-if [ "${PRINT_BUILD_LOGS-}" ]; then
-    printLogs="--print-build-logs"
-fi
 
+# Start the rebuild procedure
+runColored "cd \"$DOTFILES_DIR\""
 if [ -z "${DONT_UPDATE-}" ]; then
-    pushd "${DOTFILES_DIR-}" 1>/dev/null
-    runColored "nix flake update ${dontWarnDirty} ${printLogs-}"
-    popd 1>/dev/null
+    runColored "nix flake update ${FLAKE_UPDATE_FLAGS[*]-}"
 fi
 
-rebuild_cmd="nixos-rebuild switch --use-remote-sudo ${printLogs-}"
-if [ "${FAST_REBUILD-}" ]; then
-    rebuild_cmd+=" --fast"
-fi
-runColored "${rebuild_cmd}"
+runColored "$(rebuildCommand) switch --flake . ${REBUILD_FLAGS[*]-}"
 
 if [ -z "${DONT_COLLECT_GARBAGE-}" ]; then
-    garbage_cmd="nix store gc"
-
-    if [ "${PRINT_BUILD_LOGS-}" ]; then
-        garbage_cmd+=" --verbose"
-    fi
-    if [ "${COLLECT_ALL_GARBAGE-}" ]; then
-        garbage_cmd="sudo nix-collect-garbage --delete-older-than 10d"
-    fi
-
-    runColored "${garbage_cmd}"
+    runColored "nix store gc ${COLLECT_GARBAGE_FLAGS[*]-}"
 fi
