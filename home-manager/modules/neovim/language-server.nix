@@ -19,6 +19,7 @@
       cargo
       rustfmt
       rustc
+      clippy
     ];
 
     plugins = with pkgs.vimPlugins; [
@@ -41,8 +42,16 @@
           # https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
           languageServers = (dotfiles-lib.generators.toLua {
             bashls.cmd = [ "${pkgs.nodePackages.bash-language-server}/bin/bash-language-server" "start" ];
-            rust_analyzer.cmd = [ "${pkgs.rust-analyzer}/bin/rust-analyzer" ];
             omnisharp.cmd = [ "${pkgs.omnisharp-roslyn}/bin/OmniSharp" ];
+
+            rust_analyzer = {
+              cmd = [ "${pkgs.rust-analyzer}/bin/rust-analyzer" ];
+              settings."rust-analyzer" = {
+                checkOnSave = {
+                  command = "clippy";
+                };
+              };
+            };
 
             nil_ls = {
               cmd = [ "${pkgs.nil-language-server}/bin/nil" ];
