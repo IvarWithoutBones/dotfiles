@@ -45,6 +45,7 @@ rec {
           ./home-manager/modules/bat.nix
           ./home-manager/modules/discord.nix
           ./home-manager/modules/qutebrowser.nix
+          ./home-manager/modules/helix.nix
         ];
 
         extraConfig = {

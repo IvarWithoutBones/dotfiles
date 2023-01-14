@@ -22,7 +22,8 @@
     manix
     binutils
     act
-    cinny-desktop
+    # cinny-desktop
+    element-desktop
     hexyl
 
     # Packages from my overlay
