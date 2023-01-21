@@ -22,9 +22,9 @@
     manix
     binutils
     act
-    # cinny-desktop
     element-desktop
     hexyl
+    pcalc
 
     # Packages from my overlay
     dotfiles-tool

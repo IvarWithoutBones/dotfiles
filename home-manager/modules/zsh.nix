@@ -33,8 +33,6 @@
       mp3 = "mpv --no-video";
       weather = "curl -S 'https://wttr.in/?1F'";
       diskusage = "df -ht ext4";
-      to-hex = "printf '%#x\n'";
-      to-decimal = "printf '%d\n'";
     } // lib.optionalAttrs pkgs.stdenvNoCC.isLinux rec {
       battery-left = "${pkgs.acpi}/bin/acpi | cut -d' ' -f5";
       viewimg = "${pkgs.i3-swallow}/bin/swallow ${pkgs.feh}/bin/feh \"$@\"";
