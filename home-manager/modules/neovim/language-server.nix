@@ -47,9 +47,9 @@
             rust_analyzer = {
               cmd = [ "${pkgs.rust-analyzer}/bin/rust-analyzer" ];
               settings."rust-analyzer" = {
-                checkOnSave = {
-                  command = "clippy";
-                };
+                checkOnSave.command = "clippy";
+                # Dont show diagnostics for inactive cfg directives
+                diagnostics.disabled = [ "inactive-code" ];
               };
             };
 
