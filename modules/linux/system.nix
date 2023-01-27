@@ -50,7 +50,7 @@
 
   users.users.${username} = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "plugdev" ];
+    extraGroups = [ "wheel" "plugdev" "dialout" ];
     shell = pkgs.zsh;
   };
 }
