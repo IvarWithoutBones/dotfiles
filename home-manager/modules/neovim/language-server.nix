@@ -41,6 +41,7 @@
           # For a list of available options see the documentation:
           # https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
           languageServers = (dotfiles-lib.generators.toLua {
+            tsserver.cmd = [ "${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server" "--stdio" ];
             bashls.cmd = [ "${pkgs.nodePackages.bash-language-server}/bin/bash-language-server" "start" ];
             omnisharp.cmd = [ "${pkgs.omnisharp-roslyn}/bin/OmniSharp" ];
 

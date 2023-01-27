@@ -137,6 +137,7 @@ in
           tree-sitter-lua
           tree-sitter-css
           tree-sitter-typescript
+          tree-sitter-javascript
           tree-sitter-tsx
           # From my overlay
           tree-sitter-astro
