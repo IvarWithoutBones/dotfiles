@@ -52,5 +52,6 @@
     transmission-gtk
     citra
     minecraft
+    firefox
   ] ++ lib.optional pkgs.stdenvNoCC.isDarwin iterm2;
 }
