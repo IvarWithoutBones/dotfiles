@@ -25,6 +25,7 @@
     element-desktop
     hexyl
     pcalc
+    cargo-flamegraph
 
     # Packages from my overlay
     dotfiles-tool
