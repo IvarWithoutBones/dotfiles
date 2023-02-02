@@ -128,17 +128,22 @@ in
         # Better syntax highlighting and automatic indentation
         plugin = nvim-treesitter.withPlugins (plugins: with plugins; [
           tree-sitter-json
+          tree-sitter-toml
+          tree-sitter-yaml
           tree-sitter-rust
           tree-sitter-python
           tree-sitter-nix
           tree-sitter-cmake
           tree-sitter-cpp
           tree-sitter-c
+          tree-sitter-c-sharp
+          tree-sitter-bash
           tree-sitter-lua
           tree-sitter-css
           tree-sitter-typescript
           tree-sitter-javascript
           tree-sitter-tsx
+          tree-sitter-html
           # From my overlay
           tree-sitter-astro
         ]);

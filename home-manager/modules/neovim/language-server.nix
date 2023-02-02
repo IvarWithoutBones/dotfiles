@@ -41,9 +41,23 @@
           # For a list of available options see the documentation:
           # https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
           languageServers = (dotfiles-lib.generators.toLua {
-            tsserver.cmd = [ "${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server" "--stdio" ];
             bashls.cmd = [ "${pkgs.nodePackages.bash-language-server}/bin/bash-language-server" "start" ];
+            tsserver.cmd = [ "${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server" "--stdio" ];
+            jsonls.cmd = [ "${pkgs.nodePackages.vscode-langservers-extracted}/bin/vscode-json-language-server" "--stdio" ];
+            html.cmd = [ "${pkgs.nodePackages.vscode-langservers-extracted}/bin/vscode-html-language-server" "--stdio" ];
+
+            # C#
             omnisharp.cmd = [ "${pkgs.omnisharp-roslyn}/bin/OmniSharp" ];
+
+            # TOML
+            taplo.cmd = [ "${pkgs.taplo-lsp}/bin/taplo" "lsp" "stdio" ];
+
+            yamlls = {
+              cmd = [ "${pkgs.yaml-language-server}/bin/yaml-language-server" "--stdio" ];
+              settings.redhat = {
+                telemetry.enabled = false;
+              };
+            };
 
             rust_analyzer = {
               cmd = [ "${pkgs.rust-analyzer}/bin/rust-analyzer" ];
