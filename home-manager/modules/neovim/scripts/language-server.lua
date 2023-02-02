@@ -17,9 +17,9 @@ end
 -- Rounded corners for popup boxes
 local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
 function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
-  opts = opts or {}
-  opts.border = 'rounded'
-  return orig_util_open_floating_preview(contents, syntax, opts, ...)
+    opts = opts or {}
+    opts.border = 'rounded'
+    return orig_util_open_floating_preview(contents, syntax, opts, ...)
 end
 
 -- Completion
@@ -31,21 +31,30 @@ vim.g.coq_settings = {
 
     clients = {
         -- Show paths based on file instead of working directory
-        ["paths.resolution"] =  { "file" },
+        ["paths.resolution"] = { "file" },
 
-        -- Weight adjustments, these effect the ordering of completion
+        -- These effect the ordering of completion
         ["lsp.weight_adjust"] = 1.4,
         ["buffers.weight_adjust"] = 0.8,
     },
 }
 
 -- Bindings
-local options = function(_, bufnr)
+local options = function(client, buffer)
     local function binding(key, action, mode)
         mode = mode or 'n'
         vim.keymap.set(mode, key, action, {
-            noremap = true, silent = true, nowait = true, buffer = bufnr,
+            buffer = buffer,
+            noremap = true,
+            silent = true,
+            nowait = true,
         })
+    end
+
+    if client.supports_method("textDocument/formatting") then
+        binding('<space>f', function()
+            vim.lsp.buf.format({ async = true })
+        end)
     end
 
     -- Show information about function signature
@@ -54,9 +63,6 @@ local options = function(_, bufnr)
 
     binding('K', vim.lsp.buf.hover) -- Show hover information
     binding('rn', vim.lsp.buf.rename) -- Rename symbol
-    binding('<space>f', function() -- Run formatter
-        vim.lsp.buf.format({ async = true })
-    end)
 
     -- Workspace manipulation
     binding('<space>wa', vim.lsp.buf.add_workspace_folder) -- Add workspace folder

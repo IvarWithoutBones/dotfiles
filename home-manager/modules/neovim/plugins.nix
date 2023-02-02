@@ -123,7 +123,15 @@ in
       {
         # Information about Rust dependencies inside of Cargo.toml
         plugin = crates-nvim;
-        config = mkLuaFile ./scripts/crates-nvim.lua;
+        config = mkLuaFile ./scripts/plugins/crates-nvim.lua;
+      }
+      {
+        # Formatting for languages without LSP formatting support
+        plugin = formatter-nvim;
+        config = mkLuaFile (pkgs.substituteAll {
+          src = ./scripts/plugins/formatter-nvim.lua;
+          shfmt = "${pkgs.shfmt}/bin/shfmt";
+        });
       }
 
       # Extra plugins for treesitter

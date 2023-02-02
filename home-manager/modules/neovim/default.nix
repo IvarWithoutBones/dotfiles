@@ -12,7 +12,7 @@
     ./plugins.nix
   ];
 
-  home.sessionVariables = rec {
+  home.sessionVariables = {
     EDITOR = "nvim";
     VISUAL = "nvim";
   };
@@ -43,10 +43,10 @@
           git = "${pkgs.git}/bin/git";
         };
       in
-      (mkLuaFile ./scripts/options.lua) +
-      (mkLuaFile ./scripts/options.lua) +
-      (mkLuaFile bindings) +
-      (mkLuaFile autocmds);
+      (mkLuaFile ./scripts/options.lua)
+      + (mkLuaFile ./scripts/options.lua)
+      + (mkLuaFile bindings)
+      + (mkLuaFile autocmds);
   };
 }
 
