@@ -120,6 +120,11 @@ in
         plugin = nvim-tree-lua;
         config = mkLuaFile ./scripts/plugins/nvim-tree.lua;
       }
+      {
+        # Information about Rust dependencies inside of Cargo.toml
+        plugin = crates-nvim;
+        config = mkLuaFile ./scripts/crates-nvim.lua;
+      }
 
       # Extra plugins for treesitter
       playground
