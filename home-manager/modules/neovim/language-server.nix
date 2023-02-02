@@ -6,7 +6,7 @@
 }:
 
 {
-  programs.neovim = {
+  programs.nixvim = {
     extraPackages = with pkgs; [
       shellcheck # Bash
       dotnet-sdk_6 # C#
@@ -22,7 +22,7 @@
       clippy
     ];
 
-    plugins = with pkgs.vimPlugins; [
+    extraPlugins = with pkgs.vimPlugins; [
       nvim-lspconfig # Language server presets
       coq_nvim # Completion engine
       trouble-nvim # Interactive diagnostics in bottom bar
@@ -33,7 +33,7 @@
       coq-thirdparty
     ];
 
-    extraConfig =
+    extraConfigVim =
       let
         language-server = pkgs.substituteAll {
           src = ./scripts/language-server.lua;

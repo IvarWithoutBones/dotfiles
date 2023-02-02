@@ -5,6 +5,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     nix-index-database.url = "github:mic92/nix-index-database";
     nil-language-server.url = "github:oxalica/nil";
+    nixvim.url = "github:pta2002/nixvim";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -31,6 +32,7 @@
     , agenix
     , nix-index-database
     , nil-language-server
+    , nixvim
     }:
     let
       lib = import ./lib.nix {
@@ -38,7 +40,7 @@
       };
 
       profiles = import ./profiles.nix {
-        inherit self nixpkgs agenix lib;
+        inherit self nixpkgs agenix lib nixvim;
       };
     in
     {

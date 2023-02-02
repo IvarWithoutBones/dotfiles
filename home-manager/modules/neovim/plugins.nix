@@ -8,15 +8,13 @@ let
   inherit (dotfiles-lib.vim) mkLua mkLuaFile;
 in
 {
-  programs.neovim = {
-    withNodeJs = false; # Provide an older version manually, Github Copilot does not support the latest
-
+  programs.nixvim = {
     extraPackages = with pkgs; [
       nodejs-16_x # For Github Copilot
       ripgrep # Needed by :Telescope live_grep
     ];
 
-    plugins = with pkgs.vimPlugins; [
+    extraPlugins = with pkgs.vimPlugins; [
       plenary-nvim # Dependency of telescope
       vim-nix # Nix syntax highlighting
       nvim-web-devicons # Icon support

@@ -1,6 +1,7 @@
 { self
 , nixpkgs
 , agenix
+, nixvim
 , lib
 }:
 
@@ -21,7 +22,7 @@ rec {
       inherit username;
 
       commonSpecialArgs = {
-        inherit username nixpkgs;
+        inherit username nixpkgs nixvim;
         dotfiles-lib = lib;
       };
 
