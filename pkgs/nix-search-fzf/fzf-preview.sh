@@ -9,56 +9,65 @@ FLAKE="$2"
 FLAKE_PATH="${FLAKE}#${PKG_NAME}"
 
 removeQuotes() {
-    local FLAG="$*"
-    FLAG="${FLAG%\"}"
-    echo "${FLAG#\"}"
+	local flag="$*"
+	flag="${flag%\"}"
+	echo "${flag#\"}"
 }
 
 newlinesToCommaSeperated() {
-    echo "$@" | sed ':a;N;$!ba;s/\n/, /g'
+	echo "$@" | sed ':a;N;$!ba;s/\n/, /g'
 }
 
 evalAttr() {
-    local ATTR DATA
-    ATTR="$1"
-    DATA="$(nix eval "$FLAKE_PATH"."$ATTR" 2>/dev/null)"
-    [[ "${DATA}" != "null" && "${DATA}" != "false" && -n "$DATA" ]] && removeQuotes "$DATA"
+	local attr data
+	attr="$1"
+	data="$(nix eval "$FLAKE_PATH"."$attr" 2> /dev/null)"
+	[[ $data != "null" && $data != "false" && -n $data ]] && removeQuotes "$data"
 }
 
 evalJsonAttr() {
-    local ATTR JQ_ARGS DATA
-    ATTR="$1"
-    JQ_ARGS="$2"
-    DATA="$(nix eval --json "$FLAKE_PATH"."$ATTR" 2>/dev/null | jq -r "$JQ_ARGS")"
-    [[ "$DATA" != "null" && -n "$DATA" ]] && echo "$DATA"
+	local attr jqArgs data
+	attr="$1"
+	jqArgs="$2"
+	data="$(nix eval --json "$FLAKE_PATH"."$attr" 2> /dev/null | jq -r "$jqArgs")"
+	[[ $data != "null" && -n $data ]] && echo "$data"
 }
 
 evalNixpkgsLib() {
-    local FUNCTION DATA
-    FUNCTION="$1"
-    # TODO: dont import nixpkgs with IFD. This could also mismatch iwth the flake
-    DATA="$(nix eval --raw --expr "with import <nixpkgs> {}; lib.${FUNCTION} pkgs.${PKG_NAME}" 2>/dev/null)"
-    [[ "${DATA}" != "null" && -n "$DATA" ]] && echo "${DATA}"
+	local function data
+	function="$1"
+    # Impure is needed to import the flake reference
+	data="$(nix eval --raw --impure --expr "let pkgs = (builtins.getFlake \"flake:$FLAKE\"); in pkgs.lib.$function pkgs.$PKG_NAME" 2> /dev/null)"
+	[[ $data != "null" && -n $data ]] && echo "$data"
 }
 
-[[ -n "$(evalAttr "meta.broken")" ]] && echo "broken: true"
-[[ -n "$(evalAttr "meta.insecure")" ]] && echo "insecure: true"
+maybeEcho() {
+	local -r prefix="$1"
+	local flag="$2"
+	local -r commaSeperated="${3:-false}"
+	[[ $commaSeperated == "true" ]] && flag="$(newlinesToCommaSeperated "$flag")"
+	test -n "$flag" && echo "$prefix $flag"
+}
+
+test -n "$(evalAttr "meta.broken")" && echo "broken: true"
+test -n "$(evalAttr "meta.insecure")" && echo "insecure: true"
 
 version="$(evalAttr "version")"
-[[ -z "$version" ]] && version="$(evalNixpkgsLib "getVersion")" # Derive it from "name" with getVersion as a backup
-[[ -n "$version" ]] && echo "version: $version"
+# Derive the version from "name" using 'lib.getVersion' if it's not set
+test -z "$version" && version="$(evalNixpkgsLib "getVersion")"
+maybeEcho "version:" "$version"
 
 homepage="$(evalAttr "meta.homepage")"
-[[ -n "$homepage" ]] && echo "homepage: $homepage"
+maybeEcho "homepage:" "$homepage"
 
 description="$(evalAttr "meta.description")"
-[[ -n "$description" ]] && echo "description: $description"
+maybeEcho "description:" "$description"
 
 license="$(evalJsonAttr "meta.license" 'if type=="array" then .[].fullName else .fullName end')"
-[[ -n "$license" ]] && echo "license: $(newlinesToCommaSeperated "$license")"
+maybeEcho "license:" "$license" true
 
 maintainers="$(evalJsonAttr "meta.maintainers" '.[].github')"
-[[ -n "$maintainers" ]] && echo "maintainers: $(newlinesToCommaSeperated "$maintainers")"
+maybeEcho "maintainers:" "$maintainers" true
 
 platforms="$(evalJsonAttr "meta.platforms" 'if type=="array" then .[] else . end')"
-[[ -n "$platforms" ]] && echo "platforms: $(newlinesToCommaSeperated "$platforms")"
+maybeEcho "platforms:" "$platforms" true
