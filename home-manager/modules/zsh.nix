@@ -58,6 +58,11 @@
         RPS1="" # Set by default
       ''}
 
+      # Enter a 'nix shell' with packages selected by fzf
+      source ${pkgs.nix-search-fzf.zsh-shell-widget}
+      zle -N nix-search-fzf-shell-widget
+      bindkey -M viins '^O' nix-search-fzf-shell-widget
+
       # Changes working directory so has to be sourced upon shell init
       source ${pkgs.cd-file}/bin/cd-file
 
@@ -69,7 +74,7 @@
         pushd "$(get-git-root)"
       }
 
-      # Change the working directory to a git trees root with a keybinding
+      # Change the working directory to a git trees root
       pushd-git-root-widget() {
         setopt localoptions pipefail no_aliases 2> /dev/null
         local dir="$(eval "get-git-root")"
