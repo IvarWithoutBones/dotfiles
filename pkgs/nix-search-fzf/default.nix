@@ -1,4 +1,5 @@
 { createScript
+, substituteAll
 , gnused
 , jq
 , fzf
@@ -7,7 +8,14 @@
 , bash
 }:
 
-createScript "nix-search-fzf" ./nix-search-fzf.sh {
+let
+  previewText = createScript "fzf-preview" ./fzf-preview.sh { };
+  src = substituteAll {
+    src = ./nix-search-fzf.sh;
+    previewText = "${previewText}/bin/fzf-preview";
+  };
+in
+createScript "nix-search-fzf" src {
   dependencies = [
     gnused
     jq
