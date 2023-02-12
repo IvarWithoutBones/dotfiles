@@ -26,6 +26,7 @@
     hexyl
     pcalc
     cargo-flamegraph
+    ares
 
     # Packages from my overlay
     dotfiles-tool
@@ -39,6 +40,7 @@
   ] ++ lib.optionals pkgs.stdenvNoCC.isLinux [
     # Package from my overlay
     speedtest
+    sm64ex-practice
 
     # Fonts. TODO: manage this from a module option?
     noto-fonts-emoji

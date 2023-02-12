@@ -6,6 +6,7 @@
     nix-index-database.url = "github:mic92/nix-index-database";
     nil-language-server.url = "github:oxalica/nil";
     nixvim.url = "github:pta2002/nixvim";
+    sm64ex-practice.url = "github:ivarwithoutbones/sm64ex-practice";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -33,6 +34,7 @@
     , nix-index-database
     , nil-language-server
     , nixvim
+    , sm64ex-practice
     }:
     let
       lib = import ./lib.nix {
@@ -48,7 +50,7 @@
       inherit lib;
 
       overlays.default = import ./pkgs/all-packages.nix {
-        inherit nix-index-database nil-language-server;
+        inherit nix-index-database nil-language-server sm64ex-practice;
       };
 
       darwinConfigurations = {

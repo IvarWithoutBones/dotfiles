@@ -87,6 +87,21 @@
         "type": "github"
       }
     },
+    "flake-utils_4": {
+      "locked": {
+        "lastModified": 1667395993,
+        "narHash": "sha256-nuEHfE/LcWyuSWnS8t12N1wc105Qtau+/OdUAjtQ0rA=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "5aed5285a952e0b949eb3ba02c12fa4fcfef535f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -228,6 +243,22 @@
         "type": "indirect"
       }
     },
+    "nixpkgs_5": {
+      "locked": {
+        "lastModified": 1675940568,
+        "narHash": "sha256-epG6pOT9V0kS+FUqd7R6/CWkgnZx2DMT5Veqo+y6G3c=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "6ccc4a59c3f1b56d039d93da52696633e641bc71",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixvim": {
       "inputs": {
         "beautysh": "beautysh",
@@ -284,7 +315,8 @@
         "nix-darwin": "nix-darwin",
         "nix-index-database": "nix-index-database",
         "nixpkgs": "nixpkgs_3",
-        "nixvim": "nixvim"
+        "nixvim": "nixvim",
+        "sm64ex-practice": "sm64ex-practice"
       }
     },
     "rust-overlay": {
@@ -309,6 +341,25 @@
       "original": {
         "owner": "oxalica",
         "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "sm64ex-practice": {
+      "inputs": {
+        "flake-utils": "flake-utils_4",
+        "nixpkgs": "nixpkgs_5"
+      },
+      "locked": {
+        "lastModified": 1676211406,
+        "narHash": "sha256-8IILeZTo+x2JewkeyvSJQd6hrzdVPrX8s7AqgI7al90=",
+        "owner": "ivarwithoutbones",
+        "repo": "sm64ex-practice",
+        "rev": "c1e7219d85717ced598ae3f32ff63696f1a4e696",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ivarwithoutbones",
+        "repo": "sm64ex-practice",
         "type": "github"
       }
     },
