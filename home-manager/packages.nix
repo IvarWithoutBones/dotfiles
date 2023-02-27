@@ -46,6 +46,7 @@
     noto-fonts-emoji
     (nerdfonts.override { fonts = [ "FiraCode" ]; })
 
+    evince
     gnome.ghex
     i3-swallow
     ncspot
