@@ -34,6 +34,7 @@
       weather = "curl -S 'https://wttr.in/?1F'";
       diskusage = "df -ht ext4";
     } // lib.optionalAttrs pkgs.stdenvNoCC.isLinux rec {
+      copy = "${pkgs.xclip}/bin/xclip -selection clipboard";
       battery-left = "${pkgs.acpi}/bin/acpi | cut -d' ' -f5";
       viewimg = "${pkgs.i3-swallow}/bin/swallow ${pkgs.feh}/bin/feh \"$@\"";
       caps = "${pkgs.xdotool}/bin/xdotool key Caps_Lock";
