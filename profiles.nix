@@ -39,6 +39,7 @@ rec {
           ./home-manager/packages.nix
           ./home-manager/modules/nix-index.nix
           ./home-manager/modules/mpv.nix
+          ./home-manager/modules/readline.nix
           ./home-manager/modules/fzf.nix
           ./home-manager/modules/git.nix
           ./home-manager/modules/zsh.nix
