@@ -10,16 +10,10 @@ let
   };
 in
 {
-  # The home-manager module would unfortunately require `readFile`ing the fetched theme,
-  # which can slow down evaluation by quite a bit. Luckily it isnt that much work to do manually.
-  home.file.".Xresources" = {
-    text = ''
+  xresources = {
+    extraConfig = ''
       #include "${catppuccin-theme}"
       ${pkgs.dmenu-configured.xresources}
-    '';
-
-    onChange = ''
-      ${pkgs.xorg.xrdb}/bin/xrdb "$HOME/.Xresources"
     '';
   };
 }
