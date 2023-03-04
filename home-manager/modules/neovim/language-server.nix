@@ -1,25 +1,62 @@
 { lib
-, config
 , pkgs
 , dotfiles-lib
 , ...
 }:
 
+let
+  # A hacky way to add packages to neovims environment if they are not already in $PATH.
+  # Needed to allow projects to overwrite tools bundled with neovim, for example using a nightly rust toolchain.
+  # This would be much easier if the home-manager module allowed us to define `extraWrapperArgs`, but alas.
+  nvimWithDefaultPackages = packages:
+    pkgs.runCommand "neovim-wrapped"
+      {
+        nativeBuildInputs = [ pkgs.makeWrapper ];
+      } ''
+      # Symlinking is being a bit painful here. The desktop file is attempted to be
+      # removed by the home-manager module, which it cant if this derivation does not own it.
+      mkdir -p $out
+      cp -r ${pkgs.neovim-unwrapped}/* $out
+      chmod -R +w $out
+
+      makeWrapper ${pkgs.neovim-unwrapped}/bin/nvim $out/bin/nvim \
+        --suffix PATH : ${lib.makeBinPath packages}
+    '';
+in
 {
   programs.nixvim = {
-    extraPackages = with pkgs; [
-      shellcheck # Bash
-      dotnet-sdk_6 # C#
+    package = with pkgs; nvimWithDefaultPackages [
+      ltex-ls # Spelling suggestions
+      taplo-lsp # TOML
+      yaml-language-server # YAML
+      nodePackages.typescript-language-server # Typescript/javascript
+      nodePackages.vscode-langservers-extracted # JSON/HTML
+      python3Packages.python-lsp-server # Python
+      sumneko-lua-language-server # Lua
+      cmake-language-server # CMake
 
       # C/C++
       clang-tools
       clang
+
+      # C#
+      dotnet-sdk_6
+      omnisharp-roslyn
+
+      # Bash
+      shellcheck
+      nodePackages.bash-language-server
+
+      # Nix
+      nil-language-server
+      nixpkgs-fmt
 
       # Rust
       cargo
       rustfmt
       rustc
       clippy
+      rust-analyzer
     ];
 
     extraPlugins = with pkgs.vimPlugins; [
@@ -41,26 +78,22 @@
           # For a list of available options see the documentation:
           # https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
           languageServers = (dotfiles-lib.generators.toLua {
-            bashls.cmd = [ "${pkgs.nodePackages.bash-language-server}/bin/bash-language-server" "start" ];
-            tsserver.cmd = [ "${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server" "--stdio" ];
-            jsonls.cmd = [ "${pkgs.nodePackages.vscode-langservers-extracted}/bin/vscode-json-language-server" "--stdio" ];
-            html.cmd = [ "${pkgs.nodePackages.vscode-langservers-extracted}/bin/vscode-html-language-server" "--stdio" ];
+            omnisharp = { }; # C#
+            taplo = { }; # TOML
+            bashls = { }; # Bash
+            tsserver = { }; # Typescript/javascript
+            jsonls = { }; # JSON
+            html = { }; # HTML
 
-            # C#
-            omnisharp.cmd = [ "${pkgs.omnisharp-roslyn}/bin/OmniSharp" ];
-
-            # TOML
-            taplo.cmd = [ "${pkgs.taplo-lsp}/bin/taplo" "lsp" "stdio" ];
-
+            # YAML
             yamlls = {
-              cmd = [ "${pkgs.yaml-language-server}/bin/yaml-language-server" "--stdio" ];
               settings.redhat = {
                 telemetry.enabled = false;
               };
             };
 
+            # Rust
             rust_analyzer = {
-              cmd = [ "${pkgs.rust-analyzer}/bin/rust-analyzer" ];
               settings."rust-analyzer" = {
                 checkOnSave.command = "clippy";
                 # Dont show diagnostics for inactive cfg directives
@@ -68,21 +101,22 @@
               };
             };
 
+            # Nix
             nil_ls = {
-              cmd = [ "${pkgs.nil-language-server}/bin/nil" ];
               settings.nil = {
-                formatting.command = [ "${pkgs.nixpkgs-fmt}/bin/nixpkgs-fmt" ];
+                formatting.command = [ "nixpkgs-fmt" ];
               };
             };
 
+            # CMake
             cmake = {
-              cmd = [ "${pkgs.cmake-language-server}/bin/cmake-language-server" ];
               init_options.buildDirectory = "build";
             };
 
+            # C/C++
             clangd = {
               cmd = [
-                "${pkgs.clang-tools_14}/bin/clangd"
+                "clangd"
                 "--background-index"
                 "--clang-tidy"
                 "--all-scopes-completion"
@@ -92,11 +126,12 @@
                 "--compile-commands-dir=build"
                 "--fallback-style=llvm"
               ];
+
               capabilities.offsetEncoding = "utf-8";
             };
 
+            # Python
             pylsp = {
-              cmd = [ "${pkgs.python3Packages.python-lsp-server}/bin/pylsp" ];
               settings.pylsp.plugins.pycodestyle.ignore = [
                 "E201" # Whitespace after opening bracket
                 "E202" # Whitespace before closing bracket
@@ -106,8 +141,8 @@
               ];
             };
 
-            sumneko_lua = {
-              cmd = [ "${pkgs.sumneko-lua-language-server}/bin/lua-language-server" ];
+            # Lua
+            lua_ls = {
               settings.Lua = {
                 runtime.version = "LuaJIT";
                 diagnostics.globals = [ "vim" ];
@@ -115,9 +150,8 @@
               };
             };
 
-            # Spelling suggestions for markdown/git commit messages
+            # Spelling suggestions
             ltex = {
-              cmd = [ "${pkgs.ltex-ls}/bin/ltex-ls" ];
               completionEnabled = true;
               settings.ltex = {
                 dictionary."en-US" = [
