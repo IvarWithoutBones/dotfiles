@@ -7,14 +7,15 @@
 }:
 
 {
-  imports = [ agenix.nixosModule ];
+  imports = [ agenix.nixosModules.default ];
 
   environment.systemPackages = [
-    agenix.defaultPackage.${system}
+    agenix.packages.${system}.default
 
-    (pkgs.runCommand "cachix-configured" {
-      nativeBuildInputs = [ pkgs.makeWrapper ];
-    } ''
+    (pkgs.runCommand "cachix-configured"
+      {
+        nativeBuildInputs = [ pkgs.makeWrapper ];
+      } ''
       mkdir -p $out/bin
 
       makeWrapper ${pkgs.cachix}/bin/cachix $out/bin/cachix \
