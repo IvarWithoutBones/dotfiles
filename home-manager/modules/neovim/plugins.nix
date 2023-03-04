@@ -1,5 +1,4 @@
 { pkgs
-, config
 , dotfiles-lib
 , ...
 }:
@@ -30,13 +29,6 @@ in
         '';
       }
       {
-        # Automatically insert a comment with a keybinding
-        plugin = comment-nvim;
-        config = mkLua ''
-          require('Comment').setup()
-        '';
-      }
-      {
         # Dependency of telescope
         plugin = sqlite-lua;
         config = ''
@@ -44,14 +36,45 @@ in
         '';
       }
       {
+        # Automatically insert a comment with a keybinding
+        plugin = comment-nvim;
+        config = mkLua ''
+          require('Comment').setup()
+        '';
+      }
+      {
+        # LSP signature hint as you type
+        plugin = lsp_signature-nvim;
+        config = mkLua ''
+          require("lsp_signature").setup {
+            hint_enable = false, -- The popup shows already
+            toggle_key = "<C-k>",
+          }
+        '';
+      }
+      {
+        # Display LSP progress messages
+        plugin = fidget-nvim;
+        config = mkLua ''
+          require("fidget").setup()
+        '';
+      }
+      {
+        # Enhanced f/t motions using Leap
+        plugin = flit-nvim;
+        config = mkLua ''
+          require("flit").setup()
+        '';
+      }
+      {
+        # Label-based code navigation
+        plugin = leap-nvim;
+        config = mkLuaFile ./scripts/plugins/leap.lua;
+      }
+      {
         # Display possible keybindings as you type
         plugin = which-key-nvim;
         config = mkLuaFile ./scripts/plugins/which-key.lua;
-      }
-      {
-        # Compiler integration that shows you the generated assembly
-        plugin = compiler-explorer-nvim;
-        config = mkLuaFile ./scripts/plugins/compiler-explorer.lua;
       }
       {
         # Fuzzy finder for files, buffers, git branches, etc
@@ -67,16 +90,6 @@ in
         # Show indentation guides
         plugin = indent-blankline-nvim;
         config = mkLuaFile ./scripts/plugins/indent-blankline.lua;
-      }
-      {
-        # Label-based code navigation
-        plugin = leap-nvim;
-        config = mkLuaFile ./scripts/plugins/leap.lua;
-      }
-      {
-        # Interactive code actions
-        plugin = nvim-code-action-menu;
-        config = mkLuaFile ./scripts/plugins/code-action-menu.lua;
       }
       {
         # Interactive diagnostics
@@ -155,6 +168,10 @@ in
           tree-sitter-javascript
           tree-sitter-tsx
           tree-sitter-html
+          tree-sitter-markdown
+          tree-sitter-markdown-inline
+          tree-sitter-regex
+          tree-sitter-vim
           # From my overlay
           tree-sitter-astro
         ]);

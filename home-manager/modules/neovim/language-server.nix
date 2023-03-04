@@ -60,10 +60,8 @@ in
     ];
 
     extraPlugins = with pkgs.vimPlugins; [
-      nvim-lspconfig # Language server presets
+      nvim-lspconfig # Language server configuration presets
       coq_nvim # Completion engine
-      trouble-nvim # Interactive diagnostics in bottom bar
-      nvim-code-action-menu # Interactive code actions
 
       # Snippets & more
       coq-artifacts

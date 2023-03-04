@@ -1,8 +1,6 @@
-{ config
-, lib
+{ lib
 , pkgs
 , wayland
-, dotfiles-lib
 , nixvim
 , ...
 }:
@@ -59,6 +57,9 @@
       # Show line and column when searching
       ruler = true;
 
+      # Global substitution by default
+      gdefault = true;
+
       # Start scrolling when the cursor is X lines away from the top/bottom
       scrolloff = 5;
     };
@@ -114,6 +115,13 @@
           "<A-K>" = silent ":resize -2<CR>";
           "<A-L>" = silent ":vertical resize +2<CR>";
           "<A-H>" = silent ":vertical resize -2<CR>";
+
+          # Diagnostics
+          "<space>dn" = silent ":lua vim.diagnostic.goto_next({ float = false })<cr>";
+          "<space>dN" = silent ":lua vim.diagnostic.goto_prev({ float = false })<cr>";
+
+          # Start a case-sensitive regex substitution
+          "gs" = ":%s/\\C";
         };
       };
 

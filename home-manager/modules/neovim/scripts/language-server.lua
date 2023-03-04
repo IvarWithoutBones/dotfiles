@@ -46,7 +46,6 @@ local options = function(client, buffer)
         vim.keymap.set(mode, key, action, {
             buffer = buffer,
             noremap = true,
-            silent = true,
             nowait = true,
         })
     end
@@ -63,6 +62,7 @@ local options = function(client, buffer)
 
     binding('K', vim.lsp.buf.hover) -- Show hover information
     binding('rn', vim.lsp.buf.rename) -- Rename symbol
+    binding('<space><space>', vim.lsp.buf.code_action) -- Code actions
 
     -- Workspace manipulation
     binding('<space>wa', vim.lsp.buf.add_workspace_folder) -- Add workspace folder

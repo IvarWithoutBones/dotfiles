@@ -23,13 +23,12 @@ vim.api.nvim_create_autocmd('User', {
     end
 })
 
-local leap = require 'leap'
-
 -- Bidirectional and cross-split search
 local function searchAnywhere()
-    leap.leap { target_windows = vim.tbl_filter(function(win)
-        return vim.api.nvim_win_get_config(win).focusable
-    end, vim.api.nvim_tabpage_list_wins(0)) }
+    require("leap").leap { target_windows = vim.tbl_filter(
+        function(win) return vim.api.nvim_win_get_config(win).focusable end,
+        vim.api.nvim_tabpage_list_wins(0)
+    ) }
 
     -- For some reason insert mode is entered after the search sometimes
     vim.cmd('stopinsert')
