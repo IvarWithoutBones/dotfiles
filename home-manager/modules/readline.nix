@@ -18,6 +18,7 @@
       # Completion
       completion-ignore-case = true;
       completion-map-case = true; # Treat '-' and '_' the same
+      completion-query-items = -1; # Never ask to list completions
       show-all-if-ambiguous = true;
 
       history-size = 10000;
