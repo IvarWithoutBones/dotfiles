@@ -19,6 +19,7 @@ in
       nvim-web-devicons # Icon support
       editorconfig-nvim # Editorconfig support
       dressing-nvim # Better defaults for the basic UI
+      vim-just # Syntax highlighting for justfiles, package from my overlay
 
       {
         # Github copilot, requires nodejs-16_x
