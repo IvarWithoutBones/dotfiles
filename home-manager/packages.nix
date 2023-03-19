@@ -26,7 +26,6 @@
     hexyl
     pcalc
     cargo-flamegraph
-    ares
 
     # Packages from my overlay
     dotfiles-tool
@@ -46,6 +45,7 @@
     noto-fonts-emoji
     (nerdfonts.override { fonts = [ "FiraCode" ]; })
 
+    ares
     evince
     gnome.ghex
     i3-swallow
