@@ -50,7 +50,7 @@ in
           # Ping time
           block = "custom";
           command = pkgs.writeShellScript "ping-time" ''
-            time="$(${pkgs.unixtools.ping}/bin/ping store.steampowered.com -c 1 -w 1 2>/dev/null | ${pkgs.gnugrep}/bin/grep time= | ${pkgs.coreutils}/bin/cut -d'=' -f4)"
+            time="$(${pkgs.unixtools.ping}/bin/ping store.steampowered.com -c 1 -w 3 2>/dev/null | ${pkgs.gnugrep}/bin/grep time= | ${pkgs.coreutils}/bin/cut -d'=' -f4)"
             # This might contain long error codes if the service is down
             (( "''${#time}" < 15 )) && (( "''${#time}" > 1 )) && echo "  $time"
           '';
