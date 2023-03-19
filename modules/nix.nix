@@ -1,6 +1,4 @@
-{ config
-, pkgs
-, lib
+{ pkgs
 , nixpkgs
 , username
 , ...

@@ -114,6 +114,7 @@ rec {
       ./modules/darwin/applications.nix
       ./modules/darwin/yabai
       ./modules/darwin/skhd
+      ./modules/darwin/nixos-builder.nix
     ] ++ ivv.modules;
 
     home-manager = ivv.home-manager // {
