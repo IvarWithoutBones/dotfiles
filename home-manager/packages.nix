@@ -1,5 +1,4 @@
 { pkgs
-, config
 , ...
 }:
 
@@ -10,7 +9,6 @@
     ripgrep
     htop
     unar
-    tree
     python3
     file
     feh
@@ -26,6 +24,7 @@
     hexyl
     pcalc
     cargo-flamegraph
+    exa
 
     # Packages from my overlay
     dotfiles-tool
