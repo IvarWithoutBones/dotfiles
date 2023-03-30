@@ -44,16 +44,6 @@ in
         '';
       }
       {
-        # LSP signature hint as you type
-        plugin = lsp_signature-nvim;
-        config = mkLua ''
-          require("lsp_signature").setup {
-            hint_enable = false, -- The popup shows already
-            toggle_key = "<C-k>",
-          }
-        '';
-      }
-      {
         # Display LSP progress messages
         plugin = fidget-nvim;
         config = mkLua ''
