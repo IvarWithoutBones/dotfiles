@@ -58,6 +58,13 @@ in
         '';
       }
       {
+        # Easily modify surrounding delimiter pairs
+        plugin = nvim-surround;
+        config = mkLua ''
+          require("nvim-surround").setup()
+        '';
+      }
+      {
         # Label-based code navigation
         plugin = leap-nvim;
         config = mkLuaFile ./scripts/plugins/leap.lua;
