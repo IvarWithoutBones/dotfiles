@@ -17,6 +17,8 @@ fi
 echo '#! /usr/bin/env nix-shell
 #! nix-shell -i bash -p
 # shellcheck shell=bash
+
+set -euo pipefail
 ' > "$1"
 
 chmod +x "$1"
