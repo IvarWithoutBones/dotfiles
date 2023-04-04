@@ -34,6 +34,7 @@
       mp3 = "mpv --no-video";
       weather = "curl -S 'https://wttr.in/?1F'";
       diskusage = "df -ht ext4";
+      mktar = "tar -czvf";
     } // lib.optionalAttrs pkgs.stdenvNoCC.isLinux rec {
       copy = "${pkgs.xclip}/bin/xclip -selection clipboard";
       battery-left = "${pkgs.acpi}/bin/acpi | cut -d' ' -f5";
