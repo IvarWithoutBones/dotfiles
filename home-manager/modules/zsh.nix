@@ -38,6 +38,7 @@
       copy = "${pkgs.xclip}/bin/xclip -selection clipboard";
       battery-left = "${pkgs.acpi}/bin/acpi | cut -d' ' -f5";
       viewimg = "${pkgs.i3-swallow}/bin/swallow ${pkgs.feh}/bin/feh \"$@\"";
+      open = "${pkgs.xdg-utils}/bin/xdg-open";
       caps = "${pkgs.xdotool}/bin/xdotool key Caps_Lock";
       CAPS = caps;
     };

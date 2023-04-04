@@ -1,4 +1,5 @@
 { pkgs
+, lib
 , ...
 }:
 
@@ -25,6 +26,7 @@
     pcalc
     cargo-flamegraph
     exa
+    gimp
 
     # Packages from my overlay
     dotfiles-tool
@@ -44,17 +46,30 @@
     noto-fonts-emoji
     (nerdfonts.override { fonts = [ "FiraCode" ]; })
 
+    arandr
     ares
     evince
-    gnome.ghex
+    drawio
+    imhex
     i3-swallow
-    ncspot
     psst
     krita
     _1password-gui
     transmission-gtk
-    citra
     minecraft
     firefox
   ] ++ lib.optional pkgs.stdenvNoCC.isDarwin iterm2;
+
+  xdg = lib.mkIf pkgs.stdenvNoCC.isLinux {
+    enable = true;
+
+    mimeApps = {
+      enable = true;
+
+      defaultApplications = {
+        "application/pdf" = "org.gnome.Evince.desktop";
+        "x-scheme-handler/magnet" = "transmission-gtk.desktop";
+      };
+    };
+  };
 }
