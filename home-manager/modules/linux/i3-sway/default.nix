@@ -85,14 +85,6 @@ in
           { class = "^Steam$"; title = "Add a Game"; }
           { title = "^Steam Keyboard$"; }
         ];
-      } // lib.optionalAttrs (windowManager == "sway") {
-        # Bind capslock to escape, and vise versa
-        input."*" = {
-          xkb_layout = "eu";
-          xkb_options = "caps:swapescape";
-          repeat_delay = "300";
-          repeat_rate = "50";
-        };
       };
     } // lib.optionalAttrs (windowManager == "sway") {
       wrapperFeatures.gtk = true;
@@ -105,7 +97,10 @@ in
   home.file.".hm-graphical-session".text = lib.optionalString (windowManager == "sway") ''
     ${lib.optionalString (hardware.gpu or "" == "nvidia") ''
       # Required for propietary nvidia drivers
-      export GBM_BACKEND=nvidia-drm_gbm.so __GLX_VENDOR_LIBRARY_NAME=nvidia WLR_NO_HARDWARE_CURSORS=1 MOZ_ENABLE_WAYLAND=1 SDL_VIDEODRIVER=wayland
+      export __GLX_VENDOR_LIBRARY_NAME=nvidia
+      export GBM_BACKEND=nvidia-drm
+      export WLR_NO_HARDWARE_CURSORS=1
+      export MOZ_ENABLE_WAYLAND=1 # Needed for firefox
     ''}
 
     ${pkgs.sway}/bin/sway ${lib.optionalString (hardware.gpu or "" == "nvidia") "--unsupported-gpu"}
