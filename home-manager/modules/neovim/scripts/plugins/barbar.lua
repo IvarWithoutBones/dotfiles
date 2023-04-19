@@ -5,7 +5,11 @@ end
 require 'bufferline'.setup {
     animation = false,
     insert_at_end = true,
-    icon_pinned = '',
+    icons = {
+        pinned = {
+            button = '',
+        }
+    }
 }
 
 -- Move to the previous and next
