@@ -1,6 +1,5 @@
 { lib
 , pkgs
-, config
 , hardware
 , ...
 }:
@@ -29,50 +28,70 @@ in
       blocks = [
         {
           # Display the currently playing song from an MPRIS instance
+          # TODO: use the `music` block once we can use `hide_when_empty` with it
           block = "custom";
           command = "${pkgs.mpris-statusbar}/bin/mpris-statusbar";
           hide_when_empty = true;
           interval = 1;
         }
+
         {
           # Temperature
           block = "custom";
+          hide_when_empty = true;
+          interval = 200;
+
           command = pkgs.writeShellScript "temperature" ''
             weather="$(${pkgs.curl}/bin/curl -S "wttr.in/?format=1" 2>/dev/null | tr -d "+" | xargs)"
             # This might contain long error codes if the service is down
             (( "''${#weather}" < 10 )) && echo "$weather"
           '';
-          on_click = "$TERMINAL --hold -e curl 'https://wttr.in/?F'";
-          hide_when_empty = true;
-          interval = 200;
+
+          click = [{
+            button = "left";
+            cmd = "$TERMINAL --hold -e curl 'https://wttr.in/?F'";
+          }];
         }
+
         {
           # Ping time
           block = "custom";
+          hide_when_empty = true;
+          interval = 1;
+
           command = pkgs.writeShellScript "ping-time" ''
             time="$(${pkgs.unixtools.ping}/bin/ping store.steampowered.com -c 1 -w 3 2>/dev/null | ${pkgs.gnugrep}/bin/grep time= | ${pkgs.coreutils}/bin/cut -d'=' -f4)"
             # This might contain long error codes if the service is down
             (( "''${#time}" < 15 )) && (( "''${#time}" > 1 )) && echo "  $time"
           '';
-          hide_when_empty = true;
-          interval = 1;
         }
+
         {
           block = "sound";
-          format = "{volume}";
-          on_click = "${pkgs.pavucontrol}/bin/pavucontrol";
+          format = " $icon $volume.eng(width:3) ";
+          show_volume_when_muted = true;
+          click = [{
+            button = "left";
+            cmd = "${pkgs.pavucontrol}/bin/pavucontrol";
+          }];
         }
+
         {
           block = "cpu";
-          format = "{utilization}";
-          on_click = "$TERMINAL -e htop";
+          format = "  $utilization.eng(width:3) ";
           interval = 1;
+          click = [{
+            button = "left";
+            cmd = "$TERMINAL -e htop";
+          }];
         }
+
         {
           block = "memory";
-          format_mem = "{mem_used}";
+          format = "  $mem_used.eng(prefix:M,width:3) ";
           interval = 1;
         }
+
         {
           # Time block, but with an emoji refering to the time of day
           block = "custom";
@@ -88,21 +107,22 @@ in
 
       settings = {
         icons.overrides = {
-          volume_full = "";
-          volume_half = "墳";
-          volume_empty = "";
           volume_muted = "";
+          volume = [
+            ""
+            "墳"
+            ""
+          ];
+
           bat_charging = "";
           bat_quarter = "";
           bat_half = "";
           bat_three_quarters = "";
           bat_full = "";
           bat_empty = "";
-          cpu = "";
-          memory_mem = "";
-          bat = "Battery:";
         };
       };
     };
   };
 }
+
