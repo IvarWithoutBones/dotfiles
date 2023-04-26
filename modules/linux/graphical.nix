@@ -15,6 +15,8 @@
   security.pam.services.swaylock = lib.mkIf wayland { };
 
   services = {
+    gnome.gnome-keyring.enable = true;
+
     xserver = {
       enable = !(wayland);
 

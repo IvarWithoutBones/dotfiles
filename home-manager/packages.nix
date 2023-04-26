@@ -46,6 +46,7 @@
     noto-fonts-emoji
     (nerdfonts.override { fonts = [ "FiraCode" ]; })
 
+    vscode-fhs
     arandr
     ares
     evince
