@@ -21,4 +21,22 @@
       license = licenses.mit;
     };
   };
+
+  vim-gas = vimUtils.buildVimPluginFrom2Nix {
+    pname = "vim-gas";
+    version = "0.pre+date=2022-03-07";
+
+    src = fetchFromGitHub {
+      owner = "Shirk";
+      repo = "vim-gas";
+      rev = "2ca95211b465be8e2871a62ee12f16e01e64bd98";
+      sha256 = "sha256-pu2EvKA5YEUhBdAG0eMuPBdKY+VdXmJsEILzq9Mrh9E=";
+    };
+
+    meta = with lib; {
+      description = "Advanced syntax highlighting for GNU Assembler";
+      homepage = "https://github.com/Shirk/vim-gas";
+      license = licenses.bsd3;
+    };
+  };
 }

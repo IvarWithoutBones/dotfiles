@@ -22,6 +22,18 @@ in
       vim-just # Syntax highlighting for justfiles, package from my overlay
 
       {
+        # Better syntax highlighting for GNU assembly, package from my overlay
+        plugin = vim-gas;
+        config = mkLua ''
+          -- Set the filetype by default for assembly
+          vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+            pattern = {"*.s", "*.S", "*.as", "*.AS", "*.asm", "*.ASM"},
+            command = "set filetype=gas"
+          })
+        '';
+      }
+
+      {
         # Github copilot, requires nodejs-16_x
         plugin = copilot-vim;
         config = ''
