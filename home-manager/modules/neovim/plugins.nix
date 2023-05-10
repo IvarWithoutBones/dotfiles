@@ -15,11 +15,12 @@ in
 
     extraPlugins = with pkgs.vimPlugins; [
       plenary-nvim # Dependency of telescope
-      vim-nix # Nix syntax highlighting
       nvim-web-devicons # Icon support
       editorconfig-nvim # Editorconfig support
       dressing-nvim # Better defaults for the basic UI
-      vim-just # Syntax highlighting for justfiles, package from my overlay
+      vim-nix # Nix syntax highlighting
+      vim-llvm # LLVM IR syntax highlighting
+      vim-just # Justfile syntax highlighting, package from my overlay
 
       {
         # Better syntax highlighting for GNU assembly, package from my overlay
@@ -168,6 +169,7 @@ in
           tree-sitter-python
           tree-sitter-nix
           tree-sitter-cmake
+          tree-sitter-make
           tree-sitter-cpp
           tree-sitter-c
           tree-sitter-c-sharp
@@ -182,6 +184,7 @@ in
           tree-sitter-markdown-inline
           tree-sitter-regex
           tree-sitter-vim
+          tree-sitter-llvm
           # From my overlay
           tree-sitter-astro
         ]);
