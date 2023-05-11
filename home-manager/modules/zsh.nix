@@ -26,7 +26,7 @@
 
     shellAliases = {
       ls = "${pkgs.exa}/bin/exa --group-directories-first";
-      tree = "${pkgs.exa}/bin/exa --group-directories-first --tree --icons";
+      tree = "${pkgs.exa}/bin/exa --group-directories-first --tree --icons --git-ignore";
       nixfzf = "${pkgs.nix-search-fzf}/bin/nix-search-fzf";
       cat = "${pkgs.bat}/bin/bat -p";
       diff = "diff --color=auto -u";
