@@ -110,7 +110,6 @@ in
           volume_muted = "";
           volume = [
             ""
-            "墳"
             ""
           ];
 
