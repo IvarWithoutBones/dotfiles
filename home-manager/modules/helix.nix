@@ -1,5 +1,4 @@
-{ config
-, pkgs
+{ pkgs
 , ...
 }:
 
@@ -67,29 +66,29 @@
       };
     };
 
-    languages = [
-      {
-        name = "nix";
+    languages = {
+      nix = {
         language-server.command = "${pkgs.nil-language-server}/bin/nil";
         formatter.command = "${pkgs.nixpkgs-fmt}/bin/nixpkgs-fmt";
         auto-format = false;
-      }
-      {
-        name = "rust";
+      };
+
+      rust = {
         language-server = {
           command = "${pkgs.rust-analyzer}/bin/rust-analyzer";
           config = {
             checkOnSave.command = "clippy";
           };
         };
-      }
-      {
+      };
+
+      bash = {
         name = "bash";
         language-server = {
           command = "${pkgs.nodePackages.bash-language-server}/bin/bash-language-server";
           args = [ "start" ];
         };
-      }
-    ];
+      };
+    };
   };
 }

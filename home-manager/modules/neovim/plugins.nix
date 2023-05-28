@@ -9,12 +9,13 @@ in
 {
   programs.nixvim = {
     extraPackages = with pkgs; [
-      nodejs-16_x # For Github Copilot
+      nodejs # For Github Copilot
       ripgrep # Needed by :Telescope live_grep
     ];
 
     extraPlugins = with pkgs.vimPlugins; [
       plenary-nvim # Dependency of telescope
+      null-ls-nvim # Dependency of crates-nvim
       nvim-web-devicons # Icon support
       editorconfig-nvim # Editorconfig support
       dressing-nvim # Better defaults for the basic UI
@@ -35,11 +36,12 @@ in
       }
 
       {
-        # Github copilot, requires nodejs-16_x
+        # Github copilot, requires nodejs
         plugin = copilot-vim;
         config = ''
-          imap <silent><script><expr> <C-J> copilot#Accept("\<CR>")
+          " Accept sugggestions using ctrl-j instead of tab
           let g:copilot_no_tab_map = v:true
+          imap <silent><script><expr> <C-J> copilot#Accept("\<CR>")
         '';
       }
       {
@@ -157,7 +159,6 @@ in
       }
 
       # Extra plugins for treesitter
-      playground
       nvim-treesitter-textobjects
       {
         # Better syntax highlighting and automatic indentation

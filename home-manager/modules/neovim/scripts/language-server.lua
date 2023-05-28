@@ -25,7 +25,6 @@ end
 -- Completion
 vim.g.coq_settings = {
     auto_start = 'shut-up', -- Load the completion engine on startup
-    xdg = true, -- Dont try to install dependencies to the nix store
     ["display.pum.fast_close"] = false, -- Stops some flickering
     ["keymap.manual_complete"] = '<C-c>', -- Manually trigger completion
 

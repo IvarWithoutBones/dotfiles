@@ -19,7 +19,7 @@ require 'nvim-treesitter.configs'.setup {
     incremental_selection = {
         enable = true,
         keymaps = {
-            init_selection = "<C-x>",
+            init_selection = "<C-j>",
             scope_incremental = "<C-j>",
             node_incremental = "<C-l>",
             node_decremental = "<C-h>",
@@ -79,7 +79,4 @@ require 'nvim-treesitter.configs'.setup {
             },
         },
     },
-
-    -- Show AST and interactively query it, uses the `playground` plugin
-    ['playground.enable'] = true,
 }
