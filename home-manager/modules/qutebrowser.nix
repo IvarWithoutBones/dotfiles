@@ -57,12 +57,14 @@ in
 
     searchEngines = {
       DEFAULT = "https://www.google.com/search?q={}";
-      git = "https://github.com/search?q={}";
-      nix = "https://search.nixos.org/packages?query={}&channel=unstable";
+      gh = "https://github.com/search?q={}";
+      nixpkg = "https://search.nixos.org/packages?query={}&channel=unstable";
       nixpkgs-prs = "https://github.com/NixOS/nixpkgs/pulls?q=is%3Aopen+{}";
       nixpkgs-issues = "https://github.com/NixOS/nixpkgs/issues?q=is%3Aopen+{}";
       repology = "https://repology.org/projects/?search={}";
       pip = "https://pypi.org/search/?q={}";
+      crates = "https://crates.io/search?q={}";
+      rstd = "https://doc.rust-lang.org/std/index.html?search={}";
       yt = "https://www.youtube.com/results?search_query={}";
       protondb = "https://www.protondb.com/search?q={}";
     };
@@ -85,19 +87,32 @@ in
       dotfiles = "https://github.com/ivarWithoutBones/dotfiles";
       ashley-dotfiles = "https://github.com/kira64xyz/ashley-nix";
       cppreference = "https://en.cppreference.com/w/cpp";
+      n64brew = "https://n64brew.dev/wiki";
       protonmail = "https://mail.protonmail.com/inbox";
-      nur-actions = "https://github.com/IvarWithoutBones/NUR/actions";
       youtube = "https://www.youtube.com/";
       catan = "https://colonist.io";
     };
 
-    # Apply theme
-    extraConfig = builtins.readFile
-      (pkgs.fetchurl {
-        name = "qutebrowser-dracula-theme.py";
-        url = "https://raw.githubusercontent.com/dracula/qutebrowser/ba5bd6589c4bb8ab35aaaaf7111906732f9764ef/draw.py";
-        sha256 = "sha256-skZYKoB8KSf8VG+5vqlSkg1q7uNZxIY/AizgtPxYyjQ=";
-      }) + "blood(c)";
+    # Apply the theme
+    extraConfig =
+      let
+        dracula-theme = pkgs.fetchurl {
+          name = "qutebrowser-dracula-theme.py";
+          url = "https://raw.githubusercontent.com/dracula/qutebrowser/ba5bd6589c4bb8ab35aaaaf7111906732f9764ef/draw.py";
+          sha256 = "sha256-skZYKoB8KSf8VG+5vqlSkg1q7uNZxIY/AizgtPxYyjQ=";
+        };
+      in
+      ''
+        # Import the theme directly from the nix store path to avoid having to use readFile
+        import importlib.util
+        import sys
+        theme_spec = importlib.util.spec_from_file_location("theme", "${dracula-theme}")
+        theme = importlib.util.module_from_spec(theme_spec)
+        sys.modules["theme"] = theme
+        theme_spec.loader.exec_module(theme)
+        # Apply the theme using the function defined in the imported file
+        theme.blood(c)
+      '';
   };
 
   home.file.".qutebrowser/greasemonkey" = lib.mkIf pkgs.stdenvNoCC.hostPlatform.isDarwin {
