@@ -1,26 +1,22 @@
-{ config
-, lib
+{ lib
 , pkgs
 , wayland
 , ...
 }:
 
 let
-  # Doing this with IFD is slow, but alacritty doesnt have an `extraConfig` option. :/
-  theme = lib.importJSON (pkgs.runCommand "yaml-to-json" {
-    nativeBuildInputs = [ pkgs.yaml2json ]; # We can only import json data
-    src = pkgs.fetchurl {
-      name = "alacritty-catpuccin-theme.yaml";
-      url = "https://raw.githubusercontent.com/catppuccin/alacritty/c2d27714b43984e47347c6d81216b7670a3fe07f/catppuccin.yml";
-      sha256 = "sha256-NFOOBFtLZqoURD4Xv2rtdfG5yvu57MgNddZJX5dZBZU=";
-    };
-  } ''
-    cp $src ./theme.yml
-    substituteInPlace ./theme.yml \
-      --replace "colors: *macchiato" "colors: *mocha"
-
-    yaml2json < ./theme.yml > $out
-  '');
+  theme = pkgs.runCommand "alacritty-catpuccin-theme.yml"
+    {
+      src = pkgs.fetchurl {
+        name = "alacritty-catpuccin-theme.yml";
+        url = "https://raw.githubusercontent.com/catppuccin/alacritty/c2d27714b43984e47347c6d81216b7670a3fe07f/catppuccin.yml";
+        sha256 = "sha256-NFOOBFtLZqoURD4Xv2rtdfG5yvu57MgNddZJX5dZBZU=";
+      };
+    } ''
+    cp $src $out
+    # Set the preferred variant of the theme
+    substituteInPlace $out --replace "colors: *macchiato" "colors: *mocha"
+  '';
 in
 {
   home.sessionVariables.TERMINAL = "alacritty";
@@ -29,7 +25,7 @@ in
     enable = true;
 
     settings = {
-      inherit (theme) color_schemes colors;
+      import = [ theme ];
 
       font = {
         normal.family = "FiraCode Nerd Font"; # TODO: inherit this from i3-sway/theme.nix
