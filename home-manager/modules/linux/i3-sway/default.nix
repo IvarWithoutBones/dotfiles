@@ -68,36 +68,37 @@ in
           "${workspaces.ws2}" = [{ class = "electronplayer"; }];
           "${workspaces.ws3}" = [
             { class = "discord"; }
-            { class = "Cinny"; }
+            { class = "element"; }
           ];
           "${workspaces.ws4}" = [{ class = "Psst-gui"; }];
           "${workspaces.ws10}" = [{ class = "Transmission-gtk"; }];
-          "${workspaces.ws5}" = [{ class = "Steam"; }];
+          "${workspaces.ws5}" = [{ class = "steam"; }];
         };
 
         floating.criteria = [
           # https://github.com/ValveSoftware/steam-for-linux/issues/1040
-          { class = "^Steam$"; title = "^Steam - Self Updater$"; }
-          { class = "^Steam$"; title = "^Screenshot Uploader$"; }
-          { class = "^Steam$"; title = "^Steam Guard - Computer Authorization Required$"; }
-          { class = "^Steam$"; title = ".* - Chat"; }
-          { class = "^Steam$"; title = ".* - event started"; }
-          { class = "^Steam$"; title = ".* CD key"; }
-          { class = "^Steam$"; title = "^Settings$"; }
-          { class = "^Steam$"; title = "Friends List"; }
-          { class = "^Steam$"; title = "Steam - News"; }
-          { class = "^Steam$"; title = "Add a Game"; }
-          { title = "^Steam Keyboard$"; }
+          { class = "steam"; title = "^Steam - Self Updater$"; }
+          { class = "steam"; title = "^Screenshot Uploader$"; }
+          { class = "steam"; title = "^Steam Guard - Computer Authorization Required$"; }
+          { class = "steam"; title = ".* - Chat"; }
+          { class = "steam"; title = ".* - event started"; }
+          { class = "steam"; title = ".* CD key"; }
+          { class = "steam"; title = "^Settings$"; }
+          { class = "steam"; title = "Friends List"; }
+          { class = "steam"; title = "Steam - News"; }
+          { class = "steam"; title = "Add a Game"; }
         ];
       };
     } // lib.optionalAttrs (windowManager == "sway") {
       wrapperFeatures.gtk = true;
     };
   } // lib.optionalAttrs (displayServer == "xsession") {
+    # Generate a script to start the X server, used by the login manager
     enable = true;
     scriptPath = ".hm-graphical-session";
   };
 
+  # Generate a script to start the wayland compositor, used by the login manager
   home.file.".hm-graphical-session".text = lib.optionalString (windowManager == "sway") ''
     ${lib.optionalString (hardware.gpu or "" == "nvidia") ''
       # Required for propietary nvidia drivers
