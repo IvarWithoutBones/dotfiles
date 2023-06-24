@@ -88,6 +88,7 @@ rec {
         ./home-manager/modules/linux/dunst.nix
         ./home-manager/modules/linux/xresources.nix
         ./home-manager/modules/linux/gtk.nix
+        ./home-manager/modules/linux/easy-effects.nix
         ./home-manager/modules/linux/i3-sway
       ] ++ ivv.home-manager.modules;
     };
