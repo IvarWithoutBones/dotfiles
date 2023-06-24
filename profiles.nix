@@ -76,6 +76,7 @@ rec {
       ./modules/linux/agenix.nix
       ./modules/linux/docker.nix
       ./modules/linux/perf.nix
+      ./modules/linux/audio.nix
       #./modules/linux/android.nix
     ] ++ ivv.modules;
 

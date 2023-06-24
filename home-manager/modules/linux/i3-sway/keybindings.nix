@@ -65,9 +65,10 @@
   "${mod}+Shift+0" = "move container to workspace ${workspaces.ws10}";
 
   # Volume control
-  "XF86AudioMute" = "exec amixer set Master toggle && amixer set Capture toggle";
-  "XF86AudioRaiseVolume" = "exec amixer set Master 5%+";
-  "XF86AudioLowerVolume" = "exec amixer set Master 5%-";
+  "XF86AudioRaiseVolume" = "exec ${pkgs.pamixer}/bin/pamixer --increase 5";
+  "XF86AudioLowerVolume" = "exec ${pkgs.pamixer}/bin/pamixer --decrease 5";
+  # Mute both the input and output devices
+  "XF86AudioMute" = "exec ${pkgs.pamixer}/bin/pamixer --toggle-mute && ${pkgs.pamixer}/bin/pamixer --default-source --toggle-mute";
 
   # Media player control
   "XF86AudioPause" = "exec ${pkgs.playerctl}/bin/playerctl play-pause";

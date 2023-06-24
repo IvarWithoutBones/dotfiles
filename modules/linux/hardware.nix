@@ -2,7 +2,6 @@
 , pkgs
 , lib
 , hardware
-, username
 , ...
 }:
 
@@ -39,9 +38,6 @@
   # Fixes tty resolution
   boot.loader.systemd-boot.consoleMode = if (hardware.gpu == "nvidia") then "max" else "keep";
 
-  sound.enable = hardware.sound or false;
-  users.users.${username}.extraGroups = lib.optionals hardware.sound [ "audio" ];
-
   hardware = {
     nvidia.package = lib.optionals (hardware.gpu == "nvidia") config.boot.kernelPackages.nvidiaPackages.stable;
     enableRedistributableFirmware = true;
@@ -50,17 +46,6 @@
       enable = true;
       driSupport32Bit = true;
       extraPackages32 = lib.optionals (hardware.gpu == "nvidia") [ pkgs.pkgsi686Linux.libva ];
-    };
-
-    pulseaudio = {
-      enable = hardware.sound;
-      support32Bit = hardware.sound;
-    } // lib.optionalAttrs (hardware.bluetooth or false) {
-      # For bluetooth headphones
-      package = pkgs.pulseaudioFull;
-      extraConfig = "
-        load-module module-switch-on-connect
-      ";
     };
 
     opentabletdriver = {
