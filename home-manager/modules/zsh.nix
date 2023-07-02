@@ -12,7 +12,7 @@
     history.path = "$HOME/.cache/zsh/history";
 
     enableAutosuggestions = true;
-    enableSyntaxHighlighting = true;
+    syntaxHighlighting.enable = true;
     autocd = true;
 
     localVariables = {
