@@ -29,8 +29,9 @@ in
       ltex-ls # Spelling suggestions
       taplo-lsp # TOML
       yaml-language-server # YAML
-      nodePackages.typescript-language-server # Typescript/javascript
-      nodePackages.vscode-langservers-extracted # JSON/HTML
+      nodePackages.typescript-language-server # Typescript/Javascript
+      nodePackages.vscode-json-languageserver # JSON
+      nodePackages.vscode-html-languageserver-bin # HTML
       python3Packages.python-lsp-server # Python
       sumneko-lua-language-server # Lua
       cmake-language-server # CMake
@@ -79,7 +80,7 @@ in
             omnisharp = { }; # C#
             taplo = { }; # TOML
             bashls = { }; # Bash
-            tsserver = { }; # Typescript/javascript
+            tsserver = { }; # Typescript/Javascript
             jsonls = { }; # JSON
             html = { }; # HTML
 
