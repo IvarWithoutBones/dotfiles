@@ -17,6 +17,17 @@ null_ls.setup {
                 "-L", ignored_words(), -- Ignore specified words
                 "-"                    -- Read from stdin
             },
+        }),
+
+        -- Formatting for shell scripts, requires the `shfmt` package.
+        null_ls.builtins.formatting.shfmt.with({
+            args = {
+                "--binary-next-line",
+                "--space-redirects",
+                "--case-indent",
+                "--simplify",
+                "-filename", "$FILENAME" -- Run on the current file
+            }
         })
     }
 }

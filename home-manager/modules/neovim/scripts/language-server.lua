@@ -49,11 +49,10 @@ local options = function(client, buffer)
         })
     end
 
-    if client.supports_method("textDocument/formatting") then
-        binding('<space>f', function()
-            vim.lsp.buf.format({ async = true })
-        end)
-    end
+    -- Format the current buffer
+    binding('<space>f', function()
+        vim.lsp.buf.format({ async = true })
+    end)
 
     -- Show information about function signature
     binding('<C-k>', vim.lsp.buf.signature_help)

@@ -11,7 +11,10 @@ in
     extraPackages = with pkgs; [
       nodejs # For Github Copilot
       ripgrep # For telescope's `live_grep`
-      codespell # For spell checking using null-ls-nvim
+
+      # Packages used by `null-ls-nvim`
+      codespell # Spell checking
+      shfmt # Shell script formatting
     ];
 
     extraPlugins = with pkgs.vimPlugins; [
@@ -80,7 +83,7 @@ in
       }
       {
         # Injects LSP diagnostics, code actions, etc for packages without a language server.
-        # Configuration requires the `codespell` package. This is a dependency of crates-nvim.
+        # Configuration requires the `codespell` and `shfmt` packages. Dependency of `crates-nvim`.
         plugin = null-ls-nvim;
         config = mkLuaFile ./scripts/plugins/null-ls.lua;
       }
@@ -154,14 +157,6 @@ in
         # Tree-like file manager
         plugin = nvim-tree-lua;
         config = mkLuaFile ./scripts/plugins/nvim-tree.lua;
-      }
-      {
-        # Formatting for languages without LSP formatting support
-        plugin = formatter-nvim;
-        config = mkLuaFile (pkgs.substituteAll {
-          src = ./scripts/plugins/formatter-nvim.lua;
-          shfmt = "${pkgs.shfmt}/bin/shfmt";
-        });
       }
 
       # Extra plugins for treesitter
