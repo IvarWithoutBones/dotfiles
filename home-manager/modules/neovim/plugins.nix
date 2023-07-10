@@ -10,12 +10,12 @@ in
   programs.nixvim = {
     extraPackages = with pkgs; [
       nodejs # For Github Copilot
-      ripgrep # Needed by :Telescope live_grep
+      ripgrep # For telescope's `live_grep`
+      codespell # For spell checking using null-ls-nvim
     ];
 
     extraPlugins = with pkgs.vimPlugins; [
       plenary-nvim # Dependency of telescope
-      null-ls-nvim # Dependency of crates-nvim
       nvim-web-devicons # Icon support
       editorconfig-nvim # Editorconfig support
       dressing-nvim # Better defaults for the basic UI
@@ -34,7 +34,6 @@ in
           })
         '';
       }
-
       {
         # Github copilot, requires nodejs
         plugin = copilot-vim;
@@ -78,6 +77,18 @@ in
         config = mkLua ''
           require("nvim-surround").setup()
         '';
+      }
+      {
+        # Injects LSP diagnostics, code actions, etc for packages without a language server.
+        # Configuration requires the `codespell` package. This is a dependency of crates-nvim.
+        plugin = null-ls-nvim;
+        config = mkLuaFile ./scripts/plugins/null-ls.lua;
+      }
+      {
+        # Information about Rust dependencies inside of Cargo.toml.
+        # Requires the `null-ls-nvim` and `coq_nvim` plugins.
+        plugin = crates-nvim;
+        config = mkLuaFile ./scripts/plugins/crates-nvim.lua;
       }
       {
         # Label-based code navigation
@@ -143,11 +154,6 @@ in
         # Tree-like file manager
         plugin = nvim-tree-lua;
         config = mkLuaFile ./scripts/plugins/nvim-tree.lua;
-      }
-      {
-        # Information about Rust dependencies inside of Cargo.toml
-        plugin = crates-nvim;
-        config = mkLuaFile ./scripts/plugins/crates-nvim.lua;
       }
       {
         # Formatting for languages without LSP formatting support
