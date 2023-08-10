@@ -41,7 +41,7 @@ in
         # Github copilot, requires nodejs
         plugin = copilot-vim;
         config = ''
-          " Accept sugggestions using ctrl-j instead of tab
+          " Accept suggestions using ctrl-j instead of tab
           let g:copilot_no_tab_map = v:true
           imap <silent><script><expr> <C-J> copilot#Accept("\<CR>")
         '';
