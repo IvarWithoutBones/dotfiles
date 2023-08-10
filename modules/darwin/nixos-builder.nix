@@ -4,14 +4,16 @@
 }:
 
 # Configuration for a NixOS virtual machine on which Nix can perform builds if linux-only packages are needed.
+# TODO: Use the `nixos-builder` nix-darwin module.
 
 let
   builderScript = pkgs.writeShellScriptBin "nixos-builder" ''
     set -xeuo pipefail
 
-    mkdir -p "$HOME/nix/nixos-builder"
-    cd "$HOME/nix/nixos-builder"
-    ${pkgs.darwin.builder}/bin/create-builder "''$*"
+    NIXOS_BUILDER_DIRECTORY="''${NIXOS_BUILDER_DIR:-$HOME/nix/nixos-builder}"
+    mkdir -p "$NIXOS_BUILDER_DIRECTORY"
+    cd "$NIXOS_BUILDER_DIRECTORY"
+    ${pkgs.darwin.linux-builder}/bin/create-builder "''$*"
   '';
 in
 {
