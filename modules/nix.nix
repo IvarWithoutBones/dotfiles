@@ -4,22 +4,28 @@
 , ...
 }:
 
+let
+  trustedAndAllowedUsers = [ "@wheel" username ];
+in
 {
   nixpkgs.config.allowUnfree = true;
 
   nix = {
     package = pkgs.nixUnstable;
-    registry.nixpkgs.flake = nixpkgs;
-
     gc.automatic = true;
 
-    settings = rec {
-      auto-optimise-store = true;
-      warn-dirty = false;
+    # Pin the flake registry's nixpkgs to the version from this flake.
+    registry.nixpkgs.flake = nixpkgs;
 
+    settings = {
       experimental-features = [ "nix-command" "flakes" ];
-      trusted-users = [ "@wheel" username ];
-      allowed-users = trusted-users;
+      trusted-users = trustedAndAllowedUsers;
+      allowed-users = trustedAndAllowedUsers;
+      warn-dirty = false; # Gets pretty annoying while working on a flake
+
+      # Can causes failures on Darwin, see https://github.com/NixOS/nix/issues/7273.
+      # TODO: Maybe add a launchctl service to run `nix store optimise` periodically?
+      auto-optimise-store = !pkgs.stdenvNoCC.isDarwin;
 
       substituters = [
         "https://ivar.cachix.org"
