@@ -64,6 +64,10 @@
   xdg = lib.mkIf pkgs.stdenvNoCC.isLinux {
     enable = true;
 
+    # Avoid activation failures when the mimeapps file already exists, as some packages (e.g. firefox) will overwrite it.
+    # See https://github.com/nix-community/home-manager/issues/1213.
+    configFile."mimeapps.list".force = true;
+
     mimeApps = {
       enable = true;
 

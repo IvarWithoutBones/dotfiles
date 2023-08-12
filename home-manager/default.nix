@@ -1,6 +1,4 @@
-{ config
-, ...
-}:
+{ ... }:
 
 {
   # Applies inside of the home-manager config
