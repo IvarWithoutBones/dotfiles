@@ -14,7 +14,7 @@ let
         nativeBuildInputs = [ pkgs.makeWrapper ];
       } ''
       # Symlinking is being a bit painful here. The desktop file is attempted to be
-      # removed by the home-manager module, which it cant if this derivation does not own it.
+      # removed by the home-manager module, which it can't if this derivation does not own it.
       mkdir -p $out
       cp -r ${pkgs.neovim-unwrapped}/* $out
       chmod -R +w $out
