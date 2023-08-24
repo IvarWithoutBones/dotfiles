@@ -48,6 +48,7 @@ rec {
           ./home-manager/modules/discord.nix
           ./home-manager/modules/qutebrowser.nix
           ./home-manager/modules/helix.nix
+          ./home-manager/modules/gdb.nix
         ];
 
         extraConfig = {
