@@ -53,6 +53,8 @@ with pkgs; {
 
   nixpkgs-pr = callPackage ./nixpkgs-pr { };
 
+  proton-ge-runner = callPackage ./proton-ge-runner { };
+
   qutebrowser-scripts = lib.recurseIntoAttrs (callPackage ./qutebrowser/scripts { });
 
   qutebrowser =

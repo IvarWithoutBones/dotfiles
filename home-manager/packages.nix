@@ -41,6 +41,7 @@
     # Package from my overlay
     speedtest
     sm64ex-practice
+    proton-ge-runner
 
     # Fonts. TODO: manage this from a module option?
     noto-fonts-emoji
