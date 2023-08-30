@@ -1,5 +1,4 @@
 { nixpkgs
-, home-manager
 , nix-darwin
 , flake-utils
 , ...
@@ -31,7 +30,7 @@ rec {
   };
 
   /* Generate a list of packages with an overlay applied, to be used as a flake output.
-     For convienience, attributes for all platforms in nixpkgs are generated.
+     For convenience, attributes for all platforms in nixpkgs are generated.
 
      Example:
         lib.packagesFromOverlay overlays.default
@@ -47,7 +46,7 @@ rec {
   }.packages;
 
   /* Generate a NixOS/nix-darwin configuration based on a profile, with optional home-manager support.
-     A common configuration (refered to as a "profile") is used to share code between flakes.
+     A common configuration (referred to as a "profile") is used to share code between flakes.
      This is used to avoid code repetition for flakes that configure multiple machines.
 
      Example:
@@ -209,4 +208,18 @@ rec {
       EOF
     '';
   };
+
+  # Generate keybindings for readline that apply to all modes, e.g. vi-command and vi-insert.
+  readlineBindingsAllModes = bindings: lib.concatMapStringsSep "\n"
+    (binding: ''
+      $if mode=vi
+        set keymap vi-command
+        ${binding}
+        set keymap vi-insert
+        ${binding}
+      $else
+        ${binding}
+      $endif
+    '')
+    bindings;
 }

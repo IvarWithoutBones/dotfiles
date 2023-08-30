@@ -1,22 +1,7 @@
-{ lib
+{ dotfiles-lib
 , ...
 }:
 
-let
-  # Creates keybindings that apply in the vi-insert, vi-command and emacs modes
-  mkKeyBindings = bindings: lib.concatMapStringsSep "\n"
-    (binding: ''
-      $if mode=vi
-        set keymap vi-command
-        ${binding}
-        set keymap vi-insert
-        ${binding}
-      $else
-        ${binding}
-      $endif
-    '')
-    bindings;
-in
 {
   programs.readline = {
     enable = true;
@@ -26,6 +11,7 @@ in
       history-size = 10000;
       expand-tilde = true;
       echo-control-characters = false;
+      convert-meta = true;
 
       # VI mode
       editing-mode = "vi";
@@ -44,11 +30,11 @@ in
       menu-complete-display-prefix = true;
     };
 
-    extraConfig = mkKeyBindings [
+    extraConfig = dotfiles-lib.readlineBindingsAllModes [
       "Control-l: clear-display"
       # Cycle through completion options
       "TAB: menu-complete"
-      "\"\\e[Z\": menu-complete-backward" # Shift-tab
+      ''"\e[Z": menu-complete-backward'' # Shift-tab
     ];
   };
 }
