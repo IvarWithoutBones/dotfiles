@@ -145,12 +145,7 @@
         pattern = "*";
         command = "setlocal formatoptions-=c formatoptions-=r formatoptions-=o";
       }
-    ] ++ lib.optional pkgs.stdenvNoCC.hostPlatform.isDarwin {
-      # TODO: investigate if this is still necessary
-      description = "Kill rust-analyzer manually when exiting because it doesn't on its own sometimes";
-      event = [ "ExitPre" ];
-      command = "!killall -QUIT rust-analyzer";
-    };
+    ];
   };
 }
 
