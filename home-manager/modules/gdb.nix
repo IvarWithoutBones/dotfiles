@@ -4,12 +4,13 @@
 , ...
 }:
 
-# Projects sometimes ship their own gdbinit file, to automatically load these you need to manually approve it.
-# Since the directory is dependent on the directory structure of the host, we dont configure it here.
-# These should be manually added to the `gdbearlyinit` file seeing how `gdbinit` is managed by nix.
-
 let
-  gdbConfig = ''
+  gdbearlyinit = ''
+    set startup-quietly on
+    set prompt ${"> "/* Prevents my editor from removing the trailing space */}
+  '';
+
+  gdbinit = ''
     set disassembly-flavor intel
     set max-value-size unlimited
     set disassemble-next-line on
@@ -63,28 +64,39 @@ let
       target remote localhost:9001
     end
 
-    ${lib.optionalString (extraConfigFile != null) ''
-      # Load the extra configuration file if it exists.
-      shell test ! -f "${extraConfigFile}"
-      if $_shell_exitcode
-        source ${extraConfigFile}
-      end
+    define hook-stop
+      # Manually refresh the TUI as writes to stdout/stderror will break it otherwise.
+      source ${pkgs.writeText "refresh-tui.py" ''
+        import gdb
+        # Refreshing the tui will automatically switch to it, so we need to check if was enabled prior.
+        if "(has focus)" in gdb.execute("info win", to_string=True):
+          gdb.execute("tui refresh")
+      ''}
+    end
+
+    # Load the extra configuration file, if it exists.
+    source ${pkgs.writeText "maybe-source-extra-config.py" ''
+      import gdb
+      import os
+      if os.path.isfile("${extraConfigFile}"):
+        gdb.execute("source ${extraConfigFile}")
     ''}
   '';
 
-  # Extra initialisation commands that cannot be apart of the general configuration, e.g. for loading symbol files.
-  # Unfortunately gdb does not look in $XDG_CONFIG_HOME on MacOS, so we have to pollute the home directory there instead. :/
   extraConfigFile =
     if pkgs.stdenvNoCC.isLinux then "${config.xdg.configHome}/gdb/gdbinit-extra"
     else if pkgs.stdenvNoCC.isDarwin then "${config.home.homeDirectory}/.gdbinit-extra"
-    else null;
+    else throw "gdb: unsupported platform ${pkgs.stdenvNoCC.system}";
 in
 {
-  xdg = lib.mkIf pkgs.stdenvNoCC.isLinux {
-    configFile."gdb/gdbinit".text = gdbConfig;
+  xdg.configFile = lib.mkIf pkgs.stdenvNoCC.isLinux {
+    "gdb/gdbinit".text = gdbinit;
+    "gdb/gdbearlyinit".text = gdbearlyinit;
   };
 
-  home = lib.mkIf pkgs.stdenvNoCC.isDarwin {
-    file.".gdbinit".text = gdbConfig;
+  # Unfortunately gdb does not look in $XDG_CONFIG_HOME on Darwin, so we have to pollute the home directory there instead :/
+  home.file = lib.mkIf pkgs.stdenvNoCC.isDarwin {
+    ".gdbinit".text = gdbinit;
+    ".gdbearlyinit".text = gdbearlyinit;
   };
 }
