@@ -1,5 +1,6 @@
 { lib
 , pkgs
+, config
 , ...
 }:
 
@@ -16,10 +17,10 @@ in
 
     settings = {
       colors.webpage.preferred_color_scheme = "dark";
-      downloads.location.directory = "$HOME/downloads";
+      downloads.location.directory = "${config.home.homeDirectory}/downloads";
 
       content = {
-        javascript.can_access_clipboard = true;
+        javascript.clipboard = "access";
 
         # Disable scrolling past the end of the page, which is an issue with gesture navigation
         user_stylesheets = lib.mkIf pkgs.stdenv.isDarwin (lib.toList
