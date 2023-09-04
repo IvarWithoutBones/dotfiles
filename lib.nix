@@ -209,17 +209,15 @@ rec {
     '';
   };
 
-  # Generate keybindings for readline that apply to all modes, e.g. vi-command and vi-insert.
-  readlineBindingsAllModes = bindings: lib.concatMapStringsSep "\n"
-    (binding: ''
-      $if mode=vi
-        set keymap vi-command
-        ${binding}
-        set keymap vi-insert
-        ${binding}
-      $else
-        ${binding}
-      $endif
-    '')
-    bindings;
+  # Generate keybindings for readline that apply to all modes: vi-command vi-insert and emacs.
+  readlineBindingsAllModes = bindings: ''
+    $if mode=vi
+      set keymap vi-command
+      ${bindings}
+      set keymap vi-insert
+      ${bindings}
+    $else
+      ${bindings}
+    $endif
+  '';
 }

@@ -30,11 +30,11 @@
       menu-complete-display-prefix = true;
     };
 
-    extraConfig = dotfiles-lib.readlineBindingsAllModes [
-      "Control-l: clear-display"
+    extraConfig = dotfiles-lib.readlineBindingsAllModes ''
+      Control-l: clear-display
       # Cycle through completion options
-      "TAB: menu-complete"
-      ''"\e[Z": menu-complete-backward'' # Shift-tab
-    ];
+      TAB: menu-complete
+      "\e[Z": menu-complete-backward # Shift-tab
+    '';
   };
 }
