@@ -1,5 +1,4 @@
-{ lib
-, pkgs
+{ pkgs
 , wayland
 , ...
 }:
@@ -17,6 +16,11 @@ let
     # Set the preferred variant of the theme
     substituteInPlace $out --replace "colors: *macchiato" "colors: *mocha"
   '';
+
+  fontSize =
+    if wayland then 13.5
+    else if pkgs.stdenvNoCC.isDarwin then 15.5
+    else 10.0;
 in
 {
   home.sessionVariables.TERMINAL = "alacritty";
@@ -28,11 +32,8 @@ in
       import = [ theme ];
 
       font = {
-        normal.family = "FiraCode Nerd Font"; # TODO: inherit this from i3-sway/theme.nix
-        size = 10.0;
-      } // lib.optionalAttrs wayland {
-        # For some reason the font looks a bit smaller on wayland
-        size = 13.5;
+        normal.family = "FiraCode Nerd Font";
+        size = fontSize;
       };
 
       key_bindings =

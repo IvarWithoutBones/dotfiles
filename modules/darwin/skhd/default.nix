@@ -1,5 +1,4 @@
-{ config
-, pkgs
+{ pkgs
 , lib
 , ...
 }:
@@ -77,10 +76,13 @@ in
       "shift + alt - r" = "launchctl kickstart -k gui/\${UID}/org.nixos.yabai && launchctl kickstart -k gui/\${UID}/org.nixos.skhd";
 
       # Application shortcuts
-      "alt - return" = "open -n ${pkgs.iterm2}/Applications/iTerm2.app";
       "shift + alt - d" = "open -n ${pkgs.discord}/Applications/Discord.app";
       "ctrl + shift + alt - d" = "killall discord";
       "shift + alt - w" = "yabai -m space --focus 2 && open -n ${pkgs.qutebrowser}/Applications/qutebrowser.app";
+      # I quite like iTerm2, but its much slower than alacritty when there is a lot of output.
+      # This doesn't use the direct path as a workaround for the following issue: https://github.com/koekeishiya/yabai/issues/1250#issuecomment-1181616780
+      "alt + shift - return" = "open -n -a 'Alacritty.app'";
+      "alt - return" = "open -n ${pkgs.iterm2}/Applications/iTerm2.app";
 
       # Moving focus and windows to different spaces
     } // mkSpaceShortcut "alt" "${yabai} -m space --focus"

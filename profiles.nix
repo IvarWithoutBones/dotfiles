@@ -35,6 +35,7 @@ rec {
         inherit username;
 
         modules = [
+          ./home-manager/modules/linux/alacritty.nix
           ./home-manager/default.nix
           ./home-manager/packages.nix
           ./home-manager/modules/nix-index.nix
@@ -85,7 +86,6 @@ rec {
       enable = true;
 
       modules = [
-        ./home-manager/modules/linux/alacritty.nix
         ./home-manager/modules/linux/dunst.nix
         ./home-manager/modules/linux/xresources.nix
         ./home-manager/modules/linux/gtk.nix
