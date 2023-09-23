@@ -25,7 +25,7 @@
     hexyl
     pcalc
     cargo-flamegraph
-    exa
+    eza
     gimp
 
     # Packages from my overlay
