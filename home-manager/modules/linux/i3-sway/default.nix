@@ -76,17 +76,8 @@ in
         };
 
         floating.criteria = [
-          # https://github.com/ValveSoftware/steam-for-linux/issues/1040
-          { class = "steam"; title = "^Steam - Self Updater$"; }
-          { class = "steam"; title = "^Screenshot Uploader$"; }
-          { class = "steam"; title = "^Steam Guard - Computer Authorization Required$"; }
-          { class = "steam"; title = ".* - Chat"; }
-          { class = "steam"; title = ".* - event started"; }
-          { class = "steam"; title = ".* CD key"; }
-          { class = "steam"; title = "^Settings$"; }
-          { class = "steam"; title = "Friends List"; }
-          { class = "steam"; title = "Steam - News"; }
-          { class = "steam"; title = "Add a Game"; }
+          # Default to floating windows for everything but the main window. See https://github.com/ValveSoftware/steam-for-linux/issues/1040
+          { class = "steam"; title = "[^Steam]"; }
         ];
       };
     } // lib.optionalAttrs (windowManager == "sway") {
@@ -101,7 +92,7 @@ in
   # Generate a script to start the wayland compositor, used by the login manager
   home.file.".hm-graphical-session".text = lib.optionalString (windowManager == "sway") ''
     ${lib.optionalString (hardware.gpu or "" == "nvidia") ''
-      # Required for propietary nvidia drivers
+      # Required for proprietary nvidia drivers
       export __GLX_VENDOR_LIBRARY_NAME=nvidia
       export GBM_BACKEND=nvidia-drm
       export WLR_NO_HARDWARE_CURSORS=1
