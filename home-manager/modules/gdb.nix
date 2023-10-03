@@ -11,95 +11,109 @@ let
     set prompt ${"> " /* Prevents my editor from removing the trailing space */ }
   '';
 
-  gdbinit = ''
-    set disassembly-flavor intel
-    set max-value-size unlimited
-    set disassemble-next-line on
-    set confirm off
-    set pagination off
-    set step-mode on
-
-    set history save on
-    set history remove-duplicates 20
-
-    set print address on
-    set print symbol-filename on
-    set print array on
-    set print pretty on
-    set print demangle on
-    set print asm-demangle on
-    set print object on
-    set print static-members on
-    set print vtbl on
-
-    set tui compact-source on
-    set tui border-mode normal
-    set tui active-border-mode bold
-    set style tui-border foreground magenta
-    set style tui-active-border foreground magenta
-
-    tui new-layout regs-horizontal {-horizontal asm 1 regs 1} 2 status 0 cmd 1
-    tui new-layout full {-horizontal asm 1 src 1} 2 status 0 cmd 1
-
-    define xn
-      # TODO: allow this to be an expression
-      x $arg1
-      set $i = 0
-      while $i < $arg0
-        x $__
-        set $i = $i + 1
-      end
-    end
-
-    define xx
-      xn 1 $arg0
-    end
-
-    define connect-remote
-      echo connecting to localhost:9001\n
-      target remote localhost:9001
-    end
-
-    define clear
-      source ${pkgs.writeText "clear-command-output.py" ''
-        import gdb
-        tuiEnabled = False
-        for line in gdb.execute("info win", to_string=True).splitlines():
-          if "(has focus)" in line:
-            # A hack to clear the cmd window in TUI mode. Surely there is a better way, but I can't find it.
-            tuiEnabled = True
-            win = line.split()[0]
-            gdb.execute(f"tui window height {win} +1")
-            gdb.execute(f"tui window height {win} -1")
-            gdb.execute("echo")
-            break
-        if not tuiEnabled:
-          gdb.execute("shell clear")
-      ''}
-    end
-
-    define hook-stop
-      # Manually refresh the TUI as writes to stdout/stderror will break it otherwise.
-      source ${pkgs.writeText "refresh-tui.py" ''
+  gdbinit =
+    let
+      refreshTui = pkgs.writeText "refresh-tui.py" ''
         import gdb
         # Refreshing the tui will automatically switch to it, so we need to check if was enabled prior.
         if "(has focus)" in gdb.execute("info win", to_string=True):
           gdb.execute("tui refresh")
-      ''}
-    end
+      '';
+    in
+    ''
+      set disassembly-flavor intel
+      set max-value-size unlimited
+      set disassemble-next-line on
+      set confirm off
+      set pagination off
+      set step-mode on
 
-    # Load the extra configuration file, if it exists.
-    source ${pkgs.writeText "maybe-source-extra-config.py" ''
-      import gdb
-      import os
-      if os.path.isfile("${extraConfigFile}"):
-        gdb.execute("source ${extraConfigFile}")
-    ''}
-  '';
+      set history save on
+      set history remove-duplicates 20
+
+      set print address on
+      set print symbol-filename on
+      set print array on
+      set print pretty on
+      set print demangle on
+      set print asm-demangle on
+      set print object on
+      set print static-members on
+      set print vtbl on
+
+      set tui compact-source on
+      set tui border-mode normal
+      set tui active-border-mode bold
+      set style tui-border foreground magenta
+      set style tui-active-border foreground magenta
+
+      tui new-layout regs-horizontal {-horizontal asm 1 regs 1} 2 status 0 cmd 1
+      tui new-layout full {-horizontal src 1 asm 1} 2 status 0 cmd 1
+
+      define xn
+        # TODO: allow this to be an expression
+        x $arg1
+        set $i = 0
+        while $i < $arg0
+          x $__
+          set $i = $i + 1
+        end
+      end
+
+      ${lib.concatMapStringsSep "\n" (amount: let
+        # Generate shorthands to follow pointer indirection, for example "xxx" -> dereference 3 times
+        name = lib.fixedWidthString (amount + 1) "x" "x";
+      in ''
+        define ${name}
+          xn ${toString amount} $arg0
+        end
+      '') (lib.range 1 10)}
+
+      define less
+        || ${pkgs.less}/bin/less
+        # Giving less access to the terminal breaks the TUI, so we need to manually refresh it
+        source ${refreshTui}
+      end
+
+      define connect-remote
+        if $argc == 0
+          init-if-undefined $connectRemoteAddress = "localhost:9001"
+          set $_connectRemoteAddress = $connectRemoteAddress
+        end
+        if $argc == 1
+          set $_connectRemoteAddress = $arg0
+        end
+
+        eval "echo connecting to \"%s\"\n", $_connectRemoteAddress
+        eval "target remote %s", $_connectRemoteAddress
+      end
+
+      define hook-stop
+        # Manually refresh the TUI as writes to stdout/stderror will break it otherwise.
+        source ${refreshTui}
+      end
+
+      # Load the extra configuration file, if it exists.
+      source ${pkgs.writeText "maybe-source-extra-config.py" ''
+        import gdb
+        import os
+        if os.path.isfile("${extraConfigFile}"):
+          gdb.execute("source ${extraConfigFile}")
+      ''}
+    '';
 
   # Keybindings are configured through readline.
   bindings =
     let
+      changeActiveWindowSize = dimension: amount: pkgs.writeText "change-active-window-${dimension}.py" ''
+        import gdb
+        for line in gdb.execute("info win", to_string=True).splitlines():
+          if "(has focus)" in line:
+            win = line.split()[0]
+            gdb.execute(f"tui window ${dimension} {win} ${amount}")
+            break
+      '';
+
       # This is a pretty nasty workaround for readline not accepting more than one command per binding:
       # We assign a placeholder shortcut to the command we want to execute, and then "press" it in a macro.
       clearLine = ''\xBA\xDD\x06\xFA\xCE\xF0\x0D\xCA\xFE'';
@@ -112,12 +126,30 @@ let
       # Step one instruction/line
       Meta-p: ${insertCommand "step"}
       Control-p: ${insertCommand "stepi"}
+
       # Step one instruction/line, but step over function calls
       Meta-o: ${insertCommand "next"}
       Control-o: ${insertCommand "nexti"}
 
+      # Continue execution until the current function returns
+      Control-f: ${insertCommand "finish"}
+
+      # View the output of the previous command in less
+      Control-k: ${insertCommand "less"}
+
+      # Switch settings for displaying the current file name, as it can be too long to fit in the TUI windows.
+      "\C-gff": ${insertCommand "set print symbol-filename on\\nset filename-display relative"}
+      "\C-gfs": ${insertCommand "set print symbol-filename on\\nset filename-display basename"}
+      "\C-gfo": ${insertCommand "set print symbol-filename off"}
+
+      # Change the size of the currently focused window
+      Meta-s: ${insertCommand "source ${changeActiveWindowSize "height" "+2"}"}
+      Meta-w: ${insertCommand "source ${changeActiveWindowSize "height" "-2"}"}
+      Meta-d: ${insertCommand "source ${changeActiveWindowSize "width" "+2"}"}
+      Meta-a: ${insertCommand "source ${changeActiveWindowSize "width" "-2"}"}
+
       # Cycle between register groups
-      Control-g: ${insertCommand "tui reg next"}
+      "\C-w\C-r": ${insertCommand "tui reg next"}
 
       # Switch to various layouts
       "\C-wa": ${insertCommand "layout asm"}
