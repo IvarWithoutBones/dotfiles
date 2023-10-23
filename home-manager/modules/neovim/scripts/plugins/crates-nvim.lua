@@ -1,9 +1,8 @@
 require('crates').setup {
     src = {
-        coq = {
-            -- Enable completion, requires the `coq_nvim` plugin
+        -- Enable completion, requires the `nvim-cmp` plugin
+        cmp = {
             enabled = true,
-            name = "crates.nvim",
         },
     },
 

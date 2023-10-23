@@ -6,20 +6,16 @@ local function binding(key, action, mode)
 end
 
 -- Disable highlight of current context by indent-blankline when beginning a motion
-local indentLineColors = {}
 vim.api.nvim_create_autocmd('User', {
     pattern = 'LeapEnter',
     callback = function()
-        indentLineColors = vim.api.nvim_get_hl_by_name("IndentBlanklineContextChar", true)
-        -- Set the highlight to be the same as unselected contexts
-        vim.api.nvim_set_hl(0, 'IndentBlanklineContextChar', { link = 'IndentBlanklineChar' })
+        vim.cmd("IBLDisable")
     end
 })
 vim.api.nvim_create_autocmd('User', {
     pattern = 'LeapLeave',
     callback = function()
-        -- Restore the old highlight
-        vim.api.nvim_set_hl(0, 'IndentBlanklineContextChar', indentLineColors)
+        vim.cmd("IBLEnable")
     end
 })
 

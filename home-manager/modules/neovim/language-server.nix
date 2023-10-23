@@ -26,7 +26,6 @@ in
 {
   programs.nixvim = {
     package = with pkgs; nvimWithDefaultPackages [
-      ltex-ls # Spelling suggestions
       taplo-lsp # TOML
       yaml-language-server # YAML
       nodePackages.typescript-language-server # Typescript/Javascript
@@ -62,11 +61,17 @@ in
 
     extraPlugins = with pkgs.vimPlugins; [
       nvim-lspconfig # Language server configuration presets
-      coq_nvim # Completion engine
 
-      # Snippets & more
-      coq-artifacts
-      coq-thirdparty
+      # Completion engine and its sources
+      nvim-cmp
+      cmp-nvim-lsp
+      cmp-path
+      cmp-buffer
+      cmp-cmdline
+      cmp-git
+      cmp-dictionary
+      luasnip
+      lspkind-nvim
     ];
 
     extraConfigVim =
@@ -148,24 +153,17 @@ in
                 telemetry.enable = false;
               };
             };
-
-            # Spelling suggestions
-            ltex = {
-              completionEnabled = true;
-              settings.ltex = {
-                dictionary."en-US" = [
-                  "NixOS"
-                  "nixos"
-                  "Nix"
-                  "nix"
-                  "dotfiles"
-                  "nixpkgs"
-                  "neovim"
-                  "vim"
-                ];
-              };
-            };
           });
+
+          # The english dictionary for usage with cmp-dictionary
+          englishDictionary = pkgs.runCommand "english-dictionary"
+            {
+              nativeBuildInputs = [ pkgs.aspell ];
+              ASPELL_CONF = "dict-dir ${pkgs.aspellDicts.en}/lib/aspell";
+            }
+            ''
+              aspell -d en dump master | aspell -l en expand > $out
+            '';
         };
       in
       dotfiles-lib.vim.mkLuaFile language-server;
