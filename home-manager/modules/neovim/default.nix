@@ -64,70 +64,46 @@
       scrolloff = 5;
     };
 
-    maps =
-      let
-        silent = action: {
-          inherit action;
-          silent = true;
-        };
+    keymaps = [
+      # Space mappings break without this
+      { mode = "n"; key = "<space>"; action = "<nop>"; }
 
-        # Use `ALT+{h,j,k,l}` to navigate windows from any mode.
-        # This generates an attribute set that looks as follows:
-        # { normal = { "<A-h>" = "<C-w>h"; "<A-j>" = "<C-w>j"; ... }; insert = { ... }; ... }
-        navigate =
-          let
-            keys = [ "h" "j" "k" "l" ];
-            modes = rec {
-              normal = "<C-w>";
-              insert = "<C-\\><C-N><C-w>";
-              terminal = insert;
-            };
-          in
-          lib.mapAttrs
-            (mode: escape:
-              builtins.listToAttrs (builtins.map
-                (key: {
-                  name = "<A-${key}>";
-                  value = escape + key;
-                })
-                keys))
-            modes;
-      in
-      lib.recursiveUpdate navigate {
-        visual = {
-          # Stay in visual mode after indenting a block
-          ">" = ">gv";
-          "<" = "<gv";
-        };
+      # Add a newline without going into insert mode
+      { mode = "n"; key = "<enter>"; action = "o<esc>"; }
 
-        normal = {
-          # Space mappings break without this
-          "<space>" = "<nop>";
+      # Start a case-sensitive regex substitution
+      { mode = "n"; key = "gs"; action = ":%s/\\C"; }
 
-          # Add a newline without going into insert mode
-          "<enter>" = "o<esc>";
+      # Jump between diagnostics
+      { mode = "n"; key = "<space>dn"; options.silent = true; action = ":lua vim.diagnostic.goto_next({ float = false })<cr>"; }
+      { mode = "n"; key = "<space>dN"; options.silent = true; action = ":lua vim.diagnostic.goto_prev({ float = false })<cr>"; }
 
-          # Find and replace a string in the current buffer
-          "rf" = silent ":luafile ${./scripts/find-and-replace.lua}<cr>";
+      # Use `Control+Alt+{h,j,k,l}` to resize buffers
+      { mode = "n"; key = "<C-A-h>"; options.silent = true; action = ":vertical resize -2<cr>"; }
+      { mode = "n"; key = "<C-A-j>"; options.silent = true; action = ":resize +2<cr>"; }
+      { mode = "n"; key = "<C-A-k>"; options.silent = true; action = ":resize -2<cr>"; }
+      { mode = "n"; key = "<C-A-l>"; options.silent = true; action = ":vertical resize +2<cr>"; }
 
-          # Use `Alt+Shift+{h,j,k,l}` to resize splits
-          "<A-J>" = silent ":resize +2<CR>";
-          "<A-K>" = silent ":resize -2<CR>";
-          "<A-L>" = silent ":vertical resize +2<CR>";
-          "<A-H>" = silent ":vertical resize -2<CR>";
+      # Use `Alt+{h,j,k,l}` to navigate buffers from normal mode
+      { mode = "n"; key = "<A-h>"; action = "<C-w>h"; }
+      { mode = "n"; key = "<A-j>"; action = "<C-w>j"; }
+      { mode = "n"; key = "<A-k>"; action = "<C-w>k"; }
+      { mode = "n"; key = "<A-l>"; action = "<C-w>l"; }
 
-          # Diagnostics
-          "<space>dn" = silent ":lua vim.diagnostic.goto_next({ float = false })<cr>";
-          "<space>dN" = silent ":lua vim.diagnostic.goto_prev({ float = false })<cr>";
+      # Use `Alt+{h,j,k,l}` to navigate buffers from terminal mode
+      { mode = [ "t" ]; key = "<A-h>"; action = "<C-\\><C-N><C-w>h"; }
+      { mode = [ "t" ]; key = "<A-j>"; action = "<C-\\><C-N><C-w>j"; }
+      { mode = [ "t" ]; key = "<A-k>"; action = "<C-\\><C-N><C-w>k"; }
+      { mode = [ "t" ]; key = "<A-l>"; action = "<C-\\><C-N><C-w>l"; }
 
-          # Start a case-sensitive regex substitution
-          "gs" = ":%s/\\C";
-        };
-      };
+      # Stay in visual mode after indenting a block
+      { mode = "v"; key = ">"; action = ">gv"; }
+      { mode = "v"; key = "<"; action = "<gv"; }
+    ];
 
     autoCmd = [
       {
-        description = "Change the working directory to a git repository's root";
+        desc = "Change the working directory to a git repository's root";
         event = [ "VimEnter" ];
         pattern = "*";
         # Unfortunately there is no API to run a lua function directly, so we have to write it to a file
@@ -140,7 +116,7 @@
       }
 
       {
-        description = "Disable insertion of a comment character when starting a new line";
+        desc = "Disable insertion of a comment character when starting a new line";
         event = [ "FileType" ];
         pattern = "*";
         command = "setlocal formatoptions-=c formatoptions-=r formatoptions-=o";
