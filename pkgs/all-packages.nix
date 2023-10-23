@@ -75,8 +75,5 @@ with pkgs; {
   tree-sitter-grammars = prev.tree-sitter-grammars //
     lib.recurseIntoAttrs (import ./tree-sitter-grammars);
 
-  vimPlugins = prev.vimPlugins //
-    lib.recurseIntoAttrs (callPackage ./vim-plugins { });
-
   yabai-zsh-completions = callPackage ./yabai-zsh-completions { };
 }
