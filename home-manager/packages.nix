@@ -27,6 +27,7 @@
     cargo-flamegraph
     eza
     gimp
+    ghidra
 
     # Packages from my overlay
     dotfiles-tool

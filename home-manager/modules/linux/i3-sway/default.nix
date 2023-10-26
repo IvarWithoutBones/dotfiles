@@ -76,8 +76,9 @@ in
         };
 
         floating.criteria = [
-          # Default to floating windows for everything but the main window. See https://github.com/ValveSoftware/steam-for-linux/issues/1040
-          { class = "steam"; title = "[^Steam]"; }
+          # Default to floating windows for everything but the main window.
+          { class = "steam"; title = "[^Steam]"; } # See https://github.com/ValveSoftware/steam-for-linux/issues/1040
+          { class = "ghidra-Ghidra"; title = "^(?!CodeBrowser.*)"; }
         ];
       };
     } // lib.optionalAttrs (windowManager == "sway") {
