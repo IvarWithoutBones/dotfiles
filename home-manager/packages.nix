@@ -27,7 +27,6 @@
     cargo-flamegraph
     eza
     gimp
-    ghidra
 
     # Packages from my overlay
     dotfiles-tool
@@ -48,6 +47,7 @@
     noto-fonts-emoji
     (nerdfonts.override { fonts = [ "FiraCode" ]; })
 
+    ghidra # TODO: enable on Darwin when it isn't broken there anymore.
     vscode-fhs
     arandr
     ares

@@ -32,7 +32,7 @@
   "${mod}+Ctrl+l" = "resize grow width 10 px or 10 ppt";
   "${mod}+Ctrl+k" = "resize shrink height 10 px or 10 ppt";
   "${mod}+Ctrl+j" = "resize grow height 10 px or 10 ppt";
-  "${mod}+Shift+Ctrl" = "split h";
+  "${mod}+Shift+Ctrl+h" = "split h";
   "${mod}+n" = "move workspace to output right";
   "${mod}+v" = "split v";
   "${mod}+s" = "layout stacking";
