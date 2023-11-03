@@ -23,9 +23,10 @@
     };
 
     extraConfig = ''
-      yabai -m rule --add app='System Preferences' manage=off
+      yabai -m rule --add app='System Settings' manage=off
       yabai -m rule --add app='Boot Camp Assistant' manage=off
       yabai -m rule --add app='System Information' manage=off
+      yabai -m rule --add app='Ghidra' title!='^CodeBrowser$' manage=off
       yabai -m rule --add app='SwiftBar' manage=off
       yabai -m rule --add app='Widgets Manager' manage=off # From pock
       yabai -m rule --add app="Discord" space=3
