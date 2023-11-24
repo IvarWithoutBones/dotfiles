@@ -69,7 +69,6 @@ in
       cmp-buffer
       cmp-cmdline
       cmp-git
-      cmp-dictionary
       luasnip
       lspkind-nvim
     ];
@@ -86,8 +85,13 @@ in
             taplo = { }; # TOML
             bashls = { }; # Bash
             tsserver = { }; # Typescript/Javascript
-            jsonls = { }; # JSON
             html = { }; # HTML
+
+            # JSON
+            jsonls = {
+              # lspconfig expects "vscode-json-language-server", but nixpkgs provides it under a different name
+              cmd = [ "vscode-json-languageserver" "--stdio" ];
+            };
 
             # YAML
             yamlls = {
@@ -154,16 +158,6 @@ in
               };
             };
           });
-
-          # The english dictionary for usage with cmp-dictionary
-          englishDictionary = pkgs.runCommand "english-dictionary"
-            {
-              nativeBuildInputs = [ pkgs.aspell ];
-              ASPELL_CONF = "dict-dir ${pkgs.aspellDicts.en}/lib/aspell";
-            }
-            ''
-              aspell -d en dump master | aspell -l en expand > $out
-            '';
         };
       in
       dotfiles-lib.vim.mkLuaFile language-server;

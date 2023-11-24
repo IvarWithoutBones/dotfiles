@@ -1,4 +1,4 @@
--- Always show the signcolumn, otherwise text would be shifted upon errors
+-- Always show the signcolumn, otherwise text would be shifted when showing errors
 vim.opt.signcolumn = "yes"
 
 -- Replace existing signs for diagnostics with our icons
@@ -27,14 +27,29 @@ local luasnip = require("luasnip")
 vim.keymap.set({ "i", "n" }, "<C-h>", function() luasnip.jump(1) end, { silent = true })
 
 -- nvim-cmp setup
+local cmp_buffer = require("cmp_buffer")
 local cmp = require("cmp")
 cmp.setup {
     sources = {
-        { name = "nvim_lsp",   priority = 10 },
-        { name = "path",       priority = 9 },
-        { name = "luasnip",    priority = 5 },
-        { name = "buffer",     priority = 1, keyword_length = 2 },
-        { name = "dictionary", priority = 1, keyword_length = 2 },
+        { name = "nvim_lsp", priority = 10 },
+        { name = "path",     priority = 9 },
+        { name = "luasnip",  priority = 5 },
+        {
+            name = "buffer",
+            option = {
+                get_bufnrs = function()
+                    -- Complete from all open buffers, not only the one that is currently active
+                    return vim.api.nvim_list_bufs()
+                end
+            }
+        },
+    },
+
+    sorting = {
+        comparators = {
+            -- Sort buffer completion items by distance from the cursor
+            function(...) return cmp_buffer:compare_locality(...) end,
+        }
     },
 
     snippet = {
@@ -89,7 +104,6 @@ cmp.setup {
                 nvim_lsp = "[LSP]",
                 luasnip = "[LuaSnip]",
                 path = "[Path]",
-                dictionary = "[Dict]",
             })
         })
     },
@@ -102,18 +116,6 @@ cmp.setup.filetype('gitcommit', {
         { name = 'git' },
         { name = 'buffer' },
     })
-})
-
--- Completion from a dictionary
-local dict = require("cmp_dictionary")
-dict.setup({
-    max_items = 5,
-})
-dict.switcher({
-    spelllang = {
-        -- Will get substituted to a path containing the required file
-        en = "@englishDictionary@",
-    },
 })
 
 -- Use the cmp completion menu for searching through the current buffer
