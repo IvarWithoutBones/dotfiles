@@ -1,43 +1,40 @@
 local function map(key, cmd)
-    vim.api.nvim_set_keymap('n', key, cmd, { noremap = true, silent = true })
+    local binding = '<cmd>' .. cmd .. '<cr>'
+    vim.api.nvim_set_keymap('n', key, binding, { noremap = true, silent = true })
 end
+
+vim.g.barbar_auto_setup = false -- Disable auto-setup so we can supply our own config
 
 require 'bufferline'.setup {
     animation = false,
+    tabpages = false,
     insert_at_end = true,
+
     icons = {
-        pinned = {
-            button = '',
-        }
+        separator_at_end = false,
+        pinned = { button = '' },
     }
 }
 
 -- Move to the previous and next
-map('<A-,>', '<cmd>BufferPrevious<cr>')
-map('<A-.>', '<cmd>BufferNext<cr>')
+map('<A-,>', 'BufferPrevious')
+map('<A-.>', 'BufferNext')
 
 -- Re-order the previous and next
-map('<A-<>', '<cmd>BufferMovePrevious<cr>')
-map('<A->>', '<cmd>BufferMoveNext<cr>')
+map('<A-<>', 'BufferMovePrevious')
+map('<A->>', 'BufferMoveNext')
 
--- Close and force close
-map('<A-q>', '<cmd>BufferClose<cr>')
-map('<A-Q>', '<cmd>BufferClose!<cr>')
+-- Close and restore
+map('<A-q>', 'BufferClose')
+map('<A-s-q>', 'BufferRestore')
+map('<A-s-c-q>', 'BufferClose!')                 -- Force close
 
--- Pin or unpin
-map('<A-p>', '<cmd>BufferPin<cr>')
-
--- Close all but the current and pinned
-map('<A-x>', '<cmd>BufferCloseAllButCurrentOrPinned<cr>')
-
--- Sort all by directory
-map('<A-s>', '<cmd>BufferOrderByDirectory<cr>')
-
--- Jump by label
-map('<A-b>', '<cmd>BufferPick<cr>')
+map('<A-p>', 'BufferPin')                        -- Pin or unpin the current buffer
+map('<A-x>', 'BufferCloseAllButCurrentOrPinned') -- Close all but the current and pinned
+map('<A-b>', 'BufferPick')                       -- Jump by label
 
 -- Jump by position
-for itr = 1, 9 do
-    map('<A-' .. itr .. '>', '<cmd>BufferGoto ' .. itr .. '<cr>')
+for idx = 1, 9 do
+    map('<A-' .. idx .. '>', 'BufferGoto ' .. idx .. '')
 end
-map('<A-0>', '<cmd>BufferLast<cr>')
+map('<A-0>', 'BufferLast')

@@ -32,6 +32,3 @@ end
 
 binding('s', function() searchAnywhere() end)
 binding('s', function() searchAnywhere() end, 'v')
-
--- Fade the background while doing a motion, this makes it easier to see the labels
-vim.api.nvim_set_hl(0, 'LeapBackdrop', { link = 'Comment' })

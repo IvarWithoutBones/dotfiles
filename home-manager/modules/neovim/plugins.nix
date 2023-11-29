@@ -64,7 +64,14 @@ in
         # Display LSP progress messages
         plugin = fidget-nvim;
         config = mkLua ''
-          require("fidget").setup()
+          require("fidget").setup {
+            notification = {
+              window = {
+              -- Required for catpuccin
+                winblend = 0,
+              },
+            }
+          }
         '';
       }
       {

@@ -73,6 +73,7 @@
 
       # Start a case-sensitive regex substitution
       { mode = "n"; key = "gs"; action = ":%s/\\C"; }
+      { mode = "v"; key = "gs"; action = ":s/\\C\\%V"; } # %V matches the selection instead of the whole line
 
       # Jump between diagnostics
       { mode = "n"; key = "<space>dn"; options.silent = true; action = ":lua vim.diagnostic.goto_next({ float = false })<cr>"; }
