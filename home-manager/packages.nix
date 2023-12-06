@@ -42,6 +42,7 @@
     speedtest
     sm64ex-practice
     proton-ge-runner
+    signal-desktop
 
     # Fonts. TODO: manage this from a module option?
     noto-fonts-emoji
