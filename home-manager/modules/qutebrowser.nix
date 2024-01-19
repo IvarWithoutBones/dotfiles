@@ -16,8 +16,14 @@ in
     enable = true;
 
     settings = {
-      colors.webpage.preferred_color_scheme = "dark";
       downloads.location.directory = "${config.home.homeDirectory}/downloads";
+      colors.webpage.preferred_color_scheme = "dark";
+      content.pdfjs = true; # Preview PDFs by default, instead of asking to download them
+
+      url = {
+        start_pages = "https://www.google.com";
+        default_page = "https://www.google.com";
+      };
 
       content = {
         javascript.clipboard = "access";
@@ -29,11 +35,6 @@ in
               overscroll-behavior: none;
             }
           '').outPath);
-      };
-
-      url = {
-        start_pages = "https://www.google.com";
-        default_page = "https://www.google.com";
       };
     };
 
@@ -52,8 +53,9 @@ in
 
     aliases = {
       "mpv" = "spawn --verbose --detach ${pkgs.mpv}/bin/mpv {url}";
-      "nixpkgs-tracker" = "spawn --userscript ${userscripts.nixpkgs-tracker}/bin/qute-nixpkgs-tracker {url}";
-      "fake-fullscreen" = "spawn --userscript ${userscripts.fake-fullscreen}/bin/qute-fake-fullscreen";
+      "nixpkgs-tracker" = "spawn --userscript --output-messages ${userscripts.nixpkgs-tracker}/bin/qute-nixpkgs-tracker {url}";
+      "fake-fullscreen" = "spawn --userscript --output-messages ${userscripts.fake-fullscreen}/bin/qute-fake-fullscreen";
+      "docsrs" = "spawn --userscript --output-messages ${userscripts.docsrs}/bin/qute-docsrs";
     };
 
     searchEngines = {
@@ -64,10 +66,10 @@ in
       nixpkgs-issues = "https://github.com/NixOS/nixpkgs/issues?q=is%3Aopen+{}";
       repology = "https://repology.org/projects/?search={}";
       pip = "https://pypi.org/search/?q={}";
-      crates = "https://crates.io/search?q={}";
-      rstd = "https://doc.rust-lang.org/std/index.html?search={}";
       yt = "https://www.youtube.com/results?search_query={}";
       protondb = "https://www.protondb.com/search?q={}";
+      rstd = "https://doc.rust-lang.org/std/index.html?search={}";
+      crates = "https://crates.io/search?q={}";
     };
 
     quickmarks = {
