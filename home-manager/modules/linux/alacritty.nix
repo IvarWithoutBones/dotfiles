@@ -4,18 +4,10 @@
 }:
 
 let
-  theme = pkgs.runCommand "alacritty-catpuccin-theme.yml"
-    {
-      src = pkgs.fetchurl {
-        name = "alacritty-catpuccin-theme.yml";
-        url = "https://raw.githubusercontent.com/catppuccin/alacritty/c2d27714b43984e47347c6d81216b7670a3fe07f/catppuccin.yml";
-        sha256 = "sha256-NFOOBFtLZqoURD4Xv2rtdfG5yvu57MgNddZJX5dZBZU=";
-      };
-    } ''
-    cp $src $out
-    # Set the preferred variant of the theme
-    substituteInPlace $out --replace "colors: *macchiato" "colors: *mocha"
-  '';
+  theme = pkgs.fetchurl {
+    url = "https://raw.githubusercontent.com/catppuccin/alacritty/f2da554ee63690712274971dd9ce0217895f5ee0/catppuccin-mocha.toml";
+    hash = "sha256-nmVaYJUavF0u3P0Qj9rL+pzcI9YQOTGPyTvi+zNVPhg=";
+  };
 
   fontSize =
     if wayland then 13.5
@@ -36,7 +28,7 @@ in
         size = fontSize;
       };
 
-      key_bindings =
+      keyboard.bindings =
         let
           mod = "Alt";
         in
