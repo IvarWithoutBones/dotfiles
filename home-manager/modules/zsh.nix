@@ -9,7 +9,7 @@
     enable = true;
 
     defaultKeymap = "viins";
-    history.path = "$HOME/.cache/zsh/history";
+    history.path = "${config.xdg.cacheHome}/zsh/history";
 
     enableAutosuggestions = true;
     syntaxHighlighting.enable = true;

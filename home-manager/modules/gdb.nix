@@ -6,6 +6,15 @@
 }:
 
 let
+  # An extra (mutable) configuration file for stuff we cannot configure with home-manager,
+  # used mainly for shortcut `define`s to load symbol files from locally compiled projects.
+  extraConfigFile =
+    if pkgs.stdenvNoCC.isLinux then "${config.xdg.configHome}/gdb/gdbinit-extra"
+    else if pkgs.stdenvNoCC.isDarwin then "${config.home.homeDirectory}/.gdbinit-extra"
+    else throw "gdb: unsupported platform ${pkgs.stdenvNoCC.system}";
+
+  cacheDir = "${config.xdg.cacheHome}/gdb";
+
   gdbearlyinit = ''
     set startup-quietly on
     set prompt ${"> " /* Prevents my editor from removing the trailing space */ }
@@ -29,6 +38,8 @@ let
       set step-mode on
 
       set history save on
+      set history filename ${cacheDir}/history
+      set history size 10000
       set history remove-duplicates 20
 
       set print address on
@@ -164,11 +175,6 @@ let
       "\C-x1": tui-delete-other-windows # Switch to TUI with one window (source, assembly)
       "\C-x2": tui-change-windows       # Switch to TUI with two windows (split, registers)
     '';
-
-  extraConfigFile =
-    if pkgs.stdenvNoCC.isLinux then "${config.xdg.configHome}/gdb/gdbinit-extra"
-    else if pkgs.stdenvNoCC.isDarwin then "${config.home.homeDirectory}/.gdbinit-extra"
-    else throw "gdb: unsupported platform ${pkgs.stdenvNoCC.system}";
 in
 {
   xdg.configFile = lib.mkIf pkgs.stdenvNoCC.isLinux {
@@ -176,10 +182,19 @@ in
     "gdb/gdbearlyinit".text = gdbearlyinit;
   };
 
-  # Unfortunately gdb does not look in $XDG_CONFIG_HOME on Darwin, so we have to pollute the home directory there instead :/
-  home.file = lib.mkIf pkgs.stdenvNoCC.isDarwin {
-    ".gdbinit".text = gdbinit;
-    ".gdbearlyinit".text = gdbearlyinit;
+  home = {
+    packages = [ pkgs.gdb ];
+
+    # Unfortunately GDB does not look in $XDG_CONFIG_HOME on Darwin, so we have to pollute the home directory instead.
+    file = lib.mkIf pkgs.stdenvNoCC.isDarwin {
+      ".gdbinit".text = gdbinit;
+      ".gdbearlyinit".text = gdbearlyinit;
+    };
+
+    activation.gdbCacheDir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      # Create the cache directory, if it does already exist.
+      $DRY_RUN_CMD mkdir $VERBOSE_ARG -p ${cacheDir}
+    '';
   };
 
   programs.readline.extraConfig = ''
