@@ -57,11 +57,11 @@ with pkgs; {
 
   qutebrowser-scripts = lib.recurseIntoAttrs (callPackage ./qutebrowser/scripts { });
 
+  # The qt6 version of qtwebengine (which qutebrowser by default depends on) is not in the binary cache on Darwin,
+  # presumably because of a build failure. We can simply use the qt5 version instead for now.
   qutebrowser =
-    if stdenvNoCC.isDarwin && stdenvNoCC.isx86_64 then
-      callPackage ./qutebrowser/darwin.nix { }
-    else
-      prev.qutebrowser;
+    if stdenvNoCC.isDarwin then prev.qutebrowser-qt5
+    else prev.qutebrowser;
 
   read-macos-alias = callPackage ./read-macos-alias { };
 
