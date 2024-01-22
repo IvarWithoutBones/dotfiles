@@ -1,0 +1,10 @@
+# Cargo
+/target
+
+# Nix
+/result
+/result-dev
+
+# Direnv
+/.direnv
+/.envrc

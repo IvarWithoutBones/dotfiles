@@ -1,10 +1,10 @@
 { pkgs
-, dotfiles-lib
+, dotfiles-flake
 , ...
 }:
 
 let
-  inherit (dotfiles-lib.vim) mkLua mkLuaFile;
+  inherit (dotfiles-flake.lib.vim) mkLua mkLuaFile;
 in
 {
   programs.nixvim = {

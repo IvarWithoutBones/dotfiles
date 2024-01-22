@@ -1,6 +1,7 @@
 { pkgs
 , nixpkgs
 , username
+, dotfiles-flake
 , ...
 }:
 
@@ -14,8 +15,10 @@ in
     package = pkgs.nixUnstable;
     gc.automatic = true;
 
-    # Pin the flake registry's nixpkgs to the version from this flake.
-    registry.nixpkgs.flake = nixpkgs;
+    registry = {
+      dotfiles.flake = dotfiles-flake; # Add a reference to this flake, for its templates.
+      nixpkgs.flake = nixpkgs; # Pin the flake registry's nixpkgs to the version from this flake.
+    };
 
     settings = {
       experimental-features = [ "nix-command" "flakes" ];
@@ -24,7 +27,6 @@ in
       warn-dirty = false; # Gets pretty annoying while working on a flake
 
       # Can causes failures on Darwin, see https://github.com/NixOS/nix/issues/7273.
-      # TODO: Maybe add a launchctl service to run `nix store optimise` periodically?
       auto-optimise-store = !pkgs.stdenvNoCC.isDarwin;
 
       substituters = [

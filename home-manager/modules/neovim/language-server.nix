@@ -1,6 +1,6 @@
 { lib
 , pkgs
-, dotfiles-lib
+, dotfiles-flake
 , ...
 }:
 
@@ -80,7 +80,7 @@ in
 
           # For a list of available options see the documentation:
           # https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
-          languageServers = (dotfiles-lib.generators.toLua {
+          languageServers = (dotfiles-flake.lib.generators.toLua {
             omnisharp = { }; # C#
             taplo = { }; # TOML
             bashls = { }; # Bash
@@ -160,6 +160,6 @@ in
           });
         };
       in
-      dotfiles-lib.vim.mkLuaFile language-server;
+      dotfiles-flake.lib.vim.mkLuaFile language-server;
   };
 }

@@ -46,6 +46,8 @@
       };
     in
     {
+      templates = import ./templates;
+
       packages = lib.packagesFromOverlay self.overlays.default;
       inherit lib;
 

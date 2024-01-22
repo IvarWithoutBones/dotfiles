@@ -23,7 +23,7 @@ rec {
 
       commonSpecialArgs = {
         inherit username nixpkgs nixvim;
-        dotfiles-lib = lib;
+        dotfiles-flake = self;
       };
 
       modules = [

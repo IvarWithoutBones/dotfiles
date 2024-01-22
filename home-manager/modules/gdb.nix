@@ -1,6 +1,6 @@
 { config
 , lib
-, dotfiles-lib
+, dotfiles-flake
 , pkgs
 , ...
 }:
@@ -131,7 +131,7 @@ let
       # Enters the given command by clearing the current line, entering insert mode, and then entering the command.
       insertCommand = cmd: ''"${clearLine}\ei${cmd}\n"'';
     in
-    dotfiles-lib.readlineBindingsAllModes ''
+    dotfiles-flake.lib.readlineBindingsAllModes ''
       "${clearLine}": kill-whole-line # See the comment above
 
       # Step one instruction/line
