@@ -71,15 +71,25 @@
       # Add a newline without going into insert mode
       { mode = "n"; key = "<enter>"; action = "o<esc>"; }
 
-      # Start a case-sensitive regex substitution
-      { mode = "n"; key = "gs"; action = ":%s/\\C"; }
-      { mode = "v"; key = "gs"; action = ":s/\\C\\%V"; } # %V matches the selection instead of the whole line
+      # Start a case-sensitive (\C) regex substitution
+      # \V selects "very nomagic" mode (never change, vim) so that everything is literal unless explicitly escaped
+      { mode = "n"; key = "gs"; action = ":%s/\\C\\V"; }
+      { mode = "v"; key = "gs"; action = ":s/\\C\\%V\\V"; } # %V matches the selection instead of the whole line
+
+      # Capture something in a regex group, for substitutions
+      { mode = "c"; key = "<C-o>"; action = "\\(\\.\\*\\)"; } # Group matching anything
+      { mode = "c"; key = "<C-S-o>"; action = "\\(\\)<Left><Left>"; } # Empty group with cursor inside
+      { mode = "c"; key = "<C-.>"; action = "\\.\\*"; } # Match anything
+
+      # Stay in visual mode after indenting a block
+      { mode = "v"; key = ">"; action = ">gv"; }
+      { mode = "v"; key = "<"; action = "<gv"; }
 
       # Jump between diagnostics
       { mode = "n"; key = "<space>dn"; options.silent = true; action = ":lua vim.diagnostic.goto_next({ float = false })<cr>"; }
       { mode = "n"; key = "<space>dN"; options.silent = true; action = ":lua vim.diagnostic.goto_prev({ float = false })<cr>"; }
 
-      # Use `Control+Alt+{h,j,k,l}` to resize buffers
+      # Use `Control+Alt+{h,j,k,l}` to resize buffers from normal mode
       { mode = "n"; key = "<C-A-h>"; options.silent = true; action = ":vertical resize -2<cr>"; }
       { mode = "n"; key = "<C-A-j>"; options.silent = true; action = ":resize +2<cr>"; }
       { mode = "n"; key = "<C-A-k>"; options.silent = true; action = ":resize -2<cr>"; }
@@ -92,14 +102,22 @@
       { mode = "n"; key = "<A-l>"; action = "<C-w>l"; }
 
       # Use `Alt+{h,j,k,l}` to navigate buffers from terminal mode
-      { mode = [ "t" ]; key = "<A-h>"; action = "<C-\\><C-N><C-w>h"; }
-      { mode = [ "t" ]; key = "<A-j>"; action = "<C-\\><C-N><C-w>j"; }
-      { mode = [ "t" ]; key = "<A-k>"; action = "<C-\\><C-N><C-w>k"; }
-      { mode = [ "t" ]; key = "<A-l>"; action = "<C-\\><C-N><C-w>l"; }
+      { mode = "t"; key = "<A-h>"; action = "<C-\\><C-N><C-w>h"; }
+      { mode = "t"; key = "<A-j>"; action = "<C-\\><C-N><C-w>j"; }
+      { mode = "t"; key = "<A-k>"; action = "<C-\\><C-N><C-w>k"; }
+      { mode = "t"; key = "<A-l>"; action = "<C-\\><C-N><C-w>l"; }
 
-      # Stay in visual mode after indenting a block
-      { mode = "v"; key = ">"; action = ">gv"; }
-      { mode = "v"; key = "<"; action = "<gv"; }
+      # Mimic normal mode mappings from insert mode using Alt as a modifier
+      { mode = "i"; key = "<A-h>"; action = "<Left>"; }
+      { mode = "i"; key = "<A-j>"; action = "<Down>"; }
+      { mode = "i"; key = "<A-k>"; action = "<Up>"; }
+      { mode = "i"; key = "<A-l>"; action = "<Right>"; }
+      # Word motions
+      { mode = "i"; key = "<A-w>"; action = "<C-\\><C-o>w"; }
+      { mode = "i"; key = "<A-e>"; action = "<C-\\><C-o>e<Right>"; }
+      { mode = "i"; key = "<A-b>"; action = "<C-\\><C-o>b"; }
+      # Start a delete motion
+      { mode = "i"; key = "<A-d>"; action = "<C-\\><C-o>d"; }
     ];
 
     autoCmd = [
