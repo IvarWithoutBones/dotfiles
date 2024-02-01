@@ -1,4 +1,6 @@
-require 'nvim-treesitter.configs'.setup {
+require("nvim-treesitter.configs").setup {
+    auto_install = false, -- Managed by nix
+
     indent = {
         enable = true,
     },
@@ -6,13 +8,12 @@ require 'nvim-treesitter.configs'.setup {
     highlight = {
         enable = true,
 
-        -- Disable highlighting if the file is larger than 1MB, that can cause slowdowns
-        disable = function(_, buf)
-            local max_filesize = 1000 * 1024
+        disable = function(lang, buf)
+            -- Disable highlighting if the file is larger than 1MB, as that can cause slowdowns
             local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-            if ok and stats and stats.size > max_filesize then
-                return true
-            end
+            local too_large = ok and stats and (stats.size > (1000 * 1024))
+            -- Also disable vimdoc highlighting, it appears to be broken
+            return too_large or (lang == "vimdoc")
         end,
     },
 

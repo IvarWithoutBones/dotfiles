@@ -1,4 +1,4 @@
-require "symbols-outline".setup {
+require("symbols-outline").setup {
     preview_bg_highlight = "NormalFloat",
     border = "rounded",
     keymaps = {
@@ -10,5 +10,4 @@ require "symbols-outline".setup {
     }
 }
 
-local bufoptions = { noremap = true, silent = true }
-vim.api.nvim_set_keymap("n", "<space>S", "<cmd>SymbolsOutline<cr>", bufoptions)
+vim.api.nvim_set_keymap("n", "<space>S", "<cmd>SymbolsOutline<cr>", { noremap = true, silent = true })

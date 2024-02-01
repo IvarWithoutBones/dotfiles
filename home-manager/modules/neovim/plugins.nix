@@ -22,21 +22,9 @@ in
       nvim-web-devicons # Icon support
       editorconfig-nvim # Editorconfig support
       dressing-nvim # Better defaults for the basic UI
-      vim-nix # Nix syntax highlighting
-      vim-llvm # LLVM IR syntax highlighting
-      vim-just # Justfile syntax highlighting, package from my overlay
+      vim-just # Justfile syntax highlighting
+      vim-gas # Better syntax highlighting for GNU assembly
 
-      {
-        # Better syntax highlighting for GNU assembly, package from my overlay
-        plugin = vim-gas;
-        config = mkLua ''
-          -- Set the filetype by default for assembly
-          vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
-            pattern = {"*.s", "*.S", "*.as", "*.AS", "*.asm", "*.ASM"},
-            command = "set filetype=gas"
-          })
-        '';
-      }
       {
         # Github copilot, requires nodejs
         plugin = copilot-vim;
@@ -172,6 +160,7 @@ in
         # Better syntax highlighting and automatic indentation
         plugin = nvim-treesitter.withPlugins (plugins: with plugins; [
           tree-sitter-json
+          tree-sitter-json5
           tree-sitter-toml
           tree-sitter-yaml
           tree-sitter-rust
@@ -185,15 +174,30 @@ in
           tree-sitter-bash
           tree-sitter-lua
           tree-sitter-css
+          tree-sitter-scss
           tree-sitter-typescript
           tree-sitter-javascript
           tree-sitter-tsx
           tree-sitter-html
+          tree-sitter-http
           tree-sitter-markdown
           tree-sitter-markdown-inline
           tree-sitter-regex
           tree-sitter-vim
+          tree-sitter-query
           tree-sitter-llvm
+          tree-sitter-go
+          tree-sitter-zig
+          tree-sitter-sql
+          tree-sitter-wgsl
+          tree-sitter-glsl
+          tree-sitter-cuda
+          tree-sitter-perl
+          tree-sitter-ruby
+          tree-sitter-latex
+          tree-sitter-proto
+          tree-sitter-devicetree
+          tree-sitter-dockerfile
           # From my overlay
           tree-sitter-astro
         ]);

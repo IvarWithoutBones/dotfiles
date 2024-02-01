@@ -1,6 +1,3 @@
--- Always show the signcolumn, otherwise text would be shifted when showing errors
-vim.opt.signcolumn = "yes"
-
 -- Replace existing signs for diagnostics with our icons
 local signs = {
     Error = "",
@@ -22,11 +19,33 @@ function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
     return orig_util_open_floating_preview(contents, syntax, opts, ...)
 end
 
--- luasnip setup
+-- Set up snippets using luasnip
 local luasnip = require("luasnip")
 vim.keymap.set({ "i", "n" }, "<C-h>", function() luasnip.jump(1) end, { silent = true })
+vim.keymap.set({ "i", "n" }, "<C-S-h>", function() luasnip.jump(-1) end, { silent = true })
 
--- nvim-cmp setup
+-- Register snippets defined in various formats
+require("luasnip.loaders.from_vscode").lazy_load()
+require("luasnip.loaders.from_snipmate").lazy_load()
+require("luasnip.loaders.from_lua").lazy_load()
+
+-- Enable snippets for standardized comments from friendly-snippets
+luasnip.filetype_extend("rust", { "rustdoc" })
+luasnip.filetype_extend("typescript", { "tsdoc" })
+luasnip.filetype_extend("javascript", { "jsdoc" })
+luasnip.filetype_extend("lua", { "luadoc" })
+luasnip.filetype_extend("python", { "pydoc" })
+luasnip.filetype_extend("rust", { "rustdoc" })
+luasnip.filetype_extend("cs", { "csharpdoc" })
+luasnip.filetype_extend("java", { "javadoc" })
+luasnip.filetype_extend("c", { "cdoc" })
+luasnip.filetype_extend("cpp", { "cppdoc" })
+luasnip.filetype_extend("php", { "phpdoc" })
+luasnip.filetype_extend("kotlin", { "kdoc" })
+luasnip.filetype_extend("ruby", { "rdoc" })
+luasnip.filetype_extend("sh", { "shelldoc" })
+
+-- The completion engine, nvim-cmp
 local cmp_buffer = require("cmp_buffer")
 local cmp = require("cmp")
 cmp.setup {
@@ -36,19 +55,23 @@ cmp.setup {
         { name = "luasnip",  priority = 5 },
         {
             name = "buffer",
+            priority = 1,
             option = {
-                get_bufnrs = function()
-                    -- Complete from all open buffers, not only the one that is currently active
-                    return vim.api.nvim_list_bufs()
-                end
+                -- Complete from all open buffers, not only the one that is currently active
+                get_bufnrs = function() return vim.api.nvim_list_bufs() end
             }
         },
     },
 
     sorting = {
         comparators = {
+            cmp.config.compare.offset,
+            cmp.config.compare.exact,
+            cmp.config.compare.score,
+            cmp.config.compare.recently_used,
             -- Sort buffer completion items by distance from the cursor
             function(...) return cmp_buffer:compare_locality(...) end,
+            cmp.config.compare.kind,
         }
     },
 
@@ -100,11 +123,17 @@ cmp.setup {
         format = require("lspkind").cmp_format({
             mode = "symbol_text",
             menu = ({
-                buffer = "[Buffer]",
+                buffer = "[Buf]",
                 nvim_lsp = "[LSP]",
-                luasnip = "[LuaSnip]",
+                luasnip = "[Snip]",
                 path = "[Path]",
-            })
+            }),
+
+            -- Disable possible text after the source name, e.g. function signatures
+            before = function(_, item)
+                item.menu = ""
+                return item
+            end
         })
     },
 }
@@ -143,7 +172,7 @@ cmp.setup.cmdline(':', {
     })
 })
 
--- lspconfig setup
+-- Configure defaults for all language servers using lspconfig
 local on_lsp_attach = function(_, buffer)
     local function binding(key, action, mode)
         mode = mode or 'n'

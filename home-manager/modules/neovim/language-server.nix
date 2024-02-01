@@ -34,6 +34,7 @@ in
       python3Packages.python-lsp-server # Python
       sumneko-lua-language-server # Lua
       cmake-language-server # CMake
+      glslls # GLSL
 
       # C/C++
       clang-tools
@@ -62,6 +63,10 @@ in
     extraPlugins = with pkgs.vimPlugins; [
       nvim-lspconfig # Language server configuration presets
 
+      # Snippets
+      luasnip
+      friendly-snippets
+
       # Completion engine and its sources
       nvim-cmp
       cmp-nvim-lsp
@@ -69,7 +74,7 @@ in
       cmp-buffer
       cmp-cmdline
       cmp-git
-      luasnip
+      cmp_luasnip
       lspkind-nvim
     ];
 
@@ -86,6 +91,7 @@ in
             bashls = { }; # Bash
             tsserver = { }; # Typescript/Javascript
             html = { }; # HTML
+            glslls = { }; # GLSL
 
             # JSON
             jsonls = {

@@ -2,7 +2,7 @@
 -- https://github.com/codespell-project/codespell#ignoring-words
 local function ignored_words()
     local words = {
-        "crate"
+        "crate", "tese"
     }
 
     return table.concat(words, ",")

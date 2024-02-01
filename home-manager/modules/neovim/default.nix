@@ -24,9 +24,9 @@
     vimAlias = true;
 
     # Required for system clipboard support
-    extraPackages = lib.mkIf pkgs.stdenvNoCC.isLinux (with pkgs;
-      lib.optional wayland wl-clipboard
-      ++ lib.optional (!wayland) xclip
+    extraPackages = lib.mkIf pkgs.stdenvNoCC.isLinux (
+      lib.optional wayland pkgs.wl-clipboard
+      ++ lib.optional (!wayland) pkgs.xclip
     );
 
     options = {
@@ -36,6 +36,9 @@
       # Line numbers
       number = true;
       relativenumber = true;
+
+      # Always show the signcolumn, otherwise text would be shifted when displaying error icons
+      signcolumn = "yes";
 
       # Search
       ignorecase = true;
@@ -120,27 +123,44 @@
       { mode = "i"; key = "<A-d>"; action = "<C-\\><C-o>d"; }
     ];
 
-    autoCmd = [
-      {
-        desc = "Change the working directory to a git repository's root";
-        event = [ "VimEnter" ];
-        pattern = "*";
-        # Unfortunately there is no API to run a lua function directly, so we have to write it to a file
-        command = "luafile ${pkgs.writeText "cd-git-root.lua" ''
+    autoCmd =
+      let
+        setFileType = ext: ft: {
+          desc = "Set the file type for '.${ext}' files to ${ft}";
+          event = [ "BufRead" "BufNewFile" ];
+          pattern = "*.${ext}";
+          command = "set filetype=${ft}";
+        };
+      in
+      [
+        (setFileType "ll" "llvm")
+        (setFileType "wgsl" "wgsl")
+        (setFileType "vert" "glsl")
+        (setFileType "tesc" "glsl")
+        (setFileType "tese" "glsl")
+        (setFileType "frag" "glsl")
+        (setFileType "geom" "glsl")
+        (setFileType "comp" "glsl")
+
+        {
+          desc = "Change the working directory to a git repository's root";
+          event = [ "VimEnter" ];
+          pattern = "*";
+          # Unfortunately there is no API to run a lua function directly, so we have to write it to a file
+          command = "luafile ${pkgs.writeText "cd-git-root.lua" ''
           local gitRoot = vim.fn.system("${pkgs.git}/bin/git rev-parse --show-toplevel 2>/dev/null")
           if (gitRoot ~= nil and gitRoot ~= "") then
               vim.cmd("cd " .. gitRoot)
           end
         ''}";
-      }
-
-      {
-        desc = "Disable insertion of a comment character when starting a new line";
-        event = [ "FileType" ];
-        pattern = "*";
-        command = "setlocal formatoptions-=c formatoptions-=r formatoptions-=o";
-      }
-    ];
+        }
+        {
+          desc = "Disable insertion of a comment character when starting a new line";
+          event = [ "FileType" ];
+          pattern = "*";
+          command = "setlocal formatoptions-=c formatoptions-=r formatoptions-=o";
+        }
+      ];
   };
 }
 
