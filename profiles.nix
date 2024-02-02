@@ -79,6 +79,7 @@ rec {
       ./modules/linux/docker.nix
       ./modules/linux/perf.nix
       ./modules/linux/audio.nix
+      ./modules/linux/jellyfin.nix
       #./modules/linux/android.nix
     ] ++ ivv.modules;
 
