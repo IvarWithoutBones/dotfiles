@@ -5,10 +5,25 @@
 , ...
 }:
 
+let
+  # A hacky way to add packages to neovims environment if they are not already in $PATH, using `makeWrapper --suffix`.
+  # Needed to allow projects to overwrite tools bundled with neovim, for example using a nightly rust toolchain.
+  # Note that we cannot use `extraPackages`, as those packages would take priority over installations from the environment.
+  nvimWithDefaultPackages = packages:
+    pkgs.runCommand "neovim-wrapped"
+      {
+        nativeBuildInputs = [ pkgs.makeWrapper ];
+      } ''
+      # Symlinking is being a bit painful here, another derivation attempts to mutate the output.
+      mkdir -p $out
+      cp -r ${pkgs.neovim-unwrapped}/* $out
+      chmod -R +w $out
+      makeWrapper ${pkgs.neovim-unwrapped}/bin/nvim $out/bin/nvim --suffix PATH : ${lib.makeBinPath packages}
+    '';
+in
 {
   imports = [
     nixvim.homeManagerModules.nixvim
-    ./language-server.nix
     ./plugins.nix
   ];
 
@@ -19,15 +34,46 @@
 
   programs.nixvim = {
     enable = true;
-
     viAlias = true;
     vimAlias = true;
 
-    # Required for system clipboard support
-    extraPackages = lib.mkIf pkgs.stdenvNoCC.isLinux (
-      lib.optional wayland pkgs.wl-clipboard
-      ++ lib.optional (!wayland) pkgs.xclip
-    );
+    # See `plugins/lspconfig.lua` for the configuration of the language servers.
+    package = with pkgs; nvimWithDefaultPackages ([
+      taplo-lsp # TOML
+      yaml-language-server # YAML
+      nodePackages.typescript-language-server # Typescript/Javascript
+      nodePackages.vscode-json-languageserver # JSON
+      nodePackages.vscode-html-languageserver-bin # HTML
+      python3Packages.python-lsp-server # Python
+      sumneko-lua-language-server # Lua
+      cmake-language-server # CMake
+      glslls # GLSL
+
+      # C/C++
+      clang-tools
+      clang
+
+      # C#
+      dotnet-sdk_6
+      omnisharp-roslyn
+
+      # Bash
+      shellcheck
+      nodePackages.bash-language-server
+
+      # Nix
+      nil-language-server
+      nixpkgs-fmt
+
+      # Rust
+      cargo
+      rustfmt
+      rustc
+      clippy
+      rust-analyzer
+
+      # Packages required for system clipboard support
+    ] ++ lib.optional pkgs.stdenvNoCC.isLinux (if wayland then wl-clipboard else xclip));
 
     options = {
       syntax = "enable";

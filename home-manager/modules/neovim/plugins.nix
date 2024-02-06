@@ -15,6 +15,7 @@ in
       # Packages used by `null-ls-nvim`
       codespell # Spell checking
       shfmt # Shell script formatting
+      jq # JSON formatting
     ];
 
     extraPlugins = with pkgs.vimPlugins; [
@@ -78,13 +79,13 @@ in
       }
       {
         # Injects LSP diagnostics, code actions, etc for packages without a language server.
-        # Configuration requires the `codespell` and `shfmt` packages. Dependency of `crates-nvim`.
+        # Configuration requires the `codespell`, `jq` and `shfmt` packages. Dependency of `crates-nvim`.
         plugin = null-ls-nvim;
         config = mkLuaFile ./scripts/plugins/null-ls.lua;
       }
       {
         # Information about Rust dependencies inside of Cargo.toml.
-        # Requires the `null-ls-nvim` and `coq_nvim` plugins.
+        # Requires the `null-ls-nvim` and `cmp-nvim` plugins.
         plugin = crates-nvim;
         config = mkLuaFile ./scripts/plugins/crates-nvim.lua;
       }
@@ -153,9 +154,34 @@ in
         plugin = nvim-tree-lua;
         config = mkLuaFile ./scripts/plugins/nvim-tree.lua;
       }
+      {
+        # Language server configuration presets
+        plugin = nvim-lspconfig;
+        config = mkLuaFile ./scripts/plugins/lspconfig.lua;
+      }
 
-      # Extra plugins for treesitter
-      nvim-treesitter-textobjects
+      # Sources for nvim-cmp
+      cmp-nvim-lsp
+      cmp-path
+      cmp-buffer
+      cmp-cmdline
+      cmp-git
+      cmp_luasnip
+      lspkind-nvim
+      {
+        # Completion engine
+        plugin = nvim-cmp;
+        config = mkLuaFile ./scripts/plugins/cmp.lua;
+      }
+
+      friendly-snippets # Collection of snippets for luasnip
+      {
+        # Snippet support
+        plugin = luasnip;
+        config = mkLuaFile ./scripts/plugins/luasnip.lua;
+      }
+
+      nvim-treesitter-textobjects # For treesitter
       {
         # Better syntax highlighting and automatic indentation
         plugin = nvim-treesitter.withPlugins (plugins: with plugins; [

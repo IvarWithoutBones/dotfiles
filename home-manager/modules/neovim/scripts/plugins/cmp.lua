@@ -1,53 +1,6 @@
--- Replace existing signs for diagnostics with our icons
-local signs = {
-    Error = "",
-    Warn = "",
-    Hint = "",
-    Info = ""
-}
-
-for type, icon in pairs(signs) do
-    local hl = "DiagnosticSign" .. type
-    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-end
-
--- Rounded corners for popup boxes
-local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
-function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
-    opts = opts or {}
-    opts.border = 'rounded'
-    return orig_util_open_floating_preview(contents, syntax, opts, ...)
-end
-
--- Set up snippets using luasnip
-local luasnip = require("luasnip")
-vim.keymap.set({ "i", "n" }, "<C-h>", function() luasnip.jump(1) end, { silent = true })
-vim.keymap.set({ "i", "n" }, "<C-S-h>", function() luasnip.jump(-1) end, { silent = true })
-
--- Register snippets defined in various formats
-require("luasnip.loaders.from_vscode").lazy_load()
-require("luasnip.loaders.from_snipmate").lazy_load()
-require("luasnip.loaders.from_lua").lazy_load()
-
--- Enable snippets for standardized comments from friendly-snippets
-luasnip.filetype_extend("rust", { "rustdoc" })
-luasnip.filetype_extend("typescript", { "tsdoc" })
-luasnip.filetype_extend("javascript", { "jsdoc" })
-luasnip.filetype_extend("lua", { "luadoc" })
-luasnip.filetype_extend("python", { "pydoc" })
-luasnip.filetype_extend("rust", { "rustdoc" })
-luasnip.filetype_extend("cs", { "csharpdoc" })
-luasnip.filetype_extend("java", { "javadoc" })
-luasnip.filetype_extend("c", { "cdoc" })
-luasnip.filetype_extend("cpp", { "cppdoc" })
-luasnip.filetype_extend("php", { "phpdoc" })
-luasnip.filetype_extend("kotlin", { "kdoc" })
-luasnip.filetype_extend("ruby", { "rdoc" })
-luasnip.filetype_extend("sh", { "shelldoc" })
-
--- The completion engine, nvim-cmp
 local cmp_buffer = require("cmp_buffer")
 local cmp = require("cmp")
+
 cmp.setup {
     sources = {
         { name = "nvim_lsp", priority = 10 },
@@ -76,7 +29,8 @@ cmp.setup {
     },
 
     snippet = {
-        expand = function(args) luasnip.lsp_expand(args.body) end,
+        -- Expand snippets using luasnip, see `plugins/luasnip.lua`
+        expand = function(args) require("luasnip").lsp_expand(args.body) end,
     },
 
     mapping = cmp.mapping.preset.insert({
@@ -171,41 +125,3 @@ cmp.setup.cmdline(':', {
         { name = 'cmdline' }
     })
 })
-
--- Configure defaults for all language servers using lspconfig
-local on_lsp_attach = function(_, buffer)
-    local function binding(key, action, mode)
-        mode = mode or 'n'
-        vim.keymap.set(mode, key, action, {
-            buffer = buffer,
-            noremap = true,
-            nowait = true,
-        })
-    end
-
-    -- Format the current buffer
-    binding('<space>f', function()
-        vim.lsp.buf.format({ async = true })
-    end)
-
-    -- Show information about function signature
-    binding('<C-k>', vim.lsp.buf.signature_help)
-    binding('<C-k>', vim.lsp.buf.signature_help, 'i')
-
-    binding('K', vim.lsp.buf.hover)                    -- Show hover information
-    binding('rn', vim.lsp.buf.rename)                  -- Rename symbol
-    binding('<space><space>', vim.lsp.buf.code_action) -- Code actions
-end
-
--- languageServers is substituted from the nix expression that imports this file.
-loadstring([[languageServers = { @languageServers@ }]])()
-local defaultOptions = {
-    on_attach = on_lsp_attach,
-    capabilities = require("cmp_nvim_lsp").default_capabilities()
-}
-
----@diagnostic disable-next-line: undefined-global
-for name, options in pairs(languageServers) do
-    local mergedOptions = vim.tbl_deep_extend("force", defaultOptions, options)
-    require("lspconfig")[name].setup(mergedOptions)
-end
