@@ -1,5 +1,4 @@
-{ config
-, pkgs
+{ pkgs
 , ...
 }:
 
@@ -23,15 +22,15 @@
 
       new = "checkout -b";
       rb = "rebase --interactive";
-      last = "show HEAD";
       cim = "commit --amend";
       cimn = "commit --amend --no-edit";
       st = "status";
-      br = "branch";
       ci = "commit";
       df = "diff";
-      ps = "push";
-      fp = "push --force";
+      ignore = "update-index --skip-worktree";
+      unignore = "update-index --no-skip-worktree";
+      # Show `--skip-worktree` files (prefixed with `S`), and remove the prefix
+      ignored = "!git ls-files -v | grep '^S' | cut -d ' ' -f 2-";
     };
 
     signing = {
@@ -40,8 +39,10 @@
     };
 
     extraConfig = {
+      rerere.enabled = true;
       pull.rebase = true;
       init.defaultBranch = "main";
+      diff.colorMoved = "zebra";
     };
 
     # Prettier pager, adds syntax highlighting and line numbers
