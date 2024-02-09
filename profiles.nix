@@ -35,9 +35,10 @@ rec {
         inherit username;
 
         modules = [
-          ./home-manager/modules/linux/alacritty.nix
+          ./home-manager/modules/alacritty.nix
           ./home-manager/default.nix
           ./home-manager/packages.nix
+          ./home-manager/modules/less.nix
           ./home-manager/modules/nix-index.nix
           ./home-manager/modules/mpv.nix
           ./home-manager/modules/readline.nix
