@@ -27,6 +27,7 @@
       st = "status";
       ci = "commit";
       df = "diff";
+      ap = "add --patch";
       ignore = "update-index --skip-worktree";
       unignore = "update-index --no-skip-worktree";
       # Show `--skip-worktree` files (prefixed with `S`), and remove the prefix

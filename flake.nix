@@ -1,8 +1,8 @@
 {
-  description = "My NixOS configuration, using home-manager";
+  description = "My NixOS/MacOS configurations, using home-manager and nix-darwin";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nix-index-database.url = "github:mic92/nix-index-database";
     nil-language-server.url = "github:oxalica/nil";
     nixvim.url = "github:pta2002/nixvim";
