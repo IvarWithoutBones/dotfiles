@@ -48,6 +48,7 @@
     noto-fonts-emoji
     (nerdfonts.override { fonts = [ "FiraCode" ]; })
 
+    obsidian
     ghidra # TODO: enable on Darwin when it isn't broken there anymore.
     vscode-fhs
     arandr
