@@ -1,9 +1,12 @@
 { config
-, lib
 , pkgs
 , ...
 }:
 
 {
-  environment.systemPackages = lib.toList config.boot.kernelPackages.perf;
+  environment.systemPackages = with pkgs; [
+    config.boot.kernelPackages.perf
+    valgrind
+    kcachegrind
+  ];
 }
