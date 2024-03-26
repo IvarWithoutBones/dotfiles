@@ -11,7 +11,7 @@
     defaultKeymap = "viins";
     history.path = "${config.xdg.cacheHome}/zsh/history";
 
-    enableAutosuggestions = true;
+    autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
     autocd = true;
 
