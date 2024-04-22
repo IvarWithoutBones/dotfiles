@@ -53,7 +53,11 @@
       vt = config.services.xserver.tty;
 
       settings = {
-        default_session.command = "${pkgs.greetd.tuigreet}/bin/tuigreet --sessions \"${config.services.xserver.displayManager.sessionData.desktops}/share/xsessions\" --time";
+        default_session.command =
+          let
+            sessions = "${config.services.displayManager.sessionData.desktops}/share/xsessions";
+          in
+          "${pkgs.greetd.tuigreet}/bin/tuigreet --sessions \"${sessions}\" --time";
       };
     };
   };
