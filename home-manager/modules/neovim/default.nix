@@ -111,6 +111,9 @@ in
 
       # Start scrolling when the cursor is X lines away from the top/bottom
       scrolloff = 5;
+
+      # Time (in milliseconds) between CursorHold event updates, used by signature hints
+      updatetime = 200;
     };
 
     keymaps = [

@@ -9,7 +9,6 @@ in
 {
   programs.nixvim = {
     extraPackages = with pkgs; [
-      nodejs # For Github Copilot
       ripgrep # For telescope's `live_grep`
 
       # Packages used by `null-ls-nvim`
@@ -27,12 +26,15 @@ in
       vim-gas # Better syntax highlighting for GNU assembly
 
       {
-        # Github copilot, requires nodejs
-        plugin = copilot-vim;
-        config = ''
-          " Accept suggestions using ctrl-j instead of tab
-          let g:copilot_no_tab_map = v:true
-          imap <silent><script><expr> <C-J> copilot#Accept("\<CR>")
+        plugin = codeium-vim;
+        config = mkLua ''
+          -- Use the language server binary from nixpkgs, instead of downloading a binary at runtime.
+          -- This is required on NixOS, as we cannot `patchelf` the binary the plugin would download.
+          vim.g.codeium_bin = "${pkgs.codeium}/bin/codeium_language_server"
+
+          -- Accept completions using control+j instead of tab
+          vim.g.codeium_no_map_tab = 1
+          vim.keymap.set('i', '<C-j>', function() return vim.fn['codeium#Accept']() end, { expr = true, silent = true })
         '';
       }
       {
@@ -76,6 +78,23 @@ in
         config = mkLua ''
           require("nvim-surround").setup()
         '';
+      }
+      {
+        # Information about the signature at the current cursor position, used by lualine
+        plugin = lsp_signature-nvim;
+        config = mkLua ''
+          require("lsp_signature").setup({
+            -- Dont show signature help in a floating window or hint text, lualine will do so instead
+            floating_window = false,
+            hint_enable = false,
+            always_trigger = true,
+          })
+        '';
+      }
+      {
+        # Status line
+        plugin = lualine-nvim;
+        config = mkLuaFile ./scripts/plugins/lualine.lua;
       }
       {
         # Injects LSP diagnostics, code actions, etc for packages without a language server.
@@ -143,11 +162,6 @@ in
         # Buffer management with nice looking tabs
         plugin = barbar-nvim;
         config = mkLuaFile ./scripts/plugins/barbar.lua;
-      }
-      {
-        # Status line
-        plugin = lualine-nvim;
-        config = mkLuaFile ./scripts/plugins/lualine.lua;
       }
       {
         # Tree-like file manager
