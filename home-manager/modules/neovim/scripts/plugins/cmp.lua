@@ -6,6 +6,7 @@ cmp.setup {
         { name = "nvim_lsp", priority = 10 },
         { name = "path",     priority = 9 },
         { name = "luasnip",  priority = 5 },
+        { name = "crates" }, -- Uses the crates.nvim plugin
         {
             name = "buffer",
             priority = 1,
@@ -82,12 +83,6 @@ cmp.setup {
                 luasnip = "[Snip]",
                 path = "[Path]",
             }),
-
-            -- Disable possible text after the source name, e.g. function signatures
-            before = function(_, item)
-                item.menu = ""
-                return item
-            end
         })
     },
 }

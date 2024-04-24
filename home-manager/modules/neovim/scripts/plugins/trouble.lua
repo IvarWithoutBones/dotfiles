@@ -22,4 +22,4 @@ vim.keymap.set('n', '<space>A', function() showDiagnostics(true) end, bufopts)  
 vim.keymap.set('n', 'gd', function() trouble.toggle("lsp_definitions") end, bufopts)      -- Jump to definitions (if there are multiple, show a list)
 vim.keymap.set('n', 'gD', function() trouble.toggle("lsp_type_definitions") end, bufopts) -- Jump to type definitions (if there are multiple, show a list)
 vim.keymap.set('n', 'gr', function() trouble.toggle("lsp_references") end, bufopts)       -- Show symbol references
-vim.keymap.set('n', 'K', function() trouble.toggle("lsp_implementations") end, bufopts)   -- Show implementations
+vim.keymap.set('n', 'gi', function() trouble.toggle("lsp_implementations") end, bufopts)   -- Show implementations

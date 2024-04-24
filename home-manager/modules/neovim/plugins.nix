@@ -55,14 +55,7 @@ in
         # Display LSP progress messages
         plugin = fidget-nvim;
         config = mkLua ''
-          require("fidget").setup {
-            notification = {
-              window = {
-              -- Required for catpuccin
-                winblend = 0,
-              },
-            }
-          }
+          require("fidget").setup()
         '';
       }
       {
@@ -168,6 +161,8 @@ in
         plugin = nvim-tree-lua;
         config = mkLuaFile ./scripts/plugins/nvim-tree.lua;
       }
+
+      rustaceanvim # Used in ./scripts/plugins/lspconfig.lua
       {
         # Language server configuration presets
         plugin = nvim-lspconfig;
