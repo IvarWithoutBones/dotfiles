@@ -61,7 +61,6 @@
     krita
     _1password-gui
     transmission-gtk
-    minecraft
     firefox
   ] ++ lib.optional pkgs.stdenvNoCC.isDarwin iterm2;
 

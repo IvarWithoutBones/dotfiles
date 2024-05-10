@@ -17,17 +17,17 @@
   services = {
     gnome.gnome-keyring.enable = true;
 
-    xserver = {
-      enable = !(wayland);
-
-      libinput = {
-        enable = true;
-        touchpad = {
-          tapping = false;
-          naturalScrolling = true;
-          accelProfile = "flat";
-        };
+    libinput = {
+      enable = true;
+      touchpad = {
+        tapping = false;
+        naturalScrolling = true;
+        accelProfile = "flat";
       };
+    };
+
+    xserver = {
+      enable = !wayland;
 
       # A session for whatever desktop environment is configured in home-manager, for both xorg and wayland.
       desktopManager = {
@@ -42,7 +42,7 @@
       };
 
       displayManager = {
-        lightdm.enable = !(config.services.greetd.enable);
+        lightdm.enable = !config.services.greetd.enable;
         startx.enable = config.services.xserver.enable; # Required for greetd, it doesn't start the xserver
       };
     };
@@ -57,7 +57,7 @@
           let
             sessions = "${config.services.displayManager.sessionData.desktops}/share/xsessions";
           in
-          "${pkgs.greetd.tuigreet}/bin/tuigreet --sessions \"${sessions}\" --time";
+          "${pkgs.greetd.tuigreet}/bin/tuigreet --sessions \"${sessions}\" --time --asterisks --user-menu --remember --remember-session";
       };
     };
   };
