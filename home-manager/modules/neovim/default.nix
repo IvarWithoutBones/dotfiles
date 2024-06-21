@@ -47,7 +47,6 @@ in
       python3Packages.python-lsp-server # Python
       sumneko-lua-language-server # Lua
       cmake-language-server # CMake
-      glslls # GLSL
 
       # C/C++
       clang-tools
@@ -71,9 +70,10 @@ in
       rustc
       clippy
       rust-analyzer
-
-      # Packages required for system clipboard support
-    ] ++ lib.optional pkgs.stdenvNoCC.isLinux (if wayland then wl-clipboard else xclip));
+    ] ++ lib.optionals pkgs.stdenvNoCC.isLinux [
+      (if wayland then wl-clipboard else xclip) # Required for system clipboard support
+      glslls # GLSL language server, does not support Darwin.
+    ]);
 
     options = {
       syntax = "enable";

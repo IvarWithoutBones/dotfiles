@@ -42,10 +42,10 @@
     nvidia.package = lib.optionals (hardware.gpu == "nvidia") config.boot.kernelPackages.nvidiaPackages.stable;
     enableRedistributableFirmware = true;
 
-    opengl = {
+    graphics = {
       enable = true;
-      driSupport32Bit = true;
-      extraPackages32 = lib.optionals (hardware.gpu == "nvidia") [ pkgs.pkgsi686Linux.libva ];
+      enable32Bit = true;
+      extraPackages32 = lib.optional (hardware.gpu == "nvidia") pkgs.pkgsi686Linux.libva;
     };
 
     opentabletdriver = {

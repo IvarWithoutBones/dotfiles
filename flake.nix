@@ -42,7 +42,7 @@
       };
 
       profiles = import ./profiles.nix {
-        inherit self nixpkgs agenix lib nixvim;
+        inherit self nixpkgs agenix lib nixvim nix-index-database;
       };
     in
     {

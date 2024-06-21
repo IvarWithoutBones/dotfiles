@@ -3,6 +3,7 @@
 , agenix
 , nixvim
 , lib
+, nix-index-database
 }:
 
 rec {
@@ -22,7 +23,7 @@ rec {
       inherit username;
 
       commonSpecialArgs = {
-        inherit username nixpkgs nixvim;
+        inherit username nixpkgs nixvim nix-index-database;
         dotfiles-flake = self;
       };
 
