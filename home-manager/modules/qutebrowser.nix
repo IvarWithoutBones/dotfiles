@@ -18,7 +18,11 @@ in
     settings = {
       downloads.location.directory = "${config.home.homeDirectory}/downloads";
       colors.webpage.preferred_color_scheme = "dark";
-      content.pdfjs = true; # Preview PDFs by default, instead of asking to download them
+      content = {
+        pdfjs = true; # Preview PDFs by default, instead of asking to download them
+        blocking.method = "both"; # Block ads by using both a host disallowlist and a content-based blocker
+        autoplay = false; # Dont start playing video's automatically
+      };
 
       url = {
         start_pages = "https://www.google.com";
@@ -26,6 +30,7 @@ in
       };
 
       content = {
+        # Allow javascript to read/write to the clipboard
         javascript.clipboard = "access";
 
         # Disable scrolling past the end of the page, which is an issue with gesture navigation

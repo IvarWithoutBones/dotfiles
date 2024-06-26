@@ -17,8 +17,6 @@
     killall
     fd
     nix-prefetch-git
-    comma
-    manix
     binutils
     act
     element-desktop

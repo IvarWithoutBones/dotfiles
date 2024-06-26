@@ -1,25 +1,35 @@
-local trouble = require("trouble")
+require("trouble").setup {
+    warn_no_results = false, -- The warning requires you to press enter to confirm, which is a annoying
+    auto_jump = true,        -- Dont show the picker if there is only one result
+    focus = true,            -- Automatically focus the buffer
 
--- Dont open diagnostics window if none are found
-local function showDiagnostics(currentBuffer)
-    currentBuffer = currentBuffer or false
-    local amount = #vim.diagnostic.get(currentBuffer and 0 or nil)
-    if amount == 0 then
-        print("no diagnostics found" .. (currentBuffer and " in current buffer" or ""))
-    else
-        trouble.toggle(currentBuffer and "document_diagnostics" or "workspace_diagnostics")
-    end
-end
+    modes = {
+        diagnostics = {
+            -- Sort by position first so that related diagnostics are more closely grouped together
+            sort = { "pos", "severity", "filename", "message" },
+            -- Disable the separate directory fold
+            groups = { { "filename", format = "{file_icon} {filename} {count}" } },
+        },
+    },
 
-trouble.setup {
-    use_diagnostic_signs = true,
+    keys = {
+        ["<cr>"] = "jump_close", -- Close the menu and jump to the selected item
+        o = "jump",              -- Jump to the selected item
+        L = "fold_open",         -- Open the fold closest to the cursor
+        H = "fold_close",        -- Close the fold closest to the cursor
+    }
 }
 
--- TODO: optimally these should only be loaded when the LSP is attached, but defining plugins separately is nice
-local bufopts = { noremap = true, silent = true }
-vim.keymap.set('n', '<space>a', function() showDiagnostics(false) end, bufopts)           -- Show diagnostics in workspace
-vim.keymap.set('n', '<space>A', function() showDiagnostics(true) end, bufopts)            -- Show diagnostics in current buffer
-vim.keymap.set('n', 'gd', function() trouble.toggle("lsp_definitions") end, bufopts)      -- Jump to definitions (if there are multiple, show a list)
-vim.keymap.set('n', 'gD', function() trouble.toggle("lsp_type_definitions") end, bufopts) -- Jump to type definitions (if there are multiple, show a list)
-vim.keymap.set('n', 'gr', function() trouble.toggle("lsp_references") end, bufopts)       -- Show symbol references
-vim.keymap.set('n', 'gi', function() trouble.toggle("lsp_implementations") end, bufopts)   -- Show implementations
+local function bind(key, mode, opts, action)
+    local args = vim.tbl_deep_extend("force", { mode = mode }, opts or {})
+    local func = action or "toggle"
+    local keyOpts = { noremap = true, silent = true }
+    vim.keymap.set("n", key, function() require("trouble")[func](args) end, keyOpts)
+end
+
+bind("<space>a", "diagnostics")
+bind("<space>A", "diagnostics", { focus = false })
+bind("gd", "lsp_definitions")
+bind("gD", "lsp_type_definitions")
+bind("gr", "lsp_references")
+bind("gi", "lsp_implementations")
