@@ -6,20 +6,57 @@
 }:
 
 let
+  # Packages to bundle with neovim, see `nvimWithDefaultPackages` below.
+  # `plugins/lspconfig.lua` contains the configuration of the language servers listed here.
+  packages = with pkgs; [
+    taplo-lsp # TOML
+    yaml-language-server # YAML
+    nodePackages.typescript-language-server # Typescript/Javascript
+    nodePackages.vscode-json-languageserver # JSON
+    nodePackages.vscode-html-languageserver-bin # HTML
+    python3Packages.python-lsp-server # Python
+    sumneko-lua-language-server # Lua
+    cmake-language-server # CMake
+
+    # C/C++
+    clang-tools
+    clang
+
+    # C#
+    dotnet-sdk_6
+    omnisharp-roslyn
+
+    # Bash
+    shellcheck
+    nodePackages.bash-language-server
+
+    # Nix
+    nil-language-server
+    nixpkgs-fmt
+
+    # Rust
+    cargo
+    rustfmt
+    rustc
+    clippy
+    rust-analyzer
+  ] ++ lib.optionals pkgs.stdenvNoCC.isLinux [
+    glslls # GLSL language server, does not support Darwin.
+  ];
+
   # A hacky way to add packages to neovims environment if they are not already in $PATH, using `makeWrapper --suffix`.
   # Needed to allow projects to overwrite tools bundled with neovim, for example using a nightly rust toolchain.
   # Note that we cannot use `extraPackages`, as those packages would take priority over installations from the environment.
-  nvimWithDefaultPackages = packages:
-    pkgs.runCommand "neovim-wrapped"
-      {
-        nativeBuildInputs = [ pkgs.makeWrapper ];
-      } ''
-      # Symlinking is being a bit painful here, another derivation attempts to mutate the output.
-      mkdir -p $out
-      cp -r ${pkgs.neovim-unwrapped}/* $out
-      chmod -R +w $out
-      makeWrapper ${pkgs.neovim-unwrapped}/bin/nvim $out/bin/nvim --suffix PATH : ${lib.makeBinPath packages}
-    '';
+  nvimWithDefaultPackages = pkgs.runCommand "neovim-with-default-packages"
+    {
+      nativeBuildInputs = [ pkgs.makeWrapper ];
+    } ''
+    # Symlinking is being a bit painful here, another derivation attempts to mutate the output.
+    mkdir -p $out
+    cp -r ${pkgs.neovim-unwrapped}/* $out
+    chmod -R +w $out
+    makeWrapper ${pkgs.neovim-unwrapped}/bin/nvim $out/bin/nvim --suffix PATH : ${lib.makeBinPath packages}
+  '';
 in
 {
   imports = [
@@ -34,48 +71,21 @@ in
 
   programs.nixvim = {
     enable = true;
+    package = nvimWithDefaultPackages;
+
     viAlias = true;
     vimAlias = true;
 
-    # See `plugins/lspconfig.lua` for the configuration of the language servers.
-    package = with pkgs; nvimWithDefaultPackages ([
-      taplo-lsp # TOML
-      yaml-language-server # YAML
-      nodePackages.typescript-language-server # Typescript/Javascript
-      nodePackages.vscode-json-languageserver # JSON
-      nodePackages.vscode-html-languageserver-bin # HTML
-      python3Packages.python-lsp-server # Python
-      sumneko-lua-language-server # Lua
-      cmake-language-server # CMake
+    clipboard = {
+      register = "unnamedplus"; # Copy to the system clipboard by default
+      providers = lib.optionalAttrs pkgs.stdenvNoCC.isLinux {
+        # Required for copying to the system clipboard
+        wl-copy.enable = wayland;
+        xclip.enable = !wayland;
+      };
+    };
 
-      # C/C++
-      clang-tools
-      clang
-
-      # C#
-      dotnet-sdk_6
-      omnisharp-roslyn
-
-      # Bash
-      shellcheck
-      nodePackages.bash-language-server
-
-      # Nix
-      nil-language-server
-      nixpkgs-fmt
-
-      # Rust
-      cargo
-      rustfmt
-      rustc
-      clippy
-      rust-analyzer
-    ] ++ lib.optionals pkgs.stdenvNoCC.isLinux [
-      (if wayland then wl-clipboard else xclip) # Required for system clipboard support
-      glslls # GLSL language server, does not support Darwin.
-    ]);
-
-    options = {
+    opts = {
       syntax = "enable";
       termguicolors = true;
 
@@ -96,9 +106,6 @@ in
       softtabstop = 0;
       expandtab = true;
       smarttab = true;
-
-      # System clipboard support, needs xclip/wl-clipboard
-      clipboard = "unnamedplus";
 
       # Highlight the current line
       cursorline = true;
@@ -210,6 +217,38 @@ in
           command = "setlocal formatoptions-=c formatoptions-=r formatoptions-=o";
         }
       ];
+
+    files =
+      let
+        jumpToAndFromHeader = {
+          keymaps = [{
+            mode = "n";
+            key = "<space>gp";
+            action = ":lua dofile(\"${./scripts/jump-to-and-from-header.lua}\")<cr>";
+            options = {
+              buffer = true; # Only apply this keybinding to C/C++ buffers
+              silent = true; # Do not print our `action`
+            };
+          }];
+        };
+      in
+      {
+        "after/ftplugin/c.lua" = jumpToAndFromHeader;
+        "after/ftplugin/cpp.lua" = jumpToAndFromHeader;
+
+        "after/ftplugin/nix.lua" = {
+          opts = {
+            expandtab = true;
+            shiftwidth = 2;
+            tabstop = 2;
+          };
+        };
+      };
+
+    # Execute each file in the list upon startup
+    extraConfigLua = lib.concatMapStringsSep "\n" (file: "dofile(\"${file}\")") [
+      ./scripts/lsp.lua
+    ];
   };
 }
 
