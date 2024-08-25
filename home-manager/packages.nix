@@ -74,6 +74,7 @@
 
       defaultApplications = {
         "application/pdf" = "org.gnome.Evince.desktop";
+        "image/svg+xml" = "feh.desktop";
         "x-scheme-handler/magnet" = "transmission-gtk.desktop";
       };
     };

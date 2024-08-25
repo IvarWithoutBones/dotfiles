@@ -13,7 +13,7 @@ let
     yaml-language-server # YAML
     nodePackages.typescript-language-server # Typescript/Javascript
     nodePackages.vscode-json-languageserver # JSON
-    nodePackages.vscode-html-languageserver-bin # HTML
+    vscode-langservers-extracted # HTML
     python3Packages.python-lsp-server # Python
     sumneko-lua-language-server # Lua
     cmake-language-server # CMake
@@ -50,12 +50,13 @@ let
   nvimWithDefaultPackages = pkgs.runCommand "neovim-with-default-packages"
     {
       nativeBuildInputs = [ pkgs.makeWrapper ];
+      inherit (pkgs.neovim.unwrapped) meta lua;
     } ''
     # Symlinking is being a bit painful here, another derivation attempts to mutate the output.
     mkdir -p $out
-    cp -r ${pkgs.neovim-unwrapped}/* $out
+    cp -r ${pkgs.neovim.unwrapped}/* $out
     chmod -R +w $out
-    makeWrapper ${pkgs.neovim-unwrapped}/bin/nvim $out/bin/nvim --suffix PATH : ${lib.makeBinPath packages}
+    makeWrapper ${pkgs.neovim.unwrapped}/bin/nvim $out/bin/nvim --suffix PATH : ${lib.makeBinPath packages}
   '';
 in
 {
