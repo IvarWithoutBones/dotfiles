@@ -1,9 +1,5 @@
-{ config
-, lib
-, pkgs
-, system
+{ pkgs
 , username
-, hardware
 , ...
 }:
 
@@ -33,8 +29,7 @@
     kernelParams = [
       "quiet"
       "boot.shell_on_fail"
-    ] ++ lib.optional (hardware.gpu or "" == "nvidia")
-      "nvidia-drm.modeset=1"; # Required for wayland support with propietary nvidia drivers
+    ];
 
     binfmt.emulatedSystems = [ "aarch64-linux" ];
     supportedFilesystems = [ "ntfs" ];

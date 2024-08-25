@@ -1,6 +1,4 @@
-{ config
-, pkgs
-, lib
+{ lib
 , hardware
 , ...
 }:
@@ -10,18 +8,8 @@
     blueman.enable = if (hardware.bluetooth or false) then true else false;
 
     xserver = {
-      videoDrivers = [
-        (
-          if (hardware.gpu == "nvidia") then "nvidia"
-          else if (hardware.gpu == "amd") then "amdgpu"
-          else ""
-        )
-      ];
-
-      # Fixes screentearing
-      screenSection = lib.optionalString (hardware.gpu == "nvidia") ''
-        Option "metamodes" "nvidia-auto-select +0+0 { ForceCompositionPipeline = On }"
-      '';
+      # See /modules/linux/nvidia.nix for the nvidia driver
+      videoDrivers = lib.optionals (hardware.gpu == "amd") [ "amdgpu" ];
 
       libinput = lib.optionalAttrs (hardware.touchpad or false) {
         enable = true;
@@ -35,17 +23,12 @@
     };
   };
 
-  # Fixes tty resolution
-  boot.loader.systemd-boot.consoleMode = if (hardware.gpu == "nvidia") then "max" else "keep";
-
   hardware = {
-    nvidia.package = lib.optionals (hardware.gpu == "nvidia") config.boot.kernelPackages.nvidiaPackages.stable;
     enableRedistributableFirmware = true;
 
     graphics = {
       enable = true;
       enable32Bit = true;
-      extraPackages32 = lib.optional (hardware.gpu == "nvidia") pkgs.pkgsi686Linux.libva;
     };
 
     opentabletdriver = {
@@ -57,7 +40,9 @@
       enable = true;
       settings.General.Enable = "Source,Sink,Media,Socket";
     };
-  } // lib.optionalAttrs (hardware.cpu or "" != "") {
-    cpu.${hardware.cpu}.updateMicrocode = true;
+
+    cpu = lib.optionalAttrs (hardware.cpu or null != null) {
+      ${hardware.cpu}.updateMicrocode = true;
+    };
   };
 }

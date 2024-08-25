@@ -7,7 +7,7 @@
 
 {
   programs = {
-    # Required for some GTK prorams
+    # Required for some GTK programs
     dconf.enable = true;
   };
 

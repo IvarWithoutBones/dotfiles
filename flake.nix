@@ -67,6 +67,7 @@
           system = "x86_64-linux";
 
           modules = [
+            ./modules/linux/nvidia.nix
             ./modules/linux/hardware-config/nixos-pc.nix
           ];
 
