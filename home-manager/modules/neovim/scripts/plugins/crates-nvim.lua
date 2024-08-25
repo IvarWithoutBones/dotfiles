@@ -1,5 +1,5 @@
 require('crates').setup {
-    src = {
+    completion = {
         -- Enable completion, requires the `nvim-cmp` plugin
         cmp = {
             enabled = true,

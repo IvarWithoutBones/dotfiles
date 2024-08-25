@@ -58,7 +58,7 @@
     psst
     krita
     _1password-gui
-    transmission-gtk
+    transmission_4-gtk
     firefox
   ] ++ lib.optional pkgs.stdenvNoCC.isDarwin iterm2;
 

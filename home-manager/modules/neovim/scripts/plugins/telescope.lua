@@ -18,6 +18,6 @@ binding("<space>tb", function() pick('buffers') end)
 binding("<space>tr", function() pick('resume') end) -- resume previous search
 
 -- Git
-binding("<space>gs", function() pick('git_status') end)
-binding("<space>gb", function() pick('git_branches') end)
-binding("<space>gc", function() pick('git_commits') end)
+binding("<space>gS", function() pick('git_status') end)
+binding("<space>gB", function() pick('git_branches') end)
+binding("<space>gC", function() pick('git_commits') end)
