@@ -38,20 +38,5 @@ in
     "network-addresses-${device}".wantedBy = lib.mkForce [ "sys-subsystem-net-devices-${device}.device" ];
   }));
 
-  services = {
-    openssh.enable = true;
-
-    zerotierone = {
-      enable = true;
-
-      joinNetworks = [
-        # Personal network
-        "12ac4a1e719ff42c"
-        # queens & co
-        "8286ac0e47868413"
-      ];
-    };
-  };
-
-  programs.ssh.setXAuthLocation = true;
+  services.openssh.enable = true;
 }
