@@ -17,6 +17,8 @@ null_ls.setup {
                 "--space-redirects",
                 "--case-indent",
                 "--simplify",
+                "--case-indent",
+                "--apply-ignore",
                 "-filename", "$FILENAME" -- Run on the current file
             }
         }),

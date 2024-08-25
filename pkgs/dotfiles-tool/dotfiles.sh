@@ -37,6 +37,7 @@ usage: $(basename "$0") [OPTIONS]
     [--update-git, -U]          Update the git repository.
     [--collect-garbage, -g]     Collect garbage.
     [--print-logs, -l]          Print more verbose logs.
+    [--fast, -f]                Pass '--fast' to the rebuild command.
     [--help, -h]                Print this help message, then exit.
     [-- FLAGS]                  Pass all proceeding flags to the rebuild command.
 EOF
@@ -60,6 +61,9 @@ for arg in "$@"; do
 			REBUILD_FLAGS+=("--print-build-logs")
 			FLAKE_UPDATE_FLAGS+=("--print-build-logs")
 			COLLECT_GARBAGE_FLAGS+=("--verbose")
+			;;
+		--fast | -f)
+			REBUILD_FLAGS+=("--fast")
 			;;
 		--help | -h)
 			helpMessage
