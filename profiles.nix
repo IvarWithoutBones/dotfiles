@@ -83,6 +83,7 @@ rec {
       ./modules/linux/audio.nix
       ./modules/linux/jellyfin.nix
       ./modules/linux/zerotierone.nix
+      ./modules/linux/greetd.nix
       #./modules/linux/android.nix
     ] ++ ivv.modules;
 
