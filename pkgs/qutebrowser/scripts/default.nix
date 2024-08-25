@@ -2,8 +2,6 @@
 
 {
   greasemonkey = {
-    dark-reader = callPackage ./dark-reader { };
-
     youtube-adblock = callPackage ./youtube-adblock { };
 
     youtube-sponsorblock = callPackage ./youtube-sponsorblock { };
