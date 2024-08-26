@@ -41,7 +41,6 @@ rec {
           ./home-manager/packages.nix
           ./home-manager/modules/less.nix
           ./home-manager/modules/nix-index.nix
-          ./home-manager/modules/mpv.nix
           ./home-manager/modules/readline.nix
           ./home-manager/modules/fzf.nix
           ./home-manager/modules/git.nix
@@ -49,7 +48,6 @@ rec {
           ./home-manager/modules/neovim
           ./home-manager/modules/bat.nix
           ./home-manager/modules/discord.nix
-          ./home-manager/modules/qutebrowser.nix
           ./home-manager/modules/helix.nix
           ./home-manager/modules/gdb.nix
         ];
@@ -95,6 +93,11 @@ rec {
         ./home-manager/modules/linux/xresources.nix
         ./home-manager/modules/linux/gtk.nix
         ./home-manager/modules/linux/i3-sway
+        # TODO: re-enable on Darwin once the following issue is fixed: https://github.com/NixOS/nixpkgs/issues/327836
+        ./home-manager/modules/mpv.nix
+        # TODO: re-enable on Darwin once `pyobjc` is packaged and added to qutebrowser. Without this qutebrowser throws an error upon startup.
+        # See the following issue for more information: https://github.com/NixOS/nixpkgs/issues/101360
+        ./home-manager/modules/qutebrowser.nix
       ] ++ ivv.home-manager.modules;
     };
 
