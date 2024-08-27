@@ -25,7 +25,7 @@ local function loadOverrides()
     return value
 end
 
-local function languageServers()
+local function loadLanguageServers()
     -- For a list of available options see the documentation:
     -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
     local default = {
@@ -35,6 +35,17 @@ local function languageServers()
         omnisharp = {}, -- C#
         taplo = {},     -- TOML
         tsserver = {},  -- TypeScript/JavaScript
+
+        -- Rust
+        rust_analyzer = {
+            settings = {
+                ["rust-analyzer"] = {
+                    checkOnSave = { command = "clippy" },
+                    -- Dont show diagnostics for inactive cfg directives
+                    diagnostics = { disabled = { "inactive-code" } },
+                }
+            }
+        },
 
         -- C/C++/Objective-C
         clangd = {
@@ -150,10 +161,16 @@ local options = {
     end
 }
 
+-- Cache the language server configurations (with overrides applied) so that rustaceanvim can use them as well
+local languageServers = loadLanguageServers()
+
 -- Register all language servers, overwriting any previous registrations
-for server_name, server_options in pairs(languageServers()) do
-    local merged = vim.tbl_deep_extend("force", options, server_options)
-    require("lspconfig")[server_name].setup(merged)
+for server_name, server_options in pairs(languageServers) do
+    -- Ignore rust-analyzer, its configured separately via rustaceanvim
+    if server_name ~= "rust_analyzer" then
+        local merged = vim.tbl_deep_extend("force", options, server_options)
+        require("lspconfig")[server_name].setup(merged)
+    end
 end
 
 -- Configure rustaceanvim, which initialises rust-analyzer differently from other LSP clients
@@ -163,6 +180,8 @@ vim.g.rustaceanvim = {
         test_executor = require('rustaceanvim.executors').toggleterm
     },
     server = {
+        settings = languageServers.rust_analyzer.settings,
+
         -- Configure some rust-specific keybindings when the language server attaches
         on_attach = function(_, buffer)
             commonBindings(buffer)
@@ -171,23 +190,5 @@ vim.g.rustaceanvim = {
             binding(buffer, '<space>ds', function() vim.cmd.RustLsp('renderDiagnostic') end) -- Show diagnostics from `cargo build`
             binding(buffer, '<space>od', function() vim.cmd.RustLsp('openDocs') end)         -- Open documentation of the hovered symbol in the browser
         end,
-
-        settings = function(_)
-            local default = {
-                ["rust-analyzer"] = {
-                    checkOnSave = { command = "clippy" },
-                    -- Dont show diagnostics for inactive cfg directives
-                    diagnostics = { disabled = { "inactive-code" } },
-                }
-            }
-
-            local overrides = loadOverrides();
-            if overrides.rust_analyzer and overrides.rust_analyzer.settings then
-                -- Use the same format as other LSP clients
-                return vim.tbl_deep_extend("force", default, overrides.rust_analyzer.settings)
-            else
-                return default
-            end
-        end
     }
 }
