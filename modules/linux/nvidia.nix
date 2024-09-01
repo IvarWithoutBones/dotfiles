@@ -5,7 +5,11 @@
 
 {
   hardware = {
-    nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
+    nvidia = {
+      package = config.boot.kernelPackages.nvidiaPackages.stable;
+      open = false; # Getting "probe failed with driver nvidia" errors upon startup
+    };
+
     # Required for some legacy applications
     graphics.extraPackages32 = [ pkgs.pkgsi686Linux.libva ];
     # GPU support in containers such as Docker
