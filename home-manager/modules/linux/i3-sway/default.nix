@@ -70,7 +70,11 @@ in
             { class = "discord"; }
             { class = "element"; }
           ];
-          "${workspaces.ws4}" = [{ class = "Psst-gui"; }];
+          "${workspaces.ws4}" = [
+            { class = "Psst-gui"; }
+            { class = "Spotify"; }
+            { class = "tidal-hifi"; }
+          ];
           "${workspaces.ws10}" = [{ class = "Transmission-gtk"; }];
           "${workspaces.ws5}" = [{ class = "steam"; }];
         };

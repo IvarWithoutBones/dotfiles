@@ -25,6 +25,7 @@
     cargo-flamegraph
     eza
     gimp
+    prismlauncher
 
     # Packages from my overlay
     dotfiles-tool
@@ -40,12 +41,13 @@
     speedtest
     sm64ex-practice
     proton-ge-runner
-    signal-desktop
 
     # Fonts. TODO: manage this from a module option?
     noto-fonts-emoji
     (nerdfonts.override { fonts = [ "FiraCode" ]; })
 
+    signal-desktop
+    tidal-hifi
     obsidian
     ghidra # TODO: enable on Darwin when it isn't broken there anymore.
     vscode-fhs
@@ -60,7 +62,9 @@
     _1password-gui
     transmission_4-gtk
     firefox
-  ] ++ lib.optional pkgs.stdenvNoCC.isDarwin iterm2;
+  ] ++ lib.optional pkgs.stdenvNoCC.isDarwin [
+    iterm2
+  ];
 
   xdg = lib.mkIf pkgs.stdenvNoCC.isLinux {
     enable = true;

@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-supportedInstances=( "spotify" "psst" ) # The MPRIS instances to display information for
+supportedInstances=( "spotify" "psst" "tidal-hifi" ) # The MPRIS instances to display information for
 currentInstances="$(playerctl --list-all)"
 
 # Dont do anything if no supported instance is active
