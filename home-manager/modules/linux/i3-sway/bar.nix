@@ -27,12 +27,16 @@ in
     bars.top = {
       blocks = [
         {
-          # Display the currently playing song from an MPRIS instance
-          # TODO: use the `music` block once we can use `hide_when_empty` with it
-          block = "custom";
-          command = "${pkgs.mpris-statusbar}/bin/mpris-statusbar";
-          hide_when_empty = true;
-          interval = 1;
+          # Music
+          block = "music";
+          player = [ "spotify" "psst" "tidal-hifi" ];
+          format = "{ $icon $combo.str(max_w:50,rot_interval:0.25) }|";
+          theme_overrides.info_bg = { link = "idle_bg"; }; # Disable darkened background
+          click = [
+            { button = "left"; action = "prev"; }
+            { button = "right"; action = "next"; }
+            { button = "middle"; action = "play_pause"; }
+          ];
         }
 
         {
@@ -93,7 +97,7 @@ in
         }
 
         {
-          # Time block, but with an emoji refering to the time of day
+          # Time block, but with an emoji referring to the time of day
           block = "custom";
           command = "echo \"$(${timeEmoji}) $(date +'%H:%M:%S')\"";
           interval = 1;
@@ -107,6 +111,8 @@ in
 
       settings = {
         icons.overrides = {
+          music = "󰝚";
+
           volume_muted = "";
           volume = [
             ""

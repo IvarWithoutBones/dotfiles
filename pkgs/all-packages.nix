@@ -33,8 +33,6 @@ with pkgs; {
 
   mkscript = callPackage ./mkscript { };
 
-  mpris-statusbar = callPackage ./mpris-statusbar { };
-
   nil-language-server = nil-language-server.packages.${stdenvNoCC.hostPlatform.system
     or (throw "Unsupported platform ${stdenvNoCC.hostPlatform.system}")}.nil;
 
