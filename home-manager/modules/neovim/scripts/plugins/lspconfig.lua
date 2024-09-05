@@ -126,13 +126,15 @@ local function loadLanguageServers()
     return vim.tbl_deep_extend("force", default, loadOverrides())
 end
 
-local function binding(buffer, key, action, mode)
-    mode = mode or 'n'
-    vim.keymap.set(mode, key, action, {
+local function binding(buffer, key, action, opts)
+    opts = opts or {}
+    local keymapOpts = {
         buffer = buffer,
         noremap = true,
         nowait = true,
-    })
+    }
+    if opts.desc then keymapOpts.desc = opts.desc end
+    vim.keymap.set(opts.mode or "n", key, action, keymapOpts)
 end
 
 local function commonBindings(buffer)
@@ -143,7 +145,7 @@ local function commonBindings(buffer)
 
     -- Show information about function signature
     binding(buffer, '<C-k>', vim.lsp.buf.signature_help)
-    binding(buffer, '<C-k>', vim.lsp.buf.signature_help, 'i')
+    binding(buffer, '<C-k>', vim.lsp.buf.signature_help, { mode = 'i' })
 
     binding(buffer, 'K', vim.lsp.buf.hover)                    -- Show hover information
     binding(buffer, 'rn', vim.lsp.buf.rename)                  -- Rename symbol
@@ -185,10 +187,18 @@ vim.g.rustaceanvim = {
         -- Configure some rust-specific keybindings when the language server attaches
         on_attach = function(_, buffer)
             commonBindings(buffer)
-            binding(buffer, 'gp', function() vim.cmd.RustLsp('parentModule') end)            -- Open the parent module
-            binding(buffer, 'gP', function() vim.cmd.RustLsp('openCargo') end)               -- Open Cargo.toml
-            binding(buffer, '<space>ds', function() vim.cmd.RustLsp('renderDiagnostic') end) -- Show diagnostics from `cargo build`
-            binding(buffer, '<space>od', function() vim.cmd.RustLsp('openDocs') end)         -- Open documentation of the hovered symbol in the browser
+            -- Open the parent module
+            binding(buffer, 'gp', function() vim.cmd.RustLsp('parentModule') end, { desc = "open parent module" })
+            -- Open Cargo.toml
+            binding(buffer, 'gP', function() vim.cmd.RustLsp('openCargo') end, { desc = "open Cargo.toml" })
+            -- Recursively expand the macro under the cursor
+            binding(buffer, '<space>rm', function() vim.cmd.RustLsp('expandMacro') end, { desc = "expand macro" })
+            -- Open documentation of the hovered symbol in the browser
+            binding(buffer, '<space>rD', function() vim.cmd.RustLsp('openDocs') end, { desc = "open documentation" })
+            -- Show diagnostics from `cargo clippy`
+            binding(buffer, '<space>rd', function() vim.cmd.RustLsp('renderDiagnostic') end,
+                { desc = "render diagnostics" }
+            )
         end,
     }
 }
