@@ -64,6 +64,7 @@
     firefox
   ] ++ lib.optionals pkgs.stdenvNoCC.isDarwin [
     iterm2
+    mosh # Enabled from the NixOS module on Linux
   ];
 
   xdg = lib.mkIf pkgs.stdenvNoCC.isLinux {
