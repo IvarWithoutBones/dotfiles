@@ -62,7 +62,7 @@
     _1password-gui
     transmission_4-gtk
     firefox
-  ] ++ lib.optional pkgs.stdenvNoCC.isDarwin [
+  ] ++ lib.optionals pkgs.stdenvNoCC.isDarwin [
     iterm2
   ];
 
