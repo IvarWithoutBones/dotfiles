@@ -90,6 +90,9 @@ in
       syntax = "enable";
       termguicolors = true;
 
+      # Allow UI components to react to mouse events
+      mousemoveevent = true;
+
       # Line numbers
       number = true;
       relativenumber = true;

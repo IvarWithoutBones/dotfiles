@@ -162,6 +162,13 @@ in
         config = mkLuaFile ./scripts/plugins/nvim-tree.lua;
       }
 
+      telescope-fzf-native-nvim # Dependency of dropbar-nvim
+      {
+        # Show context such as the function the cursor is in inside of the winbar
+        plugin = dropbar-nvim;
+        config = mkLuaFile ./scripts/plugins/dropbar.lua;
+      }
+
       rustaceanvim # Used in ./scripts/plugins/lspconfig.lua
       {
         # Language server configuration presets
