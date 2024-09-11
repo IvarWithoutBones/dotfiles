@@ -26,6 +26,7 @@
     eza
     gimp
     prismlauncher
+    moonlight-qt
 
     # Packages from my overlay
     dotfiles-tool
