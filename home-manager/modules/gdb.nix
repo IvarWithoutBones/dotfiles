@@ -6,8 +6,7 @@
 }:
 
 let
-  # An extra (mutable) configuration file for stuff we cannot configure with home-manager,
-  # used mainly for shortcut `define`s to load symbol files from locally compiled projects.
+  # An extra (mutable) configuration file for stuff we cannot configure with home-manager, used mainly for extra `add-auto-load-safe-path` entries.
   extraConfigFile =
     if pkgs.stdenvNoCC.isLinux then "${config.xdg.configHome}/gdb/gdbinit-extra"
     else if pkgs.stdenvNoCC.isDarwin then "${config.home.homeDirectory}/.gdbinit-extra"
@@ -28,14 +27,16 @@ let
         if "(has focus)" in gdb.execute("info win", to_string=True):
           gdb.execute("tui refresh")
       '';
+
+      bat = "${lib.getExe pkgs.bat} --pager=\"${lib.getExe pkgs.less} --no-init --raw-control-chars --ignore-case --mouse -+F +r\" --paging=always --plain";
     in
     ''
       set disassembly-flavor intel
       set max-value-size unlimited
-      set disassemble-next-line on
       set confirm off
       set pagination off
       set step-mode on
+      set unwind-on-signal on
 
       set history save on
       set history filename ${cacheDir}/history
@@ -43,7 +44,6 @@ let
       set history remove-duplicates 20
 
       set print address on
-      set print symbol-filename on
       set print array on
       set print pretty on
       set print demangle on
@@ -51,10 +51,12 @@ let
       set print object on
       set print static-members on
       set print vtbl on
+      set filename-display relative
 
       set tui compact-source on
       set tui border-mode normal
       set tui active-border-mode bold
+      set tui mouse-events on
       set style tui-border foreground magenta
       set style tui-active-border foreground magenta
 
@@ -80,12 +82,6 @@ let
         end
       '') (lib.range 1 10)}
 
-      define less
-        || ${pkgs.less}/bin/less
-        # Giving less access to the terminal breaks the TUI, so we need to manually refresh it
-        source ${refreshTui}
-      end
-
       define connect-remote
         if $argc == 0
           init-if-undefined $connectRemoteAddress = "localhost:9001"
@@ -97,6 +93,25 @@ let
 
         eval "echo connecting to \"%s\"\n", $_connectRemoteAddress
         eval "target remote %s", $_connectRemoteAddress
+      end
+
+      define bat
+        || ${bat}
+        # Giving the pager access to the terminal breaks the TUI, so we need to manually refresh it
+        source ${refreshTui}
+      end
+
+      define bat-current-language
+        # Check if bat supports syntax highlighting for the current language, and if so, use it
+        source ${pkgs.writeText "bat-current-language.py" ''
+          import subprocess
+          cmd = '|| ${bat}'
+          lang = gdb.current_language()
+          if subprocess.run(["${lib.getExe pkgs.bat}", "--list-languages"], stdout=subprocess.PIPE).stdout.decode("utf-8").lower().find(lang) != -1:
+              cmd += f" --language={lang}"
+          gdb.execute(cmd, from_tty=True)
+        ''}
+        source ${refreshTui}
       end
 
       define hook-stop
@@ -134,24 +149,24 @@ let
     dotfiles-flake.lib.readlineBindingsAllModes ''
       "${clearLine}": kill-whole-line # See the comment above
 
-      # Step one instruction/line
-      Meta-p: ${insertCommand "step"}
-      Control-p: ${insertCommand "stepi"}
+      # Step one line/instruction (into function calls)
+      Control-o: ${insertCommand "step"}
+      Control-y: ${insertCommand "stepi"}
 
-      # Step one instruction/line, but step over function calls
-      Meta-o: ${insertCommand "next"}
-      Control-o: ${insertCommand "nexti"}
+      # Step one line/instruction (over function calls)
+      Control-p: ${insertCommand "next"}
+      Control-u: ${insertCommand "nexti"}
 
       # Continue execution until the current function returns
       Control-f: ${insertCommand "finish"}
 
-      # View the output of the previous command in less
-      Control-k: ${insertCommand "less"}
+      Control-a: ${insertCommand "info args"}   # View the arguments of the current function
+      Control-e: ${insertCommand "info locals"} # View the local variables of the current function
+      Control-g: ${insertCommand "backtrace"}   # View a backtrace
 
-      # Switch settings for displaying the current file name, as it can be too long to fit in the TUI windows.
-      "\C-gff": ${insertCommand "set print symbol-filename on\\nset filename-display relative"}
-      "\C-gfs": ${insertCommand "set print symbol-filename on\\nset filename-display basename"}
-      "\C-gfo": ${insertCommand "set print symbol-filename off"}
+      # View the output of the previous command in the pager
+      Control-k: ${insertCommand "bat"}
+      Control-b: ${insertCommand "bat-current-language"}
 
       # Change the size of the currently focused window
       Meta-s: ${insertCommand "source ${changeActiveWindowSize "height" "+2"}"}
