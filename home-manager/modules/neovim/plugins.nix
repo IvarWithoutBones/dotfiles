@@ -169,6 +169,16 @@ in
         config = mkLuaFile ./scripts/plugins/dropbar.lua;
       }
 
+      # UI addons for nvim-dap
+      nvim-dap-ui
+      nvim-dap-virtual-text
+      telescope-dap-nvim
+      {
+        # Debug Adapter Protocol integration for debugging
+        plugin = nvim-dap;
+        config = mkLuaFile ./scripts/plugins/dap.lua;
+      }
+
       rustaceanvim # Used in ./scripts/plugins/lspconfig.lua
       {
         # Language server configuration presets

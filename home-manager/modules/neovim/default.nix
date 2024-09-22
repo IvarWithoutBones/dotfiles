@@ -7,8 +7,12 @@
 
 let
   # Packages to bundle with neovim, see `nvimWithDefaultPackages` below.
-  # `plugins/lspconfig.lua` contains the configuration of the language servers listed here.
   packages = with pkgs; [
+    # DAP clients
+    lldb
+    gdb
+
+    # `plugins/lspconfig.lua` contains the configuration of the language servers listed below.
     taplo-lsp # TOML
     yaml-language-server # YAML
     typescript-language-server # Typescript/Javascript

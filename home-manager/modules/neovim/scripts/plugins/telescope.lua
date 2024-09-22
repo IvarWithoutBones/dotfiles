@@ -3,6 +3,10 @@ local function binding(key, action, mode)
     vim.keymap.set(mode, key, action, { noremap = true, silent = true })
 end
 
+local telescope = require("telescope")
+telescope.setup()
+telescope.load_extension("dap") -- Needs the `telescope-dap-nvim` plugin
+
 local builtin = require 'telescope.builtin'
 local options = require 'telescope.themes'.get_ivy {}
 
