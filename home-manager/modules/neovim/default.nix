@@ -11,7 +11,7 @@ let
   packages = with pkgs; [
     taplo-lsp # TOML
     yaml-language-server # YAML
-    nodePackages.typescript-language-server # Typescript/Javascript
+    typescript-language-server # Typescript/Javascript
     nodePackages.vscode-json-languageserver # JSON
     vscode-langservers-extracted # HTML
     python3Packages.python-lsp-server # Python

@@ -34,7 +34,7 @@ local function loadLanguageServers()
         html = {},      -- HTML
         omnisharp = {}, -- C#
         taplo = {},     -- TOML
-        tsserver = {},  -- TypeScript/JavaScript
+        ts_ls = {},  -- TypeScript/JavaScript
 
         -- Rust
         rust_analyzer = {
