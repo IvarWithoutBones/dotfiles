@@ -21,6 +21,8 @@
       frb = ''!git fetch $1 && git rebase $1/''${2:-HEAD} && :'';
       # Create a new branch and check it out, optionally from a given starting point.
       new = ''!''${2+git fetch $2} && git checkout -b $1 ''${2+$2/''${3:-HEAD}} --no-track --no-guess && :'';
+      # Create an empty file and add it to git
+      touch-add = ''![ ! -e "$1" ] && (touch "$1" && git add "$1") || (echo "path '$1' already exists" && exit 1) && :'';
 
       rb = "rebase --interactive";
       br = "branch";
