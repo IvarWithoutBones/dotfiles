@@ -149,8 +149,8 @@ in
       { mode = "v"; key = "<"; action = "<gv"; }
 
       # Jump between diagnostics
-      { mode = "n"; key = "<space>dn"; options.silent = true; action = ":lua vim.diagnostic.goto_next({ float = false })<cr>"; }
-      { mode = "n"; key = "<space>dN"; options.silent = true; action = ":lua vim.diagnostic.goto_prev({ float = false })<cr>"; }
+      { mode = "n"; key = "<space>n"; options.silent = true; action = ":lua vim.diagnostic.goto_next({ float = false })<cr>"; }
+      { mode = "n"; key = "<space>N"; options.silent = true; action = ":lua vim.diagnostic.goto_prev({ float = false })<cr>"; }
 
       # Use `Control+Alt+{h,j,k,l}` to resize buffers from normal mode
       { mode = "n"; key = "<C-A-h>"; options.silent = true; action = ":vertical resize -2<cr>"; }
