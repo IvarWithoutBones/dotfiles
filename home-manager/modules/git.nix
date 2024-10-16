@@ -46,9 +46,10 @@
 
     extraConfig = {
       rerere.enabled = true;
-      pull.rebase = true;
       init.defaultBranch = "main";
       diff.colorMoved = "zebra";
+      pull.rebase = true;
+      push.autoSetupRemote = true;
     };
 
     # Prettier pager, adds syntax highlighting and line numbers
