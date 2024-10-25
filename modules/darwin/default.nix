@@ -18,4 +18,6 @@
     name = username;
     home = "/Users/${username}";
   };
+
+  system.stateVersion = 5;
 }
