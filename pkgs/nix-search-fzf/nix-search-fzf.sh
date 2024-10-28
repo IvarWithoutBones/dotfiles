@@ -74,11 +74,11 @@ manageCache() {
 	local doUpdate="${1:-false}"
 	mkdir -p "$(dirname "$CACHE_PATH")"
 
-	if [ ! -f "$CACHE_PATH" ]; then
-		doUpdate=true
-		echo "cache file does not exist, generating..." >&2
+	if [ ! -f "$CACHE_PATH" ] || [ ! -s "$CACHE_PATH" ]; then
+		doUpdate="true"
+		echo "attribute path cache does not exist, generating..." >&2
 	elif (($(date -r "$CACHE_PATH" +%s) < $(date -d "now - 10 days" +%s))); then
-		doUpdate=true
+		doUpdate="true"
 		echo "cache file is older than 10 days, updating..." >&2
 	fi
 
@@ -86,8 +86,8 @@ manageCache() {
 		echo "caching attribute paths..." >&2
 		# Create a list of all attribute paths with "legacyPackages.$arch" stripped
 		# In the future this could contain metadata as well, doing a "nix-eval" for each is not the fastest
-		nix search "$FLAKE" --json | jq -r 'keys[]' | cut -d'.' -f3- > "$CACHE_PATH"
-		echo "successfully generated the cache" >&2
+		nix search "$FLAKE" "^" --quiet --json | jq -r 'keys[]' | cut -d'.' -f3- > "$CACHE_PATH"
+		echo "successfully generated attribute path cache" >&2
 	fi
 }
 
