@@ -4,7 +4,7 @@
 }:
 
 let
-  packages = with pkgs; [
+  extraPackages = with pkgs; [
     taplo-lsp # TOML
     nodePackages.vscode-json-languageserver # JSON
     yaml-language-server # YAML
@@ -28,7 +28,7 @@ let
     shfmt
 
     # Python
-    python3Packages.python-lsp-server # Python
+    python3Packages.python-lsp-server
     ruff
 
     # Nix
@@ -51,7 +51,11 @@ let
       nativeBuildInputs = [ pkgs.makeWrapper ];
     } ''
     mkdir -p $out/bin
-    makeWrapper ${lib.getExe pkgs.helix} $out/bin/hx --suffix PATH : ${lib.makeBinPath packages}
+
+    # Note that `pkg.helix-git` comes from my overlay, it refers to the upstream flake.
+    # This is because I want to use the "inline diagnostics" feature, which is not yet present in a stable release.
+    # TODO: Switch back to regular `pkgs.helix` once this PR makes it into a release: https://github.com/helix-editor/helix/pull/6417.
+    makeWrapper ${lib.getExe pkgs.helix-git} $out/bin/hx --suffix PATH : ${lib.makeBinPath extraPackages}
   '';
 in
 {
@@ -65,11 +69,12 @@ in
       keys.normal = {
         C-f = ":format"; # Format the current buffer
         A-q = ":buffer-close"; # Close the current buffer
+        A-Q = ":buffer-close!"; # Forcibly close the current buffer
 
         "A-]" = ":buffer-next"; # Jump to the next buffer
         "A-[" = ":buffer-previous"; # Jump to the previous buffer
 
-        # Navigate between views using Alt+{h,j,k,l}
+        # Navigate between buffers using Alt+{h,j,k,l}
         A-h = "jump_view_left";
         A-j = "jump_view_down";
         A-k = "jump_view_up";
@@ -81,13 +86,13 @@ in
         color-modes = true;
         line-number = "relative";
         bufferline = "always";
+        lsp.display-messages = true;
+        indent-guides.render = true;
 
-        lsp = {
-          display-messages = true;
-        };
-
-        indent-guides = {
-          render = true;
+        # Display diagnostics next to their source. Note that this is (currently) not possible on stable helix, see the comment on `helixWithDefaultPackages`.
+        end-of-line-diagnostics = "hint";
+        inline-diagnostics = {
+          cursor-line = "warning";
         };
 
         cursor-shape = {
@@ -109,9 +114,10 @@ in
           ];
 
           right = [
-            "version-control"
-            "separator"
             "workspace-diagnostics"
+            "spacer"
+            "version-control"
+            "spacer"
             "separator"
             "selections"
             "separator"

@@ -1,6 +1,7 @@
 { nix-index-database
 , nil-language-server
 , sm64ex-practice
+, helix
 , ...
 }:
 
@@ -29,15 +30,15 @@ with pkgs; {
 
   git-add-fuzzy = callPackage ./git-add-fuzzy { };
 
+  helix-git = helix.packages.${hostPlatform.system or (throw "Unsupported platform ${hostPlatform.system}")}.helix;
+
   iterm2-shell-integration = callPackage ./iterm2-shell-integration { };
 
   mkscript = callPackage ./mkscript { };
 
-  nil-language-server = nil-language-server.packages.${stdenvNoCC.hostPlatform.system
-    or (throw "Unsupported platform ${stdenvNoCC.hostPlatform.system}")}.nil;
+  nil-language-server = nil-language-server.packages.${hostPlatform.system or (throw "Unsupported platform ${hostPlatform.system}")}.nil;
 
-  nix-index-database = nix-index-database.legacyPackages.${stdenvNoCC.hostPlatform.system
-    or (throw "Unsupported platform ${stdenvNoCC.hostPlatform.system}")}.database;
+  nix-index-database = nix-index-database.legacyPackages.${hostPlatform.system or (throw "Unsupported platform ${hostPlatform.system}")}.database;
 
   nix-search-fzf = callPackage ./nix-search-fzf { };
 
