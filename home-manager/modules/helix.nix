@@ -4,14 +4,24 @@
 }:
 
 let
-  extraPackages = with pkgs; [
+  debuggers = with pkgs; [
+    lldb # Rust/C/C++/Zig
+    netcoredbg # C#
+  ];
+
+  languageServers = with pkgs; [
+    marksman # Markdown
+    dot-language-server # Dot (graphviz)
     taplo-lsp # TOML
     nodePackages.vscode-json-languageserver # JSON
     yaml-language-server # YAML
+    haskell-language-server # Haskell
+    gopls # Go
     typescript-language-server # Typescript/Javascript
     vscode-langservers-extracted # HTML/CSS
     sumneko-lua-language-server # Lua
     glsl_analyzer # GLSL
+    mesonlsp # Meson
     cmake-language-server # CMake
 
     # C/C++
@@ -21,6 +31,10 @@ let
     # C#
     dotnet-sdk
     omnisharp-roslyn
+
+    # Zig
+    zls
+    zig
 
     # Bash
     shellcheck
@@ -55,12 +69,18 @@ let
     # Note that `pkg.helix-git` comes from my overlay, it refers to the upstream flake.
     # This is because I want to use the "inline diagnostics" feature, which is not yet present in a stable release.
     # TODO: Switch back to regular `pkgs.helix` once this PR makes it into a release: https://github.com/helix-editor/helix/pull/6417.
-    makeWrapper ${lib.getExe pkgs.helix-git} $out/bin/hx --suffix PATH : ${lib.makeBinPath extraPackages}
+    makeWrapper ${lib.getExe pkgs.helix-git} $out/bin/hx --suffix PATH : ${lib.makeBinPath (debuggers ++ languageServers)}
   '';
 in
 {
+  home.sessionVariables = {
+    EDITOR = "hx";
+    VISUAL = "hx";
+  };
+
   programs.helix = {
     enable = true;
+    defaultEditor = true;
     package = helixWithDefaultPackages;
 
     settings = {
@@ -91,9 +111,6 @@ in
 
         # Display diagnostics next to their source. Note that this is (currently) not possible on stable helix, see the comment on `helixWithDefaultPackages`.
         end-of-line-diagnostics = "hint";
-        inline-diagnostics = {
-          cursor-line = "warning";
-        };
 
         cursor-shape = {
           insert = "bar";
@@ -154,8 +171,12 @@ in
       ];
 
       language-server = {
-        rust-analyzer = {
-          config.checkOnSave.command = "clippy";
+        rust-analyzer.config = {
+          # Run `cargo clippy` on save instead of `cargo check`.
+          checkOnSave.command = "clippy";
+
+          # Dont show hint diagnostics for inactive cfg directives.
+          diagnostics.disabled = [ "inactive-code" ];
         };
       };
     };

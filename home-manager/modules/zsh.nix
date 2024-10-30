@@ -27,7 +27,7 @@
     shellAliases = {
       ls = "${lib.getExe pkgs.eza} --group-directories-first";
       ls-diskusage = "${lib.getExe pkgs.eza} --all --total-size --sort size --long --no-permissions --no-user --no-time";
-      tree = "${lib.getExe pkgs.eza} --group-directories-first --tree --icons --git-ignore";
+      tree = "${lib.getExe pkgs.eza} --tree --icons --follow-symlinks --group-directories-first --git-ignore";
       cat = "${lib.getExe pkgs.bat} --plain";
       diff = "diff --color=auto --unified";
       dirdiff = "diff --color=auto -ENwbur";
@@ -35,6 +35,7 @@
       weather = "curl -S 'https://wttr.in/?1F'";
       diskusage = "df -ht ext4";
       mktar = "tar -czvf";
+      github-actions = "${lib.getExe pkgs.act} -s GITHUB_TOKEN=\"$(${lib.getExe pkgs.github-cli} auth token)\"";
     } // lib.optionalAttrs pkgs.stdenvNoCC.isLinux rec {
       copy = "${pkgs.xclip}/bin/xclip -selection clipboard";
       battery-left = "${pkgs.acpi}/bin/acpi | cut -d' ' -f5";
