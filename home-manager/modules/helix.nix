@@ -14,14 +14,12 @@ let
     dot-language-server # Dot (graphviz)
     taplo-lsp # TOML
     nodePackages.vscode-json-languageserver # JSON
-    yaml-language-server # YAML
     haskell-language-server # Haskell
     gopls # Go
     typescript-language-server # Typescript/Javascript
     vscode-langservers-extracted # HTML/CSS
     sumneko-lua-language-server # Lua
     glsl_analyzer # GLSL
-    mesonlsp # Meson
     cmake-language-server # CMake
 
     # C/C++
@@ -45,6 +43,14 @@ let
     python3Packages.python-lsp-server
     ruff
 
+    # SQL (various dialects)
+    sqls
+    sqlfluff
+
+    # YAML
+    yaml-language-server
+    yamlfmt
+
     # Nix
     nil-language-server
     nixpkgs-fmt
@@ -55,6 +61,8 @@ let
     rustc
     clippy
     rust-analyzer
+  ] ++ lib.optionals pkgs.hostPlatform.isLinux [
+    mesonlsp # Meson
   ];
 
   # A hacky way to add packages to helix's environment if they are not already present in $PATH.
@@ -86,20 +94,34 @@ in
     settings = {
       theme = "catppuccin_mocha";
 
-      keys.normal = {
-        C-f = ":format"; # Format the current buffer
-        A-q = ":buffer-close"; # Close the current buffer
-        A-Q = ":buffer-close!"; # Forcibly close the current buffer
+      keys =
+        let
+          # Enter normal mode and change/delete until the end of the line, yanking the removed content.
+          A-S-c = [ "normal_mode" "collapse_selection" "select_mode" "goto_line_end" "change_selection" ];
+          A-S-d = [ "normal_mode" "collapse_selection" "select_mode" "goto_line_end" "delete_selection" ];
+        in
+        {
+          select = {
+            inherit A-S-c A-S-d;
+          };
 
-        "A-]" = ":buffer-next"; # Jump to the next buffer
-        "A-[" = ":buffer-previous"; # Jump to the previous buffer
+          normal = {
+            inherit A-S-c A-S-d;
 
-        # Navigate between buffers using Alt+{h,j,k,l}
-        A-h = "jump_view_left";
-        A-j = "jump_view_down";
-        A-k = "jump_view_up";
-        A-l = "jump_view_right";
-      };
+            C-f = ":format"; # Format the current buffer
+            A-q = ":buffer-close"; # Close the current buffer
+            A-S-q = ":buffer-close!"; # Forcibly close the current buffer
+
+            "A-]" = ":buffer-next"; # Jump to the next buffer
+            "A-[" = ":buffer-previous"; # Jump to the previous buffer
+
+            # Navigate between buffers using Alt+{h,j,k,l}
+            A-h = "jump_view_left";
+            A-j = "jump_view_down";
+            A-k = "jump_view_up";
+            A-l = "jump_view_right";
+          };
+        };
 
       editor = {
         cursorline = true;
@@ -152,7 +174,6 @@ in
           name = "nix";
           formatter.command = "nixpkgs-fmt";
         }
-
         {
           name = "bash";
           formatter = {
@@ -164,13 +185,34 @@ in
               "--simplify"
               "--case-indent"
               "--apply-ignore"
-              "-" # Use standard input/output
+              "-" # Use stdin/stdout
             ];
+          };
+        }
+        {
+          name = "yaml";
+          formatter = {
+            command = "yamlfmt";
+            args = [ "-in" ]; # Use stdin/stdout
+          };
+        }
+        {
+          name = "sql";
+          language-servers = [{
+            name = "sqls";
+            except-features = [ "format" ]; # Appears to be broken: https://github.com/sqls-server/sqls/issues/153
+          }];
+
+          formatter = {
+            command = "sqlfluff";
+            args = [ "format" "-" ]; # Use stdin/stdout
           };
         }
       ];
 
       language-server = {
+        sqls.command = "sqls";
+
         rust-analyzer.config = {
           # Run `cargo clippy` on save instead of `cargo check`.
           checkOnSave.command = "clippy";
