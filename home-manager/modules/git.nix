@@ -24,6 +24,7 @@
       # Create an empty file and add it to git
       touch-add = ''![ ! -e "$1" ] && (touch "$1" && git add "$1") || (echo "path '$1' already exists" && exit 1) && :'';
 
+      fup = "commit --message fixup";
       rb = "rebase --interactive";
       br = "branch";
       brm = "branch --delete";
