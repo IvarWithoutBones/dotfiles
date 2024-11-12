@@ -8,11 +8,11 @@
 let
   proton-ge = stdenv.mkDerivation rec {
     pname = "proton-ge";
-    version = "8-13";
+    version = "9-20";
 
     src = fetchurl {
       url = "https://github.com/GloriousEggroll/proton-ge-custom/releases/download/GE-Proton${version}/GE-Proton${version}.tar.gz";
-      hash = "sha256-XdIQYbWqBFidrcWaAxbtkWgKC2G5CFSPNamIhkm/nqo=";
+      hash = "sha256-jDWZ4m5aUALhs/EhGwrFa/3dbrLE3Lrn2BAnGC7TbIk=";
     };
 
     dontConfigure = true;
