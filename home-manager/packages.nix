@@ -46,7 +46,7 @@
 
     # Fonts. TODO: manage this from a module option?
     noto-fonts-emoji
-    (nerdfonts.override { fonts = [ "FiraCode" ]; })
+    nerd-fonts.fira-code
 
     signal-desktop
     tidal-hifi

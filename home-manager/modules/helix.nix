@@ -28,7 +28,8 @@ let
 
     # C#
     dotnet-sdk
-    omnisharp-roslyn
+    # TODO: Re-enable once it upgrades from the EOL dotnet-sdk_6
+    # omnisharp-roslyn
 
     # Zig
     zls

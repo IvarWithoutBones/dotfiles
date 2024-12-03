@@ -21,7 +21,7 @@ in
     enable = true;
 
     settings = {
-      import = [ theme ];
+      general.import = [ theme ];
 
       font = {
         normal.family = "FiraCode Nerd Font";

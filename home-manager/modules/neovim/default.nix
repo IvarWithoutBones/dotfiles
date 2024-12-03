@@ -27,8 +27,9 @@ let
     clang
 
     # C#
-    dotnet-sdk_6
-    omnisharp-roslyn
+    dotnet-sdk
+    # TODO: Re-enable once it upgrades from the EOL dotnet-sdk_6
+    # omnisharp-roslyn
 
     # Bash
     shellcheck
