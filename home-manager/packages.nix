@@ -27,6 +27,7 @@
     gimp
     prismlauncher
     moonlight-qt
+    jellyfin-media-player
 
     # Packages from my overlay
     dotfiles-tool
