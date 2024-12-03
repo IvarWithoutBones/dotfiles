@@ -1,10 +1,14 @@
-# Cargo
-/target
-
 # Nix
 /result
 /result-dev
+/result-man
 
 # Direnv
 /.direnv
 /.envrc
+
+# Cargo
+/target
+
+# MacOS Finder
+.DS_Store

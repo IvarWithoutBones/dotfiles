@@ -1,0 +1,30 @@
+[workspace]
+members = ["crates/*"]
+resolver = "2"
+
+[workspace.package]
+edition = "2021"
+rust-version = "1.83"
+license = "MIT OR Apache-2.0"
+
+# High-performance but slow-to-compile release builds.
+[profile.release-lto]
+inherits = "release"
+codegen-units = 1
+lto = true
+
+[workspace.lints.clippy]
+# These get a lower priority since they are lint groups, we want to be able to override the level for individual lints.
+all = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+
+[workspace.lints.rust]
+missing_debug_implementations = "warn"
+keyword-idents-2024 = "warn"
+non-ascii-idents = "warn"
+unsafe_op_in_unsafe_fn = "warn"
+missing-unsafe-on-extern = "warn"
+unsafe-attr-outside-unsafe = "warn"
+
+[workspace.lints.rustdoc]
+private_doc_tests = "warn"
