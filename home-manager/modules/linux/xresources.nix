@@ -1,5 +1,4 @@
-{ config
-, pkgs
+{ pkgs
 , ...
 }:
 
@@ -13,7 +12,6 @@ in
   xresources = {
     extraConfig = ''
       #include "${catppuccin-theme}"
-      ${pkgs.dmenu-configured.xresources}
     '';
   };
 }
