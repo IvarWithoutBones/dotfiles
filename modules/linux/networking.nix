@@ -15,6 +15,10 @@ in
     hostName = hostname;
     enableIPv6 = false;
 
+    firewall.allowedTCPPorts = [
+      1285 # For streaming audio to other devices using this script: https://gist.github.com/IvarWithoutBones/944af61598a7da0e798a2474bcce1ceb
+    ];
+
     networkmanager = {
       enable = true;
       unmanaged = ethernetDevices;
