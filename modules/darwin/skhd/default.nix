@@ -78,7 +78,10 @@ in
       # Application shortcuts
       "shift + alt - d" = "open -n ${pkgs.discord}/Applications/Discord.app";
       "ctrl + shift + alt - d" = "killall discord";
-      "shift + alt - w" = "yabai -m space --focus 2 && open -n ${pkgs.qutebrowser}/Applications/qutebrowser.app";
+
+      # Currently broken on Darwin: https://github.com/NixOS/nixpkgs/issues/353924
+      # "shift + alt - w" = "yabai -m space --focus 2 && open -n ${pkgs.qutebrowser}/Applications/qutebrowser.app";
+
       # I quite like iTerm2, but its much slower than alacritty when there is a lot of output.
       # This doesn't use the direct path as a workaround for the following issue: https://github.com/koekeishiya/yabai/issues/1250#issuecomment-1181616780
       "alt + shift - return" = "open -n -a 'Alacritty.app'";

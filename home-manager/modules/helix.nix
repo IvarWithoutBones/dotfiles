@@ -14,7 +14,6 @@ let
     dot-language-server # Dot (graphviz)
     taplo-lsp # TOML
     nodePackages.vscode-json-languageserver # JSON
-    haskell-language-server # Haskell
     gopls # Go
     typescript-language-server # Typescript/Javascript
     vscode-langservers-extracted # HTML/CSS
@@ -64,6 +63,7 @@ let
     rust-analyzer
   ] ++ lib.optionals pkgs.hostPlatform.isLinux [
     mesonlsp # Meson
+    haskell-language-server # Haskell
   ];
 
   # A hacky way to add packages to helix's environment if they are not already present in $PATH.

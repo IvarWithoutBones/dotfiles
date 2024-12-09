@@ -25,7 +25,7 @@
     mkdir -p "$nix_apps"
 
     find ${config.system.build.applications}/Applications -maxdepth 1 -type l -exec readlink '{}' + |
-        while read src; do
+        while read -r src; do
             # Spotlight does not recognize symlinks, it will ignore directory we link to the applications folder.
             # It does understand MacOS aliases though, a unique filesystem feature. Sadly they cannot be created
             # from bash (as far as I know), so we use the oh-so-great Apple Script instead.

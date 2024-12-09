@@ -8,7 +8,7 @@
 
   fonts.packages = with pkgs; [
     noto-fonts-emoji
-    (nerdfonts.override { fonts = [ "FiraCode" ]; })
+    nerd-fonts.fira-code
   ];
 
   # This line is required; otherwise, on shell startup, you won't have Nix stuff in the PATH.

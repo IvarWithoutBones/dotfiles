@@ -27,7 +27,6 @@
     gimp
     prismlauncher
     moonlight-qt
-    jellyfin-media-player
 
     # Packages from my overlay
     dotfiles-tool
@@ -48,6 +47,7 @@
     noto-fonts-emoji
     nerd-fonts.fira-code
 
+    jellyfin-media-player
     signal-desktop
     tidal-hifi
     obsidian
