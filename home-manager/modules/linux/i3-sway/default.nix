@@ -65,7 +65,6 @@ in
         ];
 
         assigns = {
-          "${workspaces.ws2}" = [{ class = "electronplayer"; }];
           "${workspaces.ws3}" = [
             { class = "discord"; }
             { class = "element"; }
