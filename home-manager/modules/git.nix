@@ -41,7 +41,7 @@
     };
 
     signing = {
-      signByDefault = false;
+      signByDefault = true;
       key = null; # Let the gpg agent handle it
     };
 
