@@ -1,7 +1,6 @@
 { nix-index-database
 , nil-language-server
 , sm64ex-practice
-, helix
 , ...
 }:
 
@@ -29,8 +28,6 @@ with pkgs; {
   dmenu-configured = callPackage ./dmenu-configured { };
 
   git-add-fuzzy = callPackage ./git-add-fuzzy { };
-
-  helix-git = helix.packages.${hostPlatform.system or (throw "Unsupported platform ${hostPlatform.system}")}.helix;
 
   iterm2-shell-integration = callPackage ./iterm2-shell-integration { };
 

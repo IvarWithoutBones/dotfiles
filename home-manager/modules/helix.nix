@@ -74,11 +74,7 @@ let
       nativeBuildInputs = [ pkgs.makeWrapper ];
     } ''
     mkdir -p $out/bin
-
-    # Note that `pkg.helix-git` comes from my overlay, it refers to the upstream flake.
-    # This is because I want to use the "inline diagnostics" feature, which is not yet present in a stable release.
-    # TODO: Switch back to regular `pkgs.helix` once this PR makes it into a release: https://github.com/helix-editor/helix/pull/6417.
-    makeWrapper ${lib.getExe pkgs.helix-git} $out/bin/hx --suffix PATH : ${lib.makeBinPath (debuggers ++ languageServers)}
+    makeWrapper ${lib.getExe pkgs.helix} $out/bin/hx --suffix PATH : ${lib.makeBinPath (debuggers ++ languageServers)}
   '';
 in
 {
@@ -131,9 +127,7 @@ in
         bufferline = "always";
         lsp.display-messages = true;
         indent-guides.render = true;
-
-        # Display diagnostics next to their source. Note that this is (currently) not possible on stable helix, see the comment on `helixWithDefaultPackages`.
-        end-of-line-diagnostics = "hint";
+        end-of-line-diagnostics = "hint"; # Display diagnostics next to their source.
 
         cursor-shape = {
           insert = "bar";
