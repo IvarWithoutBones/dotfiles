@@ -71,7 +71,7 @@ rec {
       ./modules/linux/hardware.nix
       ./modules/linux/system.nix
       ./modules/linux/steam.nix
-      ./modules/linux/graphical.nix
+      ./modules/linux/keyring.nix
       ./modules/linux/flatpak.nix
       ./modules/linux/networking.nix
       ./modules/linux/gpg.nix
@@ -93,6 +93,7 @@ rec {
         ./home-manager/modules/linux/dunst.nix
         ./home-manager/modules/linux/xresources.nix
         ./home-manager/modules/linux/gtk.nix
+        ./home-manager/modules/linux/keyring.nix
         ./home-manager/modules/linux/i3-sway
         # TODO: re-enable on Darwin once the following issue is fixed: https://github.com/NixOS/nixpkgs/issues/327836
         ./home-manager/modules/mpv.nix

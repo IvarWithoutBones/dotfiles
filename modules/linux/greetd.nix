@@ -6,8 +6,11 @@
 }:
 
 {
-  # Allow gnome-keyring to authenticate the user on startup
-  security.pam.services.greetd.enableGnomeKeyring = config.services.gnome.gnome-keyring.enable;
+  # Required for some GTK programs.
+  programs.dconf.enable = true;
+
+  # Allow swaylock to authenticate the user.
+  security.pam.services.swaylock = lib.mkIf wayland { };
 
   services = {
     xserver = {
@@ -15,7 +18,7 @@
 
       # A session for whatever desktop environment is configured in home-manager, for both xorg and wayland.
       desktopManager = {
-        xterm.enable = false; # Otherwise we get a non-functional desktop session in the closure
+        xterm.enable = false; # Otherwise we get a non-functional desktop session in the closure.
         session = [{
           name = "home-manager";
           start = ''
@@ -26,7 +29,7 @@
       };
 
       displayManager = {
-        # Required when using Xorg as greetd cannot start the xserver on its own
+        # Required when using Xorg as greetd cannot start the xserver on its own.
         startx.enable = config.services.xserver.enable;
         lightdm.enable = false;
       };
