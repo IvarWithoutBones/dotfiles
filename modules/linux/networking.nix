@@ -7,6 +7,11 @@
 
 let
   ethernetDevices = [ "enp0s20f0u4" "enp0s20f0u6" ];
+
+  openPorts = [
+    1285 # For streaming audio to other devices using this script: https://gist.github.com/IvarWithoutBones/944af61598a7da0e798a2474bcce1ceb
+    34197 # Factorio
+  ];
 in
 {
   users.users.${username}.extraGroups = [ "networkmanager" ];
@@ -15,9 +20,10 @@ in
     hostName = hostname;
     enableIPv6 = false;
 
-    firewall.allowedTCPPorts = [
-      1285 # For streaming audio to other devices using this script: https://gist.github.com/IvarWithoutBones/944af61598a7da0e798a2474bcce1ceb
-    ];
+    firewall = {
+      allowedTCPPorts = openPorts;
+      allowedUDPPorts = openPorts;
+    };
 
     networkmanager = {
       enable = true;
