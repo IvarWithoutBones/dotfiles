@@ -127,14 +127,9 @@ in
         config = mkLuaFile ./scripts/plugins/indent-blankline.lua;
       }
       {
-        # Interactive diagnostics
+        # Interactive diagnostics and tree-based symbol navigation
         plugin = trouble-nvim;
         config = mkLuaFile ./scripts/plugins/trouble.lua;
-      }
-      {
-        # Tree-based symbol viewer
-        plugin = symbols-outline-nvim;
-        config = mkLuaFile ./scripts/plugins/symbols-outline.lua;
       }
       {
         # Automatically insert braces, brackets, etc
