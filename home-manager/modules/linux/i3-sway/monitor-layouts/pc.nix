@@ -1,4 +1,7 @@
-{ pkgs, ... }:
+{ lib
+, pkgs
+, ...
+}:
 
 {
   # Set the correct monitor layout after starting the graphical session, for my desktop machine
@@ -10,6 +13,6 @@
     };
 
     Install.WantedBy = [ "graphical-session.target" ];
-    Service.ExecStart = "${pkgs.xorg.xrandr}/bin/xrandr --output HDMI-0 --mode 1280x1024 --pos 0x208 --rotate normal --output DP-0 --primary --mode 3440x1440 --pos 1280x0 --rotate normal";
+    Service.ExecStart = "${lib.getExe pkgs.xorg.xrandr} --output DP-0 --primary --mode 3440x1440 --pos 1280x0 --rotate normal";
   };
 }
