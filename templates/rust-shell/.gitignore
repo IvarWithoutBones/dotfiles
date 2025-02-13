@@ -1,0 +1,11 @@
+# Nix
+/result
+/result-dev
+/result-man
+
+# Direnv
+/.direnv
+/.envrc
+
+# MacOS Finder
+.DS_Store
