@@ -17,7 +17,7 @@
 
   # Request manager for jellyfin, unifying series and movies
   services.jellyseerr = {
-    enable = true;
+    enable = false; # TODO: Re-enable once the following PR makes it into unstable: https://github.com/NixOS/nixpkgs/pull/380532
     openFirewall = true;
   };
 
