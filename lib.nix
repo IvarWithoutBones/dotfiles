@@ -109,7 +109,7 @@ rec {
 
       homeManagerFunc =
         if (isDarwin system)
-        then inputs.home-manager.darwinModule
+        then inputs.home-manager.darwinModules.home-manager
         else inputs.home-manager.nixosModules.home-manager;
     in
     systemFunc {

@@ -4,7 +4,8 @@
 }:
 
 {
-  services.nix-daemon.enable = true;
+  # Set the Nix build group ID to it's old default value, matching the state Nix was installed with.
+  ids.gids.nixbld = 30000;
 
   fonts.packages = with pkgs; [
     noto-fonts-emoji
