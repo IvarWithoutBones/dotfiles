@@ -64,6 +64,7 @@
     _1password-gui
     transmission_4-gtk
     firefox
+    libreoffice
   ] ++ lib.optionals pkgs.stdenvNoCC.isDarwin [
     iterm2
     # mosh # Enabled from the NixOS module on Linux
