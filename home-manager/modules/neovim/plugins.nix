@@ -11,10 +11,9 @@ in
     extraPackages = with pkgs; [
       ripgrep # For telescope's `live_grep`
 
-      # Packages used by `null-ls-nvim`
+      # Packages used by `none-ls-nvim`
       codespell # Spell checking
       shfmt # Shell script formatting
-      jq # JSON formatting
     ];
 
     extraPlugins = with pkgs.vimPlugins; [
@@ -92,12 +91,12 @@ in
       {
         # Injects LSP diagnostics, code actions, etc for packages without a language server.
         # Configuration requires the `codespell`, `jq` and `shfmt` packages. Dependency of `crates-nvim`.
-        plugin = null-ls-nvim;
-        config = mkLuaFile ./scripts/plugins/null-ls.lua;
+        plugin = none-ls-nvim;
+        config = mkLuaFile ./scripts/plugins/none-ls.lua;
       }
       {
         # Information about Rust dependencies inside of Cargo.toml.
-        # Requires the `null-ls-nvim` and `cmp-nvim` plugins.
+        # Requires the `none-ls-nvim` and `cmp-nvim` plugins.
         plugin = crates-nvim;
         config = mkLuaFile ./scripts/plugins/crates-nvim.lua;
       }
