@@ -25,7 +25,7 @@ in
       vim-gas # Better syntax highlighting for GNU assembly
 
       {
-        plugin = codeium-vim;
+        plugin = windsurf-vim;
         config = mkLua ''
           -- Use the language server binary from nixpkgs, instead of downloading a binary at runtime.
           -- This is required on NixOS, as we cannot `patchelf` the binary the plugin would download.

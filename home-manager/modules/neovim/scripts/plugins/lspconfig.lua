@@ -66,12 +66,13 @@ local function loadLanguageServers()
             capabilities = { offsetEncoding = "utf-8" },
             cmd = {
                 "clangd",
-                "--background-index",
                 "--clang-tidy",
+                "--background-index",
                 "--all-scopes-completion",
+                "--header-insertion-decorators",
                 "--header-insertion=iwyu",
-                "--suggest-missing-includes",
-                "--completion-style=detailed",
+                "--completion-style=bundled",
+                "--enable-config",
                 "--compile-commands-dir=build",
                 "--fallback-style=llvm"
             }

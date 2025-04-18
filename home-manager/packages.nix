@@ -48,7 +48,7 @@
     nerd-fonts.fira-code
 
     jellyfin-media-player
-    signal-desktop
+    signal-desktop-source
     tidal-hifi
     obsidian
     ghidra # TODO: enable on Darwin when it isn't broken there anymore.

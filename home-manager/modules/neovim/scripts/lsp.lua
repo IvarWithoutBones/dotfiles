@@ -7,15 +7,19 @@ local icons = {
     Info = ""
 }
 
--- Replace some diagnostic icons with our own
+local signs = { text = {}, linehl = {}, numhl = {} }
 for type, icon in pairs(icons) do
-    local hl = "DiagnosticSign" .. type
-    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+    local severity = vim.diagnostic.severity[string.upper(type)]
+    signs.text[severity] = icon
+    signs.linehl[severity] = type .. "Msg"
+    signs.numhl[severity] = type .. "Msg"
 end
 
 vim.diagnostic.config({
-    update_in_insert = true, -- Update diagnostics in insert mode
-    severity_sort = true,    -- Sort diagnostics by severity
+    signs = signs,                  -- Use the symbols defined above
+    virtual_text = true,            -- Show diagnostics next to their source line
+    update_in_insert = true,        -- Update diagnostics in insert mode
+    float = { border = "rounded" }, -- Use rounded corners for floating windows
 })
 
 -- Rounded corners for popup boxes

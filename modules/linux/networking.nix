@@ -18,7 +18,7 @@ in
 
   networking = {
     hostName = hostname;
-    enableIPv6 = false;
+    enableIPv6 = true;
 
     firewall = {
       allowedTCPPorts = openPorts;
