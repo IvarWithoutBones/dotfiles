@@ -25,7 +25,6 @@
     cargo-flamegraph
     eza
     gimp
-    prismlauncher
     moonlight-qt
 
     # Packages from my overlay
@@ -47,6 +46,7 @@
     noto-fonts-emoji
     nerd-fonts.fira-code
 
+    prismlauncher
     jellyfin-media-player
     signal-desktop-source
     tidal-hifi
