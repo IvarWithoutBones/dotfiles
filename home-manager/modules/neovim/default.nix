@@ -140,9 +140,13 @@ in
       { mode = "v"; key = "gs"; action = ":s/\\C\\%V\\V"; } # %V matches the selection instead of the whole line
 
       # Capture something in a regex group, for substitutions
-      { mode = "c"; key = "<C-o>"; action = "\\(\\.\\*\\)"; } # Group matching anything
       { mode = "c"; key = "<C-S-o>"; action = "\\(\\)<Left><Left>"; } # Empty group with cursor inside
-      { mode = "c"; key = "<C-.>"; action = "\\.\\*"; } # Match anything
+
+      { mode = "c"; key = "<C-o>"; action = "\\(\\.\\{-}\\)"; } # Match anything in a group (non-greedy)
+      { mode = "c"; key = "<C-A-o>"; action = "\\(\\.\\*\\)"; } # Match anything in a group (greedy)
+
+      { mode = "c"; key = "<C-.>"; action = "\\.\\{-}"; } # Match anything (non-greedy)
+      { mode = "c"; key = "<C-A-.>"; action = "\\.\\*"; } # Match anything (greedy)
 
       # Stay in visual mode after indenting a block
       { mode = "v"; key = ">"; action = ">gv"; }
