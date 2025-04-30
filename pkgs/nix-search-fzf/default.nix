@@ -1,5 +1,5 @@
 { createScript
-, substituteAll
+, replaceVars
 , gnused
 , jq
 , fzf
@@ -12,8 +12,7 @@
 
 let
   previewText = createScript "fzf-preview" ./fzf-preview.sh { };
-  src = substituteAll {
-    src = ./nix-search-fzf.sh;
+  src = replaceVars ./nix-search-fzf.sh {
     previewText = "${previewText}/bin/fzf-preview";
   };
 in

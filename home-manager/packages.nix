@@ -48,7 +48,7 @@
 
     prismlauncher
     jellyfin-media-player
-    signal-desktop-source
+    signal-desktop
     tidal-hifi
     obsidian
     ghidra # TODO: enable on Darwin when it isn't broken there anymore.

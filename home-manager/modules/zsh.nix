@@ -56,7 +56,7 @@
       };
     }];
 
-    initExtra = ''
+    initContent = ''
       ${lib.optionalString pkgs.stdenvNoCC.hostPlatform.isDarwin ''
         source ${pkgs.iterm2-shell-integration}/share/zsh/iterm2.zsh
         RPS1="" # Set by default
