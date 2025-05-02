@@ -53,7 +53,7 @@ local function loadLanguageServers()
                     },
 
                     -- Show diagnostics from `cargo clippy` instead of `cargo check`. The former is a bit stricter.
-                    checkOnSave = { command = "clippy" },
+                    check = { command = "clippy" },
 
                     -- Don't show diagnostics for inactive cfg directives.
                     diagnostics = { disabled = { "inactive-code" } },
@@ -141,6 +141,24 @@ local function loadLanguageServers()
     return vim.tbl_deep_extend("force", default, loadOverrides())
 end
 
+local bindings = {
+    format = "<space>f",
+    signatureHelp = "<C-k>",
+    rename = "rn",
+    codeActions = "<space><space>",
+    hover = "K",
+
+    rust = {
+        parentModule = "gp",
+        cargoToml = "gP",
+        renderDiagnostics = "<space>rd",
+        openDocumentation = "<space>rD",
+        expandMacro = "<space>rm",
+        run = "<space>rR",
+        runnables = "<space>rr",
+    },
+}
+
 local function binding(buffer, key, action, opts)
     opts = opts or {}
     local keymapOpts = {
@@ -154,19 +172,16 @@ end
 
 local function commonBindings(buffer)
     -- Format the current buffer
-    binding(buffer, '<space>f', function()
+    binding(buffer, bindings.format, function()
         vim.lsp.buf.format({ async = true })
-    end)
+    end, { desc = "format buffer" })
 
     -- Show information about function signature
-    binding(buffer, '<C-k>', vim.lsp.buf.signature_help)
-    binding(buffer, '<C-k>', vim.lsp.buf.signature_help, { mode = 'i' })
-
-    binding(buffer, 'K', vim.lsp.buf.hover)                    -- Show hover information
-    binding(buffer, 'rn', vim.lsp.buf.rename)                  -- Rename symbol
-    binding(buffer, '<space><space>', vim.lsp.buf.code_action) -- Code actions
+    binding(buffer, bindings.signatureHelp, vim.lsp.buf.signature_help, { desc = "signature help" })
+    binding(buffer, bindings.signatureHelp, vim.lsp.buf.signature_help, { desc = "signature help", mode = 'i' })
+    binding(buffer, bindings.rename, vim.lsp.buf.rename, { desc = "rename symbol" })
+    binding(buffer, bindings.codeActions, vim.lsp.buf.code_action, { desc = "code actions" })
 end
-
 
 local options = {
     -- Use nvim-cmp's capabilities, see `plugins/cmp.lua`
@@ -175,6 +190,7 @@ local options = {
     -- Configure some keybindings when a language server attaches
     on_attach = function(_, buffer)
         commonBindings(buffer)
+        binding(buffer, bindings.hover, vim.lsp.buf.hover, { desc = "hover" })
     end
 }
 
@@ -202,18 +218,39 @@ vim.g.rustaceanvim = {
         -- Configure some rust-specific keybindings when the language server attaches
         on_attach = function(_, buffer)
             commonBindings(buffer)
+
+            -- Show information/actions about the hovered symbol
+            binding(buffer, bindings.hover, function()
+                vim.cmd.RustLsp({ 'hover', 'actions' })
+            end, { desc = "hover actions" })
+
             -- Open the parent module
-            binding(buffer, 'gp', function() vim.cmd.RustLsp('parentModule') end, { desc = "open parent module" })
-            -- Open Cargo.toml
-            binding(buffer, 'gP', function() vim.cmd.RustLsp('openCargo') end, { desc = "open Cargo.toml" })
-            -- Recursively expand the macro under the cursor
-            binding(buffer, '<space>rm', function() vim.cmd.RustLsp('expandMacro') end, { desc = "expand macro" })
+            local binds = bindings.rust
+            binding(buffer, binds.parentModule, function()
+                vim.cmd.RustLsp('parentModule')
+            end, { desc = "open parent module" })
+
             -- Open documentation of the hovered symbol in the browser
-            binding(buffer, '<space>rD', function() vim.cmd.RustLsp('openDocs') end, { desc = "open documentation" })
+            binding(buffer, binds.openDocumentation, function()
+                vim.cmd.RustLsp('openDocs')
+            end, { desc = "open documentation" })
+
             -- Show diagnostics from `cargo clippy`
-            binding(buffer, '<space>rd', function() vim.cmd.RustLsp('renderDiagnostic') end,
-                { desc = "render diagnostics" }
-            )
+            binding(buffer, binds.renderDiagnostics, function()
+                vim.cmd.RustLsp('renderDiagnostic')
+            end, { desc = "render diagnostics" })
+
+            -- Execute the currently hovered runnable (test, main function, ...).
+            binding(buffer, binds.run, function() vim.cmd.RustLsp('run') end, { desc = "execute hovered runnable" })
+
+            -- Fuzzy pick a runnable and execute it
+            binding(buffer, binds.runnables, function() vim.cmd.RustLsp('runnables') end, { desc = "pick runnable" })
+
+            -- Open Cargo.toml
+            binding(buffer, binds.cargoToml, function() vim.cmd.RustLsp('openCargo') end, { desc = "open Cargo.toml" })
+
+            -- Recursively expand the macro under the cursor
+            binding(buffer, binds.expandMacro, function() vim.cmd.RustLsp('expandMacro') end, { desc = "expand macro" })
         end,
     }
 }
