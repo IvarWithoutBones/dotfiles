@@ -29,6 +29,8 @@ with pkgs; {
 
   git-add-fuzzy = callPackage ./git-add-fuzzy { };
 
+  git-checkout-fuzzy = callPackage ./git-checkout-fuzzy { };
+
   # Update from 3.5.11 (the latest version within nixpkgs as of writing this) to 3.5.13 to work around the following bug:
   # https://github.com/neovim/neovim/issues/33127
   iterm2 = prev.iterm2.overrideAttrs (prevAttrs: rec {
