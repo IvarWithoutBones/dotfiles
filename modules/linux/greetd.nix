@@ -9,9 +9,6 @@
   # Required for some GTK programs.
   programs.dconf.enable = true;
 
-  # Allow swaylock to authenticate the user.
-  security.pam.services.swaylock = lib.mkIf wayland { };
-
   services = {
     xserver = {
       enable = !wayland;
