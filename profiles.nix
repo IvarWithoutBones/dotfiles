@@ -84,7 +84,6 @@ rec {
       ./modules/linux/greetd.nix
       ./modules/linux/sunshine.nix
       ./modules/linux/lockscreen.nix
-      #./modules/linux/android.nix
     ] ++ ivv.modules;
 
     home-manager = ivv.home-manager // {
