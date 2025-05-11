@@ -6,15 +6,16 @@
 {
   hardware = {
     nvidia = {
-      # Temporarily using beta to work around the following issue: https://github.com/NixOS/nixpkgs/issues/357643
-      package = config.boot.kernelPackages.nvidiaPackages.beta;
+      package = config.boot.kernelPackages.nvidiaPackages.stable;
       open = false; # Getting "probe failed with driver nvidia" errors upon startup
+      modesetting.enable = true; # Allow the kernel driver to configure the display
     };
 
     # Required for some legacy applications
     graphics.extraPackages32 = [ pkgs.pkgsi686Linux.libva ];
-    # GPU support in containers such as Docker. TODO: Re-enable once its not broken anymore
-    # nvidia-container-toolkit.enable = true;
+
+    # GPU support in containers such as Docker
+    nvidia-container-toolkit.enable = true;
   };
 
   boot = {
