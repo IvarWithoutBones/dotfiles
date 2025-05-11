@@ -1,5 +1,5 @@
-{ lib
-, config
+{ pkgs
+, wayland
 , ...
 }:
 
@@ -7,23 +7,17 @@
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true;
-  };
+    extest.enable = wayland; # Translate X11 input events to uinput events.
+    gamescopeSession.enable = true; # Enable the gamescope display session.
 
-  nixpkgs.config.packageOverrides = pkgs: {
-    steam = pkgs.steam.override {
-      extraPkgs = pkgs: with pkgs; [
-        # Elden Ring enhancement patches
-        (er-patcher.overrideAttrs (attrs: rec {
-          version = "1.06-3";
-
-          src = fetchFromGitHub {
-            owner = "gurrgur";
-            repo = "er-patcher";
-            rev = "v${version}";
-            sha256 = "sha256-w/5cXxY4ua5Xo1BSz3MYRV+SdvVGFAx53KMIORS1uWE=";
-          };
-        }))
+    package = pkgs.steam.override {
+      extraPkgs = pkgs: [
+        pkgs.er-patcher # Elden Ring enhancement patches.
       ];
     };
+
+    extraCompatPackages = [
+      pkgs.proton-ge-bin # A fork of Proton that sometimes has better compatibility.
+    ];
   };
 }
