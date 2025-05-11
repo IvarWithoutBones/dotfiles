@@ -1,5 +1,4 @@
-{ lib
-, wayland
+{ wayland
 , ...
 }:
 
@@ -7,7 +6,7 @@
 
 {
   security.pam.services = {
-    swaylock = lib.mkIf wayland { }; # Allow swaylock to authenticate the user.
-    i3lock = lib.mkIf (!wayland) { }; # Allow i3lock to authenticate the user.
+    swaylock.enable = wayland; # Allow swaylock to authenticate the user.
+    i3lock.enable = !wayland; # Allow i3lock to authenticate the user.
   };
 }
