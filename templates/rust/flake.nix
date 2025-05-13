@@ -76,7 +76,7 @@
         sh-fmt = runCommandWithFileExt {
           name = "sh-fmt";
           extension = ".sh";
-          command = "${lib.getExe pkgs.shfmt} --simplify --diff";
+          command = "${lib.getExe pkgs.shfmt} --diff --simplify --binary-next-line --space-redirects --case-indent --apply-ignore --indent 4";
         };
 
         shellcheck = runCommandWithFileExt {
@@ -99,7 +99,6 @@
           taplo
           shfmt
           yamlfmt
-          fd
           shellcheck
         ];
       };
