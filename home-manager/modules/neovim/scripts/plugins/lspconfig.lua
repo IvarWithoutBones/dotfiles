@@ -29,12 +29,26 @@ local function loadLanguageServers()
     -- For a list of available options see the documentation:
     -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
     local default = {
-        bashls = {},    -- Bash
         glslls = {},    -- GLSL
         html = {},      -- HTML
         omnisharp = {}, -- C#
         taplo = {},     -- TOML
         ts_ls = {},     -- TypeScript/JavaScript
+
+        -- Bash
+        bashls = {
+            settings = {
+                bashIde = {
+                    shellcheckArguments = { "--enable=all" },
+                    shfmt = {
+                        simplifyCode = true,
+                        binaryNextLine = true,
+                        caseIndent = true,
+                        spaceRedirects = true,
+                    },
+                },
+            },
+        },
 
         -- Rust
         rust_analyzer = {

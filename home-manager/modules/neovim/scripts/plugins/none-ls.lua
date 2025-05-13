@@ -8,19 +8,6 @@ end
 local null_ls = require("null-ls")
 null_ls.setup {
     sources = {
-        -- Shell script formatting, requires the `shfmt` package.
-        null_ls.builtins.formatting.shfmt.with({
-            args = {
-                "--binary-next-line",
-                "--space-redirects",
-                "--case-indent",
-                "--simplify",
-                "--case-indent",
-                "--apply-ignore",
-                "-filename", "$FILENAME" -- Run on the current file
-            }
-        }),
-
         -- Spell checking for code, requires the `codespell` package.
         null_ls.builtins.diagnostics.codespell.with({
             args = {

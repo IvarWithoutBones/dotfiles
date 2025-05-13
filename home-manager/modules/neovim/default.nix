@@ -218,12 +218,6 @@ in
           end
         ''}";
         }
-        {
-          desc = "Disable insertion of a comment character when starting a new line";
-          event = [ "FileType" ];
-          pattern = "*";
-          command = "setlocal formatoptions-=c formatoptions-=r formatoptions-=o";
-        }
       ];
 
     files =
@@ -239,18 +233,21 @@ in
             };
           }];
         };
-      in
-      {
-        "after/ftplugin/c.lua" = jumpToAndFromHeader;
-        "after/ftplugin/cpp.lua" = jumpToAndFromHeader;
 
-        "after/ftplugin/nix.lua" = {
+        setIndent = num: {
           opts = {
-            expandtab = true;
-            shiftwidth = 2;
-            tabstop = 2;
+            shiftwidth = num;
+            tabstop = num;
           };
         };
+      in
+      {
+        "after/ftplugin/c.lua" = jumpToAndFromHeader // (setIndent 4);
+        "after/ftplugin/cpp.lua" = jumpToAndFromHeader // (setIndent 4);
+        "after/ftplugin/nix.lua" = setIndent 2;
+        "after/ftplugin/lua.lua" = setIndent 4;
+        "after/ftplugin/sh.lua" = setIndent 4;
+        "after/ftplugin/rust.lua" = setIndent 4;
       };
 
     # Execute each file in the list upon startup
