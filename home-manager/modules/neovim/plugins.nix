@@ -25,18 +25,6 @@ in
       vim-gas # Better syntax highlighting for GNU assembly
 
       {
-        plugin = windsurf-vim;
-        config = mkLua ''
-          -- Use the language server binary from nixpkgs, instead of downloading a binary at runtime.
-          -- This is required on NixOS, as we cannot `patchelf` the binary the plugin would download.
-          vim.g.codeium_bin = "${pkgs.codeium}/bin/codeium_language_server"
-
-          -- Accept completions using control+j instead of tab
-          vim.g.codeium_no_map_tab = 1
-          vim.keymap.set('i', '<C-j>', function() return vim.fn['codeium#Accept']() end, { expr = true, silent = true })
-        '';
-      }
-      {
         # Dependency of telescope
         plugin = sqlite-lua;
         config = ''
@@ -82,6 +70,11 @@ in
             always_trigger = true,
           })
         '';
+      }
+      {
+        # AI code completion
+        plugin = copilot-vim;
+        config = mkLuaFile ./scripts/plugins/copilot.lua;
       }
       {
         # Status line
