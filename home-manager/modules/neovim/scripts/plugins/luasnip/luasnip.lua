@@ -20,6 +20,11 @@ ls.filetype_extend("kotlin", { "kdoc" })
 ls.filetype_extend("ruby", { "rdoc" })
 ls.filetype_extend("sh", { "shelldoc" })
 
+-- Register snippets defined in various formats
+require("luasnip.loaders.from_snipmate").lazy_load()
+require("luasnip.loaders.from_lua").lazy_load()
+require("luasnip.loaders.from_vscode").lazy_load()
+
 -- Custom snippets
 ls.add_snippets("sh", {
     ls.parser.parse_snippet("scriptPath", [[${1:SCRIPT_PATH}="$(readlink -f "\$0")"]]),
@@ -44,8 +49,3 @@ ls.add_snippets("json", {
       }
     ]]),
 })
-
--- Register snippets defined in various formats
-require("luasnip.loaders.from_vscode").lazy_load()
-require("luasnip.loaders.from_snipmate").lazy_load()
-require("luasnip.loaders.from_lua").lazy_load()

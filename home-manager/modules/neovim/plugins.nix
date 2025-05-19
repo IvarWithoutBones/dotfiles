@@ -7,6 +7,11 @@ let
   inherit (dotfiles-flake.lib.vim) mkLua mkLuaFile;
 in
 {
+  imports = [
+    # Snippet support
+    ./scripts/plugins/luasnip
+  ];
+
   programs.nixvim = {
     extraPackages = with pkgs; [
       ripgrep # For telescope's `live_grep`
@@ -185,13 +190,6 @@ in
         # Completion engine
         plugin = nvim-cmp;
         config = mkLuaFile ./scripts/plugins/cmp.lua;
-      }
-
-      friendly-snippets # Collection of snippets for luasnip
-      {
-        # Snippet support
-        plugin = luasnip;
-        config = mkLuaFile ./scripts/plugins/luasnip.lua;
       }
 
       nvim-treesitter-textobjects # For treesitter
