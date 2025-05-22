@@ -54,8 +54,9 @@ in
       "shift + alt - l" = "${yabai} -m window --focus east";
 
       # Focus a different monitor
-      "alt - n" = "${yabai} -m display --focus recent";
-      "alt + shift - n" = moveSpaceBetweenWindows;
+      "alt - n" = "${yabai} -m display --focus next";
+      "alt + shift - n" = "${yabai} -m display --focus prev";
+      "alt + shift + ctrl - n" = moveSpaceBetweenWindows;
 
       # Change the window layout
       "ctrl + shift + alt - h" = "${yabai} -m window --warp west";
