@@ -31,12 +31,10 @@ let
       bat = "${lib.getExe pkgs.bat} --pager=\"${lib.getExe pkgs.less} --no-init --raw-control-chars --ignore-case --mouse -+F +r\" --paging=always --plain";
     in
     ''
-      set disassembly-flavor intel
       set max-value-size unlimited
       set confirm off
       set pagination off
       set step-mode on
-      set unwind-on-signal on
 
       set history save on
       set history filename ${cacheDir}/history
