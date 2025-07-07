@@ -35,13 +35,14 @@ runColored() {
 # Pick a rebuild command based on the platform
 rebuildCommand() {
     local platform
-    platform="$(uname --kernel-name)"
+    platform="$(uname -s)"
     case "${platform}" in
         Darwin)
-            echo "darwin-rebuild"
+            # Unfortunately `nixos-rebuild` and `darwin-rebuild` don't share a common flag to run activation commands as root.
+            echo "sudo darwin-rebuild switch"
             ;;
         Linux)
-            echo "nixos-rebuild"
+            echo "nixos-rebuild switch --sudo"
             ;;
         *)
             error "unsupported platform '${platform}'"
@@ -89,12 +90,14 @@ unset position
 # Go into the dotfiles directory
 DOTFILES_DIR="${DOTFILES_DIR:-"${HOME}/nix/dotfiles"}"
 if [[ ! -f "${DOTFILES_DIR}/flake.nix" ]]; then
-    error "'${DOTFILES_DIR}' is not a directory containing a flake! set DOTFILES_DIR to overwrite"
+    error "'${DOTFILES_DIR}' is not a directory containing a flake. set \$DOTFILES_DIR to the system configuration's flake"
 fi
-runColored "cd \"${DOTFILES_DIR}\""
+REBUILD_FLAGS+=("--flake" "\"${DOTFILES_DIR}\"")
+FLAKE_UPDATE_FLAGS+=("--flake" "\"${DOTFILES_DIR}\"")
 
 # Update the git repository
 if [[ -n ${UPDATE_GIT-} ]]; then
+    runColored "cd \"${DOTFILES_DIR}\""
     runColored "git pull"
 fi
 
@@ -104,14 +107,8 @@ if [[ -n ${UPDATE_FLAKE-} ]]; then
 fi
 
 # Rebuild the system
-platform="$(uname --kernel-name)"
 rebuildCommand="$(rebuildCommand)"
-if [[ ${platform} == "Linux" ]]; then
-    # Required for NixOS but breaks on Darwin.
-    REBUILD_FLAGS+=("--sudo")
-fi
-REBUILD_FLAGS+=("--flake" ".")
-runColored "${rebuildCommand} switch ${REBUILD_FLAGS[*]-}"
+runColored "${rebuildCommand} ${REBUILD_FLAGS[*]-}"
 
 # Collect garbage
 if [[ -n ${COLLECT_GARBAGE-} ]]; then

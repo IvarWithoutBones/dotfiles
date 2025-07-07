@@ -20,5 +20,8 @@
     home = "/Users/${username}";
   };
 
-  system.stateVersion = 5;
+  system = {
+    primaryUser = username;
+    stateVersion = 5;
+  };
 }
