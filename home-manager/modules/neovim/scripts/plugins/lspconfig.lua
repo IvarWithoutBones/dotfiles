@@ -82,13 +82,8 @@ local function loadLanguageServers()
                 "clangd",
                 "--clang-tidy",
                 "--background-index",
-                "--all-scopes-completion",
-                "--header-insertion-decorators",
-                "--header-insertion=iwyu",
-                "--completion-style=bundled",
                 "--enable-config",
-                "--compile-commands-dir=build",
-                "--fallback-style=llvm"
+                "--fallback-style=google"
             }
         },
 
