@@ -1,7 +1,7 @@
 -- Words to ignore when spell checking, note that this can be expanded on a per-project basis:
 -- https://github.com/codespell-project/codespell#ignoring-words
 local function ignored_words()
-    local words = { "crate", "tese", "fpr" }
+    local words = { "crate", "tese", "fpr", "inout" }
     return table.concat(words, ",")
 end
 

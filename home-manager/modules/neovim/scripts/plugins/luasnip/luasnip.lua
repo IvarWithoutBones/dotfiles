@@ -1,8 +1,22 @@
 local ls = require("luasnip")
+local function binding(desc, bind, func)
+    vim.keymap.set({ "i", "s", "n" }, bind, func, { silent = true, desc = desc })
+end
 
--- Bindings to jump between placeholders
-vim.keymap.set({ "i", "n" }, "<C-h>", function() ls.jump(1) end, { silent = true })
-vim.keymap.set({ "i", "n" }, "<C-S-h>", function() ls.jump(-1) end, { silent = true })
+binding("Next placeholder", "<C-h>", function() ls.jump(1) end)
+binding("Previous placeholder", "<C-S-h>", function() ls.jump(-1) end)
+
+binding("Choose next option", "<A-h>", function()
+    if ls.choice_active() then
+        ls.change_choice(1)
+    end
+end)
+
+binding("Choose previous option", "<A-S-h>", function()
+    if ls.choice_active() then
+        ls.change_choice(-1)
+    end
+end)
 
 -- Enable snippets for standardized comment formats, from friendly-snippets
 ls.filetype_extend("rust", { "rustdoc" })

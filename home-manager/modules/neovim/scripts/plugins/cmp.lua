@@ -46,7 +46,7 @@ cmp.setup {
             else
                 cmp.complete()
             end
-        end),
+        end, { "i", "s" }),
 
         -- Cycle through completion items
         ["<Tab>"] = cmp.mapping(function(fallback)

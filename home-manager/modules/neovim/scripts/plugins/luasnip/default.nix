@@ -12,7 +12,7 @@ let
     # Meant to be defined with `programs.nixvim.extraFiles`.
     file = {
       "snippets/${name}.json".text = lib.generators.toJSON { } {
-        "${name}" = { prefix = name; } // jsonAttrs;
+        "${jsonAttrs.prefix or name}" = { prefix = name; } // jsonAttrs;
       };
     };
 
@@ -54,13 +54,29 @@ let
         ''''${2:}''
         ""
         "#ifdef __cplusplus"
-        "} // extern \"C\""
+        "} /* extern \"C\" */"
         "#endif"
         ""
-        "#endif // ${headerGuard}"
+        "#endif /* ${headerGuard} */"
       ];
     })
-  ];
+  ] ++ (lib.map
+    (value: mkVSCodeSnippet "doxygen-file-in-group-${value.scope}" {
+      inherit (value) scope;
+      prefix = "doxygen-file-in-group";
+      description = "Doxygen file comment with group tag";
+      body = [
+        value.start
+        "${value.block_prefix or ""}@file"
+        ''${value.block_prefix or ""}@''${3|ingroup,addtogroup|} ''${1:''${TM_FILENAME_BASE}}''
+        "${value.block_prefix or ""}@{"
+        ''${value.block_end_prefix or ""}''${BLOCK_COMMENT_END}''
+        ""
+        ''''${TM_SELECTED_TEXT:''${2}}''
+        ""
+        ''${value.start} @} ''${BLOCK_COMMENT_END} ''${BLOCK_COMMENT_START} end of group "''${1:''${TM_FILENAME_BASE}}" ''${BLOCK_COMMENT_END}''
+      ];
+    }) [{ scope = "c,cpp"; start = "/**"; block_prefix = " * "; block_end_prefix = " "; } { scope = "markdown,xml,html"; start = "<!--!"; }]);
 in
 {
   programs.nixvim = {
