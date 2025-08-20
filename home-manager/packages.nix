@@ -1,5 +1,6 @@
 { pkgs
 , lib
+, wayland
 , ...
 }:
 
@@ -36,6 +37,8 @@
     callpackage-cli
     copy-nix-derivation
     read-macos-alias
+  ] ++ lib.optionals pkgs.stdenvNoCC.isDarwin [
+    iterm2
   ] ++ lib.optionals pkgs.stdenvNoCC.isLinux [
     # Package from my overlay
     speedtest
@@ -53,7 +56,6 @@
     obsidian
     ghidra # TODO: enable on Darwin when it isn't broken there anymore.
     vscode-fhs
-    arandr
     ares
     evince
     drawio
@@ -65,9 +67,7 @@
     transmission_4-gtk
     firefox
     libreoffice
-  ] ++ lib.optionals pkgs.stdenvNoCC.isDarwin [
-    iterm2
-    # mosh # Enabled from the NixOS module on Linux
+    (if wayland then wdisplays else arandr)
   ];
 
   xdg = lib.mkIf pkgs.stdenvNoCC.isLinux {

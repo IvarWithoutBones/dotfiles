@@ -18,7 +18,9 @@
         Name=home-manager-wayland
         DesktopNames=home-manager-wayland
         # Note: we need to wrap this in a shell script to ensure $HOME is expanded.
-        Exec=${pkgs.writeShellScript "home-manager-wayland" ''"$HOME"/.home-manager-graphical-session-wayland''}
+        Exec=${pkgs.writeShellScript "home-manager-wayland" ''
+          ${pkgs.runtimeShell} "$HOME"/.home-manager-graphical-session-wayland
+        ''}
       '').overrideAttrs (_: {
         passthru.providedSessions = [ "home-manager-wayland" ];
       }))
