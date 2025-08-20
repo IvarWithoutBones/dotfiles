@@ -81,9 +81,11 @@ rec {
       ./modules/linux/audio.nix
       ./modules/linux/jellyfin.nix
       ./modules/linux/zerotierone.nix
-      ./modules/linux/greetd.nix
       ./modules/linux/sunshine.nix
-      ./modules/linux/lockscreen.nix
+      ./modules/linux/desktop/lockscreen.nix
+      ./modules/linux/desktop/sessions.nix
+      ./modules/linux/desktop/tuigreet.nix
+      ./modules/linux/desktop/xserver.nix
     ] ++ ivv.modules;
 
     home-manager = ivv.home-manager // {

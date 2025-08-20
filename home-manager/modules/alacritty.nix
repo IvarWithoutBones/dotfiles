@@ -1,19 +1,8 @@
-{ pkgs
-, wayland
+{ lib
+, pkgs
 , ...
 }:
 
-let
-  theme = pkgs.fetchurl {
-    url = "https://raw.githubusercontent.com/catppuccin/alacritty/f2da554ee63690712274971dd9ce0217895f5ee0/catppuccin-mocha.toml";
-    hash = "sha256-nmVaYJUavF0u3P0Qj9rL+pzcI9YQOTGPyTvi+zNVPhg=";
-  };
-
-  fontSize =
-    if wayland then 13.5
-    else if pkgs.stdenvNoCC.isDarwin then 15.5
-    else 10.0;
-in
 {
   home.sessionVariables.TERMINAL = "alacritty";
 
@@ -21,11 +10,17 @@ in
     enable = true;
 
     settings = {
-      general.import = [ theme ];
+      general.import = [
+        # The Catppuccin Mocha theme
+        (pkgs.fetchurl {
+          url = "https://raw.githubusercontent.com/catppuccin/alacritty/f2da554ee63690712274971dd9ce0217895f5ee0/catppuccin-mocha.toml";
+          hash = "sha256-nmVaYJUavF0u3P0Qj9rL+pzcI9YQOTGPyTvi+zNVPhg=";
+        })
+      ];
 
       font = {
         normal.family = "FiraCode Nerd Font";
-        size = fontSize;
+        size = lib.mkDefault 10.0;
       };
 
       keyboard.bindings =

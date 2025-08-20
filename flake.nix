@@ -59,6 +59,12 @@
         ivvs-MacBook-Pro = lib.createSystem profiles.ivv-darwin {
           system = "x86_64-darwin";
           hostname = "darwin-macbook-pro";
+
+          home-manager.modules = [
+            ({ ... }: {
+              programs.alacritty.settings.font.size = 15.5;
+            })
+          ];
         };
       };
 

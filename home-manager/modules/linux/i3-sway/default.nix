@@ -90,11 +90,11 @@ in
   } // lib.optionalAttrs (displayServer == "xsession") {
     # Generate a script to start the X server, used by the login manager
     enable = true;
-    scriptPath = ".hm-graphical-session";
+    scriptPath = ".home-manager-graphical-session-x11";
   };
 
   # Generate a script to start the wayland compositor, used by the login manager
-  home.file.".hm-graphical-session".text = lib.optionalString (windowManager == "sway") ''
+  home.file.".home-manager-graphical-session-wayland".text = lib.optionalString (windowManager == "sway") ''
     ${lib.optionalString (hardware.gpu or "" == "nvidia") ''
       # Required for proprietary nvidia drivers
       export __GLX_VENDOR_LIBRARY_NAME=nvidia
