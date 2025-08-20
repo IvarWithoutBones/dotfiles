@@ -6,7 +6,6 @@ cmp.setup {
         { name = "nvim_lsp", priority = 10 },
         { name = "path",     priority = 9 },
         { name = "luasnip",  priority = 5 },
-        { name = "crates" }, -- Uses the crates.nvim plugin
         {
             name = "buffer",
             priority = 1,

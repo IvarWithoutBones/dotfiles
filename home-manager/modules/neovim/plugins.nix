@@ -88,13 +88,12 @@ in
       }
       {
         # Injects LSP diagnostics, code actions, etc for packages without a language server.
-        # Configuration requires the `codespell`, `jq` and `shfmt` packages. Dependency of `crates-nvim`.
+        # Configuration requires the `codespell` package.
         plugin = none-ls-nvim;
         config = mkLuaFile ./scripts/plugins/none-ls.lua;
       }
       {
         # Information about Rust dependencies inside of Cargo.toml.
-        # Requires the `none-ls-nvim` and `cmp-nvim` plugins.
         plugin = crates-nvim;
         config = mkLuaFile ./scripts/plugins/crates-nvim.lua;
       }

@@ -1,14 +1,8 @@
 require('crates').setup {
-    completion = {
-        -- Enable completion, requires the `nvim-cmp` plugin
-        cmp = {
-            enabled = true,
-        },
-    },
-
-    null_ls = {
-        -- Enable code actions using null-ls, requires the `null-ls-nvim` plugin
+    lsp = {
         enabled = true,
-        name = "crates.nvim",
+        actions = true,
+        completion = true,
+        hover = true,
     },
 }

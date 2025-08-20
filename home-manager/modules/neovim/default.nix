@@ -66,7 +66,7 @@ let
 in
 {
   imports = [
-    nixvim.homeManagerModules.nixvim
+    nixvim.homeModules.nixvim
     ./plugins.nix
   ];
 
