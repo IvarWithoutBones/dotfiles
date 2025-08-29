@@ -7,12 +7,6 @@
 }:
 
 rec {
-  laptop = {
-    touchpad = true;
-    battery = true;
-    bluetooth = true;
-  };
-
   stateVersion = "21.11";
 
   ivv =

@@ -83,7 +83,7 @@
 
           commonSpecialArgs = {
             hostname = "nixos-pc";
-            wayland = true; # TODO: make this not required, currently there are eval errors when unset
+            wayland = false; # TODO: make this not required, currently there are eval errors when unset
 
             hardware = {
               sound = true;
