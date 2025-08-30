@@ -1,9 +1,6 @@
-{ lib
-, hardware
-, ...
-}:
+{ ... }:
 
-lib.mkIf (hardware.sound or false) {
+{
   security.rtkit.enable = true;
 
   services.pipewire = {

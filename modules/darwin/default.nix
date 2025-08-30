@@ -1,5 +1,4 @@
 { pkgs
-, username
 , ...
 }:
 
@@ -14,14 +13,4 @@
 
   # This line is required; otherwise, on shell startup, you won't have Nix stuff in the PATH.
   programs.zsh.enable = true;
-
-  users.users.${username} = {
-    name = username;
-    home = "/Users/${username}";
-  };
-
-  system = {
-    primaryUser = username;
-    stateVersion = 5;
-  };
 }

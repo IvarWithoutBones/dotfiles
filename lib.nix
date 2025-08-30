@@ -1,7 +1,6 @@
 { nixpkgs
 , nix-darwin
-, flake-utils
-, ...
+, home-manager
 } @ inputs:
 
 let
@@ -17,33 +16,6 @@ rec {
         => true
   */
   isDarwin = system: lib.hasSuffix "darwin" system;
-
-  /* Generate a list of packages for the specified system with an overlay applied.
-
-     Example:
-        lib.pkgsWithOverlay "x86_64-linux" overlays.default
-        => { ... } # The resulting package set
-  */
-  pkgsWithOverlay = system: overlay: import nixpkgs {
-    overlays = [ overlay ];
-    inherit system;
-  };
-
-  /* Generate a list of packages with an overlay applied, to be used as a flake output.
-     For convenience, attributes for all platforms in nixpkgs are generated.
-
-     Example:
-        lib.packagesFromOverlay overlays.default
-        => { x86_64-linux = { ... }; x86_64-darwin = { ... }; ... }
-
-        In a flake:
-          packages = lib.packagesFromOverlay overlays.default;
-  */
-  packagesFromOverlay = overlay: {
-    inherit (flake-utils.lib.eachSystem lib.platforms.all (system: {
-      packages = pkgsWithOverlay system overlay;
-    })) packages;
-  }.packages;
 
   /* Generate a NixOS/nix-darwin configuration based on a profile, with optional home-manager support.
      A common configuration (referred to as a "profile") is used to share code between flakes.
@@ -95,12 +67,14 @@ rec {
       _homeManagerSpecialArgs = lib.mergeAttrs (home-manager.specialArgs or { }) (profile.home-manager.specialArgs or { });
       _commonSpecialArgs = lib.mergeAttrs commonSpecialArgs (profile.commonSpecialArgs or { });
 
-      _home-manager = let
-        __extraConfig = lib.toList (lib.mergeAttrs (profile.home-manager.extraConfig or { }) (home-manager.extraConfig or { }));
-      in {
-        enable = if ((profile.home-manager.enable or false) || (home-manager.enable or false)) then true else false;
-        modules = (profile.home-manager.modules or [ ]) ++ (home-manager.modules or [ ]) ++ __extraConfig;
-      };
+      _home-manager =
+        let
+          __extraConfig = lib.toList (lib.mergeAttrs (profile.home-manager.extraConfig or { }) (home-manager.extraConfig or { }));
+        in
+        {
+          enable = if ((profile.home-manager.enable or false) || (home-manager.enable or false)) then true else false;
+          modules = (profile.home-manager.modules or [ ]) ++ (home-manager.modules or [ ]) ++ __extraConfig;
+        };
 
       systemFunc =
         if (isDarwin system)

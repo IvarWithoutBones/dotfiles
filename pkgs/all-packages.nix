@@ -1,8 +1,4 @@
-{ nix-index-database
-, nil-language-server
-, sm64ex-practice
-, ...
-}:
+{ sm64ex-practice }:
 
 final: prev:
 let
@@ -48,10 +44,6 @@ with pkgs; {
 
   mkscript = callPackage ./mkscript { };
 
-  nil-language-server = nil-language-server.packages.${hostPlatform.system or (throw "Unsupported platform ${hostPlatform.system}")}.nil;
-
-  nix-index-database = nix-index-database.legacyPackages.${hostPlatform.system or (throw "Unsupported platform ${hostPlatform.system}")}.database;
-
   nix-search-fzf = callPackage ./nix-search-fzf { };
 
   nixpkgs-pr = callPackage ./nixpkgs-pr { };
@@ -59,12 +51,6 @@ with pkgs; {
   proton-ge-runner = callPackage ./proton-ge-runner { };
 
   qutebrowser-scripts = lib.recurseIntoAttrs (callPackage ./qutebrowser/scripts { });
-
-  # The qt6 version of qtwebengine (which qutebrowser by default depends on) is not in the binary cache on Darwin,
-  # presumably because of a build failure. We can simply use the qt5 version instead for now.
-  qutebrowser =
-    if stdenvNoCC.isDarwin then prev.qutebrowser-qt5
-    else prev.qutebrowser;
 
   read-macos-alias = callPackage ./read-macos-alias { };
 

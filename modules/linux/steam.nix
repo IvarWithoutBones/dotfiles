@@ -1,5 +1,4 @@
 { pkgs
-, wayland
 , ...
 }:
 
@@ -7,7 +6,7 @@
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true;
-    extest.enable = wayland; # Translate X11 input events to uinput events.
+    extest.enable = true; # Translate X11 input events to uinput events.
     gamescopeSession.enable = true; # Enable the gamescope display session.
 
     package = pkgs.steam.override {

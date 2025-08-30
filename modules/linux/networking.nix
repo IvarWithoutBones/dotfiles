@@ -1,7 +1,5 @@
-{ lib
-, username
-, hostname
-, network
+{ config
+, lib
 , ...
 }:
 
@@ -14,10 +12,11 @@ let
   ];
 in
 {
-  users.users.${username}.extraGroups = [ "networkmanager" ];
+  # Add the "networkmanager" group to every normal (i.e. interactive) user so they can change the network settings.
+  users.extraGroups."networkmanager".members = lib.attrNames
+    (lib.filterAttrs (_username: config: config.isNormalUser) config.users.extraUsers);
 
   networking = {
-    hostName = hostname;
     enableIPv6 = true;
 
     firewall = {
@@ -30,12 +29,7 @@ in
       unmanaged = ethernetDevices;
     };
 
-    interfaces = {
-      ${network.interface}.ipv4.addresses = [{
-        address = network.address;
-        prefixLength = 28;
-      }];
-    } // lib.genAttrs ethernetDevices (_: {
+    interfaces = lib.genAttrs ethernetDevices (_: {
       ipv4.addresses = [{
         address = "192.168.7.1";
         prefixLength = 24;

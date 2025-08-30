@@ -4,15 +4,14 @@
 }:
 
 {
+  imports = [ ./common.nix ];
+
   hardware = {
     nvidia = {
       package = config.boot.kernelPackages.nvidiaPackages.stable;
       open = false; # Getting "probe failed with driver nvidia" errors upon startup
       modesetting.enable = true; # Allow the kernel driver to configure the display
     };
-
-    # Required for some legacy applications
-    graphics.extraPackages32 = [ pkgs.pkgsi686Linux.libva ];
 
     # GPU support in containers such as Docker
     nvidia-container-toolkit.enable = true;

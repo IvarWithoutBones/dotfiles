@@ -2,7 +2,6 @@
 , pkgs
 , config
 , wayland
-, hardware
 , ...
 }:
 
@@ -92,15 +91,6 @@ in
   };
 
   # Generate a script to start the wayland compositor, used by the login manager
-  home.file.".home-manager-graphical-session-wayland".text = lib.optionalString (windowManager == "sway") ''
-    ${lib.optionalString (hardware.gpu or "" == "nvidia") ''
-      # Required for proprietary nvidia drivers
-      export __GLX_VENDOR_LIBRARY_NAME=nvidia
-      export GBM_BACKEND=nvidia-drm
-      export WLR_NO_HARDWARE_CURSORS=1
-      export MOZ_ENABLE_WAYLAND=1 # Needed for firefox
-    ''}
-
-    ${pkgs.sway}/bin/sway ${lib.optionalString (hardware.gpu or "" == "nvidia") "--unsupported-gpu"}
-  '';
+  home.file.".home-manager-graphical-session-wayland".text = lib.optionalString config.wayland.windowManager.sway.enable
+    (lib.getExe config.wayland.windowManager.sway.package); # Wrapped by the home-manager module.
 }

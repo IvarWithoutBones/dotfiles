@@ -1,6 +1,4 @@
-{ lib
-, pkgs
-, hardware
+{ pkgs
 , ...
 }:
 
@@ -102,12 +100,7 @@ in
           command = "echo \"$(${timeEmoji}) $(date +'%H:%M:%S')\"";
           interval = 1;
         }
-      ] ++ lib.optionals (hardware.battery or false) [rec {
-        block = "battery";
-        interval = 10;
-        format = " {percentage}";
-        full_format = format;
-      }];
+      ];
 
       settings = {
         icons.overrides = {

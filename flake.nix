@@ -3,10 +3,17 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nix-index-database.url = "github:mic92/nix-index-database";
-    nil-language-server.url = "github:oxalica/nil";
-    nixvim.url = "github:pta2002/nixvim";
     sm64ex-practice.url = "github:ivarwithoutbones/sm64ex-practice";
+
+    nixvim = {
+      url = "github:pta2002/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nix-index-database = {
+      url = "github:mic92/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -17,11 +24,6 @@
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    agenix = {
-      url = "github:ryantm/agenix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs =
@@ -30,73 +32,104 @@
     , nix-darwin
     , home-manager
     , flake-utils
-    , agenix
     , nix-index-database
-    , nil-language-server
     , nixvim
     , sm64ex-practice
     }:
     let
       lib = import ./lib.nix {
-        inherit nixpkgs home-manager nix-darwin flake-utils;
+        inherit nixpkgs nix-darwin home-manager;
       };
 
       profiles = import ./profiles.nix {
-        inherit self nixpkgs agenix lib nixvim nix-index-database;
+        inherit self nixpkgs lib nixvim nix-index-database;
       };
     in
     {
+      inherit lib;
       templates = import ./templates;
 
-      packages = lib.packagesFromOverlay self.overlays.default;
-      inherit lib;
-
       overlays.default = import ./pkgs/all-packages.nix {
-        inherit nix-index-database nil-language-server sm64ex-practice;
+        inherit sm64ex-practice;
       };
 
       darwinConfigurations = {
-        ivvs-MacBook-Pro = lib.createSystem profiles.ivv-darwin {
+        ivvs-MacBook-Pro = lib.createSystem profiles.darwin {
           system = "x86_64-darwin";
-          hostname = "darwin-macbook-pro";
+
+          modules = [
+            ({ ... }: {
+              users.users."ivv" = {
+                isHidden = false;
+                home = "/Users/ivv";
+              };
+
+              system = {
+                primaryUser = "ivv";
+                stateVersion = 5;
+              };
+            })
+          ];
 
           home-manager.modules = [
             ({ ... }: {
               programs.alacritty.settings.font.size = 15.5;
+              home.stateVersion = "21.11";
             })
           ];
         };
       };
 
       nixosConfigurations = {
-        nixos-pc = lib.createSystem profiles.ivv-linux {
+        nixos-pc = lib.createSystem profiles.linux {
           system = "x86_64-linux";
 
           modules = [
-            ./modules/linux/nvidia.nix
-            ./modules/linux/hardware-config/nixos-pc.nix
+            ./modules/linux/hardware/config/nixos-pc.nix
+            ./modules/linux/hardware/cpu/intel.nix
+            ./modules/linux/hardware/gpu/nvidia.nix
+            ({ pkgs, ... }: {
+              users.users."ivv" = {
+                isNormalUser = true;
+                extraGroups = [ "wheel" "plugdev" "dialout" ];
+                shell = pkgs.zsh;
+              };
+
+              networking = {
+                hostName = "nixos-pc";
+                interfaces.enp0s31f6.ipv4.addresses = [{
+                  address = "192.168.1.44";
+                  prefixLength = 28;
+                }];
+              };
+
+              system.stateVersion = "21.11";
+            })
           ];
 
           home-manager.modules = [
+            ./home-manager/modules/linux/i3-sway/nvidia.nix
             ./home-manager/modules/linux/i3-sway/monitor-layouts/pc.nix
+            ({ ... }: {
+              home.stateVersion = "21.11";
+            })
           ];
 
           commonSpecialArgs = {
-            hostname = "nixos-pc";
             wayland = false; # TODO: make this not required, currently there are eval errors when unset
-
-            hardware = {
-              sound = true;
-              cpu = "intel";
-              gpu = "nvidia";
-            };
-
-            network = {
-              interface = "enp0s31f6";
-              address = "192.168.1.44";
-            };
           };
         };
       };
-    };
+    } // flake-utils.lib.eachDefaultSystem (system:
+    let
+      pkgs = import nixpkgs {
+        inherit system;
+        overlays = [ self.overlays.default ];
+        config.allowUnfree = true;
+      };
+    in
+    {
+      # Every derivation defined in ./pkgs/all-packages.nix
+      packages = nixpkgs.lib.filterAttrs (_name: value: nixpkgs.lib.isDerivation value) (self.overlays.default pkgs pkgs);
+    });
 }

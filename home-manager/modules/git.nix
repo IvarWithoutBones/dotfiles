@@ -22,8 +22,13 @@ in
       frb = ''!${git} fetch $1 && ${git} rebase $1/''${2:-HEAD} && :'';
       # Create a new branch and check it out, optionally from a given starting point.
       new = ''!''${2+${git} fetch $2} && ${git} checkout -b $1 ''${2+$2/''${3:-HEAD}} --no-track --no-guess && :'';
+
       # Create an empty file and add it to git
-      touch-add = ''![ ! -e "$1" ] && (touch "$1" && ${git} add "$1") || (echo "path '$1' already exists" && exit 1) && :'';
+      touch-add =
+        let
+          path = "\${GIT_PREFIX:-}$1"; # Allow using paths relative to the current working directory.
+        in
+        ''![ ! -e "${path}" ] && (touch "${path}" && ${git} add "${path}") || (echo "path '${path}' already exists" && exit 1) && :'';
 
       # `git add` with fuzzy matching. The package is a script from my overlay.
       af = "!${lib.getExe (pkgs.git-add-fuzzy.override { inherit git; })}";

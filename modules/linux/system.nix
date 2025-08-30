@@ -1,5 +1,4 @@
 { pkgs
-, username
 , ...
 }:
 
@@ -41,11 +40,5 @@
   services = {
     fstrim.enable = true;
     udev.packages = [ pkgs.qmk-udev-rules ];
-  };
-
-  users.users.${username} = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" "plugdev" "dialout" ];
-    shell = pkgs.zsh;
   };
 }

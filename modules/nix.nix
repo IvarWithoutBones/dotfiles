@@ -1,12 +1,16 @@
-{ pkgs
+{ config
+, lib
+, pkgs
 , nixpkgs
-, username
 , dotfiles-flake
 , ...
 }:
 
 let
-  trustedAndAllowedUsers = [ "@wheel" username ];
+  hostPlatform = pkgs.stdenvNoCC.hostPlatform;
+  trustedAndAllowedUsers = [ "@wheel" ] ++ (lib.attrNames (lib.filterAttrs
+    (_username: config: if hostPlatform.isDarwin then !config.isHidden else config.isNormalUser)
+    config.users.users));
 in
 {
   nixpkgs.config.allowUnfree = true;
@@ -30,7 +34,7 @@ in
       warn-dirty = false; # Gets pretty annoying while working on a flake
 
       # Can causes failures on Darwin, see https://github.com/NixOS/nix/issues/7273.
-      auto-optimise-store = !pkgs.stdenvNoCC.isDarwin;
+      auto-optimise-store = !hostPlatform.isDarwin;
     };
   };
 }

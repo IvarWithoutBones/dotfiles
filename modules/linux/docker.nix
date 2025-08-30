@@ -1,4 +1,5 @@
-{ username
+{ config
+, lib
 , ...
 }:
 
@@ -8,5 +9,7 @@
     enableOnBoot = false; # Use socket activation
   };
 
-  users.users.${username}.extraGroups = [ "docker" ];
+  # Add the "docker" group to every normal (i.e. interactive) user.
+  users.extraGroups."docker".members = lib.attrNames
+    (lib.filterAttrs (_username: config: config.isNormalUser) config.users.extraUsers);
 }

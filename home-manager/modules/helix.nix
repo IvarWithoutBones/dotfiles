@@ -52,7 +52,7 @@ let
     yamlfmt
 
     # Nix
-    nil-language-server
+    nil
     nixpkgs-fmt
 
     # Rust

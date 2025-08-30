@@ -36,7 +36,7 @@ let
     nodePackages.bash-language-server
 
     # Nix
-    nil-language-server
+    nil
     nixpkgs-fmt
 
     # Rust
