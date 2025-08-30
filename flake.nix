@@ -88,6 +88,7 @@
             ./modules/linux/hardware/config/nixos-pc.nix
             ./modules/linux/hardware/cpu/intel.nix
             ./modules/linux/hardware/gpu/nvidia.nix
+
             ({ pkgs, ... }: {
               users.users."ivv" = {
                 isNormalUser = true;
@@ -109,15 +110,14 @@
 
           home-manager.modules = [
             ./home-manager/modules/linux/i3-sway/nvidia.nix
-            ./home-manager/modules/linux/i3-sway/monitor-layouts/pc.nix
+            ./home-manager/modules/linux/i3-sway/i3.nix
+            ./home-manager/modules/linux/i3-sway/sway.nix
+            ./home-manager/modules/linux/i3-sway/config/monitor-layouts/pc.nix
+
             ({ ... }: {
               home.stateVersion = "21.11";
             })
           ];
-
-          commonSpecialArgs = {
-            wayland = false; # TODO: make this not required, currently there are eval errors when unset
-          };
         };
       };
     } // flake-utils.lib.eachDefaultSystem (system:

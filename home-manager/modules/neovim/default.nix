@@ -1,6 +1,5 @@
 { lib
 , pkgs
-, wayland
 , nixvim
 , ...
 }:
@@ -79,10 +78,9 @@ in
 
     clipboard = {
       register = "unnamedplus"; # Copy to the system clipboard by default
-      providers = lib.optionalAttrs pkgs.stdenvNoCC.isLinux {
-        # Required for copying to the system clipboard
-        wl-copy.enable = wayland;
-        xclip.enable = !wayland;
+      providers = lib.optionalAttrs pkgs.hostPlatform.isLinux {
+        wl-copy.enable = true;
+        xclip.enable = true;
       };
     };
 

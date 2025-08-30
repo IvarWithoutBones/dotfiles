@@ -76,7 +76,6 @@ in
         ./home-manager/modules/linux/xresources.nix
         ./home-manager/modules/linux/gtk.nix
         ./home-manager/modules/linux/keyring.nix
-        ./home-manager/modules/linux/i3-sway
       ] ++ common.home-manager.modules;
     };
   };

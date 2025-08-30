@@ -1,14 +1,10 @@
 { config
 , lib
 , pkgs
-, wayland
 , ...
 }:
 
 let
-  displayServer = if wayland then "wayland" else "xsession";
-  windowManager = if wayland then "sway" else "i3";
-
   mkDefaultColor = color: attrNames: lib.genAttrs attrNames (name: color);
 
   mkColor = { ... } @ args:
@@ -39,11 +35,8 @@ let
     names = [ "FiraCode Nerd Font" ];
     size = 13.0;
   };
-in
-{
-  fonts.fontconfig.enable = true;
 
-  ${displayServer}.windowManager.${windowManager}.config = {
+  wmConfig = {
     inherit fonts;
 
     colors = {
@@ -73,6 +66,11 @@ in
       };
     };
   };
+in
+{
+  xsession.windowManager.i3.config = lib.mkIf config.xsession.windowManager.i3.enable wmConfig;
+  wayland.windowManager.sway.config = lib.mkIf config.wayland.windowManager.sway.enable wmConfig;
+  fonts.fontconfig.enable = true;
 
   programs.i3status-rust = {
     bars.top.settings.theme.overrides = mkDefaultColor colors.base [

@@ -1,6 +1,5 @@
 { pkgs
 , lib
-, wayland
 , ...
 }:
 
@@ -60,14 +59,12 @@
     evince
     drawio
     imhex
-    i3-swallow
     psst
     krita
     _1password-gui
     transmission_4-gtk
     firefox
     libreoffice
-    (if wayland then wdisplays else arandr)
   ];
 
   xdg = lib.mkIf pkgs.stdenvNoCC.isLinux {

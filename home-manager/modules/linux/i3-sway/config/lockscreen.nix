@@ -1,13 +1,13 @@
-{ lib
+{ config
+, lib
 , pkgs
-, wayland
 , ...
 }:
 
-# Used in conjunction with `modules/linux/lockscreen.nix`.
+# Used in conjunction with `modules/linux/desktop/lockscreen.nix`.
 
 {
-  services.screen-locker = lib.optionalAttrs (!wayland) {
+  services.screen-locker = lib.mkIf config.xsession.windowManager.i3.enable {
     enable = true;
     lockCmd = lib.getExe pkgs.i3lock-fancy;
     inactiveInterval = 2; # In minutes
@@ -17,7 +17,7 @@
     let
       command = lib.getExe pkgs.swaylock-fancy;
     in
-    lib.optionalAttrs wayland {
+    lib.mkIf config.wayland.windowManager.sway.enable {
       enable = true;
 
       events = [{
