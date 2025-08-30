@@ -20,15 +20,17 @@ let
     ws10 = "10";
   };
 
-  startup = [
-    { command = "--no-startup-id ${pkgs.alsa-utils}/bin/amixer set Master 35%"; always = false; }
-    { command = "--no-startup-id ${pkgs.redshift}/bin/redshift -l 50.77083:3.57361 -t 6500K:3000K"; always = false; }
-  ];
-
   wmConfig = {
-    inherit startup modifier;
+    inherit modifier;
     terminal = config.home.sessionVariables.TERMINAL;
     defaultWorkspace = "workspace ${workspaces.ws1}";
+
+    startup = [
+      # Tray icon application that disables auto-sleep while certain apps are running
+      { command = "--no-startup-id ${lib.getExe pkgs.caffeine-ng}"; always = false; }
+      # Set the default volume to 35%
+      { command = "--no-startup-id ${pkgs.alsa-utils}/bin/amixer set Master 35%"; always = false; }
+    ];
 
     # Disable default resize mode
     modes = { };
@@ -58,6 +60,13 @@ let
       { class = "ghidra-Ghidra"; title = "^(?!(CodeBrowser.*|Ghidra.*))"; }
     ];
   };
+
+  screenTemp = {
+    latitude = "52.1";
+    longitude = "5.2";
+    low = "3000";
+    high = "6500";
+  };
 in
 {
   imports = [
@@ -74,17 +83,20 @@ in
     windowManager.i3 = {
       package = pkgs.i3-gaps;
       config = wmConfig // {
-        startup = startup ++ [
-          # Tray icon application that disables auto-sleep while certain apps are running
-          { command = "--no-startup-id ${pkgs.caffeine-ng}/bin/caffeine"; always = false; }
+        startup = wmConfig.startup ++ [
+          { command = "--no-startup-id ${lib.getExe pkgs.redshift} -l ${screenTemp.latitude}:${screenTemp.longitude} -t ${screenTemp.high}K:${screenTemp.low}K"; always = false; }
         ];
       };
     };
   };
 
   wayland.windowManager.sway = lib.mkIf config.wayland.windowManager.sway.enable {
-    config = wmConfig;
     wrapperFeatures.gtk = true;
+    config = wmConfig // {
+      startup = wmConfig.startup ++ [
+        { command = "--no-startup-id ${lib.getExe pkgs.wlsunset} -l ${screenTemp.latitude} -L ${screenTemp.longitude} -t ${screenTemp.low} -T ${screenTemp.high}"; always = false; }
+      ];
+    };
   };
 
   # Generate a script to start the wayland compositor, used by the login manager
