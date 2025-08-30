@@ -6,11 +6,14 @@
 
 # Used in conjunction with `modules/linux/desktop/lockscreen.nix`.
 
+let
+  timeout = 120; # In seconds
+in
 {
   services.screen-locker = lib.mkIf config.xsession.windowManager.i3.enable {
     enable = true;
     lockCmd = lib.getExe pkgs.i3lock-fancy;
-    inactiveInterval = 2; # In minutes
+    inactiveInterval = timeout / 60; # In minutes
   };
 
   services.swayidle =
@@ -25,9 +28,6 @@
         inherit command;
       }];
 
-      timeouts = [{
-        timeout = 120; # In seconds
-        inherit command;
-      }];
+      timeouts = [{ inherit timeout command; }];
     };
 }

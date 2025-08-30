@@ -26,8 +26,6 @@ let
     defaultWorkspace = "workspace ${workspaces.ws1}";
 
     startup = [
-      # Tray icon application that disables auto-sleep while certain apps are running
-      { command = "--no-startup-id ${lib.getExe pkgs.caffeine-ng}"; always = false; }
       # Set the default volume to 35%
       { command = "--no-startup-id ${pkgs.alsa-utils}/bin/amixer set Master 35%"; always = false; }
     ];
@@ -84,7 +82,10 @@ in
       package = pkgs.i3-gaps;
       config = wmConfig // {
         startup = wmConfig.startup ++ [
+          # Set the screen color temperature based on time of day
           { command = "--no-startup-id ${lib.getExe pkgs.redshift} -l ${screenTemp.latitude}:${screenTemp.longitude} -t ${screenTemp.high}K:${screenTemp.low}K"; always = false; }
+          # Disables auto-sleep/lock while apps are playing audio
+          { command = "--no-startup-id ${lib.getExe pkgs.caffeine-ng}"; always = false; }
         ];
       };
     };
@@ -94,7 +95,10 @@ in
     wrapperFeatures.gtk = true;
     config = wmConfig // {
       startup = wmConfig.startup ++ [
+        # Set the screen color temperature based on time of day
         { command = "--no-startup-id ${lib.getExe pkgs.wlsunset} -l ${screenTemp.latitude} -L ${screenTemp.longitude} -t ${screenTemp.low} -T ${screenTemp.high}"; always = false; }
+        # Disables auto-sleep/lock while apps are playing audio
+        { command = "--no-startup-id ${lib.getExe pkgs.sway-audio-idle-inhibit}"; always = false; }
       ];
     };
   };
