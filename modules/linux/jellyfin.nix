@@ -1,14 +1,6 @@
 { ... }:
 
 {
-  # TODO: Remove this once sonarr gets support for newer dotnet SDKs
-  nixpkgs.config.permittedInsecurePackages = [
-    "aspnetcore-runtime-6.0.36"
-    "aspnetcore-runtime-wrapped-6.0.36"
-    "dotnet-sdk-6.0.428"
-    "dotnet-sdk-wrapped-6.0.428"
-  ];
-
   # Media player, hosts a web interface
   services.jellyfin = {
     enable = true;

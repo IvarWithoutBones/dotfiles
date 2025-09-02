@@ -49,7 +49,6 @@
     nerd-fonts.fira-code
 
     prismlauncher
-    jellyfin-media-player
     signal-desktop
     tidal-hifi
     obsidian

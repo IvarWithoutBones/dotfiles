@@ -29,19 +29,18 @@
       ls-diskusage = "${lib.getExe pkgs.eza} --all --total-size --sort size --long --no-permissions --no-user --no-time";
       tree = "${lib.getExe pkgs.eza} --tree --icons --follow-symlinks --group-directories-first --git-ignore";
       cat = "${lib.getExe pkgs.bat} --plain";
-      diff = "diff --color=auto --unified";
-      dirdiff = "diff --color=auto -ENwbur";
-      mp3 = "mpv --no-video";
-      weather = "curl -S 'https://wttr.in/?1F'";
-      diskusage = "df -ht ext4";
-      mktar = "tar -czvf";
+      diff = "${lib.getExe' pkgs.diffutils "diff"} --color=auto --unified";
+      dirdiff = "${lib.getExe' pkgs.diffutils "diff"} --color=auto -ENwbur";
+      mp3 = "${lib.getExe pkgs.mpv} --no-video";
+      diskusage = "${lib.getExe' pkgs.coreutils "df"} -ht ext4";
+      mktar = "${lib.getExe pkgs.gnutar} -czvf";
+      nix-locate-bin = "() { ${lib.getExe' pkgs.nix-index "nix-locate"} --type=x --whole-name --at-root \"\${@/#/\"/bin/\"}\" }"; # Prepend `/bin/` to each argument
       github-actions = "${lib.getExe pkgs.act} -s GITHUB_TOKEN=\"$(${lib.getExe pkgs.github-cli} auth token)\"";
     } // lib.optionalAttrs pkgs.stdenvNoCC.isLinux rec {
-      copy = "${pkgs.xclip}/bin/xclip -selection clipboard";
-      battery-left = "${pkgs.acpi}/bin/acpi | cut -d' ' -f5";
-      viewimg = "${pkgs.i3-swallow}/bin/swallow ${pkgs.feh}/bin/feh \"$@\"";
+      copy = "${lib.getExe pkgs.xclip} -selection clipboard";
+      battery-left = "${lib.getExe pkgs.acpi} | cut -d' ' -f5";
       open = "${pkgs.xdg-utils}/bin/xdg-open";
-      caps = "${pkgs.xdotool}/bin/xdotool key Caps_Lock";
+      caps = "${lib.getExe pkgs.xdotool} key Caps_Lock";
       CAPS = caps;
     };
 
