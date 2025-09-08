@@ -17,9 +17,13 @@ let
     typescript-language-server # Typescript/Javascript
     nodePackages.vscode-json-languageserver # JSON
     vscode-langservers-extracted # HTML
-    python3Packages.python-lsp-server # Python
     sumneko-lua-language-server # Lua
     cmake-language-server # CMake
+
+    # Python
+    python3
+    pyright
+    ruff
 
     # C/C++
     clang-tools
@@ -27,8 +31,7 @@ let
 
     # C#
     dotnet-sdk
-    # TODO: Re-enable once it upgrades from the EOL dotnet-sdk_6
-    # omnisharp-roslyn
+    omnisharp-roslyn
 
     # Bash
     shellcheck
@@ -44,8 +47,8 @@ let
     rustc
     clippy
     rust-analyzer
-  ] ++ lib.optionals pkgs.stdenvNoCC.isLinux [
-    glslls # GLSL language server, does not support Darwin.
+  ] ++ lib.optionals pkgs.hostPlatform.isLinux [
+    glslls # GLSL, does not support Darwin.
   ];
 
   # A hacky way to add packages to neovims environment if they are not already in $PATH, using `makeWrapper --suffix`.
@@ -55,13 +58,14 @@ let
     {
       nativeBuildInputs = [ pkgs.makeWrapper ];
       inherit (pkgs.neovim.unwrapped) meta lua;
-    } ''
-    # Symlinking is being a bit painful here, another derivation attempts to mutate the output.
-    mkdir -p $out
-    cp -r ${pkgs.neovim.unwrapped}/* $out
-    chmod -R +w $out
-    makeWrapper ${pkgs.neovim.unwrapped}/bin/nvim $out/bin/nvim --suffix PATH : ${lib.makeBinPath packages}
-  '';
+    }
+    ''
+      # Symlinking is being a bit painful here, another derivation attempts to mutate the output.
+      mkdir -p $out
+      cp -r ${pkgs.neovim.unwrapped}/* $out
+      chmod -R +w $out
+      makeWrapper ${pkgs.neovim.unwrapped}/bin/nvim $out/bin/nvim --suffix PATH : ${lib.makeBinPath packages}
+    '';
 in
 {
   imports = [

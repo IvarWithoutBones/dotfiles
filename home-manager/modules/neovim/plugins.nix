@@ -193,51 +193,8 @@ in
 
       nvim-treesitter-textobjects # For treesitter
       {
-        # Better syntax highlighting and automatic indentation
-        plugin = nvim-treesitter.withPlugins (plugins: with plugins; [
-          tree-sitter-json
-          tree-sitter-json5
-          tree-sitter-toml
-          tree-sitter-yaml
-          tree-sitter-rust
-          tree-sitter-python
-          tree-sitter-nix
-          tree-sitter-cmake
-          tree-sitter-make
-          tree-sitter-cpp
-          tree-sitter-c
-          tree-sitter-c-sharp
-          tree-sitter-bash
-          tree-sitter-lua
-          tree-sitter-css
-          tree-sitter-scss
-          tree-sitter-typescript
-          tree-sitter-javascript
-          tree-sitter-tsx
-          tree-sitter-html
-          tree-sitter-http
-          tree-sitter-markdown
-          tree-sitter-markdown-inline
-          tree-sitter-regex
-          tree-sitter-vim
-          tree-sitter-query
-          tree-sitter-llvm
-          tree-sitter-go
-          tree-sitter-zig
-          tree-sitter-sql
-          tree-sitter-wgsl
-          tree-sitter-glsl
-          tree-sitter-cuda
-          tree-sitter-perl
-          tree-sitter-ruby
-          tree-sitter-latex
-          tree-sitter-proto
-          tree-sitter-devicetree
-          tree-sitter-dockerfile
-          # From my overlay
-          tree-sitter-astro
-        ]);
-
+        # Better syntax highlighting and automatic indentation.
+        plugin = nvim-treesitter.withAllGrammars;
         config = mkLuaFile ./scripts/plugins/treesitter.lua;
       }
     ];

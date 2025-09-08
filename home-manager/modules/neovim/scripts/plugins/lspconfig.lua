@@ -35,6 +35,10 @@ local function loadLanguageServers()
         taplo = {},     -- TOML
         ts_ls = {},     -- TypeScript/JavaScript
 
+        -- Python
+        pyright = {},
+        ruff = {},
+
         -- Bash
         bashls = {
             settings = {
@@ -114,25 +118,6 @@ local function loadLanguageServers()
                     diagnostics = { globals = { "vim" } },
                     runtime = { version = "LuaJIT" },
                     telemetry = { enable = false }
-                }
-            }
-        },
-
-        -- Python
-        pylsp = {
-            settings = {
-                pylsp = {
-                    plugins = {
-                        pycodestyle = {
-                            ignore = {
-                                "E201", -- Whitespace after opening bracket
-                                "E202", -- Whitespace before closing bracket
-                                "E302", -- Two newlines after imports
-                                "E305", -- Two newlines after class/function
-                                "E501", -- Line too long
-                            }
-                        }
-                    }
                 }
             }
         },
@@ -263,3 +248,16 @@ vim.g.rustaceanvim = {
         end,
     }
 }
+
+-- Disable Ruff's hover capability, we use Pyright's instead.
+-- This snippet comes from the Ruff documentation: https://docs.astral.sh/ruff/editors/setup/#neovim
+vim.api.nvim_create_autocmd("LspAttach", {
+    group = vim.api.nvim_create_augroup("lsp_attach_disable_ruff_hover", { clear = true }),
+    callback = function(args)
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if client and client.name == "ruff" then
+            client.server_capabilities.hoverProvider = false
+        end
+    end,
+    desc = "LSP: Disable hover capability from Ruff",
+})
