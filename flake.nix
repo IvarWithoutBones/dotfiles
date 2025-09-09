@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     sm64ex-practice.url = "github:ivarwithoutbones/sm64ex-practice";
+    nixos-hardware.url = "github:NixOS/nixos-hardware";
 
     nixvim = {
       url = "github:pta2002/nixvim";
@@ -35,6 +36,7 @@
     , nix-index-database
     , nixvim
     , sm64ex-practice
+    , nixos-hardware
     }:
     let
       lib = import ./lib.nix {
@@ -48,10 +50,7 @@
     {
       inherit lib;
       templates = import ./templates;
-
-      overlays.default = import ./pkgs/all-packages.nix {
-        inherit sm64ex-practice;
-      };
+      overlays.default = import ./pkgs/all-packages.nix;
 
       darwinConfigurations = {
         ivvs-MacBook-Pro = lib.createSystem profiles.darwin {
@@ -88,6 +87,10 @@
             ./modules/linux/hardware/config/nixos-pc.nix
             ./modules/linux/hardware/cpu/intel.nix
             ./modules/linux/hardware/gpu/nvidia.nix
+            ./modules/linux/steam.nix
+            ./modules/linux/jellyfin.nix
+            ./modules/linux/zerotierone.nix
+            ./modules/linux/sunshine.nix
 
             ({ pkgs, ... }: {
               users.users."ivv" = {
@@ -114,8 +117,72 @@
             ./home-manager/modules/linux/i3-sway/sway.nix
             ./home-manager/modules/linux/i3-sway/config/monitor-layouts/pc.nix
 
+            ({ system, ... }: {
+              home = {
+                packages = [ sm64ex-practice.packages.${system}.default ];
+                stateVersion = "21.11";
+              };
+            })
+          ];
+        };
+
+        nixos-macbook = lib.createSystem profiles.linux {
+          system = "x86_64-linux";
+
+          modules = [
+            nixos-hardware.nixosModules.apple-t2
+            ./modules/linux/hardware/config/nixos-macbook.nix
+            ./modules/linux/hardware/cpu/intel.nix
+            ./modules/linux/hardware/touchpad.nix
+            ./modules/linux/hardware/bluetooth.nix
+
+            ({ pkgs, lib, ... }: {
+              # Use MacOS's boot partition.
+              boot.loader.efi.efiSysMountPoint = "/boot";
+
+              # Use Apple's Bluetooth/Wifi firmware. Option comes from nixos-hardware.
+              hardware.apple-t2.firmware.enable = true;
+
+              # Enable the nixos-t2 binary cache.
+              nix.settings =
+                let
+                  substituters = [ "https://cache.soopy.moe" ];
+                in
+                {
+                  inherit substituters;
+                  trusted-substituters = substituters;
+                  trusted-public-keys = [ "cache.soopy.moe-1:0RZVsQeR+GOh0VQI9rvnHz55nVXkFardDqfm4+afjPo=" ];
+                };
+
+              users.users."ivv" = {
+                isNormalUser = true;
+                extraGroups = [ "wheel" "plugdev" "dialout" ];
+                shell = pkgs.zsh;
+              };
+
+              networking.hostName = "nixos-macbook";
+              system.stateVersion = "25.11";
+            })
+          ];
+
+          home-manager.modules = [
+            ./home-manager/modules/linux/i3-sway/sway.nix
+
             ({ ... }: {
-              home.stateVersion = "21.11";
+              wayland.windowManager.sway.config.input = {
+                # Rebind capslock -> escape on all keyboards.
+                "type:keyboard".xkb_options = "caps:escape";
+
+                # Options for the laptop's internal keyboard. The identifier comes from `swaymsg -t get_inputs`.
+                "1452:636:Apple_Inc._Apple_Internal_Keyboard_/_Trackpad".xkb_options = nixpkgs.lib.concatStringsSep "," [
+                  # Rebind capslock -> escape again (the general "type:keyboard" above gets overwritten).
+                  "caps:escape"
+                  # Swap left Option <-> left Command to mimic a regular layout.
+                  "altwin:swap_lalt_lwin"
+                ];
+              };
+
+              home.stateVersion = "25.11";
             })
           ];
         };

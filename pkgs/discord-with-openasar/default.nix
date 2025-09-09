@@ -21,6 +21,10 @@ let
       asar
     ]}"
 
+    if [ ! -d "$HOME/.config/discord" ]; then
+        exit 0
+    fi
+
     path="$(find "$HOME/.config/discord" -name discord_desktop_core -type d | tail -n1)"
     if [ -d "$path/core-patched" ]; then
         echo "already patched, doing nothing"

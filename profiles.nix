@@ -53,16 +53,12 @@ in
   linux = common // {
     modules = [
       ./modules/linux/system.nix
-      ./modules/linux/steam.nix
       ./modules/linux/keyring.nix
       ./modules/linux/flatpak.nix
       ./modules/linux/networking.nix
       ./modules/linux/gpg.nix
       ./modules/linux/docker.nix
       ./modules/linux/perf.nix
-      ./modules/linux/jellyfin.nix
-      ./modules/linux/zerotierone.nix
-      ./modules/linux/sunshine.nix
       ./modules/linux/hardware/audio.nix
       ./modules/linux/desktop/lockscreen.nix
       ./modules/linux/desktop/sessions.nix
@@ -72,9 +68,10 @@ in
 
     home-manager = common.home-manager // {
       modules = [
-        ./home-manager/modules/linux/dunst.nix
-        ./home-manager/modules/linux/xresources.nix
+        ./home-manager/modules/linux/cursor.nix
         ./home-manager/modules/linux/gtk.nix
+        ./home-manager/modules/linux/xresources.nix
+        ./home-manager/modules/linux/dunst.nix
         ./home-manager/modules/linux/keyring.nix
       ] ++ common.home-manager.modules;
     };

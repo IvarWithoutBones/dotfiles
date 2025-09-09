@@ -33,6 +33,9 @@ let
     # Disable default resize mode
     modes = { };
 
+    # Hide titlebars by default
+    window.titlebar = false;
+
     gaps = {
       inner = 4;
       outer = 4;

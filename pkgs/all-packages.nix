@@ -1,5 +1,3 @@
-{ sm64ex-practice }:
-
 final: prev:
 let
   pkgs = final;
@@ -53,9 +51,6 @@ with pkgs; {
   qutebrowser-scripts = lib.recurseIntoAttrs (callPackage ./qutebrowser/scripts { });
 
   read-macos-alias = callPackage ./read-macos-alias { };
-
-  sm64ex-practice = sm64ex-practice.packages.${stdenvNoCC.hostPlatform.system
-    or (throw "Unsupported platform ${stdenvNoCC.hostPlatform.system}")}.default;
 
   speedtest = callPackage ./speedtest {
     inherit (python3Packages) speedtest-cli;
