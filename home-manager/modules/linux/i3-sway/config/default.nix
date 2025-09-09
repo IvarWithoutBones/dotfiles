@@ -92,13 +92,14 @@ in
   };
 
   wayland.windowManager.sway = lib.mkIf config.wayland.windowManager.sway.enable {
+    # Create a systemd target (`sway-session.target`) so that other services can depend on the sway session.
+    systemd.enable = true;
     wrapperFeatures.gtk = true;
+
     config = wmConfig // {
       startup = wmConfig.startup ++ [
         # Set the screen color temperature based on time of day
         { command = "--no-startup-id ${lib.getExe pkgs.wlsunset} -l ${screenTemp.latitude} -L ${screenTemp.longitude} -t ${screenTemp.low} -T ${screenTemp.high}"; always = false; }
-        # Disables auto-sleep/lock while apps are playing audio
-        { command = "--no-startup-id ${lib.getExe pkgs.sway-audio-idle-inhibit}"; always = false; }
       ];
     };
   };
