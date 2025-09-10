@@ -26,15 +26,50 @@ in
     };
   };
 
-  services.swayidle = lib.mkIf config.wayland.windowManager.sway.enable {
-    enable = true;
+  services.swayidle =
+    let
+      theme = pkgs.fetchurl {
+        url = "https://raw.githubusercontent.com/catppuccin/swaylock/17aa0be6ae7a166256c3d6d6de643b0b49c865dd/themes/mocha.conf";
+        hash = "sha256-y4Y+qZQEpMAmhT4dKHY+ZumfWfKvVvjWHyqhafdakF8=";
+      };
 
-    # Only start when the sway session is active, same idea as above.
-    systemdTarget = "sway-session.target";
+      settings = [
+        # Use the theme specified above with a blurred background and the indicator.
+        "--config=${theme}"
+        "--screenshots"
+        "--indicator"
+        "--indicator-caps-lock"
+        "--clock"
+        "--effect-scale=0.25" # Scale down to speed up the blur effect.
+        "--effect-blur=4x4"
+        "--effect-scale=1" # Scale back to original size.
+        # Don't require a password to unlock for the first N settings.
+        "--grace=5"
+        "--grace-no-mouse"
+        "--grace-no-touch"
+      ];
 
-    timeouts = [{
-      command = lib.getExe pkgs.swaylock-fancy;
-      inherit timeout;
-    }];
-  };
+      command = "${lib.getExe pkgs.swaylock-effects} --daemonize ${lib.concatStringsSep " " settings}";
+      swaymsg = lib.getExe' config.wayland.windowManager.sway.package "swaymsg";
+    in
+    lib.mkIf config.wayland.windowManager.sway.enable {
+      enable = true;
+      systemdTarget = "sway-session.target"; # Only start when the sway session is active.
+
+      timeouts = [
+        { inherit timeout command; } # Go to sleep after N seconds.
+        {
+          # After another N seconds, turn off all displays.
+          timeout = timeout * 2;
+          command = "${swaymsg} 'output * dpms off'";
+          resumeCommand = "${swaymsg} 'output * dpms on'";
+        }
+      ];
+
+      # Run the lock command before going to sleep via systemd-suspend/logind.
+      events = [
+        { event = "before-sleep"; inherit command; }
+        { event = "lock"; inherit command; }
+      ];
+    };
 }
