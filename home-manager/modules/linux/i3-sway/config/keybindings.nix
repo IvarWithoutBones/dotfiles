@@ -76,8 +76,8 @@ let
     "XF86AudioStop" = "exec ${lib.getExe pkgs.playerctl} stop";
 
     # Brightness control
-    "XF86MonBrightnessUp" = "exec ${lib.getExe pkgs.brightnessctl} set 10%+";
-    "XF86MonBrightnessDown" = "exec ${lib.getExe pkgs.brightnessctl} set 10%-";
+    "XF86MonBrightnessUp" = "exec ${lib.getExe pkgs.brightnessctl} set 5%+";
+    "XF86MonBrightnessDown" = "exec ${lib.getExe pkgs.brightnessctl} set 5%-";
   };
 
   mkExitBinding = msgCmd: name:

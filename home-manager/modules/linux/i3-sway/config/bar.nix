@@ -29,7 +29,8 @@ in
           block = "music";
           player = [ "spotify" "psst" "tidal-hifi" ];
           format = "{ $icon $combo.str(max_w:50,rot_interval:0.25) }|";
-          theme_overrides.info_bg = { link = "idle_bg"; }; # Disable darkened background
+          theme_overrides.info_bg.link = "idle_bg"; # Disable darkened background
+          icons_overrides.music = "󰝚";
           click = [
             { button = "left"; action = "prev"; }
             { button = "right"; action = "next"; }
@@ -76,6 +77,61 @@ in
             button = "left";
             cmd = "${pkgs.pavucontrol}/bin/pavucontrol";
           }];
+
+          icons_overrides = {
+            volume_muted = "";
+            volume = [
+              ""
+              ""
+              ""
+            ];
+          };
+        }
+
+        {
+          block = "battery";
+          format = " $icon$percentage ";
+          full_format = " $icon$percentage ";
+          charging_format = " $icon$percentage ";
+          empty_format = " $icon$percentage ";
+          not_charging_format = " $icon$percentage ";
+          missing_format = ""; # Hide the block if there is no battery detected.
+
+          # Use the default background regardless of state
+          theme_overrides = {
+            good_bg.link = "idle_bg";
+            warning_bg.link = "idle_bg";
+            critical_bg.link = "idle_bg";
+            info_bg.link = "idle_bg";
+          };
+
+          icons_overrides = {
+            bat = [
+              "󰁺"
+              "󰁻"
+              "󰁼"
+              "󰁽"
+              "󰁾"
+              "󰁿"
+              "󰂀"
+              "󰂁"
+              "󰂂"
+              "󰁹"
+            ];
+
+            bat_charging = [
+              "󰢜"
+              "󰂆"
+              "󰂇"
+              "󰂈"
+              "󰢝"
+              "󰂉"
+              "󰢞"
+              "󰂊"
+              "󰂋"
+              "󰂅"
+            ];
+          };
         }
 
         {
@@ -103,22 +159,7 @@ in
       ];
 
       settings = {
-        icons.overrides = {
-          music = "󰝚";
-
-          volume_muted = "";
-          volume = [
-            ""
-            ""
-          ];
-
-          bat_charging = "";
-          bat_quarter = "";
-          bat_half = "";
-          bat_three_quarters = "";
-          bat_full = "";
-          bat_empty = "";
-        };
+        icons.icons = "material-nf"; # Enable nerd-fonts icons
       };
     };
   };

@@ -26,21 +26,15 @@ in
     };
   };
 
-  services.swayidle =
-    let
+  services.swayidle = lib.mkIf config.wayland.windowManager.sway.enable {
+    enable = true;
+
+    # Only start when the sway session is active, same idea as above.
+    systemdTarget = "sway-session.target";
+
+    timeouts = [{
       command = lib.getExe pkgs.swaylock-fancy;
-    in
-    lib.mkIf config.wayland.windowManager.sway.enable {
-      enable = true;
-
-      # Only start when the sway session is active, same idea as above.
-      systemdTarget = "sway-session.target";
-
-      events = [{
-        event = "before-sleep";
-        inherit command;
-      }];
-
-      timeouts = [{ inherit timeout command; }];
-    };
+      inherit timeout;
+    }];
+  };
 }
