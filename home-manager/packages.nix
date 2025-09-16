@@ -47,11 +47,14 @@
     noto-fonts-emoji
     nerd-fonts.fira-code
 
+    perf
+    kdePackages.kcachegrind
+    valgrind
     prismlauncher
     signal-desktop
     tidal-hifi
     obsidian
-    ghidra # TODO: enable on Darwin when it isn't broken there anymore.
+    ghidra
     vscode-fhs
     ares
     evince
