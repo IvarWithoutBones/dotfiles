@@ -26,6 +26,7 @@
     eza
     gimp
     moonlight-qt
+    keepassxc
 
     # Packages from my overlay
     dotfiles-tool
@@ -36,14 +37,13 @@
     callpackage-cli
     copy-nix-derivation
     read-macos-alias
-  ] ++ lib.optionals pkgs.stdenvNoCC.isDarwin [
+  ] ++ lib.optionals pkgs.hostPlatform.isDarwin [
     iterm2
-  ] ++ lib.optionals pkgs.stdenvNoCC.isLinux [
+  ] ++ lib.optionals pkgs.hostPlatform.isLinux [
     # Package from my overlay
     speedtest
     proton-ge-runner
 
-    # Fonts. TODO: manage this from a module option?
     noto-fonts-emoji
     nerd-fonts.fira-code
 
@@ -68,7 +68,8 @@
     libreoffice
   ];
 
-  xdg = lib.mkIf pkgs.stdenvNoCC.isLinux {
+  # TODO: Move to a separate XDG file.
+  xdg = lib.mkIf pkgs.hostPlatform.isLinux {
     enable = true;
 
     # Avoid activation failures when the mimeapps file already exists, as some packages (e.g. firefox) will overwrite it.

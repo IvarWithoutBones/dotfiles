@@ -90,11 +90,11 @@ in
 
         {
           block = "battery";
-          format = " $icon$percentage ";
-          full_format = " $icon$percentage ";
-          charging_format = " $icon$percentage ";
-          empty_format = " $icon$percentage ";
-          not_charging_format = " $icon$percentage ";
+          format = " $icon $percentage ";
+          full_format = " $icon $percentage ";
+          charging_format = " $icon $percentage ";
+          empty_format = " $icon $percentage ";
+          not_charging_format = " $icon $percentage ";
           missing_format = ""; # Hide the block if there is no battery detected.
 
           # Use the default background regardless of state

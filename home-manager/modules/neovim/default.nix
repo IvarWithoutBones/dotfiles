@@ -13,12 +13,18 @@ let
 
     # `plugins/lspconfig.lua` contains the configuration of the language servers listed below.
     taplo-lsp # TOML
-    yaml-language-server # YAML
     typescript-language-server # Typescript/Javascript
     nodePackages.vscode-json-languageserver # JSON
     vscode-langservers-extracted # HTML
     sumneko-lua-language-server # Lua
-    cmake-language-server # CMake
+
+    # YAML
+    yaml-language-server
+    yamlfmt
+
+    # CMake
+    cmake-language-server
+    cmake-format
 
     # Python
     python3
