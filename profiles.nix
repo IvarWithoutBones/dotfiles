@@ -54,6 +54,7 @@ in
     modules = [
       ./modules/linux/system.nix
       ./modules/linux/keyring.nix
+      ./modules/linux/polkit.nix
       ./modules/linux/flatpak.nix
       ./modules/linux/networking.nix
       ./modules/linux/gpg.nix
