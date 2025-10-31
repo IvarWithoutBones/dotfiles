@@ -55,7 +55,7 @@ local function loadLanguageServers()
         },
 
         -- Rust
-        rust_analyzer = {
+        ["rust-analyzer"] = {
             settings = {
                 ["rust-analyzer"] = {
                     files = {
@@ -81,7 +81,6 @@ local function loadLanguageServers()
 
         -- C/C++/Objective-C
         clangd = {
-            capabilities = { offsetEncoding = "utf-8" },
             cmd = {
                 "clangd",
                 "--clang-tidy",
@@ -135,24 +134,6 @@ local function loadLanguageServers()
     return vim.tbl_deep_extend("force", default, loadOverrides())
 end
 
-local bindings = {
-    format = "<space>f",
-    signatureHelp = "<C-k>",
-    rename = "rn",
-    codeActions = "<space><space>",
-    hover = "K",
-
-    rust = {
-        parentModule = "gp",
-        cargoToml = "gP",
-        renderDiagnostics = "<space>rd",
-        openDocumentation = "<space>rD",
-        expandMacro = "<space>rm",
-        run = "<space>rR",
-        runnables = "<space>rr",
-    },
-}
-
 local function binding(buffer, key, action, opts)
     opts = opts or {}
     local keymapOpts = {
@@ -164,100 +145,142 @@ local function binding(buffer, key, action, opts)
     vim.keymap.set(opts.mode or "n", key, action, keymapOpts)
 end
 
-local function commonBindings(buffer)
-    -- Format the current buffer
-    binding(buffer, bindings.format, function()
-        vim.lsp.buf.format({ async = true })
-    end, { desc = "format buffer" })
+local function on_attach(client, buf)
+    if client.name == "ruff" then
+        -- Disable Ruff's hover capability, we use Pyright's instead: https://docs.astral.sh/ruff/editors/setup/#neovim
+        client.server_capabilities.hoverProvider = false
+    end
 
-    -- Show information about function signature
-    binding(buffer, bindings.signatureHelp, vim.lsp.buf.signature_help, { desc = "signature help" })
-    binding(buffer, bindings.signatureHelp, vim.lsp.buf.signature_help, { desc = "signature help", mode = 'i' })
-    binding(buffer, bindings.rename, vim.lsp.buf.rename, { desc = "rename symbol" })
-    binding(buffer, bindings.codeActions, vim.lsp.buf.code_action, { desc = "code actions" })
+    if client:supports_method("textDocument/formatting", buf) then
+        binding(buf, "<space>f", function() vim.lsp.buf.format({ async = true }) end, {
+            desc = "format document"
+        })
+    end
+
+    if client:supports_method("textDocument/signatureHelp", buf) then
+        binding(buf, "<C-k>", vim.lsp.buf.signature_help, {
+            desc = "signature help",
+            mode = { "n", "i" },
+        })
+    end
+
+    if client:supports_method("textDocument/rename", buf) then
+        binding(buf, "rn", vim.lsp.buf.rename, {
+            desc = "rename symbol"
+        })
+    end
+
+    if client:supports_method("textDocument/codeAction", buf) then
+        binding(buf, "<space><space>", vim.lsp.buf.code_action, {
+            desc = "code actions"
+        })
+    end
+
+    if client:supports_method("textDocument/definition", buf) then
+        binding(buf, "gd", function() require("trouble").toggle("lsp_definitions") end, {
+            desc = "go to definition"
+        })
+    end
+
+    if client:supports_method("textDocument/typeDefinition", buf) then
+        binding(buf, "gD", function() require("trouble").toggle("lsp_type_definitions") end, {
+            desc = "go to type definition"
+        })
+    end
+
+    if client:supports_method("textDocument/references", buf) then
+        binding(buf, "gr", function() require("trouble").toggle("lsp_references") end, {
+            desc = "go to references"
+        })
+    end
+
+    if client:supports_method("textDocument/implementation", buf) then
+        binding(buf, "gi", function() require("trouble").toggle("lsp_implementations") end, {
+            desc = "go to implementation"
+        })
+    end
+
+    if client:supports_method("textDocument/hover", buf) then
+        local bind = "K"
+        if client.name == "rust-analyzer" then
+            binding(buf, bind, function() vim.cmd.RustLsp({ 'hover', 'actions' }) end, { desc = "hover actions" })
+        else
+            binding(buf, bind, vim.lsp.buf.hover, { desc = "hover" })
+        end
+    end
+
+    -- Rust-specific keybindings. The `RustLsp` command is provided by rustaceanvim.
+    if client.name == "rust-analyzer" then
+        binding(buf, "gp", function() vim.cmd.RustLsp('parentModule') end, {
+            desc = "open parent Rust module"
+        })
+
+        binding(buf, "gP", function() vim.cmd.RustLsp('openCargo') end, {
+            desc = "open Cargo.toml"
+        })
+
+        binding(buf, "<space>rd", function() vim.cmd.RustLsp('renderDiagnostic') end, {
+            desc = "render diagnostics from clippy"
+        })
+
+        binding(buf, "<space>rD", function() vim.cmd.RustLsp('openDocs') end, {
+            desc = "open documentation of hovered symbol in browser"
+        })
+
+        binding(buf, "<space>rr", function() vim.cmd.RustLsp('runnables') end, {
+            desc = "fuzzy pick and execute runnable (tests, main, ...)"
+        })
+
+        binding(buf, "<space>rR", function() vim.cmd.RustLsp('run') end, {
+            desc = "execute hovered runnable (tests, main, ...)"
+        })
+
+        binding(buf, "<space>rm", function() vim.cmd.RustLsp('expandMacro') end, {
+            desc = "recursively expand macro under cursor"
+        })
+    end
 end
 
-local options = {
-    -- Use nvim-cmp's capabilities, see `plugins/cmp.lua`
-    capabilities = require("cmp_nvim_lsp").default_capabilities(),
-
-    -- Configure some keybindings when a language server attaches
-    on_attach = function(_, buffer)
-        commonBindings(buffer)
-        binding(buffer, bindings.hover, vim.lsp.buf.hover, { desc = "hover" })
-    end
-}
-
--- Cache the language server configurations (with overrides applied) so that rustaceanvim can use them as well
-local languageServers = loadLanguageServers()
-
--- Register all language servers, overwriting any previous registrations
-for server_name, server_options in pairs(languageServers) do
-    -- Ignore rust-analyzer, its configured separately via rustaceanvim
-    if server_name ~= "rust_analyzer" then
-        local merged = vim.tbl_deep_extend("force", options, server_options)
-        require("lspconfig")[server_name].setup(merged)
-    end
-end
-
--- Configure rustaceanvim, which initialises rust-analyzer differently from other LSP clients
-vim.g.rustaceanvim = {
-    tools = {
-        executor = require('rustaceanvim.executors').toggleterm,
-        test_executor = require('rustaceanvim.executors').toggleterm
-    },
-    server = {
-        settings = languageServers.rust_analyzer.settings,
-
-        -- Configure some rust-specific keybindings when the language server attaches
-        on_attach = function(_, buffer)
-            commonBindings(buffer)
-
-            -- Show information/actions about the hovered symbol
-            binding(buffer, bindings.hover, function()
-                vim.cmd.RustLsp({ 'hover', 'actions' })
-            end, { desc = "hover actions" })
-
-            -- Open the parent module
-            local binds = bindings.rust
-            binding(buffer, binds.parentModule, function()
-                vim.cmd.RustLsp('parentModule')
-            end, { desc = "open parent module" })
-
-            -- Open documentation of the hovered symbol in the browser
-            binding(buffer, binds.openDocumentation, function()
-                vim.cmd.RustLsp('openDocs')
-            end, { desc = "open documentation" })
-
-            -- Show diagnostics from `cargo clippy`
-            binding(buffer, binds.renderDiagnostics, function()
-                vim.cmd.RustLsp('renderDiagnostic')
-            end, { desc = "render diagnostics" })
-
-            -- Execute the currently hovered runnable (test, main function, ...).
-            binding(buffer, binds.run, function() vim.cmd.RustLsp('run') end, { desc = "execute hovered runnable" })
-
-            -- Fuzzy pick a runnable and execute it
-            binding(buffer, binds.runnables, function() vim.cmd.RustLsp('runnables') end, { desc = "pick runnable" })
-
-            -- Open Cargo.toml
-            binding(buffer, binds.cargoToml, function() vim.cmd.RustLsp('openCargo') end, { desc = "open Cargo.toml" })
-
-            -- Recursively expand the macro under the cursor
-            binding(buffer, binds.expandMacro, function() vim.cmd.RustLsp('expandMacro') end, { desc = "expand macro" })
-        end,
-    }
-}
-
--- Disable Ruff's hover capability, we use Pyright's instead.
--- This snippet comes from the Ruff documentation: https://docs.astral.sh/ruff/editors/setup/#neovim
-vim.api.nvim_create_autocmd("LspAttach", {
-    group = vim.api.nvim_create_augroup("lsp_attach_disable_ruff_hover", { clear = true }),
+-- Set the LSP keybindings whenever a language server attaches
+vim.api.nvim_create_autocmd('LspAttach', {
+    group = vim.api.nvim_create_augroup("lsp_attach_bindings", {}),
     callback = function(args)
         local client = vim.lsp.get_client_by_id(args.data.client_id)
-        if client and client.name == "ruff" then
-            client.server_capabilities.hoverProvider = false
+        if client then
+            on_attach(client, args.buf)
         end
     end,
-    desc = "LSP: Disable hover capability from Ruff",
 })
+
+-- Re-apply on_attach when new capabilities are registered
+vim.lsp.handlers['client/registerCapability'] = (function(overridden)
+    return function(err, res, ctx)
+        local result = overridden(err, res, ctx)
+        local client = vim.lsp.get_client_by_id(ctx.client_id)
+        if client then
+            for bufnr, _ in pairs(client.attached_buffers) do
+                on_attach(client, bufnr)
+            end
+        end
+        return result
+    end
+end)(vim.lsp.handlers['client/registerCapability'])
+
+-- Set up capabilities for every language server
+vim.lsp.config('*', {
+    capabilities = vim.tbl_deep_extend("force",
+        vim.lsp.protocol.make_client_capabilities(),
+        require("cmp_nvim_lsp").default_capabilities(),
+        {
+            -- https://github.com/neovim/nvim-lspconfig/issues/2184#issuecomment-1574848274
+            offsetEncoding = { 'utf-16' },
+            general = { positionEncodings = { 'utf-16' } },
+        }
+    )
+})
+
+-- Register all language servers, overwriting any previous registrations
+for server_name, server_options in pairs(loadLanguageServers()) do
+    vim.lsp.config(server_name, server_options)
+    vim.lsp.enable(server_name)
+end

@@ -17,8 +17,8 @@ require 'bufferline'.setup {
 }
 
 -- Move to the previous and next
-map('<A-,>', 'BufferPrevious')
-map('<A-.>', 'BufferNext')
+map('<A-[>', 'BufferPrevious')
+map('<A-]>', 'BufferNext')
 
 -- Re-order the previous and next
 map('<A-<>', 'BufferMovePrevious')

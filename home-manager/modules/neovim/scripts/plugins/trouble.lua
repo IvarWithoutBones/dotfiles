@@ -34,7 +34,3 @@ end
 bind("<space>a", "diagnostics")
 bind("<space>A", "diagnostics", { focus = false })
 bind("<space>S", "symbols")
-bind("gd", "lsp_definitions")
-bind("gD", "lsp_type_definitions")
-bind("gr", "lsp_references")
-bind("gi", "lsp_implementations")

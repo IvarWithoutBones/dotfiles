@@ -152,6 +152,11 @@ in
         plugin = nvim-tree-lua;
         config = mkLuaFile ./scripts/plugins/nvim-tree.lua;
       }
+      {
+        # Rust-analyzer enhancements
+        plugin = rustaceanvim;
+        config = mkLuaFile ./scripts/plugins/rustaceanvim.lua;
+      }
 
       telescope-fzf-native-nvim # Dependency of dropbar-nvim
       {
@@ -170,7 +175,6 @@ in
         config = mkLuaFile ./scripts/plugins/dap.lua;
       }
 
-      rustaceanvim # Used in ./scripts/plugins/lspconfig.lua
       {
         # Language server configuration presets
         plugin = nvim-lspconfig;
