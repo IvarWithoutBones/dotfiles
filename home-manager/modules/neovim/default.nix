@@ -12,11 +12,11 @@ let
     gdb
 
     # `plugins/lspconfig.lua` contains the configuration of the language servers listed below.
-    taplo-lsp # TOML
+    taplo # TOML
     typescript-language-server # Typescript/Javascript
     nodePackages.vscode-json-languageserver # JSON
     vscode-langservers-extracted # HTML
-    sumneko-lua-language-server # Lua
+    lua-language-server # Lua
 
     # YAML
     yaml-language-server

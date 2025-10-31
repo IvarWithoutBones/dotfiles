@@ -82,7 +82,7 @@ in
     scriptPath = ".home-manager-graphical-session-x11";
 
     windowManager.i3 = {
-      package = pkgs.i3-gaps;
+      package = pkgs.i3;
       config = wmConfig // {
         startup = wmConfig.startup ++ [
           # Set the screen color temperature based on time of day

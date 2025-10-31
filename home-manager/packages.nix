@@ -44,7 +44,7 @@
     speedtest
     proton-ge-runner
 
-    noto-fonts-emoji
+    noto-fonts-color-emoji
     nerd-fonts.fira-code
 
     perf

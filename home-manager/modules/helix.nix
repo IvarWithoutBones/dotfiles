@@ -12,12 +12,12 @@ let
   languageServers = with pkgs; [
     marksman # Markdown
     dot-language-server # Dot (graphviz)
-    taplo-lsp # TOML
+    taplo # TOML
     nodePackages.vscode-json-languageserver # JSON
     gopls # Go
     typescript-language-server # Typescript/Javascript
     vscode-langservers-extracted # HTML/CSS
-    sumneko-lua-language-server # Lua
+    lua-language-server # Lua
     glsl_analyzer # GLSL
     cmake-language-server # CMake
 
@@ -27,8 +27,7 @@ let
 
     # C#
     dotnet-sdk
-    # TODO: Re-enable once it upgrades from the EOL dotnet-sdk_6
-    # omnisharp-roslyn
+    omnisharp-roslyn
 
     # Zig
     zls
