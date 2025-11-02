@@ -36,6 +36,7 @@
       mktar = "${lib.getExe pkgs.gnutar} -czvf";
       nix-locate-bin = "() { ${lib.getExe' pkgs.nix-index "nix-locate"} --type=x --whole-name --at-root \"\${@/#/\"/bin/\"}\" }"; # Prepend `/bin/` to each argument
       github-actions = "${lib.getExe pkgs.act} -s GITHUB_TOKEN=\"$(${lib.getExe pkgs.github-cli} auth token)\"";
+      termtitle = "() { printf '\\e]2;%s\\a' \"\$*\"; }"; # Set the terminal window's title
     } // lib.optionalAttrs pkgs.stdenvNoCC.isLinux rec {
       copy = "${lib.getExe pkgs.xclip} -selection clipboard";
       battery-left = "${lib.getExe pkgs.acpi} | cut -d' ' -f5";

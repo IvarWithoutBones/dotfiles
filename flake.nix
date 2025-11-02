@@ -167,6 +167,7 @@
 
           home-manager.modules = [
             ./home-manager/modules/linux/i3-sway/sway.nix
+            ./home-manager/modules/linux/blueman-applet.nix
 
             ({ ... }: {
               wayland.windowManager.sway.config.input = {
