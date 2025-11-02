@@ -7,8 +7,9 @@
   imports = [ ./config ];
   wayland.windowManager.sway.enable = true;
 
-  home.packages = [
-    pkgs.wdisplays
+  home.packages = with pkgs; [
+    wdisplays
+    wl-clipboard
   ];
 
   systemd.user.services.sway-audio-idle-inhibit = {

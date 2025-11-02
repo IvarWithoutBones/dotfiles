@@ -46,7 +46,6 @@
 
     noto-fonts-color-emoji
     nerd-fonts.fira-code
-
     perf
     kdePackages.kcachegrind
     valgrind
