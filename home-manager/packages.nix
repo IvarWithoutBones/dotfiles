@@ -66,6 +66,9 @@
     transmission_4-gtk
     firefox
     libreoffice
+    mqtt-explorer
+    kicad
+    brightnessctl
   ];
 
   # TODO: Move to a separate XDG file.
