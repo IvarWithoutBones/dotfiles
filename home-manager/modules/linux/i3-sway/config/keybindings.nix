@@ -124,7 +124,6 @@ in
     lib.mkIf config.xsession.windowManager.i3.enable ((mkKeybindings modifier msgCmd) // {
       "${modifier}+Shift+e" = mkExitBinding msgCmd "i3";
       "${modifier}+Shift+r" = "exec ${msgCmd} restart";
-      "${modifier}+Shift+x" = "exec ${lib.getExe pkgs.i3lock-fancy}";
       "--release Print" = "exec --no-startup-id ${lib.getExe pkgs.maim} -su /tmp/screenshot.png && ${lib.getExe pkgs.xclip} -selection clipboard -t image/png < /tmp/screenshot.png";
     });
 
@@ -136,7 +135,6 @@ in
     lib.mkIf config.wayland.windowManager.sway.enable ((mkKeybindings modifier msgCmd) // {
       "${modifier}+Shift+e" = mkExitBinding msgCmd "sway";
       "${modifier}+Shift+r" = "exec ${msgCmd} reload";
-      "${modifier}+Shift+x" = "exec ${lib.getExe pkgs.swaylock-fancy}";
       "--release Print" = "exec --no-startup-id ${lib.getExe pkgs.sway-contrib.grimshot} copy area";
     });
 }

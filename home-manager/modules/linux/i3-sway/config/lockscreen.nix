@@ -7,7 +7,33 @@
 # Used in conjunction with `modules/linux/desktop/lockscreen.nix`.
 
 let
-  timeout = 120; # In seconds
+  timeout = 300; # In seconds
+  lockKeybinding = modifier: "${modifier}+Shift+x";
+
+  swayCommand =
+    let
+      theme = pkgs.fetchurl {
+        url = "https://raw.githubusercontent.com/catppuccin/swaylock/17aa0be6ae7a166256c3d6d6de643b0b49c865dd/themes/mocha.conf";
+        hash = "sha256-y4Y+qZQEpMAmhT4dKHY+ZumfWfKvVvjWHyqhafdakF8=";
+      };
+
+      options = [
+        # Use the theme specified above with a blurred background and the indicator.
+        "--config=${theme}"
+        "--screenshots"
+        "--indicator"
+        "--indicator-caps-lock"
+        "--clock"
+        "--effect-scale=0.25" # Scale down to speed up the blur effect.
+        "--effect-blur=4x4"
+        "--effect-scale=1" # Scale back to original size.
+        # Don't require a password to unlock for the first N settings.
+        "--grace=5"
+        "--grace-no-mouse"
+        "--grace-no-touch"
+      ];
+    in
+    "${lib.getExe pkgs.swaylock-effects} --daemonize ${lib.concatStringsSep " " options}";
 in
 {
   services.screen-locker = lib.mkIf config.xsession.windowManager.i3.enable {
@@ -26,30 +52,12 @@ in
     };
   };
 
+  xsession.windowManager.i3.config.keybindings = lib.mkIf config.xsession.windowManager.i3.enable {
+    ${lockKeybinding config.xsession.windowManager.i3.config.modifier} = "exec ${lib.getExe pkgs.i3lock-fancy}";
+  };
+
   services.swayidle =
     let
-      theme = pkgs.fetchurl {
-        url = "https://raw.githubusercontent.com/catppuccin/swaylock/17aa0be6ae7a166256c3d6d6de643b0b49c865dd/themes/mocha.conf";
-        hash = "sha256-y4Y+qZQEpMAmhT4dKHY+ZumfWfKvVvjWHyqhafdakF8=";
-      };
-
-      settings = [
-        # Use the theme specified above with a blurred background and the indicator.
-        "--config=${theme}"
-        "--screenshots"
-        "--indicator"
-        "--indicator-caps-lock"
-        "--clock"
-        "--effect-scale=0.25" # Scale down to speed up the blur effect.
-        "--effect-blur=4x4"
-        "--effect-scale=1" # Scale back to original size.
-        # Don't require a password to unlock for the first N settings.
-        "--grace=5"
-        "--grace-no-mouse"
-        "--grace-no-touch"
-      ];
-
-      command = "${lib.getExe pkgs.swaylock-effects} --daemonize ${lib.concatStringsSep " " settings}";
       swaymsg = lib.getExe' config.wayland.windowManager.sway.package "swaymsg";
     in
     lib.mkIf config.wayland.windowManager.sway.enable {
@@ -57,7 +65,7 @@ in
       systemdTarget = "sway-session.target"; # Only start when the sway session is active.
 
       timeouts = [
-        { inherit timeout command; } # Go to sleep after N seconds.
+        { inherit timeout; command = swayCommand; } # Go to sleep after N seconds.
         {
           # After another N seconds, turn off all displays.
           timeout = timeout * 2;
@@ -68,8 +76,12 @@ in
 
       # Run the lock command before going to sleep via systemd-suspend/logind.
       events = [
-        { event = "before-sleep"; inherit command; }
-        { event = "lock"; inherit command; }
+        { event = "before-sleep"; command = swayCommand; }
+        { event = "lock"; command = swayCommand; }
       ];
     };
+
+  wayland.windowManager.sway.config.keybindings = lib.mkIf config.wayland.windowManager.sway.enable {
+    ${lockKeybinding config.wayland.windowManager.sway.config.modifier} = "exec ${swayCommand}";
+  };
 }
