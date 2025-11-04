@@ -17,6 +17,7 @@ in
       diff.colorMoved = "zebra";
       pull.rebase = true;
       push.autoSetupRemote = true;
+      advice.skippedCherryPicks = false;
 
       user = {
         name = "Ivar Scholten";
