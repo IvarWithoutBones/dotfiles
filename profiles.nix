@@ -59,6 +59,7 @@ in
       ./modules/linux/networking.nix
       ./modules/linux/gpg.nix
       ./modules/linux/docker.nix
+      ./modules/linux/openocd.nix
       ./modules/linux/hardware/audio.nix
       ./modules/linux/desktop/lockscreen.nix
       ./modules/linux/desktop/sessions.nix
