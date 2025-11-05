@@ -7,6 +7,7 @@
   home.packages = with pkgs; [
     github-cli
     wget
+    curl
     ripgrep
     htop
     unar
@@ -30,47 +31,44 @@
 
     # Packages from my overlay
     dotfiles-tool
-    nixpkgs-pr
     nix-search-fzf
     mkscript
     cat-command
-    callpackage-cli
     copy-nix-derivation
-    read-macos-alias
   ] ++ lib.optionals pkgs.hostPlatform.isDarwin [
     iterm2
+    read-macos-alias
   ] ++ lib.optionals pkgs.hostPlatform.isLinux [
-    # Package from my overlay
-    speedtest
-    proton-ge-runner
+    proton-ge-runner # From my overlay
+    prismlauncher
+    ares
 
     noto-fonts-color-emoji
     nerd-fonts.fira-code
+
     perf
     kdePackages.kcachegrind
     valgrind
-    prismlauncher
+    imhex
+    ghidra
+    mqtt-explorer
+    kicad
+    vscode-fhs
+
     signal-desktop
     tidal-hifi
     obsidian
-    ghidra
-    vscode-fhs
-    ares
     evince
     drawio
-    imhex
     psst
     krita
     _1password-gui
     transmission_4-gtk
     firefox
     libreoffice
-    mqtt-explorer
-    kicad
     brightnessctl
   ];
 
-  # TODO: Move to a separate XDG file.
   xdg = lib.mkIf pkgs.hostPlatform.isLinux {
     enable = true;
 
