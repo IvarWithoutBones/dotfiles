@@ -127,15 +127,9 @@ in
     source = greasemonkeyScripts;
   };
 
-  xdg = lib.mkIf pkgs.stdenvNoCC.hostPlatform.isLinux {
-    configFile."qutebrowser/greasemonkey" = {
+  xdg.configFile = lib.mkIf pkgs.stdenvNoCC.hostPlatform.isLinux {
+    "qutebrowser/greasemonkey" = {
       source = greasemonkeyScripts;
-    };
-
-    mimeApps.defaultApplications = {
-      "text/html" = "org.qutebrowser.qutebrowser.desktop";
-      "x-scheme-handler/http" = "org.qutebrowser.qutebrowser.desktop";
-      "x-scheme-handler/https" = "org.qutebrowser.qutebrowser.desktop";
     };
   };
 }

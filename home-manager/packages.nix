@@ -83,6 +83,9 @@
         "application/pdf" = "org.gnome.Evince.desktop";
         "image/svg+xml" = "feh.desktop";
         "x-scheme-handler/magnet" = "transmission-gtk.desktop";
+        "text/html" = "firefox.desktop";
+        "x-scheme-handler/http" = "firefox.desktop";
+        "x-scheme-handler/https" = "firefox.desktop";
       };
     };
   };
