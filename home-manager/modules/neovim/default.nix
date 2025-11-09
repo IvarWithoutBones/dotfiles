@@ -53,7 +53,7 @@ let
     rustc
     clippy
     rust-analyzer
-  ] ++ lib.optionals pkgs.hostPlatform.isLinux [
+  ] ++ lib.optionals pkgs.stdenvNoCC.hostPlatform.isLinux [
     glslls # GLSL, does not support Darwin.
   ];
 
@@ -88,7 +88,7 @@ in
 
     clipboard = {
       register = "unnamedplus"; # Copy to the system clipboard by default
-      providers = lib.optionalAttrs pkgs.hostPlatform.isLinux {
+      providers = lib.optionalAttrs pkgs.stdenvNoCC.hostPlatform.isLinux {
         wl-copy.enable = true;
         xclip.enable = true;
       };

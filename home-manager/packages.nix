@@ -35,10 +35,10 @@
     mkscript
     cat-command
     copy-nix-derivation
-  ] ++ lib.optionals pkgs.hostPlatform.isDarwin [
+  ] ++ lib.optionals pkgs.stdenvNoCC.hostPlatform.isDarwin [
     iterm2
     read-macos-alias
-  ] ++ lib.optionals pkgs.hostPlatform.isLinux [
+  ] ++ lib.optionals pkgs.stdenvNoCC.hostPlatform.isLinux [
     proton-ge-runner # From my overlay
     prismlauncher
     ares
@@ -69,7 +69,7 @@
     brightnessctl
   ];
 
-  xdg = lib.mkIf pkgs.hostPlatform.isLinux {
+  xdg = lib.mkIf pkgs.stdenvNoCC.hostPlatform.isLinux {
     enable = true;
 
     # Avoid activation failures when the mimeapps file already exists, as some packages (e.g. firefox) will overwrite it.

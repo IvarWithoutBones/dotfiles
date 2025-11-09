@@ -7,7 +7,7 @@
 }:
 
 let
-  hostPlatform = pkgs.stdenvNoCC.hostPlatform;
+  inherit (pkgs.stdenvNoCC) hostPlatform;
   trustedAndAllowedUsers = [ "@wheel" ] ++ (lib.attrNames (lib.filterAttrs
     (_username: config: if hostPlatform.isDarwin then !config.isHidden else config.isNormalUser)
     config.users.users));

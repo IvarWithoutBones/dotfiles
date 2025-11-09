@@ -60,7 +60,7 @@ let
     rustc
     clippy
     rust-analyzer
-  ] ++ lib.optionals pkgs.hostPlatform.isLinux [
+  ] ++ lib.optionals pkgs.stdenvNoCC.hostPlatform.isLinux [
     mesonlsp # Meson
     haskell-language-server # Haskell
   ];
