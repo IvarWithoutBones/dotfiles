@@ -7,11 +7,12 @@
 let
   # Packages to bundle with neovim, see `nvimWithDefaultPackages` below.
   packages = with pkgs; [
-    # DAP clients
-    lldb
+    # C/C++/Rust debug adapters, see `scripts/plugins/dap.lua` for their configuration.
     gdb
+    llvmPackages_21.lldb
+    vscode-extensions.vadimcn.vscode-lldb.adapter # codelldb
 
-    # `plugins/lspconfig.lua` contains the configuration of the language servers listed below.
+    # Language servers, see `scripts/plugins/lspconfig.lua` for their configuration.
     taplo # TOML
     typescript-language-server # Typescript/Javascript
     nodePackages.vscode-json-languageserver # JSON
@@ -27,13 +28,13 @@ let
     cmake-format
 
     # Python
-    python3
+    (python3.withPackages (ps: [ ps.debugpy ]))
     pyright
     ruff
 
     # C/C++
-    clang-tools
-    clang
+    llvmPackages_21.clang-tools
+    llvmPackages_21.clang
 
     # C#
     dotnet-sdk

@@ -2,15 +2,28 @@ local function binding(key, action, desc, mode)
     vim.keymap.set(mode or "n", key, action, { noremap = true, desc = desc })
 end
 
+local function exepath_or_binary(binary)
+    local exe_path = vim.fn.exepath(binary)
+    return #exe_path > 0 and exe_path or binary
+end
+
 local function pickProgram()
-    -- TODO: Switch to something like telescope
-    return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+    local path = vim.fn.input({
+        prompt = 'Path to executable: ',
+        default = vim.fn.getcwd() .. '/',
+        completion = 'file'
+    })
+    return (path and path ~= "") and path or require("dap").ABORT
 end
 
 -- Show the values of variables next to their declaration.
 require("nvim-dap-virtual-text").setup({
     only_first_definition = false,
+    virt_text_pos = "eol",
 })
+
+-- Add Python support, requires the `nvim-dap-python` plugin and the `debugpy` package.
+require("dap-python").setup(exepath_or_binary("debugpy-adapter"))
 
 -- A UI for the debugging context.
 local ui = require("dapui")
@@ -21,16 +34,16 @@ ui.setup({
             size = 40,
             elements = {
                 { id = "scopes",  size = 0.60 },
-                { id = "watches", size = 0.25 },
-                { id = "stacks",  size = 0.15 },
+                { id = "watches", size = 0.15 },
+                { id = "stacks",  size = 0.25 },
             },
         },
         {
             position = "bottom",
             size = 10,
             elements = {
-                { id = "repl",    size = 0.75 },
                 { id = "console", size = 0.25 },
+                { id = "repl",    size = 0.75 },
             },
         }
     },
@@ -61,44 +74,54 @@ vim.fn.sign_define('DapLogPoint', { text = '', texthl = '', linehl = '', numh
 -- Debug adapters
 dap.adapters.gdb = {
     type = "executable",
-    command = "gdb",
+    command = exepath_or_binary("gdb"),
     args = { "--interpreter=dap" }
-}
-
-local gdb = {
-    name = "Launch (GDB)",
-    type = "gdb",
-    request = "launch",
-    program = pickProgram,
-    cwd = "${workspaceFolder}",
-    stopAtBeginningOfMainSubprogram = false,
 }
 
 dap.adapters.lldb = {
     type = "executable",
-    command = "lldb-dap",
+    command = exepath_or_binary("lldb-dap"),
     name = "lldb"
 }
 
-local lldb = {
-    name = 'Launch (LLDB)',
-    type = 'lldb',
-    request = 'launch',
-    program = pickProgram,
-    cwd = '${workspaceFolder}',
-    stopOnEntry = false,
-    args = {},
+dap.adapters.codelldb = {
+    type = "executable",
+    command = exepath_or_binary("codelldb"),
+    name = "codelldb"
 }
 
-dap.configurations.c = { gdb, lldb }
-dap.configurations.cpp = { gdb, lldb }
-dap.configurations.rust = { gdb, lldb }
+-- Language configurations. Note that Rust is configured by rustaceanvim (using codelldb).
+dap.configurations.c = {
+    {
+        name = "Launch (GDB)",
+        type = "gdb",
+        request = "launch",
+        program = pickProgram,
+        cwd = "${workspaceFolder}",
+    },
+    {
+        name = 'Launch (LLDB)',
+        type = 'lldb',
+        request = 'launch',
+        program = pickProgram,
+        cwd = '${workspaceFolder}',
+    },
+    {
+        name = "Launch (CodeLLDB)",
+        type = "codelldb",
+        request = "launch",
+        program = pickProgram,
+        cwd = "${workspaceFolder}",
+    }
+}
+
+dap.configurations.cpp = vim.deepcopy(dap.configurations.c)
 
 -- keybindings
 binding("<space>du", function() ui.toggle() end, "Toggle DAP UI")
 binding("<space>dR", function() dap.repl.open() end, "Toggle DAP REPL")
 binding("<space>db", function() dap.toggle_breakpoint() end, "Toggle breakpoint at cursor")
-binding("<space>dc", function() dap.continue() end, "Continue debugging session")
+binding("<space>dc", function() dap.continue() end, "Start/continue debugging session")
 binding("<space>di", function() dap.step_into() end, "Step into")
 binding("<space>do", function() dap.step_over() end, "Step over")
 binding("<space>dp", function() dap.step_out() end, "Step out")
