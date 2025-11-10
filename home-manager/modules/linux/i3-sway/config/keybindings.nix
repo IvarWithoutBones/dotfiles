@@ -66,6 +66,17 @@ let
     "${modifier}+9" = "workspace ${workspaces.ws9}";
     "${modifier}+0" = "workspace ${workspaces.ws10}";
 
+    "${modifier}+Ctrl+1" = "workspace ${workspaces.ws11}";
+    "${modifier}+Ctrl+2" = "workspace ${workspaces.ws12}";
+    "${modifier}+Ctrl+3" = "workspace ${workspaces.ws13}";
+    "${modifier}+Ctrl+4" = "workspace ${workspaces.ws14}";
+    "${modifier}+Ctrl+5" = "workspace ${workspaces.ws15}";
+    "${modifier}+Ctrl+6" = "workspace ${workspaces.ws16}";
+    "${modifier}+Ctrl+7" = "workspace ${workspaces.ws17}";
+    "${modifier}+Ctrl+8" = "workspace ${workspaces.ws18}";
+    "${modifier}+Ctrl+9" = "workspace ${workspaces.ws19}";
+    "${modifier}+Ctrl+0" = "workspace ${workspaces.ws20}";
+
     "${modifier}+Shift+1" = "move container to workspace ${workspaces.ws1}";
     "${modifier}+Shift+2" = "move container to workspace ${workspaces.ws2}";
     "${modifier}+Shift+3" = "move container to workspace ${workspaces.ws3}";
@@ -76,6 +87,17 @@ let
     "${modifier}+Shift+8" = "move container to workspace ${workspaces.ws8}";
     "${modifier}+Shift+9" = "move container to workspace ${workspaces.ws9}";
     "${modifier}+Shift+0" = "move container to workspace ${workspaces.ws10}";
+
+    "${modifier}+Shift+Ctrl+1" = "move container to workspace ${workspaces.ws11}";
+    "${modifier}+Shift+Ctrl+2" = "move container to workspace ${workspaces.ws12}";
+    "${modifier}+Shift+Ctrl+3" = "move container to workspace ${workspaces.ws13}";
+    "${modifier}+Shift+Ctrl+4" = "move container to workspace ${workspaces.ws14}";
+    "${modifier}+Shift+Ctrl+5" = "move container to workspace ${workspaces.ws15}";
+    "${modifier}+Shift+Ctrl+6" = "move container to workspace ${workspaces.ws16}";
+    "${modifier}+Shift+Ctrl+7" = "move container to workspace ${workspaces.ws17}";
+    "${modifier}+Shift+Ctrl+8" = "move container to workspace ${workspaces.ws18}";
+    "${modifier}+Shift+Ctrl+9" = "move container to workspace ${workspaces.ws19}";
+    "${modifier}+Shift+Ctrl+0" = "move container to workspace ${workspaces.ws20}";
 
     # Layout management
     "${modifier}+Shift+Ctrl+h" = "split h";
