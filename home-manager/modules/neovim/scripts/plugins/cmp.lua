@@ -87,7 +87,7 @@ cmp.setup {
 }
 
 -- Autocomplete git/github/gitlab issues, pull requests, usernames, and commits
-require("cmp_git").setup()
+require("cmp_git").setup({})
 cmp.setup.filetype('gitcommit', {
     sources = cmp.config.sources({
         { name = 'git' },
