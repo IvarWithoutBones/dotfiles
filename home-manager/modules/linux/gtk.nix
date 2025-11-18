@@ -7,11 +7,11 @@
     enable = true;
 
     theme = {
-      name = "catppuccin-mocha-mauve-standard";
-      package = pkgs.catppuccin-gtk.override {
-        variant = "mocha";
-        accents = [ "mauve" ];
-        size = "standard";
+      name = "Colloid-Purple-Dark-Catppuccin";
+      package = pkgs.colloid-gtk-theme.override {
+        tweaks = [ "catppuccin" ];
+        themeVariants = [ "purple" ]; # Matches Catppuccin's mauve
+        colorVariants = [ "dark" ];
       };
     };
 
