@@ -22,12 +22,12 @@ require("nvim-dap-virtual-text").setup({
     virt_text_pos = "eol",
 })
 
--- Add Python support, requires the `nvim-dap-python` plugin and the `debugpy` package.
-require("dap-python").setup(exepath_or_binary("debugpy-adapter"))
-
 -- A UI for the debugging context.
 local ui = require("dapui")
+
+---@diagnostic disable-next-line: missing-fields
 ui.setup({
+    floating = { border = "rounded" }, ---@diagnostic disable-line: missing-fields
     layouts = {
         {
             position = "left",
@@ -49,9 +49,8 @@ ui.setup({
     },
 })
 
-local dap = require("dap")
-
 -- Automatically open/close the UI
+local dap = require("dap")
 dap.listeners.before.attach.dapui_config = function() ui.open() end
 dap.listeners.before.launch.dapui_config = function() ui.open() end
 dap.listeners.before.event_terminated.dapui_config = function() ui.close() end
@@ -71,24 +70,69 @@ vim.fn.sign_define('DapBreakpointCondition', { text = '🟡', texthl = '', lineh
 vim.fn.sign_define('DapBreakpointRejected', { text = '❌', texthl = '', linehl = '', numhl = '' })
 vim.fn.sign_define('DapLogPoint', { text = '', texthl = '', linehl = '', numhl = '' })
 
+-- Set up of handlers for probe-rs RTT messages. Adapted from https://probe.rs/docs/tools/debugger/.
+-- If RTT is enabled, probe-rs sends an event after initializing a channel. This has to be confirmed, otherwise probe-rs won't sent RTT data.
+dap.listeners.before["event_probe-rs-rtt-channel-config"]["plugins.nvim-dap-probe-rs"] = function(session, body)
+    local msg = string.format('probe-rs: opening RTT channel #%d: "%s"', body.channelNumber, body.channelName)
+    require("dap.utils").notify(msg, vim.log.levels.INFO)
+    session:request("rttWindowOpened", { body.channelNumber, true })
+end
+
+-- Handle probe-rs RTT data messages by displaying them in the REPL.
+dap.listeners.before["event_probe-rs-rtt-data"]["plugins.nvim-dap-probe-rs"] = function(_, body)
+    local msg = string.format("probe-rs RTT channel #%d: %s", body.channelNumber, body.data)
+    require("dap.repl").append(msg)
+end
+
+-- Display probe-rs messages in the REPL.
+dap.listeners.before["event_probe-rs-show-message"]["plugins.nvim-dap-probe-rs"] = function(_, body)
+    require("dap.repl").append(string.format("probe-rs: %s", body.message))
+end
+
+-- Add Python support, requires the `nvim-dap-python` plugin and the `debugpy` package.
+require("dap-python").setup(exepath_or_binary("debugpy-adapter"))
+
 -- Debug adapters
-dap.adapters.gdb = {
+dap.adapters["gdb"] = {
+    name = "gdb",
     type = "executable",
     command = exepath_or_binary("gdb"),
     args = { "--interpreter=dap" }
 }
 
-dap.adapters.lldb = {
+dap.adapters["lldb"] = {
+    name = "lldb",
     type = "executable",
     command = exepath_or_binary("lldb-dap"),
-    name = "lldb"
 }
 
-dap.adapters.codelldb = {
-    type = "executable",
-    command = exepath_or_binary("codelldb"),
-    name = "codelldb"
+dap.adapters["codelldb"] = {
+    name = "codelldb",
+    type = "server",
+    port = "${port}",
+    executable = {
+        command = exepath_or_binary('codelldb'),
+        args = { '--port', '${port}' },
+    },
 }
+
+dap.adapters["probe-rs-debug"] = {
+    name = "probe-rs-debug",
+    type = "server",
+    port = "${port}",
+    executable = {
+        command = exepath_or_binary("probe-rs"),
+        args = { "dap-server", "--port", "${port}" },
+    },
+}
+
+-- Associate specific `type` values in `.vscode/launch.json` files with configured filetypes.
+local vscode_dap = require("dap.ext.vscode")
+vscode_dap.type_to_filetypes["cppdbg"] = { "c", "cpp" }
+vscode_dap.type_to_filetypes["codelldb"] = { "c", "cpp", "rust" }
+vscode_dap.type_to_filetypes["lldb"] = { "c", "cpp", "rust" }
+vscode_dap.type_to_filetypes["gdb"] = { "c", "cpp", "rust" }
+vscode_dap.type_to_filetypes["probe-rs-debug"] = { "rust" }
 
 -- Language configurations. Note that Rust is configured by rustaceanvim (using codelldb).
 dap.configurations.c = {

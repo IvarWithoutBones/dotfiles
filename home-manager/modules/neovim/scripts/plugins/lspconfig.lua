@@ -69,7 +69,7 @@ local configurations = {
                 },
                 workspace = {
                     checkThirdParty = "Disable",
-                    library = vim.api.nvim_get_runtime_file("", false), -- Autocomplete for Neovim config files
+                    library = vim.api.nvim_get_runtime_file("lua", true), -- Autocomplete for Neovim config files
                 },
             }
         }
