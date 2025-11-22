@@ -1,0 +1,8 @@
+# Nix
+/result
+/result-dev
+/result-man
+
+# Direnv
+/.direnv
+/.envrc

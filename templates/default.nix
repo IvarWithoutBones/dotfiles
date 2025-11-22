@@ -1,5 +1,10 @@
 # Note that these are not for using this dotfiles repository, only for creating flakes for new projects.
 {
+  devshell = {
+    path = ./devshell;
+    description = "A bare-bones flake containing the skeleton of a development shell";
+  };
+
   rust = {
     path = ./rust;
     description = "An opinionated flake for new Rust/Cargo workspaces";
@@ -32,7 +37,7 @@
 
   rust-shell = {
     path = ./rust-shell;
-    description = "A flake providing a bare-bones Rust/Cargo development shell.";
+    description = "A flake providing a bare-bones Rust/Cargo development shell";
     welcomeText = ''
       # Things left to do manually:
 
