@@ -11,7 +11,7 @@
     enable = true;
     gtk.enable = true;
     sway.enable = config.wayland.windowManager.sway.enable;
-    x11.enable = config.xsession.windowManager.i3.enable;
+    x11.enable = config.xsession.enable;
 
     package = pkgs.capitaine-cursors;
     name = "capitaine-cursors";

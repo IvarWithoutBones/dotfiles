@@ -1,5 +1,4 @@
 { lib
-, pkgs
 , config
 , ...
 }:
@@ -70,19 +69,13 @@ let
       { class = "ghidra-Ghidra"; title = "^(?!(CodeBrowser.*|Ghidra.*))"; }
     ];
   };
-
-  screenTemp = {
-    latitude = "52.1";
-    longitude = "5.2";
-    low = "3000";
-    high = "6500";
-  };
 in
 {
   imports = [
     ./bar.nix
     ./theme.nix
     ./lockscreen.nix
+    ./display-temperature.nix
     ((import ./keybindings.nix) workspaces)
   ];
 
@@ -96,11 +89,6 @@ in
           { class = "Transmission-gtk"; } # Needs to be set with `class` on X11 but `app_id` on Wayland
         ];
       };
-
-      startup = wmConfig.startup or [ ] ++ [
-        # Set the screen color temperature based on time of day
-        { command = "--no-startup-id ${lib.getExe pkgs.redshift} -l ${screenTemp.latitude}:${screenTemp.longitude} -t ${screenTemp.high}K:${screenTemp.low}K"; always = false; }
-      ];
     };
   };
 
@@ -115,11 +103,6 @@ in
           { app_id = "transmission-gtk"; } # Needs to be set with `class` on X11 but `app_id` on Wayland
         ];
       };
-
-      startup = wmConfig.startup or [ ] ++ [
-        # Set the screen color temperature based on time of day
-        { command = "--no-startup-id ${lib.getExe pkgs.wlsunset} -l ${screenTemp.latitude} -L ${screenTemp.longitude} -t ${screenTemp.low} -T ${screenTemp.high}"; always = false; }
-      ];
     };
   };
 
