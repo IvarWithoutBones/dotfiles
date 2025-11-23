@@ -35,11 +35,6 @@ let
     terminal = config.home.sessionVariables.TERMINAL;
     defaultWorkspace = "workspace ${workspaces.ws1}";
 
-    startup = [
-      # Set the default volume to 35%
-      { command = "--no-startup-id ${pkgs.alsa-utils}/bin/amixer set Master 35%"; always = false; }
-    ];
-
     # Disable default resize mode
     modes = { };
 
@@ -52,17 +47,21 @@ let
     };
 
     assigns = {
-      "${workspaces.ws3}" = [
+      ${workspaces.ws3} = [
         { class = "discord"; }
         { class = "element"; }
       ];
-      "${workspaces.ws4}" = [
+      ${workspaces.ws4} = [
         { class = "Psst-gui"; }
         { class = "Spotify"; }
         { class = "tidal-hifi"; }
       ];
-      "${workspaces.ws10}" = [{ class = "Transmission-gtk"; }];
-      "${workspaces.ws5}" = [{ class = "steam"; }];
+      ${workspaces.ws5} = [
+        { class = "steam"; }
+        { class = "sm64(ex|ex-practice|coopdx)"; }
+        { class = "Celeste?(-unwrapped)"; }
+        { class = "EverestSplash-linux"; } # Celeste mod manager
+      ];
     };
 
     floating.criteria = [
@@ -91,16 +90,17 @@ in
     enable = true;
     scriptPath = ".home-manager-graphical-session-x11";
 
-    windowManager.i3 = {
-      package = pkgs.i3;
-      config = wmConfig // {
-        startup = wmConfig.startup ++ [
-          # Set the screen color temperature based on time of day
-          { command = "--no-startup-id ${lib.getExe pkgs.redshift} -l ${screenTemp.latitude}:${screenTemp.longitude} -t ${screenTemp.high}K:${screenTemp.low}K"; always = false; }
-          # Disables auto-sleep/lock while apps are playing audio
-          { command = "--no-startup-id ${lib.getExe pkgs.caffeine-ng}"; always = false; }
+    windowManager.i3.config = wmConfig // {
+      assigns = wmConfig.assigns or { } // {
+        ${workspaces.ws10} = wmConfig.assigns.${workspaces.ws10} or [ ] ++ [
+          { class = "Transmission-gtk"; } # Needs to be set with `class` on X11 but `app_id` on Wayland
         ];
       };
+
+      startup = wmConfig.startup or [ ] ++ [
+        # Set the screen color temperature based on time of day
+        { command = "--no-startup-id ${lib.getExe pkgs.redshift} -l ${screenTemp.latitude}:${screenTemp.longitude} -t ${screenTemp.high}K:${screenTemp.low}K"; always = false; }
+      ];
     };
   };
 
@@ -110,7 +110,13 @@ in
     wrapperFeatures.gtk = true;
 
     config = wmConfig // {
-      startup = wmConfig.startup ++ [
+      assigns = wmConfig.assigns or { } // {
+        ${workspaces.ws10} = wmConfig.assigns.${workspaces.ws10} or [ ] ++ [
+          { app_id = "transmission-gtk"; } # Needs to be set with `class` on X11 but `app_id` on Wayland
+        ];
+      };
+
+      startup = wmConfig.startup or [ ] ++ [
         # Set the screen color temperature based on time of day
         { command = "--no-startup-id ${lib.getExe pkgs.wlsunset} -l ${screenTemp.latitude} -L ${screenTemp.longitude} -t ${screenTemp.low} -T ${screenTemp.high}"; always = false; }
       ];

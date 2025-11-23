@@ -108,6 +108,7 @@ let
     "${modifier}+Shift+space" = "floating toggle";
     "${modifier}+space" = "focus mode_toggle";
     "${modifier}+a" = "focus parent";
+    "${modifier}+Shift+q" = "kill";
 
     # Volume control
     "XF86AudioRaiseVolume" = "exec ${lib.getExe pkgs.pamixer} --increase 5";
@@ -125,12 +126,8 @@ let
     "XF86MonBrightnessDown" = "exec ${lib.getExe pkgs.brightnessctl} set 5%-";
 
     # Programs
-    "${modifier}+Shift+q" = "kill";
     "${modifier}+d" = "exec --no-startup-id ${pkgs.dmenu-configured}/bin/dmenu_run";
     "${modifier}+Return" = "exec --no-startup-id ${config.home.sessionVariables.TERMINAL}";
-    "${modifier}+Shift+w" = "exec \"${msgCmd} 'workspace ${workspaces.ws2}; exec ${lib.getExe pkgs.qutebrowser} --qt-flag ignore-gpu-blacklist --qt-flag enable-gpu-rasterization --qt-flag enable-native-gpu-memory-buffers --qt-flag num-raster-threads=2'\"";
-    "${modifier}+Shift+d" = "exec ${pkgs.discord-with-openasar}/bin/Discord";
-    "${modifier}+Shift+Ctrl+d" = "exec pkill Discord && pkill Discord";
     "${modifier}+Shift+s" = "exec \"${msgCmd} 'workspace ${workspaces.ws4}; exec ${lib.getExe pkgs.tidal-hifi}'\"";
   };
 
