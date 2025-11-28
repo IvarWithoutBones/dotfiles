@@ -27,6 +27,8 @@ with pkgs; {
 
   iterm2-shell-integration = callPackage ./iterm2-shell-integration { };
 
+  loenn = callPackage ./loenn { };
+
   mkscript = callPackage ./mkscript { };
 
   nix-search-fzf = callPackage ./nix-search-fzf { };
