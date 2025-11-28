@@ -23,7 +23,6 @@
     element-desktop
     hexyl
     pcalc
-    cargo-flamegraph
     eza
     gimp
     moonlight-qt
@@ -39,10 +38,6 @@
     iterm2
     read-macos-alias
   ] ++ lib.optionals pkgs.stdenvNoCC.hostPlatform.isLinux [
-    proton-ge-runner # From my overlay
-    prismlauncher
-    ares
-
     noto-fonts-color-emoji
     nerd-fonts.fira-code
 

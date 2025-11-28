@@ -112,6 +112,7 @@
           ];
 
           home-manager.modules = [
+            ./home-manager/modules/games.nix
             ./home-manager/modules/linux/i3-sway/nvidia.nix
             ./home-manager/modules/linux/i3-sway/i3.nix
             ./home-manager/modules/linux/i3-sway/sway.nix
