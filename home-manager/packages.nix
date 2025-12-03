@@ -49,6 +49,8 @@
     mqtt-explorer
     kicad
     vscode-fhs
+    usbutils
+    pciutils
 
     signal-desktop
     tidal-hifi

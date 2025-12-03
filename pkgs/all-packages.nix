@@ -33,6 +33,8 @@ with pkgs; {
 
   nix-search-fzf = callPackage ./nix-search-fzf { };
 
+  probe-rs-udev-rules = callPackage ./probe-rs-udev-rules { };
+
   proton-ge-runner = callPackage ./proton-ge-runner { };
 
   qutebrowser-scripts = lib.recurseIntoAttrs (callPackage ./qutebrowser/scripts { });

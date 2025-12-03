@@ -32,8 +32,5 @@
   time.timeZone = "Europe/Amsterdam";
   programs.zsh.enable = true;
 
-  services = {
-    fstrim.enable = true;
-    udev.packages = [ pkgs.qmk-udev-rules ];
-  };
+  services.fstrim.enable = true;
 }
