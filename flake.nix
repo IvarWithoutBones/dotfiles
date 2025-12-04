@@ -168,6 +168,7 @@
 
           home-manager.modules = [
             ./home-manager/modules/linux/i3-sway/sway.nix
+            ./home-manager/modules/linux/i3-sway/config/monitor-layouts/laptop.nix
             ./home-manager/modules/linux/blueman-applet.nix
 
             ({ ... }: {
