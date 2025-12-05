@@ -1,0 +1,86 @@
+diff --git a/src/file_locations.lua b/src/file_locations.lua
+index fbdb937..eee256b 100644
+--- a/src/file_locations.lua
++++ b/src/file_locations.lua
+@@ -64,6 +64,6 @@ function fileLocations.getBackupPath()
+ end
+
+ function fileLocations.getCelesteDir()
+-    return config.readConfig(fileLocations.getSettingsPath()).celesteGameDirectory
++    return "@celeste@/lib/Celeste"
+ end
+
+ function fileLocations.getPluginsPath()
+diff --git a/src/initial_startup.lua b/src/initial_startup.lua
+index 26ff4bf..66e50b7 100644
+--- a/src/initial_startup.lua
++++ b/src/initial_startup.lua
+@@ -65,13 +65,7 @@ function startup.verifyCelesteDir(path)
+ end
+
+ function startup.requiresInit()
+-    local data = config.readConfig(settingsPath)
+-
+-    if data and data.celesteGameDirectory then
+-        return not startup.verifyCelesteDir(data.celesteGameDirectory)
+-    end
+-
+-    return true
++    return false
+ end
+
+ function startup.findSteamDirectory()
+@@ -107,18 +101,7 @@ function startup.findSteamDirectory()
+ end
+
+ function startup.findCelesteDirectory()
+-    local steam = startup.findSteamDirectory()
+-
+-    if steam then
+-        local celesteSteam = filesystem.joinpath(steam, "steamapps", "common", "Celeste")
+-        local cleanedPath = startup.cleanupPath(celesteSteam)
+-
+-        if cleanedPath and filesystem.isDirectory(celesteSteam) then
+-            return true, celesteSteam
+-        end
+-    end
+-
+-    return false, ""
++    return true, "@celeste@/lib/Celeste"
+ end
+
+ function startup.savePath(path)
+diff --git a/src/ui/windows/settings.lua b/src/ui/windows/settings.lua
+index dc28d4d..59897be 100644
+--- a/src/ui/windows/settings.lua
++++ b/src/ui/windows/settings.lua
+@@ -27,7 +27,6 @@ local defaultTabForms = {
+             {
+                 title = "ui.settings_window.group.general.startup",
+                 fieldOrder = {
+-                    "celesteGameDirectory",
+                     "spacer",
+                     "general.persistWindowFullscreen",
+                     "general.persistWindowPosition",
+@@ -265,21 +264,6 @@ local defaultFieldInformation = {
+         fieldType = "spacer"
+     },
+
+-    ["celesteGameDirectory"] = {
+-        fieldType = "path",
+-        filePickerExtensions = {"exe", "dll", "app"},
+-        allowEmpty = false,
+-        allowMissingPath = true,
+-        relativeToMod = false,
+-        useUnixSeparator = false,
+-        earlyValidator = function(filename)
+-            return startup.verifyCelesteDir(filename)
+-        end,
+-        filenameProcessor = function(filename)
+-            return startup.cleanupPath(filename)
+-        end,
+-    },
+-
+     ["hotkeys.cameraZoomIn"] = {
+         fieldType = "keyboard_hotkey"
+     },

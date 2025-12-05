@@ -1,5 +1,6 @@
 { lib
 , stdenvNoCC
+, replaceVars
 , fetchFromGitHub
 , makeDesktopItem
 , copyDesktopItems
@@ -8,6 +9,10 @@
 , love
 , luajitPackages
 , curl
+
+  # Override with `true` to make Lönn use the Celeste game directory managed by Nix
+, withCeleste ? false
+, celestegame
 }:
 
 stdenvNoCC.mkDerivation (finalAttrs: {
@@ -22,6 +27,14 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     fetchSubmodules = true;
   };
 
+  patches = [
+    ./disable-auto-update.patch
+  ] ++ lib.optionals withCeleste [
+    (replaceVars ./game-directory.patch {
+      celeste = celestegame.passthru.celeste-unwrapped;
+    })
+  ];
+
   nativeBuildInputs = [
     zip
     makeWrapper
@@ -30,10 +43,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
 
   postPatch = ''
     echo v${finalAttrs.version} > src/assets/VERSION
-    echo "Lönn - v${finalAttrs.version} (Nix)" > src/assets/TITLE
-
-    substituteInPlace src/updater.lua \
-      --replace-fail "function updater.canUpdate()" "function updater.canUpdate() if true then return false end"
+    echo "Lönn - v${finalAttrs.version} (nixpkgs)" > src/assets/TITLE
   '';
 
   buildPhase = ''
@@ -55,7 +65,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     makeWrapper ${lib.getExe love} $out/bin/loenn \
       --add-flags "--fused $out/lib/Lönn.love" \
       --prefix LD_LIBRARY_PATH ':' ${lib.makeLibraryPath [ curl ]} \
-      --prefix LUA_CPATH ';;' ${luajitPackages.nfd}/lib/lua/${luajitPackages.lua.luaversion}/nfd.so
+      --prefix LUA_CPATH ';' ${luajitPackages.nfd}/lib/lua/${luajitPackages.lua.luaversion}/nfd.so
 
     ln -s $out/bin/loenn $out/bin/Lönn
     install -Dm644 src/assets/logo-256.png $out/share/icons/hicolor/256x256/apps/loenn.png
@@ -79,7 +89,9 @@ stdenvNoCC.mkDerivation (finalAttrs: {
   meta = {
     description = "A Visual Map Maker and Level Editor for the game Celeste";
     homepage = "https://github.com/CelestialCartographers/Loenn";
+    changelog = "https://github.com/CelestialCartographers/Loenn/releases/tag/v${finalAttrs.version}";
     license = lib.licenses.mit;
+    sourceProvenance = [ lib.sourceTypes.fromSource ];
     mainProgram = "Lönn";
   };
 })

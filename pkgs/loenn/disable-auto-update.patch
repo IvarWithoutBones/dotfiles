@@ -1,0 +1,13 @@
+diff --git a/src/updater.lua b/src/updater.lua
+index de89bd0..55379c7 100644
+--- a/src/updater.lua
++++ b/src/updater.lua
+@@ -15,7 +15,7 @@ local updater = {}
+
+ -- Only allow if install is "fused" (.exe on Windows) or ran from a .love
+ function updater.canUpdate()
+-    return love.filesystem.isFused() or filesystem.fileExtension(love.filesystem.getSource()) == "love"
++    return false -- Version is managed by Nix
+ end
+
+ function updater.getAvailableVersions(sort)
