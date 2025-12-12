@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-fields
 require("nvim-treesitter.configs").setup {
     auto_install = false, -- Managed by nix
 
@@ -10,7 +11,7 @@ require("nvim-treesitter.configs").setup {
 
         disable = function(lang, buf)
             -- Disable highlighting if the file is larger than 1MB, as that can cause slowdowns
-            local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+            local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
             local too_large = ok and stats and (stats.size > (1000 * 1024))
             -- Also disable vimdoc highlighting, it appears to be broken
             return too_large or (lang == "vimdoc")

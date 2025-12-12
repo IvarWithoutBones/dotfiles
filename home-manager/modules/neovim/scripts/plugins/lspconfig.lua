@@ -63,14 +63,6 @@ local configurations = {
             Lua = {
                 telemetry = { enable = false },
                 runtime = { version = "LuaJIT" },
-                diagnostics = {
-                    libraryFiles = "Disable",
-                    unusedLocalExclude = { "_*" },
-                },
-                workspace = {
-                    checkThirdParty = "Disable",
-                    library = vim.api.nvim_get_runtime_file("lua", true), -- Autocomplete for Neovim config files
-                },
             }
         }
     },
