@@ -8,7 +8,7 @@ local configurations = {
     ts_ls = {},     -- TypeScript/JavaScript
 
     -- Python
-    pyright = {},
+    basedpyright = {},
     ruff = {},
 
     -- Bash

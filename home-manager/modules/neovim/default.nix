@@ -29,7 +29,7 @@ let
 
     # Python
     (python3.withPackages (ps: [ ps.debugpy ]))
-    pyright
+    basedpyright
     ruff
 
     # C/C++
