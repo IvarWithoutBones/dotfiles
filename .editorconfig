@@ -1,0 +1,24 @@
+# EditorConfig configuration, see the website for details: https://EditorConfig.org
+root = true
+
+[*]
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+charset = utf-8
+
+[*.{py,c,h,cpp,hpp,cc,hh}]
+indent_style = space
+indent_size = 4
+
+[*.{nix,toml,yml,yaml,md,json}]
+indent_style = space
+indent_size = 2
+
+[*.sh]
+indent_style = space
+indent_size = 4
+simplify = true
+binary_next_line = true
+switch_case_indent = true
+space_redirects = true
