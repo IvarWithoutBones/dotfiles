@@ -29,46 +29,63 @@ let
     ws20 = "20";
   };
 
-  wmConfig = {
-    inherit modifier;
-    terminal = config.home.sessionVariables.TERMINAL;
-    defaultWorkspace = "workspace ${workspaces.ws1}";
+  wmConfig = isSway:
+    let
+      # The `class` entries in `assigns`/`floating.criteria` are valid under both X11 and XWayland,
+      # but Wayland-native apps exclusively use `app_id`. Generate both entries when running under Sway.
+      mkWindowRules = rules: lib.flatten (lib.map
+        (rule: [ (lib.removeAttrs rule [ "app_id" ]) ] ++ lib.optionals isSway [
+          ({ app_id = rule.class; } // lib.removeAttrs rule [ "class" ])
+        ])
+        rules);
+    in
+    {
+      inherit modifier;
+      terminal = config.home.sessionVariables.TERMINAL;
+      defaultWorkspace = "workspace ${workspaces.ws1}";
 
-    # Disable default resize mode
-    modes = { };
+      # Disable default resize mode
+      modes = { };
 
-    # Hide titlebars by default
-    window.titlebar = false;
+      # Hide titlebars by default
+      window.titlebar = false;
 
-    gaps = {
-      inner = 4;
-      outer = 4;
+      gaps = {
+        inner = 4;
+        outer = 4;
+      };
+
+      assigns = {
+        ${workspaces.ws3} = mkWindowRules [
+          { class = "discord"; }
+          { class = "element"; }
+        ];
+
+        ${workspaces.ws4} = mkWindowRules [
+          { class = "Psst-gui"; }
+          { class = "Spotify"; }
+          { class = "tidal-hifi"; }
+        ];
+
+        ${workspaces.ws5} = mkWindowRules [
+          { class = "steam"; }
+          { class = "sm64(ex|ex-practice|coopdx)"; }
+          { class = "Celeste?(-unwrapped)"; }
+          { class = "EverestSplash-linux"; } # Celeste mod manager
+        ];
+
+        ${workspaces.ws10} = mkWindowRules [
+          { class = "Transmission-gtk"; app_id = "transmission-gtk"; }
+        ];
+      };
+
+      floating.criteria = mkWindowRules [
+        # Default to floating windows for everything but the main window.
+        { class = "steam"; title = "[^Steam]"; } # See https://github.com/ValveSoftware/steam-for-linux/issues/1040
+        { class = "ghidra-Ghidra"; title = "^(?!(CodeBrowser.*|Ghidra.*))"; }
+        { class = "EverestSplash-linux"; }
+      ];
     };
-
-    assigns = {
-      ${workspaces.ws3} = [
-        { class = "discord"; }
-        { class = "element"; }
-      ];
-      ${workspaces.ws4} = [
-        { class = "Psst-gui"; }
-        { class = "Spotify"; }
-        { class = "tidal-hifi"; }
-      ];
-      ${workspaces.ws5} = [
-        { class = "steam"; }
-        { class = "sm64(ex|ex-practice|coopdx)"; }
-        { class = "Celeste?(-unwrapped)"; }
-        { class = "EverestSplash-linux"; } # Celeste mod manager
-      ];
-    };
-
-    floating.criteria = [
-      # Default to floating windows for everything but the main window.
-      { class = "steam"; title = "[^Steam]"; } # See https://github.com/ValveSoftware/steam-for-linux/issues/1040
-      { class = "ghidra-Ghidra"; title = "^(?!(CodeBrowser.*|Ghidra.*))"; }
-    ];
-  };
 in
 {
   imports = [
@@ -82,20 +99,14 @@ in
   xsession = lib.mkIf config.xsession.windowManager.i3.enable {
     enable = true;
     scriptPath = ".home-manager-graphical-session-x11";
-
-    windowManager.i3.config = wmConfig // {
-      assigns = wmConfig.assigns or { } // {
-        ${workspaces.ws10} = wmConfig.assigns.${workspaces.ws10} or [ ] ++ [
-          { class = "Transmission-gtk"; } # Needs to be set with `class` on X11 but `app_id` on Wayland
-        ];
-      };
-    };
+    windowManager.i3.config = wmConfig false;
   };
 
   wayland.windowManager.sway = lib.mkIf config.wayland.windowManager.sway.enable {
     # Create a systemd target (`sway-session.target`) so that other services can depend on the sway session.
     systemd.enable = true;
     wrapperFeatures.gtk = true;
+    config = wmConfig true;
 
     extraSessionCommands = ''
       # Use the Wayland backend for SDL applications
@@ -110,15 +121,10 @@ in
 
       # Fixes rendering issues in Java AWT applications (e.g. Ghidra)
       export _JAVA_AWT_WM_NONREPARENTING=1
-    '';
 
-    config = wmConfig // {
-      assigns = wmConfig.assigns or { } // {
-        ${workspaces.ws10} = wmConfig.assigns.${workspaces.ws10} or [ ] ++ [
-          { app_id = "transmission-gtk"; } # Needs to be set with `class` on X11 but `app_id` on Wayland
-        ];
-      };
-    };
+      # Disable hardware cursors to fix the cursor sometimes disappearing
+      export WLR_NO_HARDWARE_CURSORS=1
+    '';
   };
 
   # Generate a script to start the wayland compositor, used by the login manager
