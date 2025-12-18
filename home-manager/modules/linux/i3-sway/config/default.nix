@@ -71,7 +71,8 @@ let
           { class = "steam"; }
           { class = "sm64(ex|ex-practice|coopdx)"; }
           { class = "Celeste?(-unwrapped)"; }
-          { class = "EverestSplash-linux"; } # Celeste mod manager
+          { class = "EverestSplash-linux"; } # Celeste mod loader
+          { class = "love"; title = "Olympus"; } # Celeste mod manager
         ];
 
         ${workspaces.ws10} = mkWindowRules [
