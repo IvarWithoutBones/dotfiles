@@ -1,4 +1,5 @@
-{ pkgs
+{ config
+, pkgs
 , lib
 , ...
 }:
@@ -68,24 +69,11 @@
     brightnessctl
   ];
 
-  xdg = lib.mkIf pkgs.stdenvNoCC.hostPlatform.isLinux {
-    enable = true;
-
-    # Avoid activation failures when the mimeapps file already exists, as some packages (e.g. firefox) will overwrite it.
-    # See https://github.com/nix-community/home-manager/issues/1213.
-    configFile."mimeapps.list".force = true;
-
-    mimeApps = {
-      enable = true;
-
-      defaultApplications = {
-        "application/pdf" = "org.gnome.Evince.desktop";
-        "image/svg+xml" = "feh.desktop";
-        "x-scheme-handler/magnet" = "transmission-gtk.desktop";
-        "text/html" = "firefox.desktop";
-        "x-scheme-handler/http" = "firefox.desktop";
-        "x-scheme-handler/https" = "firefox.desktop";
-      };
-    };
+  xdg.mimeApps.defaultApplications = lib.mkIf config.xdg.mimeApps.enable {
+    "application/pdf" = "org.gnome.Evince.desktop";
+    "image/svg+xml" = "feh.desktop";
+    "x-scheme-handler/magnet" = "transmission-gtk.desktop";
+    "x-scheme-handler/http" = "firefox.desktop";
+    "x-scheme-handler/https" = "firefox.desktop";
   };
 }

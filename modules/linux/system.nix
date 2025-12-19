@@ -6,7 +6,14 @@
 {
   environment = {
     # links paths from derivations to /run/current-system/sw
-    pathsToLink = [ "/libexec" "/share/zsh" ];
+    pathsToLink = [
+      "/libexec"
+      "/share/zsh"
+      "/share/fish"
+      "/share/bash-completion"
+      "/share/xdg-desktop-portal"
+      "/share/applications"
+    ];
 
     systemPackages = with pkgs; [
       neovim

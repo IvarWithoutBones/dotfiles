@@ -1,10 +1,22 @@
-{ lib
+{ config
+, lib
 , pkgs
 , ...
 }:
 
 {
+  # Set Alacritty as the default terminal emulator
   home.sessionVariables.TERMINAL = "alacritty";
+
+  xdg = lib.mkIf config.xdg.enable {
+    terminal-exec.settings = lib.mkIf config.xdg.terminal-exec.enable {
+      default = [ "Alacritty.desktop" ];
+    };
+
+    mimeApps.defaultApplications = lib.mkIf config.xdg.mimeApps.enable {
+      "x-scheme-handler/terminal" = "Alacritty.desktop";
+    };
+  };
 
   programs.alacritty = {
     enable = true;

@@ -1,4 +1,5 @@
-{ lib
+{ config
+, lib
 , pkgs
 , nixvim
 , ...
@@ -265,5 +266,12 @@ in
       ./scripts/lsp.lua
     ];
   };
-}
 
+  xdg.mimeApps.defaultApplications = lib.mkIf config.xdg.mimeApps.enable {
+    "text/markdown" = "nvim.desktop";
+    "text/html" = "nvim.desktop";
+    "text/xml" = "nvim.desktop";
+    "text/plain" = "nvim.desktop";
+    "application/x-shellscript" = "nvim.desktop";
+  };
+}

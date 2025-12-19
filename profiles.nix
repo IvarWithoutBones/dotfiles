@@ -74,6 +74,7 @@ in
         ./home-manager/modules/linux/xresources.nix
         ./home-manager/modules/linux/dunst.nix
         ./home-manager/modules/linux/keyring.nix
+        ./home-manager/modules/linux/xdg.nix
       ] ++ common.home-manager.modules;
     };
   };

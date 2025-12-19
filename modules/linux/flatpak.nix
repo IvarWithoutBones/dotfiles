@@ -1,6 +1,4 @@
-{ pkgs
-, ...
-}:
+{ ... }:
 
 {
   services.flatpak.enable = true;
@@ -8,9 +6,7 @@
   xdg.portal = {
     enable = true;
 
-    config.common.default = "gtk";
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-gtk
-    ];
+    # Don't pick system-wide, allow home-manager to choose in `home-manager/modules/linux/xdg.nix`
+    config.common.default = "*";
   };
 }
