@@ -12,28 +12,34 @@ let
 
   swayCommand =
     let
-      theme = pkgs.fetchurl {
+      colors = pkgs.fetchurl {
         url = "https://raw.githubusercontent.com/catppuccin/swaylock/17aa0be6ae7a166256c3d6d6de643b0b49c865dd/themes/mocha.conf";
         hash = "sha256-y4Y+qZQEpMAmhT4dKHY+ZumfWfKvVvjWHyqhafdakF8=";
       };
 
       options = [
-        # Use the theme specified above with a blurred background and the indicator.
-        "--config=${theme}"
+        # Required for the effects to apply correctly.
+        "--daemonize"
+
+        # Theming
+        "--config=${colors}"
         "--screenshots"
         "--indicator"
         "--indicator-caps-lock"
         "--clock"
-        "--effect-scale=0.25" # Scale down to speed up the blur effect.
+
+        # Blur the background screenshot by first scaling it down to improve performance, blurring it, then restoring it to full size.
+        "--effect-scale=0.25"
         "--effect-blur=4x4"
-        "--effect-scale=1" # Scale back to original size.
+        "--effect-scale=1"
+
         # Don't require a password to unlock for the first N settings.
         "--grace=5"
         "--grace-no-mouse"
         "--grace-no-touch"
       ];
     in
-    "${lib.getExe pkgs.swaylock-effects} --daemonize ${lib.concatStringsSep " " options}";
+    "${lib.getExe pkgs.swaylock-effects} ${lib.concatStringsSep " " options}";
 in
 {
   services.screen-locker = lib.mkIf config.xsession.windowManager.i3.enable {
@@ -75,10 +81,10 @@ in
       ];
 
       # Run the lock command before going to sleep via systemd-suspend/logind.
-      events = [
-        { event = "before-sleep"; command = swayCommand; }
-        { event = "lock"; command = swayCommand; }
-      ];
+      events = {
+        before-sleep = swayCommand;
+        lock = swayCommand;
+      };
     };
 
   wayland.windowManager.sway.config.keybindings = lib.mkIf config.wayland.windowManager.sway.enable {
