@@ -28,6 +28,7 @@
     gimp
     moonlight-qt
     keepassxc
+    jellyfin-media-player
 
     # Packages from my overlay
     dotfiles-tool

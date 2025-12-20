@@ -17,6 +17,7 @@ in
     proton-ge-runner # From my overlay
     prismlauncher
     ares
+    yafc-ce
 
     celeste
 

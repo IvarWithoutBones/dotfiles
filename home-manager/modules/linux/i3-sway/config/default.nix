@@ -56,6 +56,11 @@ let
       };
 
       assigns = {
+        ${workspaces.ws2} = mkWindowRules [
+          { class = "mpv"; }
+          { class = "org.jellyfin.JellyfinDesktop"; }
+        ];
+
         ${workspaces.ws3} = mkWindowRules [
           { class = "discord"; }
           { class = "element"; }
