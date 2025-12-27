@@ -7,10 +7,11 @@
   xsession.windowManager.i3.enable = true;
 
   home.packages = with pkgs; [
-    i3-swallow
-    arandr
-    xclip
-    xkill
+    i3-swallow # Replace terminal windows when launching GUI apps
+    arandr # Display configuration
+    xclip # Clipboard utilities
+    xkill # Kill applications by clicking on their window
+    feh # Image viewer
   ];
 
   # Automatically disable sleep/lock while apps are playing audio

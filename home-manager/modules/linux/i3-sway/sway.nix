@@ -1,4 +1,5 @@
-{ lib
+{ config
+, lib
 , pkgs
 , ...
 }:
@@ -8,9 +9,19 @@
   wayland.windowManager.sway.enable = true;
 
   home.packages = with pkgs; [
-    wdisplays
-    wl-clipboard
+    wdisplays # Display configuration
+    wl-clipboard # Clipboard utilities
+    nautilus # File manager
+    loupe # Image viewer
   ];
+
+  xdg.mimeApps.defaultApplications = lib.mkIf config.xdg.mimeApps.enable {
+    "inode/directory" = "nautilus.desktop";
+    "image/svg+xml" = "org.gnome.Loupe.desktop";
+    "image/png" = "org.gnome.Loupe.desktop";
+    "image/jpeg" = "org.gnome.Loupe.desktop";
+    "image/jpg" = "org.gnome.Loupe.desktop";
+  };
 
   systemd.user.services.sway-audio-idle-inhibit = {
     Unit = {

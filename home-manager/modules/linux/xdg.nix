@@ -31,10 +31,17 @@ in
 
       extraPortals = [
         pkgs.xdg-desktop-portal-gtk
+      ] ++ lib.optionalAttrs config.services.gnome-keyring.enable [
+        pkgs.gnome-keyring
       ] ++ lib.optionals config.wayland.windowManager.sway.enable [
         # Implements various screen sharing APIs for wlroots-based compositors
         pkgs.xdg-desktop-portal-wlr
       ];
     };
   };
+
+  # In order to start applications specified in desktop files the xdg-desktop-portal service
+  # needs to be able to find them in its `$PATH`. Because these services aren't defined by
+  # Nix we cannot modify the service definition, we instead do so for all user services.
+  systemd.user.sessionVariables.PATH = "${config.home.profileDirectory}/bin";
 }
