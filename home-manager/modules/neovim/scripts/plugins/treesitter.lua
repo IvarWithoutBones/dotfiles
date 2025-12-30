@@ -82,3 +82,8 @@ require("nvim-treesitter.configs").setup {
         },
     },
 }
+
+-- Disable some reStructuredText highlighting which gets incorrectly applied for Python docstrings.
+-- A better solution would be to fix the injection query: the contents indentation gets misinterpreted.
+vim.api.nvim_set_hl(0, "@markup.strong.rst", { link = "@spell.rst" })
+vim.api.nvim_set_hl(0, "@markup.quote.rst", { link = "@spell.rst" })

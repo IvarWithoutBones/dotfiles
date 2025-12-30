@@ -223,11 +223,11 @@ in
           pattern = "*";
           # Unfortunately there is no API to run a lua function directly, so we have to write it to a file
           command = "luafile ${pkgs.writeText "cd-git-root.lua" ''
-          local gitRoot = vim.fn.system("${pkgs.git}/bin/git rev-parse --show-toplevel 2>/dev/null")
-          if (gitRoot ~= nil and gitRoot ~= "") then
-              vim.cmd("cd " .. gitRoot)
-          end
-        ''}";
+            local gitRoot = vim.fn.system("${lib.getExe pkgs.git} rev-parse --show-toplevel 2>/dev/null")
+            if (gitRoot ~= nil and gitRoot ~= "") then
+                vim.cmd("cd " .. gitRoot)
+            end
+          ''}";
         }
       ];
 
@@ -260,6 +260,33 @@ in
         "after/ftplugin/sh.lua" = setIndent 4;
         "after/ftplugin/rust.lua" = setIndent 4;
       };
+
+    # Highlight Python docstrings as RST
+    extraFiles."after/queries/python/injections.scm".text = ''
+      ;; extends
+
+      ; Module docstring
+      (module . (expression_statement (string (string_content)
+        @injection.content (#set! injection.language "rst"))))
+
+      ; Class docstring
+      (class_definition body: ((block . (expression_statement (string (string_content)
+        @injection.content (#set! injection.language "rst"))))))
+
+      ; Function/method docstring
+      (function_definition body: (block . (expression_statement (string (string_content)
+        @injection.content (#set! injection.language "rst")))))
+
+      ; Attribute docstring
+      ((expression_statement (assignment)) . (expression_statement (string (string_content)
+        @injection.content (#set! injection.language "rst"))))
+
+      ; Documentation comments starting with '#: '
+      ((comment) @injection.content
+        (#lua-match? @injection.content "^#: ")
+        (#offset! @injection.content 0 3 0 0)
+        (#set! injection.language "rst"))
+    '';
 
     # Execute each file in the list upon startup
     extraConfigLua = lib.concatMapStringsSep "\n" (file: "dofile(\"${file}\")") [
