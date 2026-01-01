@@ -7,6 +7,8 @@ with pkgs; {
 
   cd-file = callPackage ./cd-file { };
 
+  compress-video = callPackage ./compress-video { };
+
   copy-nix-derivation = callPackage ./copy-nix-derivation { };
 
   createScript = callPackage ./createScript { };

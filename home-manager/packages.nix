@@ -35,6 +35,7 @@
     mkscript
     cat-command
     copy-nix-derivation
+    compress-video
   ] ++ lib.optionals pkgs.stdenvNoCC.hostPlatform.isDarwin [
     iterm2
     read-macos-alias
