@@ -7,8 +7,6 @@ with pkgs; {
 
   cd-file = callPackage ./cd-file { };
 
-  compress-video = callPackage ./compress-video { };
-
   copy-nix-derivation = callPackage ./copy-nix-derivation { };
 
   createScript = callPackage ./createScript { };
@@ -42,6 +40,8 @@ with pkgs; {
   qutebrowser-scripts = lib.recurseIntoAttrs (callPackage ./qutebrowser/scripts { });
 
   read-macos-alias = callPackage ./read-macos-alias { };
+
+  transcode-video = callPackage ./transcode-video { };
 
   yabai-zsh-completions = callPackage ./yabai-zsh-completions { };
 }

@@ -2,20 +2,21 @@
 
 set -euo pipefail
 
-USAGE="usage: $(basename "$0") [options] <input>
+USAGE="usage: transcode-video [OPTIONS] <INPUT>
 
-Compress video files using ffmpeg, with hardware acceleration if available.
+Transcodes videos to HEVC/OPUS using ffmpeg, optionally compressing them to reduce file size.
 
 Positional arguments:
-  input                   Path to input video file or directory containing video files.
+  INPUT                   Path to input video file or directory containing video files.
 
 Options:
-  -r, --resolution <res>  Target vertical resolution (e.g., 720p, 1080p). Defaults to original resolution.
-  -l, --level <level>     Compression level: low, medium, or high. Lower values yield better quality at the cost of larger file sizes. Default is medium.
-  -i, --in-place          Compress the input file(s) in-place.
-  -o, --output <path>     Path to output file or directory. Required unless using --in-place.
-      --dry-run           Show what would be done without modifying any files.
-  -h, --help              Show this help message and exit."
+  -o, --output <path>         Path to output file or directory. Required unless using --in-place.
+  -i, --in-place              Overwrite the input file with the transcoded output. Cannot be used with --output.
+  -r, --resolution <res>      Target vertical resolution (e.g. 720p, 1080p). Defaults to the original resolution.
+  -c, --compression <level>   Compression level: none, low, medium, or high. Lower values yield better quality at the cost of larger file sizes. Default is none.
+      --copy-audio            Copy the audio stream without re-encoding.
+      --dry-run               Show what would be done without modifying any files.
+  -h, --help                  Show this help message and exit."
 
 panic() {
     if [[ -z ${NO_COLOR:-} ]]; then
@@ -40,68 +41,67 @@ FFMPEG_OUTPUT_FLAGS=()
 
 setFfmpegFlags() {
     # Detetect the available hardware accelerations methods
-    local crf="${1:-}" audioBitrate="${2:-320k}" resolution="${3:-}"
-    local availableHwAccels hwAccel videoFilters
+    local crf="${1:-}" audioBitrate="${2:-320k}" resolution="${3:-}" copyAudio="${4:-0}"
 
-    # Use CUDA/VA-API hardware acceleration if available, transcode video to HEVC
-    availableHwAccels="$(ffmpeg -hide_banner -hwaccels)"
-    if grep -q cuda <<< "${availableHwAccels}"; then
-        hwAccel="cuda"
-        FFMPEG_HARDWARE_FLAGS+=(-init_hw_device cuda=hwDevice:0)
+    # Transcode video to HEVC using hardware acceleration if available
+    local availableEncoders
+    availableEncoders="$(ffmpeg -hide_banner -encoders)"
+    if grep -q "hevc_nvenc" <<< "${availableEncoders}"; then
+        # NVIDIA GPU with CUDA support
+        FFMPEG_HARDWARE_FLAGS+=(
+            # Use the first CUDA GPU for accelerated encoding and decoding (if supported)
+            -init_hw_device cuda=hwDevice:0
+            -hwaccel_device hwDevice
+            -hwaccel cuda
+            -hwaccel_output_format cuda
+        )
+
         FFMPEG_OUTPUT_FLAGS+=(
-            -vcodec hevc_nvenc
-            -tune hq           # High quality tuning
-            -preset p7         # Optimize for quality over speed
-            -rc-lookahead 32   # Look N frames ahead for better compression
-            -multipass fullres # Enable multipass encoding
-            -rc vbr            # Use variable bitrate mode
-            -spatial-aq true   # Enable spatial adaptive quantization
-            -aq-strength 15    # Set adaptive quantization strength (1-15)
+            -filter_hw_device hwDevice # Use the CUDA device initialized above for encoding
+            -vcodec hevc_nvenc         # Use NVIDIA's HEVC encoder
+            -tune hq                   # High quality tuning
+            -preset p7                 # Optimize for quality over speed
+            -rc-lookahead 32           # Look N frames ahead for better compression
+            -multipass fullres         # Enable multipass encoding
+            -rc vbr                    # Use variable bitrate mode
+            -spatial-aq true           # Enable spatial adaptive quantization
+            -aq-strength 15            # Adaptive quantization strength
         )
 
         [[ -n ${crf} ]] && FFMPEG_OUTPUT_FLAGS+=(-qmin "${crf}" -qmax 51 -cq "${crf}")
-        [[ -n ${resolution} ]] && videoFilters+="scale_cuda=-2:${resolution%p},"
-    elif grep -q vaapi <<< "${availableHwAccels}"; then
-        hwAccel="vaapi"
-        FFMPEG_HARDWARE_FLAGS+=(-init_hw_device vaapi=hwDevice:/dev/dri/renderD128)
-        FFMPEG_OUTPUT_FLAGS+=(-vcodec hevc_vaapi)
-
-        [[ -n ${crf} ]] && FFMPEG_OUTPUT_FLAGS+=(-qp "${crf}")
-        [[ -n ${resolution} ]] && videoFilters+="scale_vaapi=w=-2:h=${resolution%p},"
+        if [[ -n "${resolution:-}" ]]; then
+            FFMPEG_OUTPUT_FLAGS+=(
+                -noautoscale
+                -vf "format=nv12|cuda,hwupload,scale_cuda=-2:${resolution%p}:force_original_aspect_ratio=decrease"
+            )
+        fi
     else
-        FFMPEG_OUTPUT_FLAGS+=(-vcodec hevc)
-
+        # Software encoding fallback
+        FFMPEG_OUTPUT_FLAGS+=(-vcodec hevc -preset slow)
         [[ -n ${crf} ]] && FFMPEG_OUTPUT_FLAGS+=(-crf "${crf}")
-        [[ -n ${resolution} ]] && videoFilters+="scale=-2:${resolution%p},"
+        [[ -n ${resolution} ]] && FFMPEG_OUTPUT_FLAGS+=(-vf "scale=-2:${resolution%p}:force_original_aspect_ratio=decrease,")
     fi
 
-    if [[ -n ${hwAccel:-} ]]; then
-        videoFilters+="format=nv12|${hwAccel},hwupload,"
-        FFMPEG_OUTPUT_FLAGS+=(-filter_hw_device hwDevice)
-        FFMPEG_HARDWARE_FLAGS+=(
-            -hwaccel_device hwDevice
-            -hwaccel "${hwAccel}"
-            -hwaccel_output_format "${hwAccel}"
-        )
-    fi
+    local audioCodec
+    ((copyAudio)) && audioCodec="copy" || audioCodec="libopus"
 
-    [[ -n ${videoFilters:-} ]] && FFMPEG_OUTPUT_FLAGS+=(-vf "${videoFilters%,}")
     FFMPEG_OUTPUT_FLAGS+=(
-        -acodec libopus        # Transcode audio to OPUS
-        -b:a "${audioBitrate}" # Set audio bitrate
-        -movflags +faststart   # Enable fast start for web playback
-        -progress pipe:1       # Show progress on stdout
-        -loglevel warning      # Reduce log verbosity
-        -y                     # Overwrite output file without asking
+        -movflags +faststart    # Enable fast start for web playback
+        -acodec "${audioCodec}" # Set the audio codec
+        -b:a "${audioBitrate}"  # Set the audio bitrate
+        -progress pipe:1        # Show progress on stdout
+        -loglevel warning       # Reduce log verbosity
+        -y                      # Overwrite output file without asking
     )
 }
 
-compressVideo() {
+transcodeVideo() {
     local input="$1" output="$2"
 
     local videoDuration
     videoDuration="$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 -sexagesimal "${input}")"
-    [[ ${videoDuration} == [0-9]:* ]] && videoDuration="0${videoDuration}" # ffprobe prints 0:00:00.000000, but ffmpeg does 00:00:00.000000
+    [[ ${videoDuration} == [0-9]:* ]] && videoDuration="0${videoDuration}" # ffprobe prints 0:00:00, but ffmpeg adds a leading zero
+    videoDuration="${videoDuration%%.*}"                                   # Trim off milliseconds
 
     local sizeBefore sizeAfter printedProgress=0
     sizeBefore=$(du -h "${input}" | cut -f1)
@@ -110,6 +110,9 @@ compressVideo() {
         | grep --line-buffered "out_time=" \
         | while IFS= read -r progress; do
             progress="${progress#out_time=}"
+            [[ ${progress} == "N/A" ]] && continue
+            progress="${progress%%.*}" # Trim off milliseconds
+
             if ((printedProgress == 0)); then
                 printedProgress=1
                 echo "${progress}/${videoDuration}" >&2
@@ -131,7 +134,7 @@ trapHandler() {
     local exitCode=$? input="$1" output="$2"
     case "${VIDEO_PROCESSING_STAGE}" in
         "done") ;;
-        "compressing" | "in-place-cleanup") rm -f "${output}" ;;
+        "transcoding" | "in-place-cleanup") rm -f "${output}" ;;
         "in-place-copy")
             cp --force "${output}" "${input}"
             VIDEO_PROCESSING_STAGE="in-place-cleanup"
@@ -150,7 +153,11 @@ handleVideoInput() {
     local input="$1" output="$2" inPlace="$3" dryRun="$4"
 
     if [[ -n ${output:-} ]]; then
-        [[ -e ${output} ]] && panic "output file already exists: '${output}'"
+        if [[ -d ${output:-} ]]; then
+            output="${output}/$(basename "${input}")"
+        elif [[ -e ${output} ]]; then
+            panic "output file already exists: '${output}'"
+        fi
 
         # Only show the output filename if it's different from the input filename
         local displayOutput
@@ -160,23 +167,23 @@ handleVideoInput() {
             displayOutput="${output}"
         fi
 
-        info "compressing video: '${input}' -> '${displayOutput}'" >&2
+        info "transcoding video: '${input}' -> '${displayOutput}'" >&2
     else
         # Create a temporary output file in the same directory as the input file to avoid copying large files across disks
         if ((dryRun == 0)); then
             ((inPlace)) || panic "missing output file"
-            output="$(mktemp -p "$(dirname "${input}")" "tmp-compressed-XXXXXXXXXX-$(basename "${input}")")"
+            output="$(mktemp -p "$(dirname "${input}")" "transcoded-tmp-XXXXXXXXXX-$(basename "${input}")")"
         fi
-        info "compressing video in-place: '${input}'" >&2
+        info "transcoding video in-place: '${input}'" >&2
     fi
 
     ((dryRun)) && return
 
-    VIDEO_PROCESSING_STAGE="compressing"
+    VIDEO_PROCESSING_STAGE="transcoding"
     # shellcheck disable=SC2064
     trap "trapHandler '${input}' '${output}'" 0
 
-    compressVideo "${input}" "${output}"
+    transcodeVideo "${input}" "${output}"
 
     if ((inPlace)); then
         VIDEO_PROCESSING_STAGE="in-place-copy"
@@ -190,19 +197,19 @@ handleVideoInput() {
 }
 
 main() {
-    local input output inPlace=0 dryRun=0 level="medium" resolution=""
+    local input output inPlace=0 dryRun=0 compression="none" resolution copyAudio=0
     while (($# > 0)); do
         case "$1" in
             -r | --resolution)
                 shift || panic "missing argument for '$1'"
                 if [[ ! $1 =~ ^[0-9]+p$ ]]; then
-                    panic "invalid resolution format: '$1' (expected format: 720p, 1080p, etc.)"
+                    panic "invalid resolution format: '$1' (expected: 720p, 1080p, ...)"
                 fi
-                resolution="$1"
+                resolution="${1%p}"
                 ;;
-            -l | --level)
+            -c | --compression)
                 shift || panic "missing argument for '$1'"
-                level="$1"
+                compression="$1"
                 ;;
             -i | --in-place)
                 inPlace=1
@@ -211,9 +218,8 @@ main() {
                 shift || panic "missing argument for '$1'"
                 output="$(realpath "$1")"
                 ;;
-            --dry-run)
-                dryRun=1
-                ;;
+            --copy-audio) copyAudio=1 ;;
+            --dry-run) dryRun=1 ;;
             -h | --help)
                 echo "${USAGE}"
                 exit 0
@@ -231,7 +237,8 @@ main() {
     ((inPlace)) && [[ -n ${output:-} ]] && panic "cannot use --in-place with --output"
 
     local crf audioBitrate
-    case "${level}" in
+    case "${compression}" in
+        none) ;;
         low)
             crf="20"
             audioBitrate="192k"
@@ -244,10 +251,10 @@ main() {
             crf="28"
             audioBitrate="96k"
             ;;
-        *) panic "unknown compression level: '${level}'" ;;
+        *) panic "unknown compression level: '${compression}'" ;;
     esac
 
-    ((dryRun == 0)) && setFfmpegFlags "${crf}" "${audioBitrate}" "${resolution}"
+    ((dryRun == 0)) && setFfmpegFlags "${crf:-}" "${audioBitrate:-}" "${resolution:-}" "${copyAudio}"
 
     if [[ -f ${input} ]]; then
         handleVideoInput "${input}" "${output:-}" "${inPlace}" "${dryRun}"
