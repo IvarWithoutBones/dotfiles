@@ -5,16 +5,35 @@
 }:
 
 {
+  # The theme for the Fast Syntax Highlighting plugin
+  xdg.configFile."fsh/catppuccin-mocha.ini".source = pkgs.fetchurl {
+    url = "https://raw.githubusercontent.com/catppuccin/zsh-fsh/a9bdf479f8982c4b83b5c5005c8231c6b3352e2a/themes/catppuccin-mocha.ini";
+    hash = "sha256-YuiWhbgxlIZRlLBB0ut5ge5KLmnPrqgrBhQ7PUswYU4=";
+  };
+
   programs.zsh = {
     enable = true;
 
-    defaultKeymap = "viins";
-    history.path = "${config.xdg.cacheHome}/zsh/history";
     dotDir = "${config.xdg.configHome}/zsh";
+    history.path = "${config.xdg.cacheHome}/zsh/history";
+    defaultKeymap = "viins";
 
     autosuggestion.enable = true;
-    syntaxHighlighting.enable = true;
     autocd = true;
+    enableVteIntegration = true;
+
+    plugins = [
+      {
+        name = "zsh-vi-mode";
+        src = pkgs.zsh-vi-mode;
+        file = "share/zsh-vi-mode/zsh-vi-mode.plugin.zsh";
+      }
+      {
+        name = "fast-syntax-highlighting";
+        src = pkgs.zsh-fast-syntax-highlighting;
+        file = "share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh";
+      }
+    ];
 
     localVariables = {
       # Looks like this: '~/some/path > '
@@ -52,22 +71,14 @@
           else x11);
     };
 
-    plugins = [{
-      name = "zsh-vi-mode";
-      file = "zsh-vi-mode.plugin.zsh";
-      src = pkgs.fetchFromGitHub {
-        owner = "jeffreytse";
-        repo = "zsh-vi-mode";
-        rev = "3eeca1bc6db172edee5a2ca13d9ff588b305b455";
-        sha256 = "0na6b5b46k4473c53mv1wkb009i6b592gxpjq94bdnlz1kkcqwg6";
-      };
-    }];
-
     initContent = ''
       ${lib.optionalString pkgs.stdenvNoCC.hostPlatform.isDarwin ''
         source ${pkgs.iterm2-shell-integration}/share/zsh/iterm2.zsh
         RPS1="" # Set by default
       ''}
+
+      # Set the Fast Syntax Highlighting theme, installed above
+      fast-theme XDG:catppuccin-mocha > /dev/null
 
       # Enter a 'nix shell' with packages selected by fzf
       source ${pkgs.nix-search-fzf.zsh-shell-widget}
@@ -77,18 +88,10 @@
       # Changes working directory so has to be sourced upon shell init
       source ${pkgs.cd-file}/bin/cd-file
 
-      get-git-root() {
-        echo "$(${pkgs.git}/bin/git rev-parse --show-toplevel 2>/dev/null)"
-      }
-
-      cd-git-root() {
-        pushd "$(get-git-root)"
-      }
-
       # Change the working directory to a git trees root
       pushd-git-root-widget() {
         setopt localoptions pipefail no_aliases 2> /dev/null
-        local dir="$(eval "get-git-root")"
+        local dir="$(${lib.getExe pkgs.git} rev-parse --show-toplevel 2>/dev/null)"
         if [[ -z "$dir" ]]; then
         	zle redisplay
         	return 0
@@ -103,23 +106,6 @@
       }
       zle -N pushd-git-root-widget
       bindkey -M viins '^g' pushd-git-root-widget
-
-      find-in-store() {
-        STORE_PATHS="$(find /nix/store -maxdepth 1 -name "*$1*" -not -name "*.drv")"
-
-        if [[ -z "''${STORE_PATHS}" ]]; then
-          echo "error: no results found!"
-          return
-        fi
-
-        STORE_PATH="$(echo "''${STORE_PATHS}" | ${pkgs.fzf}/bin/fzf --preview 'tree {}')"
-
-        if [[ -d "''${STORE_PATH}" ]]; then
-          pushd "''${STORE_PATH}"
-        else
-          echo "''${STORE_PATH}"
-        fi
-      }
     '';
   };
 }
