@@ -90,7 +90,6 @@
             ./modules/linux/hardware/touchpad.nix
             ./modules/linux/steam.nix
             ./modules/linux/jellyfin.nix
-            ./modules/linux/zerotierone.nix
             ./modules/linux/sunshine.nix
 
             ({ pkgs, ... }: {
