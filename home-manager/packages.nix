@@ -28,6 +28,7 @@
     moonlight-qt
     keepassxc
     jellyfin-media-player
+    ffmpeg-full
 
     # Packages from my overlay
     dotfiles-tool

@@ -41,7 +41,7 @@ FFMPEG_OUTPUT_FLAGS=()
 
 setFfmpegFlags() {
     # Detetect the available hardware accelerations methods
-    local crf="${1:-}" audioBitrate="${2:-320k}" resolution="${3:-}" copyAudio="${4:-0}"
+    local crf="${1:-15}" audioBitrate="${2:-}" resolution="${3:-}" copyAudio="${4:-0}"
 
     # Transcode video to HEVC using hardware acceleration if available
     local availableEncoders
@@ -66,9 +66,11 @@ setFfmpegFlags() {
             -rc vbr                    # Use variable bitrate mode
             -spatial-aq true           # Enable spatial adaptive quantization
             -aq-strength 15            # Adaptive quantization strength
+            -qmin "${crf}"             # Minimum quantization parameter
+            -qmax 51                   # Maximum quantization parameter
+            -cq "${crf}"               # Constant quality factor
         )
 
-        [[ -n ${crf} ]] && FFMPEG_OUTPUT_FLAGS+=(-qmin "${crf}" -qmax 51 -cq "${crf}")
         if [[ -n "${resolution:-}" ]]; then
             FFMPEG_OUTPUT_FLAGS+=(
                 -noautoscale
@@ -77,21 +79,31 @@ setFfmpegFlags() {
         fi
     else
         # Software encoding fallback
-        FFMPEG_OUTPUT_FLAGS+=(-vcodec hevc -preset slow)
-        [[ -n ${crf} ]] && FFMPEG_OUTPUT_FLAGS+=(-crf "${crf}")
-        [[ -n ${resolution} ]] && FFMPEG_OUTPUT_FLAGS+=(-vf "scale=-2:${resolution%p}:force_original_aspect_ratio=decrease,")
+        FFMPEG_OUTPUT_FLAGS+=(
+            -vcodec hevc
+            -preset slow
+            -crf "${crf}"
+        )
+
+        if [[ -n "${resolution:-}" ]]; then
+            FFMPEG_OUTPUT_FLAGS+=(-vf "scale=-2:${resolution%p}:force_original_aspect_ratio=decrease")
+        fi
     fi
 
-    local audioCodec
-    ((copyAudio)) && audioCodec="copy" || audioCodec="libopus"
+    if ((copyAudio)); then
+        # Copy the audio stream without re-encoding
+        FFMPEG_OUTPUT_FLAGS+=(-acodec copy)
+    else
+        # Transcode the audio stream to OPUS, optionally adjusting the bitrate
+        FFMPEG_OUTPUT_FLAGS+=(-acodec libopus -b:a "${audioBitrate:-"320k"}")
+    fi
 
     FFMPEG_OUTPUT_FLAGS+=(
-        -movflags +faststart    # Enable fast start for web playback
-        -acodec "${audioCodec}" # Set the audio codec
-        -b:a "${audioBitrate}"  # Set the audio bitrate
-        -progress pipe:1        # Show progress on stdout
-        -loglevel warning       # Reduce log verbosity
-        -y                      # Overwrite output file without asking
+        -c:s mov_text        # Convert subtitles to mov_text
+        -movflags +faststart # Enable fast start for web playback
+        -progress pipe:1     # Show progress on stdout
+        -loglevel warning    # Reduce log verbosity
+        -y                   # Overwrite output file without asking
     )
 }
 
