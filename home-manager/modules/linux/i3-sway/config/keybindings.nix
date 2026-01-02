@@ -128,7 +128,6 @@ let
     # Programs
     "${modifier}+d" = "exec --no-startup-id ${pkgs.dmenu-configured}/bin/dmenu_run";
     "${modifier}+Return" = "exec --no-startup-id ${config.home.sessionVariables.TERMINAL}";
-    "${modifier}+Shift+s" = "exec \"${msgCmd} 'workspace ${workspaces.ws4}; exec ${lib.getExe pkgs.tidal-hifi}'\"";
   };
 
   mkExitBinding = msgCmd: name:

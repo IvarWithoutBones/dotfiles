@@ -1,11 +1,11 @@
 -- For a list of available options see the documentation:
 -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md
 local configurations = {
-    glslls = {},    -- GLSL
-    html = {},      -- HTML
-    omnisharp = {}, -- C#
-    taplo = {},     -- TOML
-    ts_ls = {},     -- TypeScript/JavaScript
+    glsl_analyzer = {}, -- GLSL
+    html = {},          -- HTML
+    omnisharp = {},     -- C#
+    taplo = {},         -- TOML
+    ts_ls = {},         -- TypeScript/JavaScript
 
     -- Python
     basedpyright = {},

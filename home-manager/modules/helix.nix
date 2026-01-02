@@ -44,7 +44,7 @@ let
 
     # SQL (various dialects)
     sqls
-    sqlfluff
+    # sqlfluff # TODO: Re-enable once the derivation is fixed.
 
     # YAML
     yaml-language-server
@@ -197,10 +197,11 @@ in
             except-features = [ "format" ]; # Appears to be broken: https://github.com/sqls-server/sqls/issues/153
           }];
 
-          formatter = {
-            command = "sqlfluff";
-            args = [ "format" "-" ]; # Use stdin/stdout
-          };
+          # TODO: Re-enable once the sqlfluff derivation is fixed.
+          # formatter = {
+          #   command = "sqlfluff";
+          #   args = [ "format" "-" ]; # Use stdin/stdout
+          # };
         }
       ];
 

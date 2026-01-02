@@ -10,6 +10,7 @@
 
     defaultKeymap = "viins";
     history.path = "${config.xdg.cacheHome}/zsh/history";
+    dotDir = "${config.xdg.configHome}/zsh";
 
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;

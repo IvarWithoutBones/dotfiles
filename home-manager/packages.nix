@@ -22,7 +22,7 @@
     act
     element-desktop
     hexyl
-    pcalc
+    bitwise
     eza
     gimp
     moonlight-qt
@@ -57,7 +57,7 @@
     picoscope
 
     signal-desktop
-    tidal-hifi
+    # tidal-hifi # TODO: Re-enable once https://github.com/NixOS/nixpkgs/pull/474949 makes it into nixos-unstable
     obsidian
     evince
     drawio

@@ -19,6 +19,7 @@ let
     nodePackages.vscode-json-languageserver # JSON
     vscode-langservers-extracted # HTML
     lua-language-server # Lua
+    glsl_analyzer # GLSL
 
     # YAML
     yaml-language-server
@@ -55,8 +56,6 @@ let
     rustc
     clippy
     rust-analyzer
-  ] ++ lib.optionals pkgs.stdenvNoCC.hostPlatform.isLinux [
-    glslls # GLSL, does not support Darwin.
   ];
 
   # A hacky way to add packages to neovims environment if they are not already in $PATH, using `makeWrapper --suffix`.
