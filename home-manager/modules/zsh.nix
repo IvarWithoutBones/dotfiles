@@ -71,11 +71,18 @@
           else x11);
     };
 
-    initContent = ''
+    initContent = lib.mkAfter ''
       ${lib.optionalString pkgs.stdenvNoCC.hostPlatform.isDarwin ''
         source ${pkgs.iterm2-shell-integration}/share/zsh/iterm2.zsh
         RPS1="" # Set by default
       ''}
+
+      # Cache completion results
+      zstyle ':completion:*' use-cache on
+      zstyle ':completion:*' cache-path "${config.xdg.cacheHome}/zsh/zcompcache"
+
+      # Use the colors from 'ls' in completions
+      zstyle ':completion:*:default' list-colors ''${(s.:.)LS_COLORS}
 
       # Set the Fast Syntax Highlighting theme, installed above
       fast-theme XDG:catppuccin-mocha > /dev/null

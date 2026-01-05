@@ -25,9 +25,10 @@ let
       inherit username;
 
       modules = [
-        ./home-manager/modules/alacritty.nix
         ./home-manager/default.nix
         ./home-manager/packages.nix
+        ./home-manager/modules/alacritty.nix
+        ./home-manager/modules/vivid.nix
         ./home-manager/modules/less.nix
         ./home-manager/modules/nix-index.nix
         ./home-manager/modules/readline.nix
