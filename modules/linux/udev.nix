@@ -19,6 +19,9 @@
       # Keychron Q2 keyboard
       KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="3434", ATTRS{idProduct}=="0111", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
 
+      # Halcyon Elora rev2 keyboard
+      KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="8d1d", ATTRS{idProduct}=="a392", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
+
       # SayoDevice macropad
       KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="8089", ATTRS{idProduct}=="0007", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
 

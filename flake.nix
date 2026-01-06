@@ -87,6 +87,7 @@
             ./modules/linux/hardware/config/nixos-pc.nix
             ./modules/linux/hardware/cpu/intel.nix
             ./modules/linux/hardware/gpu/nvidia.nix
+            ./modules/linux/hardware/touchpad.nix
             ./modules/linux/steam.nix
             ./modules/linux/jellyfin.nix
             ./modules/linux/zerotierone.nix
@@ -122,6 +123,15 @@
               home = {
                 packages = [ sm64ex-practice.packages.${system}.default ];
                 stateVersion = "21.11";
+              };
+
+              wayland.windowManager.sway.config.input = {
+                # Options for the Halycon Elora trackpad module. The identifier comes from `swaymsg -t get_inputs`.
+                "36125:41874:splitkb.com_Halcyon_Elora_rev2_Mouse" = {
+                  accel_profile = "flat";
+                  pointer_accel = "0.7";
+                  scroll_factor = "2.0";
+                };
               };
             })
           ];

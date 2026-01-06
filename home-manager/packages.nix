@@ -69,6 +69,7 @@
     firefox
     libreoffice
     brightnessctl
+    vial
   ];
 
   xdg.mimeApps.defaultApplications = lib.mkIf config.xdg.mimeApps.enable {
