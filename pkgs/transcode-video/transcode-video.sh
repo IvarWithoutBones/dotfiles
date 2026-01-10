@@ -99,7 +99,7 @@ setFfmpegFlags() {
     fi
 
     FFMPEG_OUTPUT_FLAGS+=(
-        -c:s mov_text        # Convert subtitles to mov_text
+        -c:s srt             # Transcode subtitles to SRT
         -movflags +faststart # Enable fast start for web playback
         -progress pipe:1     # Show progress on stdout
         -loglevel warning    # Reduce log verbosity
@@ -184,7 +184,7 @@ handleVideoInput() {
         # Create a temporary output file in the same directory as the input file to avoid copying large files across disks
         if ((dryRun == 0)); then
             ((inPlace)) || panic "missing output file"
-            output="$(mktemp -p "$(dirname "${input}")" "transcoded-tmp-XXXXXXXXXX-$(basename "${input}")")"
+            output="$(mktemp -p "$(dirname "${input}")" ".transcoded-tmp-XXXXXXXXXXXXXX" --suffix "-$(basename "${input}")")"
         fi
         info "transcoding video in-place: '${input}'" >&2
     fi
