@@ -126,7 +126,7 @@ let
     "XF86MonBrightnessDown" = "exec ${lib.getExe pkgs.brightnessctl} set 5%-";
 
     # Programs
-    "${modifier}+d" = "exec --no-startup-id ${pkgs.dmenu-configured}/bin/dmenu_run";
+    "${modifier}+d" = "exec --no-startup-id ${pkgs.dmenu-configured}/bin/dmenu_run -i";
     "${modifier}+Return" = "exec --no-startup-id ${config.home.sessionVariables.TERMINAL}";
   };
 
