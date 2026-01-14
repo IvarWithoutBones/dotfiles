@@ -126,7 +126,7 @@ let
     "XF86MonBrightnessDown" = "exec ${lib.getExe pkgs.brightnessctl} set 5%-";
 
     # Programs
-    "${modifier}+d" = "exec --no-startup-id ${pkgs.dmenu-configured}/bin/dmenu_run -i";
+    "${modifier}+d" = "exec --no-startup-id ${lib.getExe' pkgs.dmenu-configured "dmenu_run"} -i";
     "${modifier}+Return" = "exec --no-startup-id ${config.home.sessionVariables.TERMINAL}";
   };
 
@@ -136,7 +136,7 @@ in
 {
   xsession.windowManager.i3.config.keybindings =
     let
-      msgCmd = "${config.xsession.windowManager.i3.package}/bin/i3-msg";
+      msgCmd = lib.getExe' config.xsession.windowManager.i3.package "i3-msg";
       modifier = config.xsession.windowManager.i3.config.modifier;
     in
     lib.mkIf config.xsession.windowManager.i3.enable ((mkKeybindings modifier msgCmd) // {
@@ -147,12 +147,12 @@ in
 
   wayland.windowManager.sway.config.keybindings =
     let
-      msgCmd = "${config.wayland.windowManager.sway.package}/bin/swaymsg";
+      msgCmd = lib.getExe' config.wayland.windowManager.sway.package "swaymsg";
       modifier = config.wayland.windowManager.sway.config.modifier;
     in
     lib.mkIf config.wayland.windowManager.sway.enable ((mkKeybindings modifier msgCmd) // {
       "${modifier}+Shift+e" = mkExitBinding msgCmd "sway";
       "${modifier}+Shift+r" = "exec ${msgCmd} reload";
-      "--release Print" = "exec --no-startup-id ${lib.getExe pkgs.sway-contrib.grimshot} copy area";
+      "--release Print" = "exec --no-startup-id ${lib.getExe pkgs.sway-contrib.grimshot} savecopy anything /tmp/screenshot.png";
     });
 }
