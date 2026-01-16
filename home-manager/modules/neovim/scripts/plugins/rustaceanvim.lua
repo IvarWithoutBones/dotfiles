@@ -1,4 +1,3 @@
----@type rustaceanvim.Opts
 vim.g.rustaceanvim = {
     tools = {
         executor = require('rustaceanvim.executors').toggleterm,

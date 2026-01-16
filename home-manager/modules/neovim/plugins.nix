@@ -196,7 +196,9 @@ in
         config = mkLuaFile ./scripts/plugins/cmp.lua;
       }
 
-      nvim-treesitter-textobjects # For treesitter
+      # Treesitter extensions
+      nvim-treesitter-textobjects
+      treesitter-modules-nvim
       {
         # Better syntax highlighting and automatic indentation.
         plugin = nvim-treesitter.withAllGrammars;

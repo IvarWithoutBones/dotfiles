@@ -9,10 +9,8 @@ cmp.setup {
         {
             name = "buffer",
             priority = 1,
-            option = {
-                -- Complete from all open buffers, not only the one that is currently active
-                get_bufnrs = function() return vim.api.nvim_list_bufs() end
-            }
+            -- Complete from all open buffers, not only the one that is currently active
+            option = { get_bufnrs = vim.api.nvim_list_bufs }
         },
     },
 
@@ -68,8 +66,8 @@ cmp.setup {
 
     window = {
         -- Use rounded borders
-        completion = cmp.config.window.bordered(),
-        documentation = cmp.config.window.bordered(),
+        completion = cmp.config.window.bordered({ border = "rounded" }),
+        documentation = cmp.config.window.bordered({ border = "rounded" }),
     },
 
     formatting = {

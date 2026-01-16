@@ -97,7 +97,6 @@ in
 
     opts = {
       syntax = "enable";
-      termguicolors = true;
 
       # Allow UI components to react to mouse events
       mousemoveevent = true;
@@ -134,6 +133,9 @@ in
 
       # Time (in milliseconds) between CursorHold event updates, used by signature hints
       updatetime = 200;
+
+      # Open all folds by default
+      foldlevelstart = 99;
     };
 
     keymaps = [
