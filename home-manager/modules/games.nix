@@ -18,20 +18,21 @@ in
     prismlauncher
     ares
     yafc-ce
+    apotris
 
     celeste
-
-    # Celeste level editor, from my overlay
     (loenn.override {
+      # Celeste level editor, from my overlay
       withCeleste = true;
       celestegame = celeste;
     })
-
-    # Celeste mod manager
     (olympus.override {
-      # This adds a stable path (symlinked below) to the Celeste installation directory,
-      # without it we'd have to re-select it every time the store path changes.
-      finderHints = [ "${config.xdg.dataHome}/celeste-nix/home" ];
+      # Celeste mod manager
+      finderHints = [
+        # This adds a stable path (symlinked below) to the Celeste installation directory,
+        # without it we'd have to re-select it every time the store path changes.
+        "${config.xdg.dataHome}/celeste-nix/home"
+      ];
     })
   ];
 

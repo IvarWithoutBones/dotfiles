@@ -75,6 +75,8 @@ let
         ${workspaces.ws5} = mkWindowRules [
           { class = "steam"; }
           { class = "sm64(ex|ex-practice|coopdx)"; }
+          { class = ".Apotris-wrapped"; }
+          { class = "Apotris"; }
           { class = "Celeste?(-unwrapped)"; }
           { class = "EverestSplash-linux"; } # Celeste mod loader
           { class = "love"; title = "Olympus"; } # Celeste mod manager

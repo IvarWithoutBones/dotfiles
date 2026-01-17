@@ -3,6 +3,31 @@ let
   pkgs = final;
 in
 with pkgs; {
+  apotris = prev.apotris.overrideAttrs (oldAttrs:
+    let
+      _ = lib.assertMsg (oldAttrs.version == "4.1.0") "Is this override still necessary?";
+    in
+    {
+      version = "4.1.1b";
+
+      # Adds support for shaders in $XDG_DATA_HOME. Should be removed when 4.1.1+ is released.
+      src = fetchFromGitea {
+        domain = "gitea.com";
+        owner = "akouzoukos";
+        repo = "apotris";
+        rev = "225fe63affe8e5b33d038c48acb151b0b342c060";
+        hash = "sha256-QxXhHoXXKZ4ql/EHqqmn1vYfM/PYSR49PZ/9R+952xc=";
+        fetchSubmodules = true;
+      };
+
+      nativeBuildInputs = oldAttrs.nativeBuildInputs or [ ] ++ [ makeWrapper ];
+
+      postInstall = ''
+        # Required for the audio/shaders to be found
+        wrapProgram $out/bin/Apotris --chdir "$out"
+      '';
+    });
+
   cat-command = callPackage ./cat-command { };
 
   cd-file = callPackage ./cd-file { };
