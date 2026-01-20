@@ -14,7 +14,6 @@ let
 in
 {
   home.packages = with pkgs; [
-    proton-ge-runner # From my overlay
     prismlauncher
     ares
     yafc-ce
@@ -34,6 +33,10 @@ in
         "${config.xdg.dataHome}/celeste-nix/home"
       ];
     })
+
+    # From my overlay
+    proton-ge-runner
+    livesplit-one
   ];
 
   xdg.dataFile."celeste-nix/home".source = "${celeste.passthru.celeste-unwrapped}/lib/Celeste";
