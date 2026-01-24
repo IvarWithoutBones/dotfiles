@@ -124,15 +124,6 @@
                 packages = [ sm64ex-practice.packages.${system}.default ];
                 stateVersion = "21.11";
               };
-
-              wayland.windowManager.sway.config.input = {
-                # Options for the Halycon Elora trackpad module. The identifier comes from `swaymsg -t get_inputs`.
-                "36125:41874:splitkb.com_Halcyon_Elora_rev2_Mouse" = {
-                  accel_profile = "flat";
-                  pointer_accel = "0.7";
-                  scroll_factor = "2.0";
-                };
-              };
             })
           ];
         };
@@ -182,19 +173,6 @@
             ./home-manager/modules/linux/blueman-applet.nix
 
             ({ ... }: {
-              wayland.windowManager.sway.config.input = {
-                # Rebind capslock -> escape on all keyboards.
-                "type:keyboard".xkb_options = "caps:escape";
-
-                # Options for the laptop's internal keyboard. The identifier comes from `swaymsg -t get_inputs`.
-                "1452:636:Apple_Inc._Apple_Internal_Keyboard_/_Trackpad".xkb_options = nixpkgs.lib.concatStringsSep "," [
-                  # Rebind capslock -> escape again (the general "type:keyboard" above gets overwritten).
-                  "caps:escape"
-                  # Swap left Option <-> left Command to mimic a regular layout.
-                  "altwin:swap_lalt_lwin"
-                ];
-              };
-
               home.stateVersion = "25.11";
             })
           ];

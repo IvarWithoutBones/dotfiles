@@ -6,7 +6,32 @@
 
 {
   imports = [ ./config ];
-  wayland.windowManager.sway.enable = true;
+
+  wayland.windowManager.sway = {
+    enable = true;
+    wrapperFeatures.gtk = true;
+
+    # Create a systemd target (`sway-session.target`) so that other services can start after it
+    systemd.enable = true;
+
+    extraSessionCommands = ''
+      # Disable hardware cursors to fix the cursor sometimes disappearing
+      export WLR_NO_HARDWARE_CURSORS=1
+
+      # Use the Wayland backend for SDL applications
+      export SDL_VIDEODRIVER=wayland
+
+      # Use the Wayland backend for QT applications
+      export QT_QPA_PLATFORM=wayland
+      export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
+
+      # Fixes rendering issues in Java AWT applications (e.g. Ghidra)
+      export _JAVA_AWT_WM_NONREPARENTING=1
+
+      # Use the Wayland backend for Firefox
+      export MOZ_ENABLE_WAYLAND=1
+    '';
+  };
 
   home.packages = with pkgs; [
     wdisplays # Display configuration

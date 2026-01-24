@@ -101,6 +101,7 @@ in
     ./theme.nix
     ./lockscreen.nix
     ./display-temperature.nix
+    ./input.nix
     ((import ./keybindings.nix) workspaces)
   ];
 
@@ -111,28 +112,7 @@ in
   };
 
   wayland.windowManager.sway = lib.mkIf config.wayland.windowManager.sway.enable {
-    # Create a systemd target (`sway-session.target`) so that other services can depend on the sway session.
-    systemd.enable = true;
-    wrapperFeatures.gtk = true;
     config = wmConfig true;
-
-    extraSessionCommands = ''
-      # Use the Wayland backend for SDL applications
-      export SDL_VIDEODRIVER=wayland
-
-      # Use the Wayland backend for QT applications
-      export QT_QPA_PLATFORM=wayland
-      export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
-
-      # Use the Wayland backend for Firefox
-      export MOZ_ENABLE_WAYLAND=1
-
-      # Fixes rendering issues in Java AWT applications (e.g. Ghidra)
-      export _JAVA_AWT_WM_NONREPARENTING=1
-
-      # Disable hardware cursors to fix the cursor sometimes disappearing
-      export WLR_NO_HARDWARE_CURSORS=1
-    '';
   };
 
   # Generate a script to start the wayland compositor, used by the login manager
