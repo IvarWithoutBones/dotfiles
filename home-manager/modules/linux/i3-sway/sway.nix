@@ -36,6 +36,7 @@
   home.packages = with pkgs; [
     wdisplays # Display configuration
     wl-clipboard # Clipboard utilities
+    waypipe # Graphical application forwarding over SSH
     nautilus # File manager
     loupe # Image viewer
   ];
