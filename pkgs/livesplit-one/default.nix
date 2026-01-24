@@ -4,7 +4,6 @@
 , fetchFromGitHub
 , fetchNpmDeps
 , wrapGAppsHook4
-, makeWrapper
 , replaceVars
 , cargo-tauri
 , glib-networking
@@ -56,7 +55,6 @@ rustPlatform.buildRustPackage (finalAttrs: {
     npmHooks.npmConfigHook
     nodejs
   ] ++ lib.optionals stdenv.hostPlatform.isLinux [
-    makeWrapper
     wrapGAppsHook4
   ];
 
@@ -84,22 +82,16 @@ rustPlatform.buildRustPackage (finalAttrs: {
   dontWrapGApps = stdenv.hostPlatform.isLinux;
 
   preFixup = lib.optionalString stdenv.hostPlatform.isLinux ''
-    # Fixes rendering issues on NVidia + Wayland: https://github.com/tauri-apps/tauri/issues/9394
-    wrapProgram $out/bin/"LiveSplit One" \
-      --set __NV_DISABLE_EXPLICIT_SYNC 1 \
-      --set WEBKIT_DISABLE_COMPOSITING_MODE 1 \
-      ''${gappsWrapperArgs[@]}
-
-    substituteInPlace $out/share/applications/"LiveSplit One.desktop" \
-      --replace-fail "Comment=A Tauri App" "Comment=${finalAttrs.meta.description}" \
-      --replace-fail "Icon=LiveSplit One" "Icon=livesplit-one"
+    ln -s $out/bin/"LiveSplit One" $out/bin/livesplit-one
 
     # Spaces in the icon path seem to break gtk-update-icon-cache
     for dir in $out/share/icons/hicolor/*; do
       mv "$dir/apps/LiveSplit One.png" "$dir/apps/livesplit-one.png"
     done
 
-    ln -s $out/bin/"LiveSplit One" $out/bin/livesplit-one
+    substituteInPlace $out/share/applications/"LiveSplit One.desktop" \
+      --replace-fail "Icon=LiveSplit One" "Icon=livesplit-one" \
+      --replace-fail "Comment=A Tauri App" "Comment=${finalAttrs.meta.description}"
   '';
 
   meta = {
