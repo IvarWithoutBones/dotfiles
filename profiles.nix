@@ -77,6 +77,7 @@ in
         ./home-manager/modules/linux/dunst.nix
         ./home-manager/modules/linux/keyring.nix
         ./home-manager/modules/linux/xdg.nix
+        ./home-manager/modules/linux/monitor-layout.nix
       ] ++ common.home-manager.modules;
     };
   };
