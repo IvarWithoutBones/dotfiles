@@ -14,6 +14,7 @@ let
 in
 {
   home.packages = with pkgs; [
+    shipwright
     prismlauncher
     ares
     yafc-ce

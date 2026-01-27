@@ -77,6 +77,8 @@ let
           { class = "sm64(ex|ex-practice|coopdx)"; }
           { class = ".Apotris-wrapped"; }
           { class = "Apotris"; }
+          { class = ".soh.elf-wrapped"; }
+          { class = "soh.elf"; }
           { class = "Celeste?(-unwrapped)"; }
           { class = "EverestSplash-linux"; } # Celeste mod loader
           { class = "love"; title = "Olympus"; } # Celeste mod manager
