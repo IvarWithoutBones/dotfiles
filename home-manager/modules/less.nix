@@ -1,14 +1,22 @@
-{ ... }:
+{ config, ... }:
 
 {
   programs.less = {
     enable = true;
 
-    # `--RAW-CONTROL-CHARS` is needed for scrolling using the mouse wheel (ironically `--mouse` breaks it)
-    # `--IGNORE-CASE` makes searches case-insensitive when the pattern is all lowercase
-    config = ''
-      #env
-      LESS=--RAW-CONTROL-CHARS --IGNORE-CASE --quit-if-one-screen
-    '';
+    options = {
+      # Ensures mouse wheel scrolling works properly
+      RAW-CONTROL-CHARS = true;
+
+      # Makes searches case-insensitive when the pattern is all lowercase
+      ignore-case = true;
+
+      # Automatically exit less if the content fits on one screen
+      quit-if-one-screen = true;
+    };
+  };
+
+  home.sessionVariables = {
+    LESSHISTFILE = "${config.xdg.cacheHome}/less/history";
   };
 }

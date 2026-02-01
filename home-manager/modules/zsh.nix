@@ -4,7 +4,17 @@
 , ...
 }:
 
+let
+  # Include some invisible characters so that applications like Alacritty can easily detect it without conflicts.
+  invisibleChars = "\\u200B\\u200C\\u200D\\u2062\\u2063\\u2064";
+  promptSuffix = " ${invisibleChars}❯${invisibleChars} ";
+
+  # Looks like this: '~/some/path ❯ '
+  prompt = "%F{magenta}%~%f%F{yellow}${promptSuffix}%f";
+in
 {
+  home.sessionVariables.SHELL_PROMPT_MARKER = promptSuffix;
+
   # The theme for the Fast Syntax Highlighting plugin
   xdg.configFile."fsh/catppuccin-mocha.ini".source = pkgs.fetchurl {
     url = "https://raw.githubusercontent.com/catppuccin/zsh-fsh/a9bdf479f8982c4b83b5c5005c8231c6b3352e2a/themes/catppuccin-mocha.ini";
@@ -17,6 +27,7 @@
     dotDir = "${config.xdg.configHome}/zsh";
     history.path = "${config.xdg.cacheHome}/zsh/history";
     defaultKeymap = "viins";
+    localVariables.KEYTIMEOUT = 1; # Make Vi mode transitions faster (in hundredths of a second)
 
     autosuggestion.enable = true;
     autocd = true;
@@ -34,15 +45,6 @@
         file = "share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh";
       }
     ];
-
-    localVariables = {
-      # Looks like this: '~/some/path > '
-      PS1 = "%F{magenta}%~%f > ";
-      # Gets pushed to the home directory otherwise
-      LESSHISTFILE = "/dev/null";
-      # Make Vi mode transitions faster (in hundredths of a second)
-      KEYTIMEOUT = 1;
-    };
 
     shellAliases = {
       ls = "${lib.getExe pkgs.eza} --group-directories-first";
@@ -72,10 +74,15 @@
     };
 
     initContent = lib.mkAfter ''
-      ${lib.optionalString pkgs.stdenvNoCC.hostPlatform.isDarwin ''
-        source ${pkgs.iterm2-shell-integration}/share/zsh/iterm2.zsh
-        RPS1="" # Set by default
-      ''}
+      # Set the prompt
+      setopt PROMPT_PERCENT
+      RPROMPT="" # Set by default in some environments
+      if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
+        # Show username and hostname when connected over SSH
+        PROMPT=$'%F{cyan}[%n@%m]%f ${prompt}'
+      else
+        PROMPT=$'${prompt}'
+      fi
 
       # Cache completion results
       zstyle ':completion:*' use-cache on
@@ -115,6 +122,10 @@
       }
       zle -N pushd-git-root-widget
       bindkey -M viins '^g' pushd-git-root-widget
+
+      ${lib.optionalString pkgs.stdenvNoCC.hostPlatform.isDarwin ''
+        source ${pkgs.iterm2-shell-integration}/share/zsh/iterm2.zsh
+      ''}
     '';
   };
 }
