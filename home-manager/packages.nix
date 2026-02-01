@@ -41,9 +41,6 @@
     iterm2
     read-macos-alias
   ] ++ lib.optionals pkgs.stdenvNoCC.hostPlatform.isLinux [
-    noto-fonts-color-emoji
-    nerd-fonts.fira-code
-
     perf
     kdePackages.kcachegrind
     valgrind
@@ -58,7 +55,7 @@
     picoscope
 
     signal-desktop
-    # tidal-hifi # TODO: Re-enable once https://github.com/NixOS/nixpkgs/pull/474949 makes it into nixos-unstable
+    tidal-hifi
     obsidian
     evince
     drawio
