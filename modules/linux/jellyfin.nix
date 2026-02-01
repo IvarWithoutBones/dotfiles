@@ -26,6 +26,12 @@
       openFirewall = true;
     };
 
+    # Subtitle manager for sonarr/radarr
+    bazarr = {
+      enable = true;
+      openFirewall = true;
+    };
+
     # Provides the indexers for sonarr and radarr
     prowlarr = {
       enable = true;
