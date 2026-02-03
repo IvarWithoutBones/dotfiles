@@ -6,7 +6,7 @@
 
 let
   # Include some invisible characters so that applications like Alacritty can easily detect it without conflicts.
-  invisibleChars = "\\u200B\\u200C\\u200D\\u2062\\u2063\\u2064";
+  invisibleChars = "\\u200C\\u200D";
   promptSuffix = " ${invisibleChars}❯${invisibleChars} ";
 
   # Looks like this: '~/some/path ❯ '
