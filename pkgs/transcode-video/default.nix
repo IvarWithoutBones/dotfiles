@@ -1,11 +1,11 @@
 { createScript
-, ffmpeg-full
+, jellyfin-ffmpeg
 , coreutils
 }:
 
 createScript "transcode-video" ./transcode-video.sh {
   dependencies = [
-    ffmpeg-full
+    jellyfin-ffmpeg # Has some fixes for OPUS encoding
     coreutils
   ];
 
