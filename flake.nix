@@ -92,12 +92,18 @@
             ./modules/linux/jellyfin.nix
             ./modules/linux/audiobookshelf.nix
             ./modules/linux/sunshine.nix
+            ./modules/linux/desktop/xserver.nix
 
-            ({ pkgs, ... }: {
+            ({ pkgs, config, ... }: {
               users.users."ivv" = {
                 isNormalUser = true;
-                extraGroups = [ "wheel" "plugdev" "dialout" ];
                 shell = pkgs.zsh;
+                extraGroups = [
+                  "wheel"
+                  "plugdev"
+                  "dialout"
+                  config.services.transmission.group
+                ];
               };
 
               networking = {
@@ -107,6 +113,12 @@
                   prefixLength = 28;
                 }];
               };
+
+              # Extra directories that transmission has access to.
+              systemd.services.transmission.serviceConfig.BindPaths = [
+                "/mnt/hdd/downloads"
+                "/mnt/ssd1/downloads"
+              ];
 
               system.stateVersion = "21.11";
             })
@@ -137,7 +149,7 @@
             ./modules/linux/hardware/touchpad.nix
             ./modules/linux/hardware/bluetooth.nix
 
-            ({ pkgs, lib, ... }: {
+            ({ pkgs, lib, config, ... }: {
               # Use MacOS's boot partition.
               boot.loader.efi.efiSysMountPoint = "/boot";
 
@@ -157,8 +169,13 @@
 
               users.users."ivv" = {
                 isNormalUser = true;
-                extraGroups = [ "wheel" "plugdev" "dialout" ];
                 shell = pkgs.zsh;
+                extraGroups = [
+                  "wheel"
+                  "plugdev"
+                  "dialout"
+                  config.services.transmission.group
+                ];
               };
 
               networking.hostName = "nixos-macbook";

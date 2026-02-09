@@ -86,6 +86,7 @@ let
 
         ${workspaces.ws10} = mkWindowRules [
           { class = "Transmission-gtk"; app_id = "transmission-gtk"; }
+          { class = "transmission-remote-gtk"; }
         ];
       };
 

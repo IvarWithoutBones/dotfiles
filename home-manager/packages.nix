@@ -62,7 +62,7 @@
     psst
     krita
     _1password-gui
-    transmission_4-gtk
+    transmission-remote-gtk
     firefox
     libreoffice
     brightnessctl
@@ -71,8 +71,9 @@
 
   xdg.mimeApps.defaultApplications = lib.mkIf config.xdg.mimeApps.enable {
     "application/pdf" = "org.gnome.Evince.desktop";
-    "x-scheme-handler/magnet" = "transmission-gtk.desktop";
     "x-scheme-handler/http" = "firefox.desktop";
     "x-scheme-handler/https" = "firefox.desktop";
+    "x-scheme-handler/magnet" = "io.github.TransmissionRemoteGtk.desktop";
+    "application/x-bittorrent" = "io.github.TransmissionRemoteGtk.desktop";
   };
 }

@@ -67,7 +67,7 @@ in
       ./modules/linux/desktop/lockscreen.nix
       ./modules/linux/desktop/sessions.nix
       ./modules/linux/desktop/tuigreet.nix
-      ./modules/linux/desktop/xserver.nix
+      ./modules/linux/transmission.nix
     ] ++ common.modules;
 
     home-manager = common.home-manager // {
