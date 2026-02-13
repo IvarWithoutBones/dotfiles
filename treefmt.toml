@@ -1,0 +1,15 @@
+# Configuration for treefmt, a formatter multiplexer: https://github.com/numtide/treefmt
+
+[formatter.nixfmt]
+command = "nixfmt"
+includes = ["*.nix"]
+
+[formatter.shfmt]
+command = "shfmt"
+includes = ["*.sh", "*.bash", "*.envrc", "*.envrc.*"]
+options = ["--write"]
+
+[formatter.taplo]
+command = "taplo"
+includes = ["*.toml"]
+options = ["format"]

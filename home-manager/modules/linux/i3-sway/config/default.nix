@@ -92,8 +92,8 @@ let
 
       floating.criteria = mkWindowRules [
         # Default to floating windows for everything but the main window.
-        { class = "steam"; title = "[^Steam]"; } # See https://github.com/ValveSoftware/steam-for-linux/issues/1040
         { class = "ghidra-Ghidra"; title = "^(?!(CodeBrowser.*|Ghidra.*))"; }
+        { class = "steam"; title = "[^Steam]"; } # See https://github.com/ValveSoftware/steam-for-linux/issues/1040
         { class = "EverestSplash-linux"; }
       ];
     };

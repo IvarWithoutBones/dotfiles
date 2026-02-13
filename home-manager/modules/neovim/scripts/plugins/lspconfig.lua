@@ -1,11 +1,26 @@
+-- Load project-specific settings using codesettings.nvim
+local function before_init(_, config)
+    local codesettings = require('codesettings')
+    codesettings.with_local_settings(config.name, config)
+end
+
 -- For a list of available options see the documentation:
 -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md
 local configurations = {
-    glsl_analyzer = {}, -- GLSL
-    html = {},          -- HTML
-    omnisharp = {},     -- C#
-    taplo = {},         -- TOML
-    ts_ls = {},         -- TypeScript/JavaScript
+    glsl_analyzer = {},          -- GLSL
+    wgsl_analyzer = {},          -- WGSL
+    html = {},                   -- HTML
+    omnisharp = {},              -- C#
+    taplo = {},                  -- TOML
+    ts_ls = {},                  -- TypeScript/JavaScript
+    autotools_ls = {},           -- Makefiles/configure.ac
+    just = {},                   -- Justfiles
+    starlark_rust = {},          -- Bazel
+    docker_language_server = {}, -- Dockerfiles
+    fish_lsp = {},               -- Fish shell
+    gopls = {},                  -- Go
+    marksman = {},               -- Markdown
+    sqls = {},                   -- SQL
 
     -- Python
     basedpyright = {},
@@ -49,12 +64,25 @@ local configurations = {
     },
 
     -- Nix
-    nil_ls = {
+    nixd = {
         settings = {
-            ["nil"] = {
-                formatting = { command = { "nixpkgs-fmt" } }
+            nixd = {
+                formatting = { command = { "nixfmt" } },
+                nixpkgs = { expr = "import <nixpkgs> { }" }, -- Might get overwritten in `before_init()`
             }
-        }
+        },
+
+        before_init = function(client, config)
+            -- Use the project's nixpkgs if available
+            local flake_dir = vim.fs.root(0, { "flake.nix", ".git" })
+            if flake_dir and vim.uv.fs_stat(vim.fs.joinpath(flake_dir, "flake.nix")) then
+                config.settings.nixd.nixpkgs.expr =
+                    "import (builtins.getFlake \"" .. flake_dir .. "\").inputs.nixpkgs { }"
+            end
+
+            -- Load the default `before_init()` since we overwrote it
+            before_init(client, config)
+        end,
     },
 
     -- Lua
@@ -202,8 +230,9 @@ vim.lsp.handlers['client/registerCapability'] = (function(overridden)
     end
 end)(vim.lsp.handlers['client/registerCapability'])
 
--- Set up capabilities for every language server
-vim.lsp.config('*', {
+-- Default config for every language server
+local default_config = {
+    before_init = before_init,
     capabilities = vim.tbl_deep_extend("force",
         vim.lsp.protocol.make_client_capabilities(),
         require("cmp_nvim_lsp").default_capabilities(),
@@ -212,13 +241,11 @@ vim.lsp.config('*', {
             offsetEncoding = { 'utf-16' },
             general = { positionEncodings = { 'utf-16' } },
         }
-    )
-})
+    ),
+}
 
 -- Configure and enable the language servers
 for server_name, server_options in pairs(configurations) do
-    if server_options ~= {} then
-        vim.lsp.config(server_name, server_options)
-    end
+    vim.lsp.config(server_name, vim.tbl_deep_extend("force", default_config, server_options))
     vim.lsp.enable(server_name)
 end

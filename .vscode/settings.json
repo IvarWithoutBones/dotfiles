@@ -1,0 +1,15 @@
+{
+  "nixd": {
+    "nixpkgs": {
+      "expr": "import (builtins.getFlake \"${workspaceFolder}\").inputs.nixpkgs { }"
+    },
+    "options": {
+      "nixos": {
+        "expr": "(builtins.getFlake \"${workspaceFolder}\").nixosConfigurations.nixos-pc.options"
+      },
+      "home-manager": {
+        "expr": "(builtins.getFlake \"${workspaceFolder}\").nixosConfigurations.nixos-pc.options.home-manager.users.type.getSubOptions []"
+      }
+    }
+  }
+}

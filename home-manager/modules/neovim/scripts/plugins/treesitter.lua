@@ -5,7 +5,7 @@ local disabled_indent_languages = {
 }
 
 vim.api.nvim_create_autocmd('FileType', {
-    group = vim.api.nvim_create_augroup('treesitter.setup', {}),
+    group = vim.api.nvim_create_augroup('ivar.treesitter.setup', {}),
     callback = function(args)
         -- Ensure we have a treesitter parser for this filetype
         local language = vim.treesitter.language.get_lang(args.match) or args.match

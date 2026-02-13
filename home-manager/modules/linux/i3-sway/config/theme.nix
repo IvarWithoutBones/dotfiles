@@ -32,7 +32,7 @@ let
   };
 
   fonts = {
-    names = [ "FiraCode Nerd Font" ];
+    names = config.fonts.fontconfig.defaultFonts.monospace;
     size = 13.0;
   };
 
@@ -70,7 +70,6 @@ in
 {
   xsession.windowManager.i3.config = lib.mkIf config.xsession.windowManager.i3.enable wmConfig;
   wayland.windowManager.sway.config = lib.mkIf config.wayland.windowManager.sway.enable wmConfig;
-  fonts.fontconfig.enable = true;
 
   programs.i3status-rust = {
     bars.top.settings.theme.overrides = mkDefaultColor colors.base [

@@ -6,20 +6,23 @@
 }:
 
 let
-  # Packages to bundle with neovim, see `nvimWithDefaultPackages` below.
-  packages = with pkgs; [
-    # C/C++/Rust debug adapters, see `scripts/plugins/dap.lua` for their configuration.
-    gdb
-    llvmPackages_21.lldb
-    vscode-extensions.vadimcn.vscode-lldb.adapter # codelldb
-
-    # Language servers, see `scripts/plugins/lspconfig.lua` for their configuration.
+  # Language servers, see `scripts/plugins/lspconfig.lua` for their configuration.
+  languageServers = with pkgs; [
     taplo # TOML
     typescript-language-server # Typescript/Javascript
     nodePackages.vscode-json-languageserver # JSON
     vscode-langservers-extracted # HTML
     lua-language-server # Lua
     glsl_analyzer # GLSL
+    autotools-language-server # Makefiles/configure.ac
+    starlark-rust # Bazel
+    just-lsp # Justfiles
+    docker-language-server # Dockerfiles
+    fish-lsp # Fish shell
+    gopls # Go
+    marksman # Markdown
+    sqls # SQL
+    wgsl-analyzer # WGSL
 
     # YAML
     yaml-language-server
@@ -30,7 +33,6 @@ let
     cmake-format
 
     # Python
-    (python3.withPackages (ps: [ ps.debugpy ]))
     basedpyright
     ruff
 
@@ -47,8 +49,8 @@ let
     nodePackages.bash-language-server
 
     # Nix
-    nil
-    nixpkgs-fmt
+    nixd
+    nixfmt
 
     # Rust
     cargo
@@ -57,6 +59,20 @@ let
     clippy
     rust-analyzer
   ];
+
+  # Debug adapters, see `scripts/plugins/dap.lua` for their configuration.
+  debuggers = with pkgs; [
+    (python3.withPackages (ps: [ ps.debugpy ])) # Python
+
+    # C/C++/Rust
+    gdb
+    llvmPackages_21.lldb
+    vscode-extensions.vadimcn.vscode-lldb.adapter # codelldb
+  ];
+
+  defaultPackages = with pkgs; [
+    treefmt # Formatter multiplexer
+  ] ++ languageServers ++ debuggers;
 
   # A hacky way to add packages to neovims environment if they are not already in $PATH, using `makeWrapper --suffix`.
   # Needed to allow projects to overwrite tools bundled with neovim, for example using a nightly rust toolchain.
@@ -71,7 +87,7 @@ let
       mkdir -p $out
       cp -r ${pkgs.neovim.unwrapped}/* $out
       chmod -R +w $out
-      makeWrapper ${pkgs.neovim.unwrapped}/bin/nvim $out/bin/nvim --suffix PATH : ${lib.makeBinPath packages}
+      makeWrapper ${pkgs.neovim.unwrapped}/bin/nvim $out/bin/nvim --suffix PATH : ${lib.makeBinPath defaultPackages}
     '';
 in
 {

@@ -176,6 +176,7 @@ in
         config = mkLuaFile ./scripts/plugins/dap.lua;
       }
 
+      codesettings-nvim # Project-local LSP settings
       {
         # Language server configuration presets
         plugin = nvim-lspconfig;
