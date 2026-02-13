@@ -1,16 +1,22 @@
-{ config
-, lib
-, pkgs
-, nixpkgs
-, dotfiles-flake
-, ...
+{
+  config,
+  lib,
+  pkgs,
+  nixpkgs,
+  dotfiles-flake,
+  ...
 }:
 
 let
   inherit (pkgs.stdenvNoCC) hostPlatform;
-  trustedAndAllowedUsers = [ "@wheel" ] ++ (lib.attrNames (lib.filterAttrs
-    (_username: config: if hostPlatform.isDarwin then !config.isHidden else config.isNormalUser)
-    config.users.users));
+  trustedAndAllowedUsers = [
+    "@wheel"
+  ]
+  ++ (lib.attrNames (
+    lib.filterAttrs (
+      _username: config: if hostPlatform.isDarwin then !config.isHidden else config.isNormalUser
+    ) config.users.users
+  ));
 in
 {
   nixpkgs.config.allowUnfree = true;
@@ -28,7 +34,10 @@ in
     };
 
     settings = {
-      experimental-features = [ "nix-command" "flakes" ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
       trusted-users = trustedAndAllowedUsers;
       allowed-users = trustedAndAllowedUsers;
       warn-dirty = false; # Gets pretty annoying while working on a flake

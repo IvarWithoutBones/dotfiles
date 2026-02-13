@@ -6,7 +6,7 @@
 set -euo pipefail
 url="$1"
 
-if ! [[ "${url,,}" =~ https://github.com/nixos/nixpkgs/pull/[0-9]+ ]]; then
+if ! [[ ${url,,} =~ https://github.com/nixos/nixpkgs/pull/[0-9]+ ]]; then
     echo "message-error 'not a nixpkgs PR'" >> "$QUTE_FIFO"
     exit
 fi

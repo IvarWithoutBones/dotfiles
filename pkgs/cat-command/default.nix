@@ -1,6 +1,7 @@
-{ createScript
-, bat
-, coreutils
+{
+  createScript,
+  bat,
+  coreutils,
 }:
 
 createScript "cat-command" ./cat-command.sh {

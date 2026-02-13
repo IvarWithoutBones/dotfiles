@@ -1,4 +1,5 @@
-{ createScript
+{
+  createScript,
 }:
 
 createScript "qute-docsrs" ./docsrs.sh {

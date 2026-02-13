@@ -1,18 +1,19 @@
-{ lib
-, stdenvNoCC
-, replaceVars
-, fetchFromGitHub
-, makeDesktopItem
-, copyDesktopItems
-, makeWrapper
-, zip
-, love
-, luajitPackages
-, curl
+{
+  lib,
+  stdenvNoCC,
+  replaceVars,
+  fetchFromGitHub,
+  makeDesktopItem,
+  copyDesktopItems,
+  makeWrapper,
+  zip,
+  love,
+  luajitPackages,
+  curl,
 
   # Override with `true` to make Lönn use the Celeste game directory managed by Nix
-, withCeleste ? false
-, celestegame
+  withCeleste ? false,
+  celestegame,
 }:
 
 stdenvNoCC.mkDerivation (finalAttrs: {
@@ -29,7 +30,8 @@ stdenvNoCC.mkDerivation (finalAttrs: {
 
   patches = [
     ./disable-auto-update.patch
-  ] ++ lib.optionals withCeleste [
+  ]
+  ++ lib.optionals withCeleste [
     (replaceVars ./game-directory.patch {
       celeste = celestegame.passthru.celeste-unwrapped;
     })
@@ -81,8 +83,19 @@ stdenvNoCC.mkDerivation (finalAttrs: {
       exec = "${finalAttrs.meta.mainProgram} %F";
       type = "Application";
       icon = "loenn";
-      categories = [ "Utility" "Development" "Game" "X-LevelEditor" ];
-      keywords = [ "Celeste" "Map" "Level" "Editor" "Loenn" ];
+      categories = [
+        "Utility"
+        "Development"
+        "Game"
+        "X-LevelEditor"
+      ];
+      keywords = [
+        "Celeste"
+        "Map"
+        "Level"
+        "Editor"
+        "Loenn"
+      ];
     })
   ];
 

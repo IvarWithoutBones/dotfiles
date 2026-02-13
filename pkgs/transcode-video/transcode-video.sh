@@ -75,7 +75,7 @@ setFfmpegFlags() {
             -cq:v "${crf}"             # Constant quality factor
         )
 
-        if [[ -n "${resolution:-}" ]]; then
+        if [[ -n ${resolution:-} ]]; then
             FFMPEG_OUTPUT_FLAGS+=(
                 -noautoscale
                 -vf "format=nv12|cuda,hwupload,scale_cuda=-2:${resolution}:force_original_aspect_ratio=decrease"
@@ -89,7 +89,7 @@ setFfmpegFlags() {
             -crf:v "${crf}"
         )
 
-        if [[ -n "${resolution:-}" ]]; then
+        if [[ -n ${resolution:-} ]]; then
             FFMPEG_OUTPUT_FLAGS+=(-vf "scale=-2:${resolution%p}:force_original_aspect_ratio=decrease")
         fi
     fi
@@ -156,7 +156,7 @@ transcodeVideo() {
 
             if ((printedProgress != 0)); then
                 IFS='[;' read -p $'\033[6n' -sdRra newCursorPosition < /dev/tty
-                if [[ "${newCursorPosition[*]}" == "${cursorPosition[*]}" ]]; then
+                if [[ ${newCursorPosition[*]} == "${cursorPosition[*]}" ]]; then
                     # Clear the previous progress line by moving the cursor up and clearing the line, then print the new progress
                     printf '\e[A\e[K%s/%s (%s)\n' "${progress}" "${videoDuration}" "${sizeBefore}" >&2
                     continue
@@ -177,7 +177,7 @@ transcodeVideo() {
     sizeAfter=$(du -h "${output}" | cut -f1)
 
     IFS='[;' read -p $'\033[6n' -sdRra newCursorPosition < /dev/tty
-    if [[ "${newCursorPosition[*]}" == "${cursorPosition[*]}" ]]; then
+    if [[ ${newCursorPosition[*]} == "${cursorPosition[*]}" ]]; then
         # Clear the previous progress line by moving the cursor up and clearing the line, then print the new progress
         printf '\e[A\e[K%s/%s (%s -> %s)\n' "${videoDuration}" "${videoDuration}" "${sizeBefore}" "${sizeAfter}"
     else

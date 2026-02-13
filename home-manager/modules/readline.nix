@@ -1,5 +1,6 @@
-{ dotfiles-flake
-, ...
+{
+  dotfiles-flake,
+  ...
 }:
 
 {

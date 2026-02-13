@@ -1,6 +1,7 @@
-{ config
-, lib
-, ...
+{
+  config,
+  lib,
+  ...
 }:
 
 {
@@ -10,6 +11,7 @@
   };
 
   # Add the "docker" group to every normal (i.e. interactive) user.
-  users.extraGroups."docker".members = lib.attrNames
-    (lib.filterAttrs (_username: config: config.isNormalUser) config.users.extraUsers);
+  users.extraGroups."docker".members = lib.attrNames (
+    lib.filterAttrs (_username: config: config.isNormalUser) config.users.extraUsers
+  );
 }

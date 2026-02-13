@@ -1,7 +1,8 @@
-{ config
-, lib
-, pkgs
-, ...
+{
+  config,
+  lib,
+  pkgs,
+  ...
 }:
 
 {
@@ -68,8 +69,15 @@
         Description = "Inhibit Wayland idling when media is played through pipewire";
         Documentation = "https://github.com/rafaelrc7/wayland-pipewire-idle-inhibit";
         PartOf = [ config.wayland.systemd.target ];
-        After = [ config.wayland.systemd.target "pipewire.service" "pipewire-pulse.service" ];
-        Wants = [ "pipewire.service" "pipewire-pulse.service" ];
+        After = [
+          config.wayland.systemd.target
+          "pipewire.service"
+          "pipewire-pulse.service"
+        ];
+        Wants = [
+          "pipewire.service"
+          "pipewire-pulse.service"
+        ];
       };
 
       Service = {

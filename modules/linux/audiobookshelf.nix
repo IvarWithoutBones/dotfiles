@@ -8,7 +8,9 @@
     host = "0.0.0.0";
   };
 
-  users.users.${config.services.audiobookshelf.user} = lib.optionalAttrs config.services.transmission.enable {
-    extraGroups = [ config.services.transmission.group ];
-  };
+  users.users.${config.services.audiobookshelf.user} =
+    lib.optionalAttrs config.services.transmission.enable
+      {
+        extraGroups = [ config.services.transmission.group ];
+      };
 }

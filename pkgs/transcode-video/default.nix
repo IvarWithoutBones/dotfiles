@@ -1,6 +1,7 @@
-{ createScript
-, jellyfin-ffmpeg
-, coreutils
+{
+  createScript,
+  jellyfin-ffmpeg,
+  coreutils,
 }:
 
 createScript "transcode-video" ./transcode-video.sh {

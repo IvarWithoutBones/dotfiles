@@ -7,12 +7,12 @@ set -euo pipefail
 URL="https://docs.rs"
 
 if (($# > 0)); then
-	URL="$URL/$1/latest/$1" # Append the crate name to the URL if its present
-	shift
+    URL="$URL/$1/latest/$1" # Append the crate name to the URL if its present
+    shift
 fi
 
 if (($# > 0)); then
-	URL="$URL/?search=$*" # Add the query to the URL, if one is provided
+    URL="$URL/?search=$*" # Add the query to the URL, if one is provided
 fi
 
 echo "open $URL" > "$QUTE_FIFO"

@@ -50,21 +50,24 @@
       config.services.sonarr.group
       config.services.radarr.group
       config.services.bazarr.group
-    ] ++ lib.optionals config.services.transmission.enable [
+    ]
+    ++ lib.optionals config.services.transmission.enable [
       config.services.transmission.group
     ];
 
     ${config.services.sonarr.user}.extraGroups = [
       config.services.jellyfin.group
       config.services.bazarr.group
-    ] ++ lib.optionals config.services.transmission.enable [
+    ]
+    ++ lib.optionals config.services.transmission.enable [
       config.services.transmission.group
     ];
 
     ${config.services.radarr.user}.extraGroups = [
       config.services.jellyfin.group
       config.services.bazarr.group
-    ] ++ lib.optionals config.services.transmission.enable [
+    ]
+    ++ lib.optionals config.services.transmission.enable [
       config.services.transmission.group
     ];
 
@@ -72,7 +75,8 @@
       config.services.jellyfin.group
       config.services.sonarr.group
       config.services.radarr.group
-    ] ++ lib.optionals config.services.transmission.enable [
+    ]
+    ++ lib.optionals config.services.transmission.enable [
       config.services.transmission.group
     ];
   };

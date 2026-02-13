@@ -1,6 +1,7 @@
-{ createScript
-, gnugrep
-, coreutils
+{
+  createScript,
+  gnugrep,
+  coreutils,
 }:
 
 createScript "qute-nixpkgs-tracker" ./qute-nixpkgs-tracker.sh {

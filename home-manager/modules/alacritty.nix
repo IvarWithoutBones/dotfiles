@@ -1,7 +1,8 @@
-{ config
-, lib
-, pkgs
-, ...
+{
+  config,
+  lib,
+  pkgs,
+  ...
 }:
 
 {
@@ -69,43 +70,204 @@
           key = "D";
           action = "ScrollPageDown";
         }
-      ] ++ lib.optionals (lib.hasAttr "SHELL_PROMPT_MARKER" config.home.sessionVariables) [
+      ]
+      ++ lib.optionals (lib.hasAttr "SHELL_PROMPT_MARKER" config.home.sessionVariables) [
         # Jump to previous/next prompt in scrollback. Taken from: https://github.com/alacritty/alacritty/issues/5850#issuecomment-3570435051
-        { mods = "Alt"; key = "ArrowUp"; mode = "~Vi|~Search"; action = "ToggleViMode"; }
-        { mods = "Alt"; key = "ArrowUp"; mode = "~Vi|~Search"; action = "ScrollLineUp"; }
-        { mods = "Alt"; key = "ArrowUp"; mode = "~Vi|~Search"; action = "ScrollLineUp"; }
-        { mods = "Alt"; key = "ArrowUp"; mode = "~Vi|~Search"; action = "ScrollLineUp"; }
-        { mods = "Alt"; key = "ArrowUp"; mode = "~Vi|~Search"; action = "SearchBackward"; }
-        { mods = "Alt"; key = "ArrowUp"; mode = "~Vi|~Search"; chars = config.home.sessionVariables.SHELL_PROMPT_MARKER; }
-        { mods = "Alt"; key = "ArrowUp"; mode = "~Vi|~Search"; action = "SearchConfirm"; }
-        { mods = "Alt"; key = "ArrowUp"; mode = "~Vi|~Search"; action = "CenterAroundViCursor"; }
-        { mods = "Alt"; key = "ArrowUp"; mode = "~Vi|~Search"; action = "ToggleViMode"; }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "~Vi|~Search";
+          action = "ToggleViMode";
+        }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "~Vi|~Search";
+          action = "ScrollLineUp";
+        }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "~Vi|~Search";
+          action = "ScrollLineUp";
+        }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "~Vi|~Search";
+          action = "ScrollLineUp";
+        }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "~Vi|~Search";
+          action = "SearchBackward";
+        }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "~Vi|~Search";
+          chars = config.home.sessionVariables.SHELL_PROMPT_MARKER;
+        }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "~Vi|~Search";
+          action = "SearchConfirm";
+        }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "~Vi|~Search";
+          action = "CenterAroundViCursor";
+        }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "~Vi|~Search";
+          action = "ToggleViMode";
+        }
 
-        { mods = "Alt"; key = "ArrowUp"; mode = "Vi"; action = "ScrollLineUp"; }
-        { mods = "Alt"; key = "ArrowUp"; mode = "Vi"; action = "ScrollLineUp"; }
-        { mods = "Alt"; key = "ArrowUp"; mode = "Vi"; action = "ScrollLineUp"; }
-        { mods = "Alt"; key = "ArrowUp"; mode = "Vi"; action = "SearchBackward"; }
-        { mods = "Alt"; key = "ArrowUp"; mode = "Vi"; chars = config.home.sessionVariables.SHELL_PROMPT_MARKER; }
-        { mods = "Alt"; key = "ArrowUp"; mode = "Vi"; action = "SearchConfirm"; }
-        { mods = "Alt"; key = "ArrowUp"; mode = "Vi"; action = "CenterAroundViCursor"; }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "Vi";
+          action = "ScrollLineUp";
+        }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "Vi";
+          action = "ScrollLineUp";
+        }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "Vi";
+          action = "ScrollLineUp";
+        }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "Vi";
+          action = "SearchBackward";
+        }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "Vi";
+          chars = config.home.sessionVariables.SHELL_PROMPT_MARKER;
+        }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "Vi";
+          action = "SearchConfirm";
+        }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "Vi";
+          action = "CenterAroundViCursor";
+        }
 
-        { mods = "Alt"; key = "ArrowUp"; mode = "~Vi|~Search"; action = "ToggleViMode"; }
-        { mods = "Alt"; key = "ArrowUp"; mode = "~Vi|~Search"; action = "ScrollLineDown"; }
-        { mods = "Alt"; key = "ArrowUp"; mode = "~Vi|~Search"; action = "ScrollLineDown"; }
-        { mods = "Alt"; key = "ArrowUp"; mode = "~Vi|~Search"; action = "ScrollLineDown"; }
-        { mods = "Alt"; key = "ArrowUp"; mode = "~Vi|~Search"; action = "SearchForward"; }
-        { mods = "Alt"; key = "ArrowUp"; mode = "~Vi|~Search"; chars = config.home.sessionVariables.SHELL_PROMPT_MARKER; }
-        { mods = "Alt"; key = "ArrowUp"; mode = "~Vi|~Search"; action = "SearchConfirm"; }
-        { mods = "Alt"; key = "ArrowUp"; mode = "~Vi|~Search"; action = "CenterAroundViCursor"; }
-        { mods = "Alt"; key = "ArrowUp"; mode = "~Vi|~Search"; action = "ToggleViMode"; }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "~Vi|~Search";
+          action = "ToggleViMode";
+        }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "~Vi|~Search";
+          action = "ScrollLineDown";
+        }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "~Vi|~Search";
+          action = "ScrollLineDown";
+        }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "~Vi|~Search";
+          action = "ScrollLineDown";
+        }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "~Vi|~Search";
+          action = "SearchForward";
+        }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "~Vi|~Search";
+          chars = config.home.sessionVariables.SHELL_PROMPT_MARKER;
+        }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "~Vi|~Search";
+          action = "SearchConfirm";
+        }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "~Vi|~Search";
+          action = "CenterAroundViCursor";
+        }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "~Vi|~Search";
+          action = "ToggleViMode";
+        }
 
-        { mods = "Alt"; key = "ArrowUp"; mode = "Vi"; action = "ScrollLineDown"; }
-        { mods = "Alt"; key = "ArrowUp"; mode = "Vi"; action = "ScrollLineDown"; }
-        { mods = "Alt"; key = "ArrowUp"; mode = "Vi"; action = "ScrollLineDown"; }
-        { mods = "Alt"; key = "ArrowUp"; mode = "Vi"; action = "SearchForward"; }
-        { mods = "Alt"; key = "ArrowUp"; mode = "Vi"; chars = config.home.sessionVariables.SHELL_PROMPT_MARKER; }
-        { mods = "Alt"; key = "ArrowUp"; mode = "Vi"; action = "SearchConfirm"; }
-        { mods = "Alt"; key = "ArrowUp"; mode = "Vi"; action = "CenterAroundViCursor"; }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "Vi";
+          action = "ScrollLineDown";
+        }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "Vi";
+          action = "ScrollLineDown";
+        }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "Vi";
+          action = "ScrollLineDown";
+        }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "Vi";
+          action = "SearchForward";
+        }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "Vi";
+          chars = config.home.sessionVariables.SHELL_PROMPT_MARKER;
+        }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "Vi";
+          action = "SearchConfirm";
+        }
+        {
+          mods = "Alt";
+          key = "ArrowUp";
+          mode = "Vi";
+          action = "CenterAroundViCursor";
+        }
       ];
     };
   };

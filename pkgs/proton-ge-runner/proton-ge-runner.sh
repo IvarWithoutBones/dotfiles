@@ -28,7 +28,7 @@ dataDir() {
 
 maybeOffline() {
     local runCommand="$1"
-    if [[ "${PROTON_GE_RUNNER_OFFLINE:-0}" != 0 ]]; then
+    if [[ ${PROTON_GE_RUNNER_OFFLINE:-0} != 0 ]]; then
         runCommand="systemd-run --same-dir --scope --property IPAddressDeny=any --property SocketBindDeny=any ${runCommand}"
     fi
     echo "${runCommand}"
@@ -37,7 +37,7 @@ maybeOffline() {
 runProton() {
     local -r targetExe="${1:-}"
     shift || true
-    if [[ -z "${targetExe}" ]] || [[ ! -f "${targetExe}" ]]; then
+    if [[ -z ${targetExe} ]] || [[ ! -f ${targetExe} ]]; then
         showUsage
         exit 1
     fi

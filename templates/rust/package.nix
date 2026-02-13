@@ -1,11 +1,11 @@
 {
   # Supplied by the flake.
-  pname
-, version
-, src
-, craneLib
+  pname,
+  version,
+  src,
+  craneLib,
   # Supplied by nixpkgs.
-, lib
+  lib,
 }:
 
 let
@@ -22,25 +22,40 @@ let
     cargoArtifacts = craneLib.buildDepsOnly args;
   };
 in
-craneLib.buildPackage (argsWithArtifacts // {
-  passthru.tests = {
-    cargo-test = craneLib.cargoTest (argsWithArtifacts // {
-      doCheck = true;
-      cargoTestArgs = "--all-features";
-    });
+craneLib.buildPackage (
+  argsWithArtifacts
+  // {
+    passthru.tests = {
+      cargo-test = craneLib.cargoTest (
+        argsWithArtifacts
+        // {
+          doCheck = true;
+          cargoTestArgs = "--all-features";
+        }
+      );
 
-    cargo-clippy = craneLib.cargoClippy (argsWithArtifacts // {
-      cargoClippyExtraArgs = "--all-targets -- --deny warnings";
-    });
+      cargo-clippy = craneLib.cargoClippy (
+        argsWithArtifacts
+        // {
+          cargoClippyExtraArgs = "--all-targets -- --deny warnings";
+        }
+      );
 
-    cargo-doc = craneLib.cargoDoc (argsWithArtifacts // {
-      RUSTDOCFLAGS = "--deny warnings";
-    });
+      cargo-doc = craneLib.cargoDoc (
+        argsWithArtifacts
+        // {
+          RUSTDOCFLAGS = "--deny warnings";
+        }
+      );
 
-    toml-fmt = craneLib.taploFmt (args // {
-      src = lib.sources.sourceFilesBySuffices src [ ".toml" ];
-    });
+      toml-fmt = craneLib.taploFmt (
+        args
+        // {
+          src = lib.sources.sourceFilesBySuffices src [ ".toml" ];
+        }
+      );
 
-    cargo-fmt = craneLib.cargoFmt args;
-  };
-})
+      cargo-fmt = craneLib.cargoFmt args;
+    };
+  }
+)

@@ -1,4 +1,5 @@
-{ createScript
+{
+  createScript,
 }:
 
 createScript "qute-fake-fullscreen" ./fake-fullscreen.sh {

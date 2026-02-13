@@ -1,5 +1,6 @@
-{ createScript
-, nix
+{
+  createScript,
+  nix,
 }:
 
 createScript "copy-nix-derivation" ./copy-nix-derivation.sh {

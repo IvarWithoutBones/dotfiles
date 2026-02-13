@@ -1,4 +1,5 @@
-{ createScript
+{
+  createScript,
 }:
 
 createScript "dotfiles" ./dotfiles.sh {

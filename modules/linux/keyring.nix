@@ -1,6 +1,7 @@
-{ config
-, lib
-, ...
+{
+  config,
+  lib,
+  ...
 }:
 
 # Used in conjunction with `home-manager/modules/linux/keyring.nix`.

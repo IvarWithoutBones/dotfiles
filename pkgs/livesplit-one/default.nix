@@ -1,19 +1,20 @@
-{ lib
-, stdenv
-, rustPlatform
-, fetchFromGitHub
-, fetchNpmDeps
-, wrapGAppsHook4
-, replaceVars
-, cargo-tauri
-, glib-networking
-, nodejs
-, npmHooks
-, openssl
-, pkg-config
-, webkitgtk_4_1
-, lld
-, wasm-bindgen-cli_0_2_108
+{
+  lib,
+  stdenv,
+  rustPlatform,
+  fetchFromGitHub,
+  fetchNpmDeps,
+  wrapGAppsHook4,
+  replaceVars,
+  cargo-tauri,
+  glib-networking,
+  nodejs,
+  npmHooks,
+  openssl,
+  pkg-config,
+  webkitgtk_4_1,
+  lld,
+  wasm-bindgen-cli_0_2_108,
 }:
 
 rustPlatform.buildRustPackage (finalAttrs: {
@@ -54,7 +55,8 @@ rustPlatform.buildRustPackage (finalAttrs: {
     lld
     npmHooks.npmConfigHook
     nodejs
-  ] ++ lib.optionals stdenv.hostPlatform.isLinux [
+  ]
+  ++ lib.optionals stdenv.hostPlatform.isLinux [
     wrapGAppsHook4
   ];
 

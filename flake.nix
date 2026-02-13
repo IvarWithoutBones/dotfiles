@@ -28,15 +28,16 @@
   };
 
   outputs =
-    { self
-    , nixpkgs
-    , nix-darwin
-    , home-manager
-    , flake-utils
-    , nix-index-database
-    , nixvim
-    , sm64ex-practice
-    , nixos-hardware
+    {
+      self,
+      nixpkgs,
+      nix-darwin,
+      home-manager,
+      flake-utils,
+      nix-index-database,
+      nixvim,
+      sm64ex-practice,
+      nixos-hardware,
     }:
     let
       lib = import ./lib.nix {
@@ -44,7 +45,13 @@
       };
 
       profiles = import ./profiles.nix {
-        inherit self nixpkgs lib nixvim nix-index-database;
+        inherit
+          self
+          nixpkgs
+          lib
+          nixvim
+          nix-index-database
+          ;
       };
     in
     {
@@ -57,24 +64,30 @@
           system = "x86_64-darwin";
 
           modules = [
-            ({ ... }: {
-              users.users."ivv" = {
-                isHidden = false;
-                home = "/Users/ivv";
-              };
+            (
+              { ... }:
+              {
+                users.users."ivv" = {
+                  isHidden = false;
+                  home = "/Users/ivv";
+                };
 
-              system = {
-                primaryUser = "ivv";
-                stateVersion = 5;
-              };
-            })
+                system = {
+                  primaryUser = "ivv";
+                  stateVersion = 5;
+                };
+              }
+            )
           ];
 
           home-manager.modules = [
-            ({ ... }: {
-              programs.alacritty.settings.font.size = 15.5;
-              home.stateVersion = "21.11";
-            })
+            (
+              { ... }:
+              {
+                programs.alacritty.settings.font.size = 15.5;
+                home.stateVersion = "21.11";
+              }
+            )
           ];
         };
       };
@@ -94,34 +107,39 @@
             ./modules/linux/sunshine.nix
             ./modules/linux/desktop/xserver.nix
 
-            ({ pkgs, config, ... }: {
-              users.users."ivv" = {
-                isNormalUser = true;
-                shell = pkgs.zsh;
-                extraGroups = [
-                  "wheel"
-                  "plugdev"
-                  "dialout"
-                  config.services.transmission.group
+            (
+              { pkgs, config, ... }:
+              {
+                users.users."ivv" = {
+                  isNormalUser = true;
+                  shell = pkgs.zsh;
+                  extraGroups = [
+                    "wheel"
+                    "plugdev"
+                    "dialout"
+                    config.services.transmission.group
+                  ];
+                };
+
+                networking = {
+                  hostName = "nixos-pc";
+                  interfaces.enp0s31f6.ipv4.addresses = [
+                    {
+                      address = "192.168.1.44";
+                      prefixLength = 28;
+                    }
+                  ];
+                };
+
+                # Extra directories that transmission has access to.
+                systemd.services.transmission.serviceConfig.BindPaths = [
+                  "/mnt/hdd/downloads"
+                  "/mnt/ssd1/downloads"
                 ];
-              };
 
-              networking = {
-                hostName = "nixos-pc";
-                interfaces.enp0s31f6.ipv4.addresses = [{
-                  address = "192.168.1.44";
-                  prefixLength = 28;
-                }];
-              };
-
-              # Extra directories that transmission has access to.
-              systemd.services.transmission.serviceConfig.BindPaths = [
-                "/mnt/hdd/downloads"
-                "/mnt/ssd1/downloads"
-              ];
-
-              system.stateVersion = "21.11";
-            })
+                system.stateVersion = "21.11";
+              }
+            )
           ];
 
           home-manager.modules = [
@@ -130,12 +148,15 @@
             ./home-manager/modules/linux/i3-sway/i3.nix
             ./home-manager/modules/linux/i3-sway/sway.nix
 
-            ({ system, ... }: {
-              home = {
-                packages = [ sm64ex-practice.packages.${system}.default ];
-                stateVersion = "21.11";
-              };
-            })
+            (
+              { system, ... }:
+              {
+                home = {
+                  packages = [ sm64ex-practice.packages.${system}.default ];
+                  stateVersion = "21.11";
+                };
+              }
+            )
           ];
         };
 
@@ -149,60 +170,76 @@
             ./modules/linux/hardware/touchpad.nix
             ./modules/linux/hardware/bluetooth.nix
 
-            ({ pkgs, lib, config, ... }: {
-              # Use MacOS's boot partition.
-              boot.loader.efi.efiSysMountPoint = "/boot";
+            (
+              {
+                pkgs,
+                lib,
+                config,
+                ...
+              }:
+              {
+                # Use MacOS's boot partition.
+                boot.loader.efi.efiSysMountPoint = "/boot";
 
-              # Use Apple's Bluetooth/Wifi firmware. Option comes from nixos-hardware.
-              hardware.apple-t2.firmware.enable = true;
+                # Use Apple's Bluetooth/Wifi firmware. Option comes from nixos-hardware.
+                hardware.apple-t2.firmware.enable = true;
 
-              # Enable the nixos-t2 binary cache.
-              nix.settings =
-                let
-                  substituters = [ "https://cache.soopy.moe" ];
-                in
-                {
-                  inherit substituters;
-                  trusted-substituters = substituters;
-                  trusted-public-keys = [ "cache.soopy.moe-1:0RZVsQeR+GOh0VQI9rvnHz55nVXkFardDqfm4+afjPo=" ];
+                # Enable the nixos-t2 binary cache.
+                nix.settings =
+                  let
+                    substituters = [ "https://cache.soopy.moe" ];
+                  in
+                  {
+                    inherit substituters;
+                    trusted-substituters = substituters;
+                    trusted-public-keys = [ "cache.soopy.moe-1:0RZVsQeR+GOh0VQI9rvnHz55nVXkFardDqfm4+afjPo=" ];
+                  };
+
+                users.users."ivv" = {
+                  isNormalUser = true;
+                  shell = pkgs.zsh;
+                  extraGroups = [
+                    "wheel"
+                    "plugdev"
+                    "dialout"
+                    config.services.transmission.group
+                  ];
                 };
 
-              users.users."ivv" = {
-                isNormalUser = true;
-                shell = pkgs.zsh;
-                extraGroups = [
-                  "wheel"
-                  "plugdev"
-                  "dialout"
-                  config.services.transmission.group
-                ];
-              };
-
-              networking.hostName = "nixos-macbook";
-              system.stateVersion = "25.11";
-            })
+                networking.hostName = "nixos-macbook";
+                system.stateVersion = "25.11";
+              }
+            )
           ];
 
           home-manager.modules = [
             ./home-manager/modules/linux/i3-sway/sway.nix
             ./home-manager/modules/linux/blueman-applet.nix
 
-            ({ ... }: {
-              home.stateVersion = "25.11";
-            })
+            (
+              { ... }:
+              {
+                home.stateVersion = "25.11";
+              }
+            )
           ];
         };
       };
-    } // flake-utils.lib.eachDefaultSystem (system:
-    let
-      pkgs = import nixpkgs {
-        inherit system;
-        overlays = [ self.overlays.default ];
-        config.allowUnfree = true;
-      };
-    in
-    {
-      # Every derivation defined in ./pkgs/all-packages.nix
-      packages = nixpkgs.lib.filterAttrs (_name: value: nixpkgs.lib.isDerivation value) (self.overlays.default pkgs pkgs);
-    });
+    }
+    // flake-utils.lib.eachDefaultSystem (
+      system:
+      let
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [ self.overlays.default ];
+          config.allowUnfree = true;
+        };
+      in
+      {
+        # Every derivation defined in ./pkgs/all-packages.nix
+        packages = nixpkgs.lib.filterAttrs (_name: value: nixpkgs.lib.isDerivation value) (
+          self.overlays.default pkgs pkgs
+        );
+      }
+    );
 }

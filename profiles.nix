@@ -1,8 +1,9 @@
-{ self
-, nixpkgs
-, nixvim
-, lib
-, nix-index-database
+{
+  self,
+  nixpkgs,
+  nixvim,
+  lib,
+  nix-index-database,
 }:
 
 let
@@ -68,7 +69,8 @@ in
       ./modules/linux/desktop/sessions.nix
       ./modules/linux/desktop/tuigreet.nix
       ./modules/linux/transmission.nix
-    ] ++ common.modules;
+    ]
+    ++ common.modules;
 
     home-manager = common.home-manager // {
       modules = [
@@ -79,7 +81,8 @@ in
         ./home-manager/modules/linux/keyring.nix
         ./home-manager/modules/linux/xdg.nix
         ./home-manager/modules/linux/monitor-layout.nix
-      ] ++ common.home-manager.modules;
+      ]
+      ++ common.home-manager.modules;
     };
   };
 
@@ -94,12 +97,14 @@ in
       ./modules/darwin/yabai
       ./modules/darwin/skhd
       ./modules/darwin/nixos-builder.nix
-    ] ++ common.modules;
+    ]
+    ++ common.modules;
 
     home-manager = common.home-manager // {
       modules = [
         ./home-manager/modules/darwin/swiftbar
-      ] ++ common.home-manager.modules;
+      ]
+      ++ common.home-manager.modules;
     };
   };
 }

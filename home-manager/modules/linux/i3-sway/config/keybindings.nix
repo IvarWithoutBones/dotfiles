@@ -1,14 +1,16 @@
 workspaces:
 
-{ config
-, lib
-, pkgs
-, ...
+{
+  config,
+  lib,
+  pkgs,
+  ...
 }:
 
 let
   # Switch to the next/previous tab in a tabbed layout. Adapted from https://github.com/swaywm/sway/issues/8537#issuecomment-2874633061, thanks!
-  switchTab = dir: msgCmd:
+  switchTab =
+    dir: msgCmd:
     let
       offset = if dir == "left" then "-1" else "1";
       wrap = if dir == "left" then "-1" else "0";
@@ -22,14 +24,16 @@ let
     '';
 
   # Focus the window in the given direction. If the currently focused window is a tab, jump over other windows in the same tab container.
-  focusDirection = dir: msgCmd: pkgs.writeShellScript "sway-focus-parent-if-tabbed-${dir}" ''
-    layout="$(${msgCmd} -t get_tree | ${lib.getExe pkgs.jq} -r 'recurse(.nodes[], .floating_nodes[]) | select(.nodes[], .floating_nodes[] | .focused).layout')"
-    if [[ ''${layout:-"null"} == "tabbed" ]]; then
-      ${msgCmd} "focus parent; focus ${dir}; focus child"
-    else
-      ${msgCmd} "focus ${dir}"
-    fi
-  '';
+  focusDirection =
+    dir: msgCmd:
+    pkgs.writeShellScript "sway-focus-parent-if-tabbed-${dir}" ''
+      layout="$(${msgCmd} -t get_tree | ${lib.getExe pkgs.jq} -r 'recurse(.nodes[], .floating_nodes[]) | select(.nodes[], .floating_nodes[] | .focused).layout')"
+      if [[ ''${layout:-"null"} == "tabbed" ]]; then
+        ${msgCmd} "focus parent; focus ${dir}; focus child"
+      else
+        ${msgCmd} "focus ${dir}"
+      fi
+    '';
 
   mkKeybindings = modifier: msgCmd: {
     # Navigation
@@ -113,7 +117,8 @@ let
     # Volume control
     "XF86AudioRaiseVolume" = "exec ${lib.getExe pkgs.pamixer} --increase 5";
     "XF86AudioLowerVolume" = "exec ${lib.getExe pkgs.pamixer} --decrease 5";
-    "XF86AudioMute" = "exec ${lib.getExe pkgs.pamixer} --toggle-mute && ${lib.getExe pkgs.pamixer} --default-source --toggle-mute"; # Mute both the input and output devices
+    "XF86AudioMute" =
+      "exec ${lib.getExe pkgs.pamixer} --toggle-mute && ${lib.getExe pkgs.pamixer} --default-source --toggle-mute"; # Mute both the input and output devices
 
     # Media player control
     "XF86AudioPause" = "exec ${lib.getExe pkgs.playerctl} play-pause";
@@ -130,7 +135,8 @@ let
     "${modifier}+Return" = "exec --no-startup-id ${config.home.sessionVariables.TERMINAL}";
   };
 
-  mkExitBinding = msgCmd: name:
+  mkExitBinding =
+    msgCmd: name:
     "exec [ \"$(printf \"No\\nYes\" | ${lib.getExe pkgs.dmenu-configured} -i -p \"Would you like to exit ${name}?\")\" = \"Yes\" ] && ${msgCmd} exit";
 in
 {
@@ -139,20 +145,28 @@ in
       msgCmd = lib.getExe' config.xsession.windowManager.i3.package "i3-msg";
       modifier = config.xsession.windowManager.i3.config.modifier;
     in
-    lib.mkIf config.xsession.windowManager.i3.enable ((mkKeybindings modifier msgCmd) // {
-      "${modifier}+Shift+e" = mkExitBinding msgCmd "i3";
-      "${modifier}+Shift+r" = "exec ${msgCmd} restart";
-      "--release Print" = "exec --no-startup-id ${lib.getExe pkgs.maim} -su /tmp/screenshot.png && ${lib.getExe pkgs.xclip} -selection clipboard -t image/png < /tmp/screenshot.png";
-    });
+    lib.mkIf config.xsession.windowManager.i3.enable (
+      (mkKeybindings modifier msgCmd)
+      // {
+        "${modifier}+Shift+e" = mkExitBinding msgCmd "i3";
+        "${modifier}+Shift+r" = "exec ${msgCmd} restart";
+        "--release Print" =
+          "exec --no-startup-id ${lib.getExe pkgs.maim} -su /tmp/screenshot.png && ${lib.getExe pkgs.xclip} -selection clipboard -t image/png < /tmp/screenshot.png";
+      }
+    );
 
   wayland.windowManager.sway.config.keybindings =
     let
       msgCmd = lib.getExe' config.wayland.windowManager.sway.package "swaymsg";
       modifier = config.wayland.windowManager.sway.config.modifier;
     in
-    lib.mkIf config.wayland.windowManager.sway.enable ((mkKeybindings modifier msgCmd) // {
-      "${modifier}+Shift+e" = mkExitBinding msgCmd "sway";
-      "${modifier}+Shift+r" = "exec ${msgCmd} reload";
-      "--release Print" = "exec --no-startup-id ${lib.getExe pkgs.sway-contrib.grimshot} savecopy anything /tmp/screenshot.png";
-    });
+    lib.mkIf config.wayland.windowManager.sway.enable (
+      (mkKeybindings modifier msgCmd)
+      // {
+        "${modifier}+Shift+e" = mkExitBinding msgCmd "sway";
+        "${modifier}+Shift+r" = "exec ${msgCmd} reload";
+        "--release Print" =
+          "exec --no-startup-id ${lib.getExe pkgs.sway-contrib.grimshot} savecopy anything /tmp/screenshot.png";
+      }
+    );
 }

@@ -1,7 +1,8 @@
-{ config
-, lib
-, pkgs
-, ...
+{
+  config,
+  lib,
+  pkgs,
+  ...
 }:
 
 # Used in conjunction with `modules/linux/desktop/lockscreen.nix`.
@@ -59,7 +60,8 @@ in
   };
 
   xsession.windowManager.i3.config.keybindings = lib.mkIf config.xsession.windowManager.i3.enable {
-    ${lockKeybinding config.xsession.windowManager.i3.config.modifier} = "exec ${lib.getExe pkgs.i3lock-fancy}";
+    ${lockKeybinding config.xsession.windowManager.i3.config.modifier} =
+      "exec ${lib.getExe pkgs.i3lock-fancy}";
   };
 
   services.swayidle =
@@ -71,7 +73,10 @@ in
       systemdTarget = "sway-session.target"; # Only start when the sway session is active.
 
       timeouts = [
-        { inherit timeout; command = swayCommand; } # Go to sleep after N seconds.
+        {
+          inherit timeout;
+          command = swayCommand;
+        } # Go to sleep after N seconds.
         {
           # After another N seconds, turn off all displays.
           timeout = timeout * 2;

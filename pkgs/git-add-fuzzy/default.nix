@@ -1,9 +1,10 @@
-{ createScript
-, git
-, fzf
-, delta
-, bat
-, file
+{
+  createScript,
+  git,
+  fzf,
+  delta,
+  bat,
+  file,
 }:
 
 createScript "git-add-fuzzy" ./git-add-fuzzy.sh {

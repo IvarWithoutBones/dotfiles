@@ -1,32 +1,52 @@
-{ pkgs
-, lib
-, ...
+{
+  pkgs,
+  lib,
+  ...
 }:
 
 let
   yabai = "${pkgs.yabai}/bin/yabai";
   jq = "${pkgs.jq}/bin/jq";
-  spaces = [ 1 2 3 4 5 6 7 8 9 10 ];
+  spaces = [
+    1
+    2
+    3
+    4
+    5
+    6
+    7
+    8
+    9
+    10
+  ];
 
   # Shorthand to generate shortcut attributes for all spaces
-  mkSpaceShortcut = modifier: command: lib.foldl' lib.mergeAttrs { } (map
-    (index:
-      let
-        key = if (index == 10) then 0 else index;
-      in
-      { "${modifier} - ${toString key}" = "${command} ${toString index}"; })
-    spaces);
+  mkSpaceShortcut =
+    modifier: command:
+    lib.foldl' lib.mergeAttrs { } (
+      map (
+        index:
+        let
+          key = if (index == 10) then 0 else index;
+        in
+        {
+          "${modifier} - ${toString key}" = "${command} ${toString index}";
+        }
+      ) spaces
+    );
 
   # Switch the focus between windows in both stack and bsp modes
-  navigateWindow = stack: bsp: pkgs.writeShellScript "yabai-navigate.sh" ''
-    layout="$(${yabai} -m query --spaces | ${jq} -r '.[] | select(."has-focus" == true) | .type')"
+  navigateWindow =
+    stack: bsp:
+    pkgs.writeShellScript "yabai-navigate.sh" ''
+      layout="$(${yabai} -m query --spaces | ${jq} -r '.[] | select(."has-focus" == true) | .type')"
 
-    if [[ "$layout" = "stack" ]]; then
-      ${yabai} -m window --layer ${stack}
-    elif [[ "$layout" = "bsp" ]]; then
-      ${yabai} -m window --focus ${bsp}
-    fi
-  '';
+      if [[ "$layout" = "stack" ]]; then
+        ${yabai} -m window --layer ${stack}
+      elif [[ "$layout" = "bsp" ]]; then
+        ${yabai} -m window --focus ${bsp}
+      fi
+    '';
 
   # Move the currently focused space to another display
   moveSpaceBetweenWindows = pkgs.writeShellScript "move-space-between-windows.sh" ''
@@ -74,7 +94,8 @@ in
       "shift + alt - q" = "${yabai} -m window --close";
 
       # Restart the WM + hotkey daemon
-      "shift + alt - r" = "launchctl kickstart -k gui/\${UID}/org.nixos.yabai && launchctl kickstart -k gui/\${UID}/org.nixos.skhd";
+      "shift + alt - r" =
+        "launchctl kickstart -k gui/\${UID}/org.nixos.yabai && launchctl kickstart -k gui/\${UID}/org.nixos.skhd";
 
       # Application shortcuts
       "shift + alt - d" = "open -n ${pkgs.discord}/Applications/Discord.app";
@@ -89,7 +110,8 @@ in
       "alt - return" = "open -n ${pkgs.iterm2}/Applications/iTerm2.app";
 
       # Moving focus and windows to different spaces
-    } // mkSpaceShortcut "alt" "${yabai} -m space --focus"
+    }
+    // mkSpaceShortcut "alt" "${yabai} -m space --focus"
     // mkSpaceShortcut "shift + alt" "${yabai} -m window --space";
   };
 }

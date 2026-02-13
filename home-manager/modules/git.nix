@@ -1,7 +1,8 @@
-{ config
-, pkgs
-, lib
-, ...
+{
+  config,
+  pkgs,
+  lib,
+  ...
 }:
 
 let
@@ -30,9 +31,9 @@ in
         # `git restore --staged` with fuzzy matching
         rs = "!${git} diff --name-only --cached | ${pkgs.fzf}/bin/fzf -0 --multi | xargs git restore --staged";
         # Fetch a branch from a remote and rebase it on the current branch
-        frb = ''!${git} fetch $1 && ${git} rebase $1/''${2:-HEAD} && :'';
+        frb = "!${git} fetch $1 && ${git} rebase $1/\${2:-HEAD} && :";
         # Create a new branch and check it out, optionally from a given starting point.
-        new = ''!''${2+${git} fetch $2} && ${git} checkout -b $1 ''${2+$2/''${3:-HEAD}} --no-track --no-guess && :'';
+        new = "!\${2+${git} fetch $2} && ${git} checkout -b $1 \${2+$2/\${3:-HEAD}} --no-track --no-guess && :";
 
         # Create an empty file and add it to git
         touch-add =

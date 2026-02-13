@@ -8,9 +8,9 @@ derivation="${1-empty}"
 output="${2-default.nix}"
 flake="nixpkgs"
 
-while (( $# > 0 )); do
+while (($# > 0)); do
     case "$1" in
-        -h|--help)
+        -h | --help)
             echo "usage: copy-nix-derivation <derivation> [<output path> (default.nix)]"
             exit
             ;;
@@ -30,7 +30,7 @@ if test -e "$output"; then
     exit 1
 fi
 
-if [[ "$derivation" =~ "#" ]]; then
+if [[ $derivation =~ "#" ]]; then
     flake="${derivation%%#*}"
     derivation="${derivation##*#}"
 fi

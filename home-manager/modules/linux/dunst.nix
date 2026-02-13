@@ -11,7 +11,7 @@
         separator_color = "#565d6d";
         font = "FiraCode Nerd Font";
       };
-  
+
       # TODO: doesn't seem to work?
       shortcuts = {
         close = "ctrl+space";
@@ -19,7 +19,7 @@
         history = "ctrl+grave";
         context = "ctrl+shift+period";
       };
-  
+
       urgency_low = {
         background = "#2f343f";
         foreground = "#ffffff";
@@ -36,5 +36,5 @@
         timeout = 10;
       };
     };
- };
+  };
 }

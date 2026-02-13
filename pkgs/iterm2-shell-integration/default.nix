@@ -1,6 +1,7 @@
-{ lib
-, fetchFromGitHub
-, stdenvNoCC
+{
+  lib,
+  fetchFromGitHub,
+  stdenvNoCC,
 }:
 
 stdenvNoCC.mkDerivation {
@@ -33,6 +34,9 @@ stdenvNoCC.mkDerivation {
   meta = with lib; {
     homepage = "https://github.com/gnachman/iTerm2-shell-integration";
     description = "Shell integration and utilities for iTerm2";
-    license = with licenses; [ gpl2Only /* or */ gpl2Plus ];
+    license = with licenses; [
+      gpl2Only # or
+      gpl2Plus
+    ];
   };
 }

@@ -1,13 +1,15 @@
-{ lib
-, pkgs
-, config
-, ...
+{
+  lib,
+  pkgs,
+  config,
+  ...
 }:
 
 let
   # All greasemonkey scripts provided by my overlay
-  greasemonkeyScripts = pkgs.linkFarmFromDrvs "qutebrowser-greasemonkey-scripts"
-    (lib.mapAttrsToList (name: value: value) pkgs.qutebrowser-scripts.greasemonkey);
+  greasemonkeyScripts = pkgs.linkFarmFromDrvs "qutebrowser-greasemonkey-scripts" (
+    lib.mapAttrsToList (name: value: value) pkgs.qutebrowser-scripts.greasemonkey
+  );
 
   userscripts = pkgs.qutebrowser-scripts.userscripts;
 in
@@ -34,12 +36,13 @@ in
         javascript.clipboard = "access";
 
         # Disable scrolling past the end of the page, which is an issue with gesture navigation
-        user_stylesheets = lib.mkIf pkgs.stdenv.isDarwin (lib.toList
-          (pkgs.writeText "qutebrowser-user-stylesheet.css" ''
+        user_stylesheets = lib.mkIf pkgs.stdenv.isDarwin (
+          lib.toList (pkgs.writeText "qutebrowser-user-stylesheet.css" ''
             * {
               overscroll-behavior: none;
             }
-          '').outPath);
+          '').outPath
+        );
       };
     };
 
@@ -50,7 +53,8 @@ in
 
       # Open the tracker for a nixpkgs PR, script from my overlay
       "<Alt-n>" = "spawn --userscript ${userscripts.nixpkgs-tracker}/bin/qute-nixpkgs-tracker {url}";
-      "<Alt-Shift-n>" = "hint links spawn --userscript ${userscripts.nixpkgs-tracker}/bin/qute-nixpkgs-tracker {hint-url}";
+      "<Alt-Shift-n>" =
+        "hint links spawn --userscript ${userscripts.nixpkgs-tracker}/bin/qute-nixpkgs-tracker {hint-url}";
 
       # Enter fullscreen mode on a website while keeping qutebrowser windowed
       "<Alt-f>" = "spawn --userscript ${userscripts.fake-fullscreen}/bin/qute-fake-fullscreen";
@@ -58,8 +62,10 @@ in
 
     aliases = {
       "mpv" = "spawn --verbose --detach ${pkgs.mpv}/bin/mpv {url}";
-      "nixpkgs-tracker" = "spawn --userscript --output-messages ${userscripts.nixpkgs-tracker}/bin/qute-nixpkgs-tracker {url}";
-      "fake-fullscreen" = "spawn --userscript --output-messages ${userscripts.fake-fullscreen}/bin/qute-fake-fullscreen";
+      "nixpkgs-tracker" =
+        "spawn --userscript --output-messages ${userscripts.nixpkgs-tracker}/bin/qute-nixpkgs-tracker {url}";
+      "fake-fullscreen" =
+        "spawn --userscript --output-messages ${userscripts.fake-fullscreen}/bin/qute-fake-fullscreen";
       "docsrs" = "spawn --userscript --output-messages ${userscripts.docsrs}/bin/qute-docsrs";
     };
 
@@ -133,4 +139,3 @@ in
     };
   };
 }
-

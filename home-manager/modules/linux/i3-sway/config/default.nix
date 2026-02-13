@@ -1,6 +1,7 @@
-{ lib
-, config
-, ...
+{
+  lib,
+  config,
+  ...
 }:
 
 let
@@ -29,15 +30,22 @@ let
     ws20 = "20";
   };
 
-  wmConfig = isSway:
+  wmConfig =
+    isSway:
     let
       # The `class` entries in `assigns`/`floating.criteria` are valid under both X11 and XWayland,
       # but Wayland-native apps exclusively use `app_id`. Generate both entries when running under Sway.
-      mkWindowRules = rules: lib.flatten (lib.map
-        (rule: [ (lib.removeAttrs rule [ "app_id" ]) ] ++ lib.optionals isSway [
-          ({ app_id = rule.class; } // lib.removeAttrs rule [ "class" ])
-        ])
-        rules);
+      mkWindowRules =
+        rules:
+        lib.flatten (
+          lib.map (
+            rule:
+            [ (lib.removeAttrs rule [ "app_id" ]) ]
+            ++ lib.optionals isSway [
+              ({ app_id = rule.class; } // lib.removeAttrs rule [ "class" ])
+            ]
+          ) rules
+        );
     in
     {
       inherit modifier;
@@ -81,19 +89,31 @@ let
           { class = "soh.elf"; }
           { class = "Celeste?(-unwrapped)"; }
           { class = "EverestSplash-linux"; } # Celeste mod loader
-          { class = "love"; title = "Olympus"; } # Celeste mod manager
+          {
+            class = "love";
+            title = "Olympus";
+          } # Celeste mod manager
         ];
 
         ${workspaces.ws10} = mkWindowRules [
-          { class = "Transmission-gtk"; app_id = "transmission-gtk"; }
+          {
+            class = "Transmission-gtk";
+            app_id = "transmission-gtk";
+          }
           { class = "transmission-remote-gtk"; }
         ];
       };
 
       floating.criteria = mkWindowRules [
         # Default to floating windows for everything but the main window.
-        { class = "ghidra-Ghidra"; title = "^(?!(CodeBrowser.*|Ghidra.*))"; }
-        { class = "steam"; title = "[^Steam]"; } # See https://github.com/ValveSoftware/steam-for-linux/issues/1040
+        {
+          class = "ghidra-Ghidra";
+          title = "^(?!(CodeBrowser.*|Ghidra.*))";
+        }
+        {
+          class = "steam";
+          title = "[^Steam]";
+        } # See https://github.com/ValveSoftware/steam-for-linux/issues/1040
         { class = "EverestSplash-linux"; }
       ];
     };
@@ -119,7 +139,9 @@ in
   };
 
   # Generate a script to start the wayland compositor, used by the login manager
-  home.file.".home-manager-graphical-session-wayland" = lib.optionalAttrs config.wayland.windowManager.sway.enable {
-    text = lib.getExe config.wayland.windowManager.sway.package;
-  };
+  home.file.".home-manager-graphical-session-wayland" =
+    lib.optionalAttrs config.wayland.windowManager.sway.enable
+      {
+        text = lib.getExe config.wayland.windowManager.sway.package;
+      };
 }

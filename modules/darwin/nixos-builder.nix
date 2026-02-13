@@ -1,4 +1,5 @@
-{ ...
+{
+  ...
 }:
 
 # Configuration for a NixOS virtual machine on which Nix can perform builds if linux-only packages are needed.

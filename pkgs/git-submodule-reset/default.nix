@@ -1,6 +1,7 @@
-{ createScript
-, git
-, coreutils
+{
+  createScript,
+  git,
+  coreutils,
 }:
 
 createScript "git-submodule-reset" ./git-submodule-reset.sh {

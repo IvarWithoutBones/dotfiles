@@ -1,8 +1,9 @@
-{ lib
-, pkgs
-, config
-, username
-, ...
+{
+  lib,
+  pkgs,
+  config,
+  username,
+  ...
 }:
 
 {
@@ -40,7 +41,10 @@
   '';
 
   launchd.user.agents.yabai-load-sa = {
-    path = [ pkgs.yabai config.environment.systemPath ];
+    path = [
+      pkgs.yabai
+      config.environment.systemPath
+    ];
     command = "/usr/bin/sudo ${pkgs.yabai}/bin/yabai --load-sa";
     serviceConfig.RunAtLoad = true;
   };

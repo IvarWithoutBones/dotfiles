@@ -1,5 +1,6 @@
-{ pkgs
-, ...
+{
+  pkgs,
+  ...
 }:
 
 let
@@ -27,14 +28,27 @@ in
         {
           # Music
           block = "music";
-          player = [ "spotify" "psst" "tidal-hifi" ];
+          player = [
+            "spotify"
+            "psst"
+            "tidal-hifi"
+          ];
           format = "{ $icon $combo.str(max_w:50,rot_interval:0.25) }|";
           theme_overrides.info_bg.link = "idle_bg"; # Disable darkened background
           icons_overrides.music = "󰝚";
           click = [
-            { button = "left"; action = "prev"; }
-            { button = "right"; action = "next"; }
-            { button = "middle"; action = "play_pause"; }
+            {
+              button = "left";
+              action = "prev";
+            }
+            {
+              button = "right";
+              action = "next";
+            }
+            {
+              button = "middle";
+              action = "play_pause";
+            }
           ];
         }
 
@@ -50,10 +64,12 @@ in
             (( "''${#weather}" < 10 )) && echo "$weather"
           '';
 
-          click = [{
-            button = "left";
-            cmd = "$TERMINAL --hold -e curl 'https://wttr.in/?F'";
-          }];
+          click = [
+            {
+              button = "left";
+              cmd = "$TERMINAL --hold -e curl 'https://wttr.in/?F'";
+            }
+          ];
         }
 
         {
@@ -73,10 +89,12 @@ in
           block = "sound";
           format = " $icon $volume.eng(width:3) ";
           show_volume_when_muted = true;
-          click = [{
-            button = "left";
-            cmd = "${pkgs.pavucontrol}/bin/pavucontrol";
-          }];
+          click = [
+            {
+              button = "left";
+              cmd = "${pkgs.pavucontrol}/bin/pavucontrol";
+            }
+          ];
 
           icons_overrides = {
             volume_muted = "";
@@ -138,10 +156,12 @@ in
           block = "cpu";
           format = "  $utilization.eng(width:3) ";
           interval = 1;
-          click = [{
-            button = "left";
-            cmd = "$TERMINAL -e htop";
-          }];
+          click = [
+            {
+              button = "left";
+              cmd = "$TERMINAL -e htop";
+            }
+          ];
         }
 
         {
@@ -164,4 +184,3 @@ in
     };
   };
 }
-

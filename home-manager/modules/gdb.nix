@@ -1,22 +1,28 @@
-{ config
-, lib
-, dotfiles-flake
-, pkgs
-, ...
+{
+  config,
+  lib,
+  dotfiles-flake,
+  pkgs,
+  ...
 }:
 
 let
   # An extra (mutable) configuration file for stuff we cannot configure with home-manager, used mainly for extra `add-auto-load-safe-path` entries.
   extraConfigFile =
-    if pkgs.stdenvNoCC.isLinux then "${config.xdg.configHome}/gdb/gdbinit-extra"
-    else if pkgs.stdenvNoCC.isDarwin then "${config.home.homeDirectory}/.gdbinit-extra"
-    else throw "gdb: unsupported platform ${pkgs.stdenvNoCC.system}";
+    if pkgs.stdenvNoCC.isLinux then
+      "${config.xdg.configHome}/gdb/gdbinit-extra"
+    else if pkgs.stdenvNoCC.isDarwin then
+      "${config.home.homeDirectory}/.gdbinit-extra"
+    else
+      throw "gdb: unsupported platform ${pkgs.stdenvNoCC.system}";
 
   cacheDir = "${config.xdg.cacheHome}/gdb";
 
   gdbearlyinit = ''
     set startup-quietly on
-    set prompt ${"> " /* Prevents my editor from removing the trailing space */ }
+    set prompt ${
+      "> " # Prevents my editor from removing the trailing space
+    }
   '';
 
   gdbinit =
@@ -71,14 +77,18 @@ let
         end
       end
 
-      ${lib.concatMapStringsSep "\n" (amount: let
-        # Generate shorthands to follow pointer indirection, for example "xxx" -> dereference 3 times
-        name = lib.fixedWidthString (amount + 1) "x" "x";
-      in ''
-        define ${name}
-          xn ${toString amount} $arg0
-        end
-      '') (lib.range 1 10)}
+      ${lib.concatMapStringsSep "\n" (
+        amount:
+        let
+          # Generate shorthands to follow pointer indirection, for example "xxx" -> dereference 3 times
+          name = lib.fixedWidthString (amount + 1) "x" "x";
+        in
+        ''
+          define ${name}
+            xn ${toString amount} $arg0
+          end
+        ''
+      ) (lib.range 1 10)}
 
       define connect-remote
         if $argc == 0
@@ -129,14 +139,16 @@ let
   # Keybindings are configured through readline.
   bindings =
     let
-      changeActiveWindowSize = dimension: amount: pkgs.writeText "change-active-window-${dimension}.py" ''
-        import gdb
-        for line in gdb.execute("info win", to_string=True).splitlines():
-          if "(has focus)" in line:
-            win = line.split()[0]
-            gdb.execute(f"tui window ${dimension} {win} ${amount}")
-            break
-      '';
+      changeActiveWindowSize =
+        dimension: amount:
+        pkgs.writeText "change-active-window-${dimension}.py" ''
+          import gdb
+          for line in gdb.execute("info win", to_string=True).splitlines():
+            if "(has focus)" in line:
+              win = line.split()[0]
+              gdb.execute(f"tui window ${dimension} {win} ${amount}")
+              break
+        '';
 
       # This is a pretty nasty workaround for readline not accepting more than one command per binding:
       # We assign a placeholder shortcut to the command we want to execute, and then "press" it in a macro.

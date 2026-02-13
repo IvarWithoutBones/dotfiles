@@ -30,10 +30,10 @@ sortByModifiedDate() {
 fzfPreview() {
     local gitDiff path
     path="$1"
-    gitDiff="$(git diff "$path" 2>/dev/null)"
+    gitDiff="$(git diff "$path" 2> /dev/null)"
 
     if test -n "$gitDiff"; then
-        echo "$gitDiff" | delta --color-only 2>/dev/null
+        echo "$gitDiff" | delta --color-only 2> /dev/null
     elif test -f "$path"; then
         if test -s "$path"; then
             if [[ "$(file -b --mime-type "$path")" == text/* ]]; then
@@ -61,6 +61,9 @@ fzfRun() {
 }
 
 GIT_ROOT="$(git rev-parse --show-toplevel)" # Just in case we're not in a git repo, shows a better error message
-DIFF_FILES="$(git diff --name-only; git ls-files --other --exclude-standard --exclude ".*")"
+DIFF_FILES="$(
+    git diff --name-only
+    git ls-files --other --exclude-standard --exclude ".*"
+)"
 SELECTED_FILES="$(sortByModifiedDate "$DIFF_FILES" | fzfRun)"
 test -n "$SELECTED_FILES" && runColored "git add $SELECTED_FILES"

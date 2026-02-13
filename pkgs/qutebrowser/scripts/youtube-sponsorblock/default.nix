@@ -1,5 +1,6 @@
-{ lib
-, fetchurl
+{
+  lib,
+  fetchurl,
 }:
 
 fetchurl {

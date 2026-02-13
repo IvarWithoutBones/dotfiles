@@ -1,4 +1,5 @@
-{ createScript
+{
+  createScript,
 }:
 
 createScript "cd-file" ./cd-file.sh {

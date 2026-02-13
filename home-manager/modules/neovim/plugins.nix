@@ -1,6 +1,7 @@
-{ pkgs
-, dotfiles-flake
-, ...
+{
+  pkgs,
+  dotfiles-flake,
+  ...
 }:
 
 let

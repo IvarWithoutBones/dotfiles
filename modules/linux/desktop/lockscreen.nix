@@ -1,5 +1,6 @@
-{ config
-, ...
+{
+  config,
+  ...
 }:
 
 # Allow swaylock/i3lock to authenticate the user. They are configured using home-manager.

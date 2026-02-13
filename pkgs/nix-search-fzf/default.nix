@@ -1,13 +1,14 @@
-{ createScript
-, replaceVars
-, gnused
-, jq
-, fzf
-, nix
-, coreutils
-, bash
-, nix-search-fzf
-, writeShellScript
+{
+  createScript,
+  replaceVars,
+  gnused,
+  jq,
+  fzf,
+  nix,
+  coreutils,
+  bash,
+  nix-search-fzf,
+  writeShellScript,
 }:
 
 let

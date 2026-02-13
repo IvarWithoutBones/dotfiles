@@ -33,7 +33,7 @@ BRANCH="$(fzf \
     --border "none" \
     --list-border "rounded" \
     --preview-window "60%,wrap" \
-    --preview "git log --color=always '${REMOTE}/{}'" <<<"${BRANCHES}")"
+    --preview "git log --color=always '${REMOTE}/{}'" <<< "${BRANCHES}")"
 
 # If any branch was selected, check it out
 if [ -n "${BRANCH}" ]; then

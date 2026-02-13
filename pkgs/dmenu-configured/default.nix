@@ -1,5 +1,6 @@
-{ fetchpatch
-, dmenu
+{
+  fetchpatch,
+  dmenu,
 }:
 
 let

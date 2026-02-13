@@ -1,6 +1,7 @@
-{ lib
-, pkgs
-, ...
+{
+  lib,
+  pkgs,
+  ...
 }:
 
 let
@@ -9,72 +10,79 @@ let
     netcoredbg # C#
   ];
 
-  languageServers = with pkgs; [
-    marksman # Markdown
-    dot-language-server # Dot (graphviz)
-    taplo # TOML
-    nodePackages.vscode-json-languageserver # JSON
-    gopls # Go
-    typescript-language-server # Typescript/Javascript
-    vscode-langservers-extracted # HTML/CSS
-    lua-language-server # Lua
-    glsl_analyzer # GLSL
-    cmake-language-server # CMake
+  languageServers =
+    with pkgs;
+    [
+      marksman # Markdown
+      dot-language-server # Dot (graphviz)
+      taplo # TOML
+      nodePackages.vscode-json-languageserver # JSON
+      gopls # Go
+      typescript-language-server # Typescript/Javascript
+      vscode-langservers-extracted # HTML/CSS
+      lua-language-server # Lua
+      glsl_analyzer # GLSL
+      cmake-language-server # CMake
 
-    # C/C++
-    clang-tools
-    clang
+      # C/C++
+      clang-tools
+      clang
 
-    # C#
-    dotnet-sdk
-    omnisharp-roslyn
+      # C#
+      dotnet-sdk
+      omnisharp-roslyn
 
-    # Zig
-    zls
-    zig
+      # Zig
+      zls
+      zig
 
-    # Bash
-    shellcheck
-    nodePackages.bash-language-server
-    shfmt
+      # Bash
+      shellcheck
+      nodePackages.bash-language-server
+      shfmt
 
-    # Python
-    python3Packages.python-lsp-server
-    ruff
+      # Python
+      python3Packages.python-lsp-server
+      ruff
 
-    # SQL (various dialects)
-    sqls
-    # sqlfluff # TODO: Re-enable once the derivation is fixed.
+      # SQL (various dialects)
+      sqls
+      # sqlfluff # TODO: Re-enable once the derivation is fixed.
 
-    # YAML
-    yaml-language-server
-    yamlfmt
+      # YAML
+      yaml-language-server
+      yamlfmt
 
-    # Nix
-    nil
-    nixpkgs-fmt
+      # Nix
+      nil
+      nixpkgs-fmt
 
-    # Rust
-    cargo
-    rustfmt
-    rustc
-    clippy
-    rust-analyzer
-  ] ++ lib.optionals pkgs.stdenvNoCC.hostPlatform.isLinux [
-    mesonlsp # Meson
-    haskell-language-server # Haskell
-  ];
+      # Rust
+      cargo
+      rustfmt
+      rustc
+      clippy
+      rust-analyzer
+    ]
+    ++ lib.optionals pkgs.stdenvNoCC.hostPlatform.isLinux [
+      mesonlsp # Meson
+      haskell-language-server # Haskell
+    ];
 
   # A hacky way to add packages to helix's environment if they are not already present in $PATH.
   # Needed to allow projects to overwrite tools we bundle with the editor, for example when we want to use nightly Rust for one project.
   # Note that we cannot use `extraPackages` as the defaults would take priority over packages from the environment.
-  helixWithDefaultPackages = pkgs.runCommand "helix-with-default-packages"
-    {
-      nativeBuildInputs = [ pkgs.makeWrapper ];
-    } ''
-    mkdir -p $out/bin
-    makeWrapper ${lib.getExe pkgs.helix} $out/bin/hx --suffix PATH : ${lib.makeBinPath (debuggers ++ languageServers)}
-  '';
+  helixWithDefaultPackages =
+    pkgs.runCommand "helix-with-default-packages"
+      {
+        nativeBuildInputs = [ pkgs.makeWrapper ];
+      }
+      ''
+        mkdir -p $out/bin
+        makeWrapper ${lib.getExe pkgs.helix} $out/bin/hx --suffix PATH : ${
+          lib.makeBinPath (debuggers ++ languageServers)
+        }
+      '';
 in
 {
   home.sessionVariables = {
@@ -93,8 +101,20 @@ in
       keys =
         let
           # Enter normal mode and change/delete until the end of the line, yanking the removed content.
-          A-S-c = [ "normal_mode" "collapse_selection" "select_mode" "goto_line_end" "change_selection" ];
-          A-S-d = [ "normal_mode" "collapse_selection" "select_mode" "goto_line_end" "delete_selection" ];
+          A-S-c = [
+            "normal_mode"
+            "collapse_selection"
+            "select_mode"
+            "goto_line_end"
+            "change_selection"
+          ];
+          A-S-d = [
+            "normal_mode"
+            "collapse_selection"
+            "select_mode"
+            "goto_line_end"
+            "delete_selection"
+          ];
         in
         {
           select = {
@@ -192,10 +212,12 @@ in
         }
         {
           name = "sql";
-          language-servers = [{
-            name = "sqls";
-            except-features = [ "format" ]; # Appears to be broken: https://github.com/sqls-server/sqls/issues/153
-          }];
+          language-servers = [
+            {
+              name = "sqls";
+              except-features = [ "format" ]; # Appears to be broken: https://github.com/sqls-server/sqls/issues/153
+            }
+          ];
 
           # TODO: Re-enable once the sqlfluff derivation is fixed.
           # formatter = {

@@ -1,6 +1,7 @@
-{ config
-, lib
-, ...
+{
+  config,
+  lib,
+  ...
 }:
 
 # Set certain monitor layouts if the appropriate monitors are connected
@@ -46,11 +47,17 @@ let
     desktop-dual = [
       {
         output = outputs.desktop-philips;
-        position = { x = 0; y = 0; };
+        position = {
+          x = 0;
+          y = 0;
+        };
       }
       {
         output = outputs.desktop-iiyama;
-        position = { x = 2560; y = 0; };
+        position = {
+          x = 2560;
+          y = 0;
+        };
         primary = true;
       }
     ];
@@ -58,113 +65,147 @@ let
     dco-macbook-triple = [
       {
         output = outputs.dco-samsung;
-        position = { x = 0; y = 142; };
+        position = {
+          x = 0;
+          y = 142;
+        };
       }
       {
         output = outputs.dco-philips;
-        position = { x = 1920; y = 0; };
+        position = {
+          x = 1920;
+          y = 0;
+        };
         primary = true;
       }
       {
         output = outputs.macbook;
-        position = { x = 3840; y = 936; };
+        position = {
+          x = 3840;
+          y = 936;
+        };
       }
     ];
 
     dco-macbook-philips = [
       {
         output = outputs.dco-philips;
-        position = { x = 0; y = 0; };
+        position = {
+          x = 0;
+          y = 0;
+        };
         primary = true;
       }
       {
         output = outputs.macbook;
-        position = { x = 1920; y = 936; };
+        position = {
+          x = 1920;
+          y = 936;
+        };
       }
     ];
 
     dco-macbook-samsung = [
       {
         output = outputs.dco-samsung;
-        position = { x = 0; y = 0; };
+        position = {
+          x = 0;
+          y = 0;
+        };
         primary = true;
       }
       {
         output = outputs.macbook;
-        position = { x = 1920; y = 794; };
+        position = {
+          x = 1920;
+          y = 794;
+        };
       }
     ];
   };
 
-  profiles = (lib.concatMapAttrs
-    (name: attrs: {
-      "${name}-single" = [{
-        output = attrs;
-        position = { x = 0; y = 0; };
-        primary = true;
-      }];
-    })
-    outputs) // customProfiles;
+  profiles =
+    (lib.concatMapAttrs (name: attrs: {
+      "${name}-single" = [
+        {
+          output = attrs;
+          position = {
+            x = 0;
+            y = 0;
+          };
+          primary = true;
+        }
+      ];
+    }) outputs)
+    // customProfiles;
 in
 {
   # The layout manager for Wayland sessions
   services.kanshi = lib.mkIf config.wayland.windowManager.sway.enable {
     enable = true;
-    settings = lib.mapAttrsToList
-      (name: outputs: {
-        profile = {
-          inherit name;
-          outputs = lib.map
-            (outputAttrs: {
-              criteria = outputAttrs.output.model;
-              mode = "${outputAttrs.output.mode}@${outputAttrs.output.refreshRate}Hz";
-              position = "${toString outputAttrs.position.x},${toString outputAttrs.position.y}";
-              adaptiveSync = outputAttrs.output.adaptiveSync or null;
-              scale = outputAttrs.output.scale or null;
-            })
-            outputs;
-        };
-      })
-      profiles;
+    settings = lib.mapAttrsToList (name: outputs: {
+      profile = {
+        inherit name;
+        outputs = lib.map (outputAttrs: {
+          criteria = outputAttrs.output.model;
+          mode = "${outputAttrs.output.mode}@${outputAttrs.output.refreshRate}Hz";
+          position = "${toString outputAttrs.position.x},${toString outputAttrs.position.y}";
+          adaptiveSync = outputAttrs.output.adaptiveSync or null;
+          scale = outputAttrs.output.scale or null;
+        }) outputs;
+      };
+    }) profiles;
   };
 
   # Workaround for https://gitlab.freedesktop.org/emersion/kanshi/-/issues/35
-  wayland.windowManager.sway = lib.mkIf (config.services.kanshi.enable && config.wayland.windowManager.sway.enable) {
-    config.startup = [{
-      command = "${lib.getExe' config.services.kanshi.package "kanshictl"} reload";
-      always = true;
-    }];
-  };
+  wayland.windowManager.sway =
+    lib.mkIf (config.services.kanshi.enable && config.wayland.windowManager.sway.enable)
+      {
+        config.startup = [
+          {
+            command = "${lib.getExe' config.services.kanshi.package "kanshictl"} reload";
+            always = true;
+          }
+        ];
+      };
 
   # The layout manager for X11 sessions. This only generates the configuration files.
   programs.autorandr = lib.mkIf config.services.autorandr.enable {
     enable = true;
-    profiles = lib.concatMapAttrs
-      (name: outputs:
-        let
-          forEachOutput = f: lib.listToAttrs (lib.filter (x: x.value != null) (lib.imap0
-            (i: outputAttrs: {
-              name = "HDMI-${toString i}"; # Dummy name, only the EDID is matched
-              value = if lib.hasAttr "edid" outputAttrs.output then f outputAttrs else null;
-            })
-            outputs));
-        in
-        lib.optionalAttrs (lib.any (outputAttrs: lib.hasAttr "edid" outputAttrs.output) outputs) {
-          ${name} = {
-            fingerprint = forEachOutput (outputAttrs: outputAttrs.output.edid);
-            config = forEachOutput (outputAttrs: {
-              inherit (outputAttrs.output) mode;
-              rate = outputAttrs.output.refreshRate;
-              position = "${toString outputAttrs.position.x}x${toString outputAttrs.position.y}";
-              primary = outputAttrs.primary or false;
-              scale =
-                if lib.hasAttr "scale" outputAttrs.output
-                then { x = outputAttrs.output.scale; y = outputAttrs.output.scale; }
-                else null;
-            });
-          };
-        })
-      profiles;
+    profiles = lib.concatMapAttrs (
+      name: outputs:
+      let
+        forEachOutput =
+          f:
+          lib.listToAttrs (
+            lib.filter (x: x.value != null) (
+              lib.imap0 (i: outputAttrs: {
+                name = "HDMI-${toString i}"; # Dummy name, only the EDID is matched
+                value = if lib.hasAttr "edid" outputAttrs.output then f outputAttrs else null;
+              }) outputs
+            )
+          );
+      in
+      lib.optionalAttrs (lib.any (outputAttrs: lib.hasAttr "edid" outputAttrs.output) outputs) {
+        ${name} = {
+          fingerprint = forEachOutput (outputAttrs: outputAttrs.output.edid);
+          config = forEachOutput (outputAttrs: {
+            inherit (outputAttrs.output) mode;
+            rate = outputAttrs.output.refreshRate;
+            position = "${toString outputAttrs.position.x}x${toString outputAttrs.position.y}";
+            primary = outputAttrs.primary or false;
+            scale =
+              if lib.hasAttr "scale" outputAttrs.output then
+                {
+                  x = outputAttrs.output.scale;
+                  y = outputAttrs.output.scale;
+                }
+              else
+                null;
+          });
+        };
+      }
+    ) profiles;
   };
 
   # This creates the autorandr service that applies configuration from `programs.autorandr`.

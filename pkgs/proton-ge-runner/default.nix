@@ -1,8 +1,9 @@
-{ lib
-, stdenv
-, makeWrapper
-, proton-ge-bin
-, steam-run
+{
+  lib,
+  stdenv,
+  makeWrapper,
+  proton-ge-bin,
+  steam-run,
 }:
 
 stdenv.mkDerivation {

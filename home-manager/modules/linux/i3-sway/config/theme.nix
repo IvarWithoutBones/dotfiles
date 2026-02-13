@@ -1,27 +1,35 @@
-{ config
-, lib
-, pkgs
-, ...
+{
+  config,
+  lib,
+  pkgs,
+  ...
 }:
 
 let
   mkDefaultColor = color: attrNames: lib.genAttrs attrNames (name: color);
 
-  mkColor = { ... } @ args:
+  mkColor =
+    { ... }@args:
     mkDefaultColor colors.base [
       "background"
       "border"
       "childBorder"
       "text"
       "indicator"
-    ] // { text = colors.text; } // args;
+    ]
+    // {
+      text = colors.text;
+    }
+    // args;
 
-  mkBarColor = { ... } @ args:
+  mkBarColor =
+    { ... }@args:
     mkDefaultColor colors.base [
       "background"
       "border"
       "text"
-    ] // args;
+    ]
+    // args;
 
   # A nice looking dark purple theme based off of catppuccin, by https://github.com/kira64xyz
   colors = {
@@ -43,12 +51,16 @@ let
       unfocused = mkColor { border = colors.highlighted; };
       focusedInactive = mkColor { };
       urgent = mkColor { };
-      focused = mkDefaultColor colors.highlighted [
-        "background"
-        "border"
-        "childBorder"
-        "indicator"
-      ] // { text = colors.base; };
+      focused =
+        mkDefaultColor colors.highlighted [
+          "background"
+          "border"
+          "childBorder"
+          "indicator"
+        ]
+        // {
+          text = colors.base;
+        };
     };
 
     bars = lib.toList {

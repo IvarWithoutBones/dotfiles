@@ -1,30 +1,38 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
 let
   cfg = config.services.skhd-custom;
 
-  validateKeybinding = binding:
+  validateKeybinding =
+    binding:
     let
       matched = builtins.match "([a-z|0-9]+( [+] [a-z|0-9]+){0,} - [a-z|0-9]+)" binding;
 
       isCorrect =
         # Some groups are optional
-        if isList matched then
-          builtins.any (group: isString group) matched
-        else matched != null;
+        if isList matched then builtins.any (group: isString group) matched else matched != null;
     in
-    if isCorrect then isCorrect
+    if isCorrect then
+      isCorrect
     # Throw here to show the name of the faulty attribute
-    else throw "attribute with name '${binding}' in 'services.skhd.keybindings' is incorrectly formatted";
+    else
+      throw "attribute with name '${binding}' in 'services.skhd.keybindings' is incorrectly formatted";
 
-  mkKeyBindings = concatStrings
-    (mapAttrsToList (name: value: "${name} : ${value}\n") cfg.keybindings);
+  mkKeyBindings = concatStrings (
+    mapAttrsToList (name: value: "${name} : ${value}\n") cfg.keybindings
+  );
 
   mkBlacklist = ".blacklist [\n  \"${concatStringsSep "\"\n  \"" cfg.blacklist}\"\n]";
 
-  configFile = optionalString (cfg.keybindings != [ ]) mkKeyBindings
+  configFile =
+    optionalString (cfg.keybindings != [ ]) mkKeyBindings
     + optionalString (cfg.blacklist != [ ]) mkBlacklist
     + cfg.extraConfig;
 in
@@ -54,9 +62,11 @@ in
     };
 
     keybindings = mkOption {
-      type = with types; addCheck (attrsOf (either str path)) (attrs:
-        builtins.all (name: validateKeybinding name) (attrNames attrs)
-      );
+      type =
+        with types;
+        addCheck (attrsOf (either str path)) (
+          attrs: builtins.all (name: validateKeybinding name) (attrNames attrs)
+        );
       default = { };
       description = ''
         A list of keybindings to add to shkd. See the
@@ -90,8 +100,12 @@ in
       path = [ config.environment.systemPath ];
 
       serviceConfig = {
-        ProgramArguments = toList "${cfg.package}/bin/skhd"
-          ++ optionals (configFile != "") [ "-c" "/etc/skhdrc" ];
+        ProgramArguments =
+          toList "${cfg.package}/bin/skhd"
+          ++ optionals (configFile != "") [
+            "-c"
+            "/etc/skhdrc"
+          ];
         KeepAlive = true;
         ProcessType = "Interactive";
       };

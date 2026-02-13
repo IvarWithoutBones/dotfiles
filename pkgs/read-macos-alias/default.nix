@@ -1,6 +1,7 @@
-{ createScript
-, coreutils
-, binutils
+{
+  createScript,
+  coreutils,
+  binutils,
 }:
 
 createScript "readalias" ./read-macos-alias.sh {

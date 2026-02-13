@@ -1,10 +1,11 @@
-{ lib
-, discord
-, writeShellScript
-, coreutils
-, findutils
-, gnused
-, asar # from nodePackages
+{
+  lib,
+  discord,
+  writeShellScript,
+  coreutils,
+  findutils,
+  gnused,
+  asar, # from nodePackages
 }:
 
 let
@@ -14,12 +15,14 @@ let
 
     set -euo pipefail
 
-    export PATH="${lib.makeBinPath [
-      coreutils
-      findutils
-      gnused
-      asar
-    ]}"
+    export PATH="${
+      lib.makeBinPath [
+        coreutils
+        findutils
+        gnused
+        asar
+      ]
+    }"
 
     if [ ! -d "$HOME/.config/discord" ]; then
         exit 0
@@ -50,15 +53,16 @@ let
 in
 (discord.override {
   withOpenASAR = true;
-}).overrideAttrs (old: {
-  passthru = old.passthru or { } // {
-    inherit noVoicechatLag;
-  };
+}).overrideAttrs
+  (old: {
+    passthru = old.passthru or { } // {
+      inherit noVoicechatLag;
+    };
 
-  meta = old.meta or { } // {
-    longDescription = old.meta.longDescription or "" + ''
-      This includes a script to fix lag after being in a voice call for a long time. you
-      can build it with 'nix-build -A discord.noVoicechatLag', and then run it with './result'.
-    '';
-  };
-})
+    meta = old.meta or { } // {
+      longDescription = old.meta.longDescription or "" + ''
+        This includes a script to fix lag after being in a voice call for a long time. you
+        can build it with 'nix-build -A discord.noVoicechatLag', and then run it with './result'.
+      '';
+    };
+  })

@@ -1,9 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   commonPortals = {
     default = [ "gtk" ];
-  } // lib.optionalAttrs config.services.gnome-keyring.enable {
+  }
+  // lib.optionalAttrs config.services.gnome-keyring.enable {
     "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
   };
 in
@@ -31,9 +37,11 @@ in
 
       extraPortals = [
         pkgs.xdg-desktop-portal-gtk
-      ] ++ lib.optionalAttrs config.services.gnome-keyring.enable [
+      ]
+      ++ lib.optionalAttrs config.services.gnome-keyring.enable [
         pkgs.gnome-keyring
-      ] ++ lib.optionals config.wayland.windowManager.sway.enable [
+      ]
+      ++ lib.optionals config.wayland.windowManager.sway.enable [
         # Implements various screen sharing APIs for wlroots-based compositors
         pkgs.xdg-desktop-portal-wlr
       ];
