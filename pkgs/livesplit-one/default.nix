@@ -19,31 +19,31 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "LiveSplitOne";
-  version = "2026-01-12";
+  version = "2026-02-15";
 
   src = fetchFromGitHub {
     owner = "LiveSplit";
     repo = "LiveSplitOne";
-    rev = "ca1b6dffa553c8c6b986418e69d0df8d5847e5f3";
-    sha256 = "sha256-M22N4RCXcnQwkc+KAz04C3mp8TK0De8UVmqkmH8V9EY=";
+    rev = "49f7eaafd81c1caf05311485d0f87bacdd592021";
+    sha256 = "sha256-+NEkwbuOGnQKVPWQWOE/q5LHoPzmv0KO+Ic1evu95uo=";
     fetchSubmodules = true;
   };
 
   npmDeps = fetchNpmDeps {
     name = "${finalAttrs.pname}-${finalAttrs.version}-npm-deps";
     inherit (finalAttrs) src;
-    hash = "sha256-nYujVmInG+4n0FafYs4lyd9hquo29/rVmaAKGyjJF40=";
+    hash = "sha256-DFGm/SbYbDhEqtpzgjaQMY/aiCyNqrhea8bzg5KJ5BE=";
   };
 
-  cargoHash = "sha256-FE1pveaKdYYkq0COV1i97rf5P26G85I9H3bnMYDo7m8=";
+  cargoLock.lockFile = ./LiveSplitOne-Cargo.lock; # The lockfile for the Tauri app, the upstream lockfile is outdated
 
   livesplitCoreCargoDeps = rustPlatform.importCargoLock {
-    lockFile = ./Cargo.lock; # The lockfile from the livesplit-core submodule
+    lockFile = ./livesplit-core-Cargo.lock; # The lockfile from the livesplit-core submodule
   };
 
   patches = [
     (replaceVars ./static-build-info.patch {
-      inherit (finalAttrs.src) rev;
+      shortRev = lib.substring 0 7 finalAttrs.src.rev;
       date = finalAttrs.version;
     })
   ];
@@ -69,6 +69,10 @@ rustPlatform.buildRustPackage (finalAttrs: {
   cargoRoot = "src-tauri";
   buildAndTestSubdir = finalAttrs.cargoRoot;
   doCheck = false;
+
+  postPatch = ''
+    ln -sf ${./LiveSplitOne-Cargo.lock} src-tauri/Cargo.lock
+  '';
 
   preBuild = ''
     # Switch to the livesplit-core Cargo deps, build it, then switch back for Tauri

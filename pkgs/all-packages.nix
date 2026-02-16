@@ -73,30 +73,5 @@ with pkgs;
 
   transcode-video = callPackage ./transcode-video { };
 
-  wasm-bindgen-cli_0_2_108 = pkgs.callPackage (
-    {
-      buildWasmBindgenCli,
-      fetchCrate,
-      rustPlatform,
-    }:
-    let
-      _ = lib.assertMsg (!hasAttr "wasm-bindgen-cli" prev) "override not needed anymore";
-      src = fetchCrate {
-        pname = "wasm-bindgen-cli";
-        version = "0.2.108";
-        hash = "sha256-UsuxILm1G6PkmVw0I/JF12CRltAfCJQFOaT4hFwvR8E=";
-      };
-    in
-    buildWasmBindgenCli {
-      inherit src;
-
-      cargoDeps = rustPlatform.fetchCargoVendor {
-        inherit src;
-        inherit (src) pname version;
-        hash = "sha256-iqQiWbsKlLBiJFeqIYiXo3cqxGLSjNM8SOWXGM9u43E=";
-      };
-    }
-  ) { };
-
   yabai-zsh-completions = callPackage ./yabai-zsh-completions { };
 }
