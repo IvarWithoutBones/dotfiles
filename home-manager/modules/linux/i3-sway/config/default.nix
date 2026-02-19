@@ -67,6 +67,7 @@ let
         ${workspaces.ws2} = mkWindowRules [
           { class = "mpv"; }
           { class = "org.jellyfin.JellyfinDesktop"; }
+          { class = "nl.jknaapen.fladder"; }
         ];
 
         ${workspaces.ws3} = mkWindowRules [
