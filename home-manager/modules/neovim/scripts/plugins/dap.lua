@@ -9,9 +9,9 @@ end
 
 local function pickProgram()
     local path = vim.fn.input({
-        prompt = 'Path to executable: ',
-        default = vim.fn.getcwd() .. '/',
-        completion = 'file'
+        prompt = "Path to executable: ",
+        default = vim.fn.getcwd() .. "/",
+        completion = "file",
     })
     return (path and path ~= "") and path or require("dap").ABORT
 end
@@ -33,9 +33,9 @@ ui.setup({
             position = "left",
             size = 40,
             elements = {
-                { id = "scopes",  size = 0.60 },
+                { id = "scopes", size = 0.60 },
                 { id = "watches", size = 0.15 },
-                { id = "stacks",  size = 0.25 },
+                { id = "stacks", size = 0.25 },
             },
         },
         {
@@ -43,9 +43,9 @@ ui.setup({
             size = 10,
             elements = {
                 { id = "console", size = 0.25 },
-                { id = "repl",    size = 0.75 },
+                { id = "repl", size = 0.75 },
             },
-        }
+        },
     },
 })
 
@@ -58,22 +58,20 @@ dap.listeners.before.event_exited.dapui_config = function() ui.close() end
 
 -- Manually refresh/clear things like the local variables upon certain events
 for _, event in ipairs({ "event_terminated", "continue", "restart", "disconnect" }) do
-    dap.listeners.after[event]['refresh_dap_ui'] = function(_, _)
-        require("dapui.controls").refresh_control_panel()
-    end
+    dap.listeners.after[event]["refresh_dap_ui"] = function(_, _) require("dapui.controls").refresh_control_panel() end
 end
 
 -- Signcolumn icons
-vim.fn.sign_define('DapStopped', { text = '🟢', texthl = '', linehl = '', numhl = '' })
-vim.fn.sign_define('DapBreakpoint', { text = '🔴', texthl = '', linehl = '', numhl = '' })
-vim.fn.sign_define('DapBreakpointCondition', { text = '🟡', texthl = '', linehl = '', numhl = '' })
-vim.fn.sign_define('DapBreakpointRejected', { text = '❌', texthl = '', linehl = '', numhl = '' })
-vim.fn.sign_define('DapLogPoint', { text = '', texthl = '', linehl = '', numhl = '' })
+vim.fn.sign_define("DapStopped", { text = "🟢", texthl = "", linehl = "", numhl = "" })
+vim.fn.sign_define("DapBreakpoint", { text = "🔴", texthl = "", linehl = "", numhl = "" })
+vim.fn.sign_define("DapBreakpointCondition", { text = "🟡", texthl = "", linehl = "", numhl = "" })
+vim.fn.sign_define("DapBreakpointRejected", { text = "❌", texthl = "", linehl = "", numhl = "" })
+vim.fn.sign_define("DapLogPoint", { text = "", texthl = "", linehl = "", numhl = "" })
 
 -- Set up of handlers for probe-rs RTT messages. Adapted from https://probe.rs/docs/tools/debugger/.
 -- If RTT is enabled, probe-rs sends an event after initializing a channel. This has to be confirmed, otherwise probe-rs won't sent RTT data.
 dap.listeners.before["event_probe-rs-rtt-channel-config"]["plugins.nvim-dap-probe-rs"] = function(session, body)
-    local msg = string.format('probe-rs: opening RTT channel #%d: "%s"', body.channelNumber, body.channelName)
+    local msg = string.format("probe-rs: opening RTT channel #%d: \"%s\"", body.channelNumber, body.channelName)
     require("dap.utils").notify(msg, vim.log.levels.INFO)
     session:request("rttWindowOpened", { body.channelNumber, true })
 end
@@ -97,7 +95,7 @@ dap.adapters["gdb"] = {
     name = "gdb",
     type = "executable",
     command = exepath_or_binary("gdb"),
-    args = { "--interpreter=dap" }
+    args = { "--interpreter=dap" },
 }
 
 dap.adapters["lldb"] = {
@@ -111,8 +109,8 @@ dap.adapters["codelldb"] = {
     type = "server",
     port = "${port}",
     executable = {
-        command = exepath_or_binary('codelldb'),
-        args = { '--port', '${port}' },
+        command = exepath_or_binary("codelldb"),
+        args = { "--port", "${port}" },
     },
 }
 
@@ -144,11 +142,11 @@ dap.configurations.c = {
         cwd = "${workspaceFolder}",
     },
     {
-        name = 'Launch (LLDB)',
-        type = 'lldb',
-        request = 'launch',
+        name = "Launch (LLDB)",
+        type = "lldb",
+        request = "launch",
         program = pickProgram,
-        cwd = '${workspaceFolder}',
+        cwd = "${workspaceFolder}",
     },
     {
         name = "Launch (CodeLLDB)",
@@ -156,7 +154,7 @@ dap.configurations.c = {
         request = "launch",
         program = pickProgram,
         cwd = "${workspaceFolder}",
-    }
+    },
 }
 
 dap.configurations.cpp = vim.deepcopy(dap.configurations.c)

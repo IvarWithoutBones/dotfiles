@@ -1,4 +1,4 @@
-require("ibl").setup {
+require("ibl").setup({
     scope = {
         show_exact_scope = true,
         show_start = false,
@@ -10,6 +10,6 @@ require("ibl").setup {
                 lua = { "return_statement", "table_constructor" },
                 nix = { "*" },
             },
-        }
-    }
-}
+        },
+    },
+})

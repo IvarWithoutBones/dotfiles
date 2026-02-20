@@ -1,13 +1,11 @@
 vim.g.rustaceanvim = {
     tools = {
-        executor = require('rustaceanvim.executors').toggleterm,
-        test_executor = require('rustaceanvim.executors').toggleterm,
+        executor = require("rustaceanvim.executors").toggleterm,
+        test_executor = require("rustaceanvim.executors").toggleterm,
         float_win_config = { border = "rounded" },
     },
     dap = {
-        adapter = function()
-            return require("dap").adapters.codelldb
-        end
+        adapter = function() return require("dap").adapters.codelldb end,
     },
     server = {
         default_settings = {
@@ -21,7 +19,7 @@ vim.g.rustaceanvim = {
                         "result-dev",
                         "result-man",
                         "result-out",
-                    }
+                    },
                 },
 
                 assist = {
@@ -36,7 +34,7 @@ vim.g.rustaceanvim = {
 
                 -- Don't show diagnostics for inactive cfg directives.
                 diagnostics = { disabled = { "inactive-code" } },
-            }
-        }
-    }
+            },
+        },
+    },
 }

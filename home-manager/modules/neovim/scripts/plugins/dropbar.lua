@@ -8,7 +8,6 @@ local function set_highlight_take_foreground(opts, source_hl, target_hl)
     end
 end
 
-
 -- Modified version of https://github.com/Bekaboo/dropbar.nvim/issues/2#issuecomment-1568244312, thanks!
 local function bar_background_color_source()
     local function color_symbols(symbols, opts)
@@ -25,7 +24,7 @@ local function bar_background_color_source()
         get_symbols = function(buf, win, cursor)
             -- Use the background of the WinBar highlight group
             local opts = { bg = vim.fn.synIDattr(vim.fn.synIDtrans(vim.fn.hlID("WinBar")), "bg#") }
-            local sources = require('dropbar.sources')
+            local sources = require("dropbar.sources")
             if vim.bo[buf].ft == "markdown" then
                 return color_symbols(sources.markdown.get_symbols(buf, win, cursor), opts)
             end
@@ -35,18 +34,16 @@ local function bar_background_color_source()
 
             for _, source in ipairs({ sources.lsp, sources.treesitter }) do
                 local symbols = source.get_symbols(buf, win, cursor)
-                if not vim.tbl_isempty(symbols) then
-                    return color_symbols(symbols, opts)
-                end
+                if not vim.tbl_isempty(symbols) then return color_symbols(symbols, opts) end
             end
             return {}
-        end
+        end,
     }
 end
 
 -- TODO: This should be configured from the colorscheme. The reason we use an autocmd here is because the colorscheme overrides the WinBar highlight group.
-vim.api.nvim_create_autocmd('BufWinEnter', {
-    pattern = { '*' },
+vim.api.nvim_create_autocmd("BufWinEnter", {
+    pattern = { "*" },
     callback = function()
         local opts = { bg = "#181825" }
         vim.api.nvim_set_hl(0, "WinBar", opts)
@@ -55,7 +52,7 @@ vim.api.nvim_create_autocmd('BufWinEnter', {
     end,
 })
 
-vim.keymap.set({ "n", "i" }, "<C-c>", function() require('dropbar.api').pick() end, {
+vim.keymap.set({ "n", "i" }, "<C-c>", function() require("dropbar.api").pick() end, {
     noremap = true,
     nowait = true,
     desc = "Open dropbar interactive picker",
@@ -63,9 +60,7 @@ vim.keymap.set({ "n", "i" }, "<C-c>", function() require('dropbar.api').pick() e
 
 require("dropbar").setup({
     bar = {
-        sources = function(_, _)
-            return { bar_background_color_source() }
-        end
+        sources = function(_, _) return { bar_background_color_source() } end,
     },
 
     menu = {

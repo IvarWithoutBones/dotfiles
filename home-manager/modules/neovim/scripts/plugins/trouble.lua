@@ -1,6 +1,6 @@
-require("trouble").setup {
+require("trouble").setup({
     warn_no_results = false, -- The warning requires you to press enter to confirm, which is a annoying
-    focus = true,            -- Automatically focus the buffer
+    focus = true, -- Automatically focus the buffer
 
     modes = {
         diagnostics = {
@@ -11,7 +11,7 @@ require("trouble").setup {
         },
 
         symbols = {
-            win = { size = 40, },
+            win = { size = 40 },
             groups = {}, -- Do not group symbols under their filename, the window only ever shows the current file.
             format = "{kind_icon} {symbol.name} {text:Comment}",
         },
@@ -19,10 +19,10 @@ require("trouble").setup {
 
     keys = {
         o = "jump_close", -- Jump to the selected item and close the menu
-        L = "fold_open",  -- Open the fold closest to the cursor
+        L = "fold_open", -- Open the fold closest to the cursor
         H = "fold_close", -- Close the fold closest to the cursor
-    }
-}
+    },
+})
 
 local function bind(key, mode, opts, action)
     local args = vim.tbl_deep_extend("force", { mode = mode }, opts or {})

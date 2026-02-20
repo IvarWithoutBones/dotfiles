@@ -1,4 +1,4 @@
-require("catppuccin").setup {
+require("catppuccin").setup({
     flavour = "mocha", -- latte, frappe, macchiato, mocha
 
     integrations = {
@@ -29,9 +29,9 @@ require("catppuccin").setup {
                 BufferInactiveSign = { bg = colors.surface0, fg = colors.surface0 },
                 BufferInactiveTarget = { bg = colors.surface0, fg = colors.red },
             }
-        end
-    }
-}
+        end,
+    },
+})
 
 vim.cmd("colorscheme catppuccin")
 

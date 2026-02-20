@@ -13,7 +13,7 @@ local function find_file(target, path)
         return result_children[1]
     else
         -- If we cannot find it there, recursively look through each subdirectory from the git root.
-        local git_root = vim.fs.root(0, '.git')
+        local git_root = vim.fs.root(0, ".git")
         if git_root == nil then return nil end
         local result_git_root = vim.fs.find(target, { type = "file", path = git_root })
         if #result_git_root == 0 then return nil end
@@ -29,7 +29,7 @@ local function jump_to_and_from_header()
 
     -- Split the path into the base name and the extension: `src/foo.cpp` -> `foo` and `cpp`
     local basename = vim.fs.basename(path)
-    local extension = basename:match("[^.]+$")                 -- Note: we cannot use `vim.bo.filetype` here since it treats headers the same as c/cpp
+    local extension = basename:match("[^.]+$") -- Note: we cannot use `vim.bo.filetype` here since it treats headers the same as c/cpp
     local target = basename:sub(1, #basename - #extension - 1) -- Basename without the file extension
 
     -- Choose the target filename(s) based on the extension of the currently opened file

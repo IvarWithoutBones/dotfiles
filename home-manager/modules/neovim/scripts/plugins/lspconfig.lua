@@ -1,26 +1,26 @@
 -- Load project-specific settings using codesettings.nvim
 local function before_init(_, config)
-    local codesettings = require('codesettings')
+    local codesettings = require("codesettings")
     codesettings.with_local_settings(config.name, config)
 end
 
 -- For a list of available options see the documentation:
 -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md
 local configurations = {
-    glsl_analyzer = {},          -- GLSL
-    wgsl_analyzer = {},          -- WGSL
-    html = {},                   -- HTML
-    omnisharp = {},              -- C#
-    taplo = {},                  -- TOML
-    ts_ls = {},                  -- TypeScript/JavaScript
-    autotools_ls = {},           -- Makefiles/configure.ac
-    just = {},                   -- Justfiles
-    starlark_rust = {},          -- Bazel
+    glsl_analyzer = {}, -- GLSL
+    wgsl_analyzer = {}, -- WGSL
+    html = {}, -- HTML
+    omnisharp = {}, -- C#
+    taplo = {}, -- TOML
+    ts_ls = {}, -- TypeScript/JavaScript
+    autotools_ls = {}, -- Makefiles/configure.ac
+    just = {}, -- Justfiles
+    starlark_rust = {}, -- Bazel
     docker_language_server = {}, -- Dockerfiles
-    fish_lsp = {},               -- Fish shell
-    gopls = {},                  -- Go
-    marksman = {},               -- Markdown
-    sqls = {},                   -- SQL
+    fish_lsp = {}, -- Fish shell
+    gopls = {}, -- Go
+    marksman = {}, -- Markdown
+    sqls = {}, -- SQL
 
     -- Python
     basedpyright = {},
@@ -33,8 +33,8 @@ local configurations = {
                 format = { enable = false }, -- Use stylua instead of the built-in formatter
                 telemetry = { enable = false },
                 runtime = { version = "LuaJIT" },
-            }
-        }
+            },
+        },
     },
     stylua = {}, -- Lua formatter
 
@@ -60,19 +60,19 @@ local configurations = {
             "--clang-tidy",
             "--background-index",
             "--enable-config",
-            "--fallback-style=google"
-        }
+            "--fallback-style=google",
+        },
     },
 
     -- CMake
     cmake = {
-        init_options = { buildDirectory = "build" }
+        init_options = { buildDirectory = "build" },
     },
 
     -- JSON
     jsonls = {
         -- lspconfig expects "vscode-json-language-server", but nixpkgs provides it under a different name
-        cmd = { "vscode-json-languageserver", "--stdio" }
+        cmd = { "vscode-json-languageserver", "--stdio" },
     },
 
     -- Nix
@@ -81,15 +81,16 @@ local configurations = {
             nixd = {
                 formatting = { command = { "nixfmt" } },
                 nixpkgs = { expr = "import <nixpkgs> { }" }, -- Might get overwritten in `before_init()`
-            }
+            },
         },
 
         before_init = function(client, config)
             -- Use the project's nixpkgs if available
             local flake_dir = vim.fs.root(0, { "flake.nix", ".git" })
             if flake_dir and vim.uv.fs_stat(vim.fs.joinpath(flake_dir, "flake.nix")) then
-                config.settings.nixd.nixpkgs.expr =
-                    "import (builtins.getFlake \"" .. flake_dir .. "\").inputs.nixpkgs { }"
+                config.settings.nixd.nixpkgs.expr = "import (builtins.getFlake \""
+                    .. flake_dir
+                    .. "\").inputs.nixpkgs { }"
             end
 
             -- Load the default `before_init()` since we overwrote it
@@ -101,10 +102,10 @@ local configurations = {
     yamlls = {
         settings = {
             redhat = {
-                telemetry = { enabled = false }
-            }
-        }
-    }
+                telemetry = { enabled = false },
+            },
+        },
+    },
 }
 
 local function binding(buffer, key, action, desc, mode)
@@ -167,7 +168,7 @@ local function on_attach(client, buf)
     if client:supports_method("textDocument/hover", buf) then
         local bind = "K"
         if client.name == "rust-analyzer" then
-            binding(buf, bind, function() vim.cmd.RustLsp({ 'hover', 'actions' }) end, "hover actions")
+            binding(buf, bind, function() vim.cmd.RustLsp({ "hover", "actions" }) end, "hover actions")
         else
             binding(buf, bind, vim.lsp.buf.hover, "hover")
         end
@@ -175,30 +176,37 @@ local function on_attach(client, buf)
 
     -- Rust-specific keybindings. The `RustLsp` command is provided by rustaceanvim.
     if client.name == "rust-analyzer" then
-        binding(buf, "gp", function() vim.cmd.RustLsp('parentModule') end, "open parent Rust module")
-        binding(buf, "gP", function() vim.cmd.RustLsp('openCargo') end, "open Cargo.toml")
-        binding(buf, "<space>rd", function() vim.cmd.RustLsp('renderDiagnostic') end, "render diagnostics")
+        binding(buf, "gp", function() vim.cmd.RustLsp("parentModule") end, "open parent Rust module")
+        binding(buf, "gP", function() vim.cmd.RustLsp("openCargo") end, "open Cargo.toml")
+        binding(buf, "<space>rd", function() vim.cmd.RustLsp("renderDiagnostic") end, "render diagnostics")
 
-        binding(buf, "<space>rD", function() vim.cmd.RustLsp('openDocs') end,
+        binding(
+            buf,
+            "<space>rD",
+            function() vim.cmd.RustLsp("openDocs") end,
             "open documentation of hovered symbol in browser"
         )
 
-        binding(buf, "<space>rr", function() vim.cmd.RustLsp('runnables') end,
+        binding(
+            buf,
+            "<space>rr",
+            function() vim.cmd.RustLsp("runnables") end,
             "fuzzy pick and execute runnable (tests, main, ...)"
         )
 
-        binding(buf, "<space>rR", function() vim.cmd.RustLsp('run') end,
-            "execute hovered runnable (tests, main, ...)"
-        )
+        binding(buf, "<space>rR", function() vim.cmd.RustLsp("run") end, "execute hovered runnable (tests, main, ...)")
 
-        binding(buf, "<space>rm", function() vim.cmd.RustLsp('expandMacro') end,
+        binding(
+            buf,
+            "<space>rm",
+            function() vim.cmd.RustLsp("expandMacro") end,
             "recursively expand macro under cursor"
         )
     end
 end
 
 -- Set the LSP keybindings whenever a language server attaches
-vim.api.nvim_create_autocmd('LspAttach', {
+vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("lsp_attach_bindings", {}),
     callback = function(args)
         local client = vim.lsp.get_client_by_id(args.data.client_id)
@@ -219,7 +227,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 })
 
 -- Re-apply on_attach when new capabilities are registered
-vim.lsp.handlers['client/registerCapability'] = (function(overridden)
+vim.lsp.handlers["client/registerCapability"] = (function(overridden)
     return function(err, res, ctx)
         local result = overridden(err, res, ctx)
         local client = vim.lsp.get_client_by_id(ctx.client_id)
@@ -230,18 +238,19 @@ vim.lsp.handlers['client/registerCapability'] = (function(overridden)
         end
         return result
     end
-end)(vim.lsp.handlers['client/registerCapability'])
+end)(vim.lsp.handlers["client/registerCapability"])
 
 -- Default config for every language server
 local default_config = {
     before_init = before_init,
-    capabilities = vim.tbl_deep_extend("force",
+    capabilities = vim.tbl_deep_extend(
+        "force",
         vim.lsp.protocol.make_client_capabilities(),
         require("cmp_nvim_lsp").default_capabilities(),
         {
             -- https://github.com/neovim/nvim-lspconfig/issues/2184#issuecomment-1574848274
-            offsetEncoding = { 'utf-16' },
-            general = { positionEncodings = { 'utf-16' } },
+            offsetEncoding = { "utf-16" },
+            general = { positionEncodings = { "utf-16" } },
         }
     ),
 }

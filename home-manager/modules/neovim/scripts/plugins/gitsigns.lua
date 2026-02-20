@@ -1,11 +1,12 @@
-require 'gitsigns'.setup {
+require("gitsigns").setup({
     on_attach = function(bufnr)
         local gs = package.loaded.gitsigns
 
         local function binding(key, action, mode)
-            mode = mode or 'n'
+            mode = mode or "n"
             vim.keymap.set(mode, key, action, {
-                noremap = true, buffer = bufnr
+                noremap = true,
+                buffer = bufnr,
             })
         end
 
@@ -18,5 +19,5 @@ require 'gitsigns'.setup {
             gs.toggle_deleted()
             gs.toggle_linehl()
         end)
-    end
-}
+    end,
+})

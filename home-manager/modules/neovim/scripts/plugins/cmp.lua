@@ -1,16 +1,16 @@
 local cmp_buffer = require("cmp_buffer")
 local cmp = require("cmp")
 
-cmp.setup {
+cmp.setup({
     sources = {
         { name = "nvim_lsp", priority = 10 },
-        { name = "path",     priority = 9 },
-        { name = "luasnip",  priority = 5 },
+        { name = "path", priority = 9 },
+        { name = "luasnip", priority = 5 },
         {
             name = "buffer",
             priority = 1,
             -- Complete from all open buffers, not only the one that is currently active
-            option = { get_bufnrs = vim.api.nvim_list_bufs }
+            option = { get_bufnrs = vim.api.nvim_list_bufs },
         },
     },
 
@@ -23,7 +23,7 @@ cmp.setup {
             -- Sort buffer completion items by distance from the cursor
             function(...) return cmp_buffer:compare_locality(...) end,
             cmp.config.compare.kind,
-        }
+        },
     },
 
     snippet = {
@@ -32,12 +32,12 @@ cmp.setup {
     },
 
     mapping = cmp.mapping.preset.insert({
-        ['<cr>'] = cmp.mapping.confirm({ select = false }), -- Insert selected completion
-        ['<C-d>'] = cmp.mapping.scroll_docs(4),             -- Scroll backwards through documentation
-        ['<C-u>'] = cmp.mapping.scroll_docs(-4),            -- Scroll forwards through documentation
+        ["<cr>"] = cmp.mapping.confirm({ select = false }), -- Insert selected completion
+        ["<C-d>"] = cmp.mapping.scroll_docs(4), -- Scroll backwards through documentation
+        ["<C-u>"] = cmp.mapping.scroll_docs(-4), -- Scroll forwards through documentation
 
         -- Toggle the completion menu
-        ['<C-c>'] = cmp.mapping(function()
+        ["<C-c>"] = cmp.mapping(function()
             if cmp.visible() then
                 cmp.abort()
             else
@@ -74,46 +74,46 @@ cmp.setup {
         -- Include icons in completion menu
         format = require("lspkind").cmp_format({
             mode = "symbol_text",
-            menu = ({
+            menu = {
                 buffer = "[Buf]",
                 nvim_lsp = "[LSP]",
                 luasnip = "[Snip]",
                 path = "[Path]",
-            }),
-        })
+            },
+        }),
     },
-}
+})
 
 -- Autocomplete git/github/gitlab issues, pull requests, usernames, and commits
 require("cmp_git").setup({})
-cmp.setup.filetype('gitcommit', {
+cmp.setup.filetype("gitcommit", {
     sources = cmp.config.sources({
-        { name = 'git' },
-        { name = 'buffer' },
-    })
+        { name = "git" },
+        { name = "buffer" },
+    }),
 })
 
 -- Use the cmp completion menu for searching through the current buffer
-cmp.setup.cmdline({ '/', '?' }, {
+cmp.setup.cmdline({ "/", "?" }, {
     mapping = cmp.mapping.preset.cmdline(),
     view = {
         -- Show a vertical completion menu
-        entries = { name = 'wildmenu', separator = '|' }
+        entries = { name = "wildmenu", separator = "|" },
     },
     sources = {
-        { name = 'buffer' }
-    }
+        { name = "buffer" },
+    },
 })
 
 -- Use the cmp completion menu when entering vim commands
-cmp.setup.cmdline(':', {
+cmp.setup.cmdline(":", {
     mapping = cmp.mapping.preset.cmdline(),
     view = {
         -- Show a vertical completion menu
-        entries = { name = 'wildmenu', separator = '|' }
+        entries = { name = "wildmenu", separator = "|" },
     },
     sources = cmp.config.sources({
-        { name = 'path' },
-        { name = 'cmdline' }
-    })
+        { name = "path" },
+        { name = "cmdline" },
+    }),
 })

@@ -6,14 +6,15 @@ local function ignored_words()
 end
 
 local null_ls = require("null-ls")
-null_ls.setup {
+null_ls.setup({
     sources = {
         -- Spell checking for code, requires the `codespell` package.
         null_ls.builtins.diagnostics.codespell.with({
             args = {
-                "-L", ignored_words(), -- Ignore specified words
-                "-"                    -- Read from stdin
+                "-L",
+                ignored_words(), -- Ignore specified words
+                "-", -- Read from stdin
             },
         }),
-    }
-}
+    },
+})
