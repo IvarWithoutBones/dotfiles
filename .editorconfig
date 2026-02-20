@@ -7,7 +7,7 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 charset = utf-8
 
-[*.{py,c,h,cpp,hpp,cc,hh}]
+[*.{py,lua,c,h,cpp,hpp,cc,hh}]
 indent_style = space
 indent_size = 4
 

@@ -13,7 +13,6 @@ let
     typescript-language-server # Typescript/Javascript
     nodePackages.vscode-json-languageserver # JSON
     vscode-langservers-extracted # HTML
-    lua-language-server # Lua
     glsl_analyzer # GLSL
     autotools-language-server # Makefiles/configure.ac
     starlark-rust # Bazel
@@ -24,6 +23,10 @@ let
     marksman # Markdown
     sqls # SQL
     wgsl-analyzer # WGSL
+
+    # Lua
+    lua-language-server
+    stylua
 
     # YAML
     yaml-language-server

@@ -13,3 +13,7 @@ options = ["--write"]
 command = "taplo"
 includes = ["*.toml"]
 options = ["format"]
+
+[formatter.stylua]
+command = "stylua"
+includes = ["*.lua"]

@@ -26,6 +26,18 @@ local configurations = {
     basedpyright = {},
     ruff = {},
 
+    -- Lua
+    lua_ls = {
+        settings = {
+            Lua = {
+                format = { enable = false }, -- Use stylua instead of the built-in formatter
+                telemetry = { enable = false },
+                runtime = { version = "LuaJIT" },
+            }
+        }
+    },
+    stylua = {}, -- Lua formatter
+
     -- Bash
     bashls = {
         settings = {
@@ -83,16 +95,6 @@ local configurations = {
             -- Load the default `before_init()` since we overwrote it
             before_init(client, config)
         end,
-    },
-
-    -- Lua
-    lua_ls = {
-        settings = {
-            Lua = {
-                telemetry = { enable = false },
-                runtime = { version = "LuaJIT" },
-            }
-        }
     },
 
     -- YAML
