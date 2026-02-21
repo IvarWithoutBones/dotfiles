@@ -37,15 +37,20 @@ let
       # but Wayland-native apps exclusively use `app_id`. Generate both entries when running under Sway.
       mkWindowRules =
         rules:
-        lib.flatten (
-          lib.map (
+        let
+          rulesFor = id: rule: [
+            rule
+            (rule // { ${id} = ".${rule.${id}}-wrapped"; })
+          ];
+
+          mkRule =
             rule:
-            [ (lib.removeAttrs rule [ "app_id" ]) ]
-            ++ lib.optionals isSway [
-              ({ app_id = rule.class; } // lib.removeAttrs rule [ "class" ])
-            ]
-          ) rules
-        );
+            (rulesFor "class" (lib.removeAttrs rule [ "app_id" ] // { class = rule.class or rule.app_id; }))
+            ++ lib.optional isSway (
+              rulesFor "app_id" (lib.removeAttrs rule [ "class" ] // { app_id = rule.app_id or rule.class; })
+            );
+        in
+        lib.flatten (lib.map mkRule rules);
     in
     {
       inherit modifier;
@@ -65,35 +70,35 @@ let
 
       assigns = {
         ${workspaces.ws2} = mkWindowRules [
-          { class = "mpv"; }
-          { class = "org.jellyfin.JellyfinDesktop"; }
-          { class = "nl.jknaapen.fladder"; }
+          { app_id = "mpv"; }
+          { app_id = "org.jellyfin.JellyfinDesktop"; }
+          { app_id = "nl.jknaapen.fladder"; }
         ];
 
         ${workspaces.ws3} = mkWindowRules [
-          { class = "discord"; }
-          { class = "element"; }
+          { app_id = "discord"; }
+          { app_id = "element"; }
         ];
 
         ${workspaces.ws4} = mkWindowRules [
-          { class = "Psst-gui"; }
-          { class = "Spotify"; }
-          { class = "tidal-hifi"; }
+          { app_id = "Psst-gui"; }
+          { app_id = "Spotify"; }
+          { app_id = "tidal-hifi"; }
         ];
 
         ${workspaces.ws5} = mkWindowRules [
-          { class = "steam"; }
-          { class = "sm64(ex|ex-practice|coopdx)"; }
-          { class = ".Apotris-wrapped"; }
-          { class = "Apotris"; }
-          { class = ".soh.elf-wrapped"; }
-          { class = "soh.elf"; }
-          { class = "Celeste?(-unwrapped)"; }
-          { class = "EverestSplash-linux"; } # Celeste mod loader
+          { app_id = "steam"; }
+          { app_id = "sm64(ex|ex-practice|coopdx)"; }
+          { app_id = "Apotris"; }
+          { app_id = "factorio"; }
+          { app_id = "soh.elf"; }
+          { app_id = "Celeste?(-unwrapped)"; }
+          { app_id = "EverestSplash-linux"; } # Celeste mod loader
           {
-            class = "love";
+            # Celeste mod manager
+            app_id = "love";
             title = "Olympus";
-          } # Celeste mod manager
+          }
         ];
 
         ${workspaces.ws10} = mkWindowRules [
@@ -101,21 +106,22 @@ let
             class = "Transmission-gtk";
             app_id = "transmission-gtk";
           }
-          { class = "transmission-remote-gtk"; }
+          { app_id = "transmission-remote-gtk"; }
         ];
       };
 
       floating.criteria = mkWindowRules [
-        # Default to floating windows for everything but the main window.
         {
-          class = "ghidra-Ghidra";
+          # Default to floating windows for everything but the main window.
+          app_id = "ghidra-Ghidra";
           title = "^(?!(CodeBrowser.*|Ghidra.*))";
         }
         {
-          class = "steam";
+          # See https://github.com/ValveSoftware/steam-for-linux/issues/1040
+          app_id = "steam";
           title = "[^Steam]";
-        } # See https://github.com/ValveSoftware/steam-for-linux/issues/1040
-        { class = "EverestSplash-linux"; }
+        }
+        { app_id = "EverestSplash-linux"; }
       ];
     };
 in
