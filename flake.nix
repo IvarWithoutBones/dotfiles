@@ -121,14 +121,11 @@
                   ];
                 };
 
-                networking = {
-                  hostName = "nixos-pc";
-                  interfaces.enp0s31f6.ipv4.addresses = [
-                    {
-                      address = "192.168.1.44";
-                      prefixLength = 28;
-                    }
-                  ];
+                networking.hostName = "nixos-pc";
+                systemd.network.networks."10-enp0s31f6" = {
+                  matchConfig.Name = "enp0s31f6";
+                  networkConfig.DHCP = "yes";
+                  address = [ "192.168.1.44/24" ];
                 };
 
                 # Extra directories that transmission has access to.
@@ -173,7 +170,6 @@
             (
               {
                 pkgs,
-                lib,
                 config,
                 ...
               }:
@@ -206,7 +202,11 @@
                   ];
                 };
 
-                networking.hostName = "nixos-macbook";
+                networking = {
+                  hostName = "nixos-macbook";
+                  wireless.iwd.enable = true;
+                };
+
                 system.stateVersion = "25.11";
               }
             )
