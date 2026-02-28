@@ -1,6 +1,6 @@
-{ nix-index-database, ... }:
+{ ivar-dotfiles, ... }:
 
 {
-  imports = [ nix-index-database.homeModules.nix-index ];
+  imports = [ ivar-dotfiles.inputs.nix-index-database.homeModules.nix-index ];
   programs.nix-index.enable = true;
 }

@@ -2,7 +2,7 @@
   config,
   lib,
   pkgs,
-  nixvim,
+  ivar-dotfiles,
   ...
 }:
 
@@ -101,7 +101,7 @@ let
 in
 {
   imports = [
-    nixvim.homeModules.nixvim
+    ivar-dotfiles.inputs.nixvim.homeModules.nixvim
     ./plugins.nix
   ];
 

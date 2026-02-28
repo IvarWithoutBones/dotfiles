@@ -1,5 +1,5 @@
 {
-  dotfiles-flake,
+  ivar-dotfiles,
   ...
 }:
 
@@ -31,7 +31,7 @@
       menu-complete-display-prefix = true;
     };
 
-    extraConfig = dotfiles-flake.lib.readlineBindingsAllModes ''
+    extraConfig = ivar-dotfiles.flake.lib.readlineBindingsAllModes ''
       Control-l: clear-display
       # Cycle through completion options
       TAB: menu-complete

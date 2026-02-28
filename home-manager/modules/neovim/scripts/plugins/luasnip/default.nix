@@ -1,7 +1,7 @@
 {
   lib,
   pkgs,
-  dotfiles-flake,
+  ivar-dotfiles,
   ...
 }:
 
@@ -108,7 +108,7 @@ in
       {
         # Snippet support
         plugin = pkgs.vimPlugins.luasnip;
-        config = dotfiles-flake.lib.vim.mkLua ''
+        config = ivar-dotfiles.flake.lib.vim.mkLua ''
           dofile("${./luasnip.lua}")
           ${lib.concatMapStringsSep "\n" (snip: snip.load) vscodeSnippets}
         '';

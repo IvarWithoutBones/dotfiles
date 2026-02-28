@@ -1,9 +1,6 @@
 {
   self,
-  nixpkgs,
-  nixvim,
-  lib,
-  nix-index-database,
+  inputs,
 }:
 
 let
@@ -12,13 +9,22 @@ let
   common = {
     inherit username;
 
-    commonSpecialArgs = {
-      inherit nixpkgs nixvim nix-index-database;
-      dotfiles-flake = self;
+    commonSpecialArgs.ivar-dotfiles = {
+      inherit inputs;
+      flake = self;
     };
 
     modules = [
       ./modules/nix.nix
+      (
+        { ... }:
+        {
+          nix.settings = {
+            trusted-users = [ username ];
+            allowed-users = [ username ];
+          };
+        }
+      )
     ];
 
     home-manager = {
@@ -55,6 +61,24 @@ in
 {
   linux = common // {
     modules = [
+      (
+        { config, pkgs, ... }:
+        {
+          users.users."${username}" = {
+            isNormalUser = true;
+            shell = pkgs.zsh;
+            extraGroups = [
+              "wheel"
+              "plugdev"
+              "netdev"
+              "dialout"
+              "docker"
+              config.services.transmission.group
+            ];
+          };
+        }
+      )
+
       ./modules/linux/system.nix
       ./modules/linux/keyring.nix
       ./modules/linux/polkit.nix

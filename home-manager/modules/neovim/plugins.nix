@@ -1,11 +1,11 @@
 {
   pkgs,
-  dotfiles-flake,
+  ivar-dotfiles,
   ...
 }:
 
 let
-  inherit (dotfiles-flake.lib.vim) mkLua mkLuaFile;
+  inherit (ivar-dotfiles.flake.lib.vim) mkLua mkLuaFile;
 in
 {
   imports = [

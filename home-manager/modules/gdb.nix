@@ -1,7 +1,7 @@
 {
   config,
   lib,
-  dotfiles-flake,
+  ivar-dotfiles,
   pkgs,
   ...
 }:
@@ -156,7 +156,7 @@ let
       # Enters the given command by clearing the current line, entering insert mode, and then entering the command.
       insertCommand = cmd: ''"${clearLine}\ei${cmd}\n"'';
     in
-    dotfiles-flake.lib.readlineBindingsAllModes ''
+    ivar-dotfiles.flake.lib.readlineBindingsAllModes ''
       "${clearLine}": kill-whole-line # See the comment above
 
       # Step one line/instruction (into function calls)

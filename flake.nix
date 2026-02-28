@@ -33,12 +33,10 @@
       nixpkgs,
       nix-darwin,
       home-manager,
-      flake-utils,
-      nix-index-database,
-      nixvim,
-      sm64ex-practice,
       nixos-hardware,
-    }:
+      sm64ex-practice,
+      ...
+    }@inputs:
     let
       lib = import ./lib.nix {
         inherit nixpkgs nix-darwin home-manager;
@@ -47,50 +45,52 @@
       profiles = import ./profiles.nix {
         inherit
           self
-          nixpkgs
-          lib
-          nixvim
-          nix-index-database
+          inputs
           ;
       };
+
+      forEachSystem =
+        f:
+        nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed (
+          system:
+          f (
+            import nixpkgs {
+              inherit system;
+              overlays = [ self.overlays.default ];
+              config.allowUnfree = true;
+            }
+          )
+        );
     in
     {
       inherit lib;
       templates = import ./templates;
       overlays.default = import ./pkgs/all-packages.nix;
 
-      darwinConfigurations = {
-        ivvs-MacBook-Pro = lib.createSystem profiles.darwin {
-          system = "x86_64-darwin";
+      # All the packages defined in `self.overlays.default`.
+      packages = forEachSystem (
+        final:
+        nixpkgs.lib.filterAttrs (_name: value: nixpkgs.lib.isDerivation value) (
+          self.overlays.default final (
+            import nixpkgs {
+              inherit (final.stdenv.hostPlatform) system;
+              config.allowUnfree = true;
+            }
+          )
+        )
+      );
 
-          modules = [
-            (
-              { ... }:
-              {
-                users.users."ivv" = {
-                  isHidden = false;
-                  home = "/Users/ivv";
-                };
-
-                system = {
-                  primaryUser = "ivv";
-                  stateVersion = 5;
-                };
-              }
-            )
-          ];
-
-          home-manager.modules = [
-            (
-              { ... }:
-              {
-                programs.alacritty.settings.font.size = 15.5;
-                home.stateVersion = "21.11";
-              }
-            )
+      devShells = forEachSystem (pkgs: {
+        default = pkgs.mkShell {
+          packages = with pkgs; [
+            treefmt
+            nixfmt
+            shfmt
+            taplo
+            stylua
           ];
         };
-      };
+      });
 
       nixosConfigurations = {
         nixos-pc = lib.createSystem profiles.linux {
@@ -108,32 +108,21 @@
             ./modules/linux/desktop/xserver.nix
 
             (
-              { pkgs, config, ... }:
+              { ... }:
               {
-                users.users."ivv" = {
-                  isNormalUser = true;
-                  shell = pkgs.zsh;
-                  extraGroups = [
-                    "wheel"
-                    "plugdev"
-                    "dialout"
-                    config.services.transmission.group
-                  ];
-                };
-
-                networking.hostName = "nixos-pc";
-                systemd.network.networks."10-enp0s31f6" = {
-                  matchConfig.Name = "enp0s31f6";
-                  networkConfig.DHCP = "yes";
-                  address = [ "192.168.1.44/24" ];
-                };
-
                 # Extra directories that transmission has access to.
                 systemd.services.transmission.serviceConfig.BindPaths = [
                   "/mnt/hdd/downloads"
                   "/mnt/ssd1/downloads"
                 ];
 
+                systemd.network.networks."10-enp0s31f6" = {
+                  matchConfig.Name = "enp0s31f6";
+                  networkConfig.DHCP = "yes";
+                  address = [ "192.168.1.44/24" ];
+                };
+
+                networking.hostName = "nixos-pc";
                 system.stateVersion = "21.11";
               }
             )
@@ -168,39 +157,13 @@
             ./modules/linux/hardware/bluetooth.nix
 
             (
-              {
-                pkgs,
-                config,
-                ...
-              }:
+              { ... }:
               {
                 # Use MacOS's boot partition.
                 boot.loader.efi.efiSysMountPoint = "/boot";
 
                 # Use Apple's Bluetooth/Wifi firmware. Option comes from nixos-hardware.
                 hardware.apple-t2.firmware.enable = true;
-
-                # Enable the nixos-t2 binary cache.
-                nix.settings =
-                  let
-                    substituters = [ "https://cache.soopy.moe" ];
-                  in
-                  {
-                    inherit substituters;
-                    trusted-substituters = substituters;
-                    trusted-public-keys = [ "cache.soopy.moe-1:0RZVsQeR+GOh0VQI9rvnHz55nVXkFardDqfm4+afjPo=" ];
-                  };
-
-                users.users."ivv" = {
-                  isNormalUser = true;
-                  shell = pkgs.zsh;
-                  extraGroups = [
-                    "wheel"
-                    "plugdev"
-                    "dialout"
-                    config.services.transmission.group
-                  ];
-                };
 
                 networking = {
                   hostName = "nixos-macbook";
@@ -225,21 +188,38 @@
           ];
         };
       };
-    }
-    // flake-utils.lib.eachDefaultSystem (
-      system:
-      let
-        pkgs = import nixpkgs {
-          inherit system;
-          overlays = [ self.overlays.default ];
-          config.allowUnfree = true;
+
+      darwinConfigurations = {
+        ivvs-MacBook-Pro = lib.createSystem profiles.darwin {
+          system = "x86_64-darwin";
+
+          modules = [
+            (
+              { ... }:
+              {
+                users.users."ivv" = {
+                  isHidden = false;
+                  home = "/Users/ivv";
+                };
+
+                system = {
+                  primaryUser = "ivv";
+                  stateVersion = 5;
+                };
+              }
+            )
+          ];
+
+          home-manager.modules = [
+            (
+              { ... }:
+              {
+                programs.alacritty.settings.font.size = 15.5;
+                home.stateVersion = "21.11";
+              }
+            )
+          ];
         };
-      in
-      {
-        # Every derivation defined in ./pkgs/all-packages.nix
-        packages = nixpkgs.lib.filterAttrs (_name: value: nixpkgs.lib.isDerivation value) (
-          self.overlays.default pkgs pkgs
-        );
-      }
-    );
+      };
+    };
 }
