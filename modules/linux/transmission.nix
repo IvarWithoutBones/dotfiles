@@ -8,12 +8,16 @@ let
   umask = "007";
 in
 {
+  sops.secrets.transmission-rpc-credentials = {
+    owner = config.services.transmission.user;
+    group = config.services.transmission.group;
+  };
+
   services.transmission = {
     enable = true;
     package = pkgs.transmission_4;
 
-    # Contains login details: `{ "rpc-password": "<password>" }`
-    credentialsFile = "${config.services.transmission.home}/credentials.json";
+    credentialsFile = config.sops.secrets.transmission-rpc-credentials.path;
     downloadDirPermissions = toString permissions;
     openPeerPorts = true;
 
@@ -21,7 +25,6 @@ in
       inherit umask;
 
       # Paths
-      download-dir = "${config.services.transmission.home}/downloads";
       incomplete-dir-enabled = false;
       trash-can-enabled = false;
 

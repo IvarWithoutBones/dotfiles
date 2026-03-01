@@ -1,0 +1,7 @@
+# Nix
+result
+result-*
+
+# Direnv
+/.envrc
+/.direnv

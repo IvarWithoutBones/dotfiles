@@ -15,6 +15,7 @@ let
     };
 
     modules = [
+      ./secrets/default.nix
       ./modules/nix.nix
       (
         { ... }:
@@ -64,9 +65,13 @@ in
       (
         { config, pkgs, ... }:
         {
+          sops.secrets."user-passwords/${username}".neededForUsers = true;
+
           users.users."${username}" = {
             isNormalUser = true;
+            hashedPasswordFile = config.sops.secrets."user-passwords/${username}".path;
             shell = pkgs.zsh;
+
             extraGroups = [
               "wheel"
               "plugdev"
