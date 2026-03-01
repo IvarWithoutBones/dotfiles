@@ -1,5 +1,7 @@
 {
   lib,
+  pkgs,
+  config,
   ...
 }:
 
@@ -29,18 +31,17 @@ in
     };
 
     networks = {
-      "35-enusb0-dhcpserver" = {
+      "10-enusb0-dhcpserver" = {
         networkConfig.Description = "Network for devices on USB Ethernet";
         matchConfig.Name = "enusb0";
-
-        # Don't block the boot sequence if not plugged in.
-        linkConfig.RequiredForOnline = "no";
+        linkConfig.RequiredForOnline = "no"; # Don't block the boot sequence if not plugged in.
         dhcpServerConfig.DNS = "9.9.9.9";
 
         networkConfig = {
-          DHCPServer = true;
-          IPMasquerade = "yes";
           Address = "192.168.7.18/30";
+          DHCPServer = true;
+          IPv4Forwarding = true;
+          IPv6Forwarding = true;
         };
 
         routes = lib.toList {
@@ -49,6 +50,7 @@ in
       };
 
       "35-wireless" = {
+        networkConfig.Description = "Generic wireless interface";
         matchConfig.WLANInterfaceType = "station";
         linkConfig.RequiredForOnline = "routable";
         dhcpV4Config.RouteMetric = 1025;
@@ -60,7 +62,50 @@ in
         };
       };
     };
+
+    # Wireguard
+    netdevs."50-wg-dco" = {
+      netdevConfig = {
+        Description = "WireGuard interface for DCO";
+        Name = "wg-dco";
+        Kind = "wireguard";
+      };
+
+      wireguardConfig = {
+        ListenPort = 51820;
+        PrivateKeyFile = config.sops.secrets."wireguard/dco/machines/${config.networking.hostName}".path;
+        RouteTable = "main"; # Automatically add routes for peer IPs.
+      };
+
+      wireguardPeers = [
+        {
+          PublicKeyFile = config.sops.secrets."wireguard/dco/public-key".path;
+          Endpoint = "@network.wireguard.dco.endpoint";
+          AllowedIPs = [ "10.10.10.0/24" ];
+          PersistentKeepalive = 25;
+        }
+      ];
+    };
   };
+
+  sops.secrets."wireguard/dco/machines/${config.networking.hostName}" = {
+    sopsFile = ../../secrets/${config.networking.hostName}.yaml;
+    reloadUnits = [ "systemd-networkd.service" ];
+    owner = "systemd-network";
+  };
+
+  sops.secrets."wireguard/dco/public-key" = {
+    owner = "systemd-network";
+  };
+
+  sops.secrets."wireguard/dco/endpoint" = {
+    path = "/etc/credstore/network.wireguard.dco.endpoint";
+    owner = "systemd-network";
+  };
+
+  environment.systemPackages = [
+    pkgs.wireguard-tools
+  ];
 
   services.openssh.enable = true;
   programs.mosh.enable = true;

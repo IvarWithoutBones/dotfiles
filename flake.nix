@@ -121,10 +121,20 @@
                   "/mnt/ssd1/downloads"
                 ];
 
-                systemd.network.networks."10-enp0s31f6" = {
-                  matchConfig.Name = "enp0s31f6";
-                  networkConfig.DHCP = "yes";
-                  address = [ "192.168.1.44/24" ];
+                systemd.network = {
+                  networks = {
+                    "10-enp0s31f6" = {
+                      matchConfig.Name = "enp0s31f6";
+                      networkConfig.DHCP = "yes";
+                      address = [ "192.168.1.44/24" ];
+                    };
+
+                    "50-wg-dco" = {
+                      networkConfig.Description = "WireGuard interface";
+                      matchConfig.Name = "wg-dco";
+                      address = [ "10.10.10.129/32" ];
+                    };
+                  };
                 };
 
                 networking.hostName = "nixos-pc";
@@ -169,6 +179,14 @@
 
                 # Use Apple's Bluetooth/Wifi firmware. Option comes from nixos-hardware.
                 hardware.apple-t2.firmware.enable = true;
+
+                systemd.network = {
+                  networks."50-wg-dco" = {
+                    networkConfig.Description = "WireGuard interface";
+                    matchConfig.Name = "wg-dco";
+                    address = [ "10.10.10.119/32" ];
+                  };
+                };
 
                 networking = {
                   hostName = "nixos-macbook";
