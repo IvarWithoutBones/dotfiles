@@ -42,6 +42,7 @@ let
         ./home-manager/modules/readline.nix
         ./home-manager/modules/fzf.nix
         ./home-manager/modules/git.nix
+        ./home-manager/modules/ssh.nix
         ./home-manager/modules/zsh.nix
         ./home-manager/modules/neovim
         ./home-manager/modules/bat.nix
@@ -93,6 +94,7 @@ in
       ./modules/linux/docker.nix
       ./modules/linux/udev.nix
       ./modules/linux/zerotierone.nix
+      ./modules/linux/ssh.nix
       ./modules/linux/hardware/audio.nix
       ./modules/linux/desktop/lockscreen.nix
       ./modules/linux/desktop/sessions.nix

@@ -150,8 +150,11 @@
             ./home-manager/modules/linux/i3-sway/sway.nix
 
             (
-              { system, ... }:
+              { system, config, ... }:
               {
+                programs.ssh.extraOptionOverrides.IdentityFile = config.sops.secrets."ssh/ivv/ed25519".path;
+                sops.secrets."ssh/ivv/ed25519".sopsFile = ./secrets/nixos-pc/ivv.yaml;
+
                 home = {
                   packages = [ sm64ex-practice.packages.${system}.default ];
                   stateVersion = "21.11";
@@ -203,8 +206,11 @@
             ./home-manager/modules/linux/blueman-applet.nix
 
             (
-              { ... }:
+              { config, ... }:
               {
+                programs.ssh.extraOptionOverrides.IdentityFile = config.sops.secrets."ssh/ivv/ed25519".path;
+                sops.secrets."ssh/ivv/ed25519".sopsFile = ./secrets/nixos-macbook/ivv.yaml;
+
                 home.stateVersion = "25.11";
               }
             )

@@ -89,16 +89,18 @@ in
   };
 
   sops.secrets."wireguard/dco/machines/${config.networking.hostName}" = {
-    sopsFile = ../../secrets/${config.networking.hostName}.yaml;
+    sopsFile = ../../secrets/${config.networking.hostName}/host.yaml;
     reloadUnits = [ "systemd-networkd.service" ];
     owner = "systemd-network";
   };
 
   sops.secrets."wireguard/dco/public-key" = {
+    reloadUnits = [ "systemd-networkd.service" ];
     owner = "systemd-network";
   };
 
   sops.secrets."wireguard/dco/endpoint" = {
+    reloadUnits = [ "systemd-networkd.service" ];
     path = "/etc/credstore/network.wireguard.dco.endpoint";
     owner = "systemd-network";
   };
@@ -106,7 +108,4 @@ in
   environment.systemPackages = [
     pkgs.wireguard-tools
   ];
-
-  services.openssh.enable = true;
-  programs.mosh.enable = true;
 }

@@ -85,14 +85,8 @@ let
       '';
 in
 {
-  home.sessionVariables = {
-    EDITOR = "hx";
-    VISUAL = "hx";
-  };
-
   programs.helix = {
     enable = true;
-    defaultEditor = true;
     package = helixWithDefaultPackages;
 
     settings = {

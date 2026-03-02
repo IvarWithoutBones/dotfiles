@@ -1,0 +1,35 @@
+# Configuration file for sops, see https://github.com/Mic92/sops-nix
+keys:
+  - &nixos-pc age145ad2emhk7e8759784w0j2aenvxe9uuymtj2xhlshk0qhgcrsgpqadhpvu
+  - &ivv-nixos-pc age1dg4zwyrvau86mchwky7al8a73lzaqm2d6rf66qe762l5wj3nm96qcwek58
+  - &nixos-macbook age1xtqd3ncx6d3365t8ee96lwyeq5mx35heexvjxgyrh6yytqspzcjqmj554w
+  - &ivv-nixos-macbook age1zj8jq8vmgv83mcds2x99c5gf2xdnqnahpskpythwl2v9he0u6vdsdww0xw
+
+creation_rules:
+  - path_regex: ^secrets/shared.yaml$
+    key_groups:
+    - age:
+      - *nixos-pc
+      - *nixos-macbook
+      - *ivv-nixos-pc
+      - *ivv-nixos-macbook
+
+  - path_regex: ^secrets/nixos-pc/host\.yaml$
+    key_groups:
+    - age:
+      - *nixos-pc
+
+  - path_regex: ^secrets/nixos-pc/ivv\.yaml$
+    key_groups:
+    - age:
+      - *ivv-nixos-pc
+
+  - path_regex: ^secrets/nixos-macbook/host\.yaml$
+    key_groups:
+    - age:
+      - *nixos-macbook
+
+  - path_regex: ^secrets/nixos-macbook/ivv\.yaml$
+    key_groups:
+    - age:
+      - *ivv-nixos-macbook
