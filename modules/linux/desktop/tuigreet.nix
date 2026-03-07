@@ -6,6 +6,9 @@
 }:
 
 {
+  # Required for some GTK programs.
+  programs.dconf.enable = true;
+
   services = {
     # Required for tuigreet to start X11 sessions.
     xserver.displayManager.startx.enable = config.services.xserver.enable;
