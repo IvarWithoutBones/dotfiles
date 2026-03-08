@@ -37,6 +37,10 @@ in
       # Local Peer Discovery
       lpd-enabled = true;
 
+      # Seeding
+      idle-seeding-limit-enabled = true;
+      idle-seeding-limit = 1; # Minutes
+
       # Block known bad peers
       blocklist-enabled = true;
       blocklist-url = "https://github.com/Naunter/BT_BlockLists/raw/refs/heads/master/bt_blocklists.gz";
