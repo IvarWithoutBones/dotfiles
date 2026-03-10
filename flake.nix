@@ -4,7 +4,6 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixos-hardware.url = "github:NixOS/nixos-hardware";
-    sm64ex-practice.url = "github:ivarwithoutbones/sm64ex-practice";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -28,6 +27,11 @@
 
     nix-index-database = {
       url = "github:mic92/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    sm64ex-practice = {
+      url = "github:ivarwithoutbones/sm64ex-practice";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

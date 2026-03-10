@@ -25,13 +25,13 @@
       # SayoDevice macropad
       KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="8089", ATTRS{idProduct}=="0007", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
 
-      # 8BitDo Ultimate 2 Dongle/2.4Ghz receiver (DInput)
-      KERNEL=="hidraw*", ATTRS{idVendor}=="2dc8", ATTRS{idProduct}=="6012", MODE="0660", TAG+="uaccess", TAG+="udev-acl"
+      # 8BitDo Ultimate 2 (Dongle, DInput)
+      KERNEL=="hidraw*", ATTRS{idVendor}=="2dc8", ATTRS{idProduct}=="6012", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
 
-      # 8BitDo Ultimate 2 Bluetooth (DInput)
-      KERNEL=="hidraw*", KERNELS=="*2DC8:6012*", MODE="0660", TAG+="uaccess", TAG+="udev-acl"
+      # 8BitDo Ultimate 2 (Bluetooth, DInput)
+      KERNEL=="hidraw*", KERNELS=="*2DC8:6012*", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
 
-      # Picoscope 2000A Oscilloscope
+      # Picoscope 2000A oscilloscope
       SUBSYSTEM=="usb", ATTR{idVendor}=="0ce9", ATTR{idProduct}=="1016", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
     '';
   };
