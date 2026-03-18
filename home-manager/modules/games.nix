@@ -7,7 +7,7 @@ let
 
     overrideSrc = pkgs.requireFile {
       name = "celeste-linux.zip";
-      sha256 = "11px388n6fkxwxkkh1fdsyfc8pq8fiqg9jgkh37kfvrvyiy7zqj3";
+      hash = "sha256-phNDBBHb7zwMRaBHT5D0hFEilkx9F31p6IllvLhHQb8=";
       url = "https://maddymakesgamesinc.itch.io/celeste";
     };
   };
