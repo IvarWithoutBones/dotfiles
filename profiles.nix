@@ -64,7 +64,7 @@ in
   linux = common // {
     modules = [
       (
-        { config, pkgs, ... }:
+        { config, lib, pkgs, ... }:
         {
           sops.secrets."user-passwords/${username}".neededForUsers = true;
 
@@ -78,9 +78,12 @@ in
               "plugdev"
               "netdev"
               "dialout"
-              "docker"
-              config.services.transmission.group
-            ];
+            ]
+            ++ lib.optional config.virtualisation.docker.enable "docker"
+            ++ lib.optional config.services.transmission.enable config.services.transmission.group
+            ++ lib.optional config.services.jellyfin.enable config.services.jellyfin.group
+            ++ lib.optional config.services.sonarr.enable config.services.sonarr.group
+            ++ lib.optional config.services.radarr.enable config.services.radarr.group;
           };
         }
       )
