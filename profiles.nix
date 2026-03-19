@@ -95,11 +95,12 @@ in
       ./modules/linux/udev.nix
       ./modules/linux/zerotierone.nix
       ./modules/linux/ssh.nix
+      ./modules/linux/transmission.nix
+      ./modules/linux/btrfs.nix
       ./modules/linux/hardware/audio.nix
       ./modules/linux/desktop/lockscreen.nix
       ./modules/linux/desktop/sessions.nix
       ./modules/linux/desktop/tuigreet.nix
-      ./modules/linux/transmission.nix
     ]
     ++ common.modules;
 

@@ -23,6 +23,9 @@
   };
 
   boot = {
+    kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
+    binfmt.emulatedSystems = [ "aarch64-linux" ];
+
     loader = {
       systemd-boot = {
         enable = true;
@@ -31,10 +34,6 @@
 
       efi.canTouchEfiVariables = false;
     };
-
-    kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
-
-    binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
 
   time.timeZone = "Europe/Amsterdam";

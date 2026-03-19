@@ -44,6 +44,11 @@
     fsType = "ext4";
   };
 
+  fileSystems."/mnt/hdd2" = {
+    device = "/dev/disk/by-uuid/1d29f991-26fd-4e24-952e-ad5387f9d0ca";
+    fsType = "btrfs";
+  };
+
   fileSystems."/mnt/ssd1" = {
     device = "/dev/disk/by-uuid/353a34ed-3de8-440f-9f86-9ffb0cf000c3";
     fsType = "ext4";
@@ -52,8 +57,6 @@
   swapDevices = [
     { device = "/dev/disk/by-uuid/a3aba786-caa4-4933-87c4-6f056acabddc"; }
   ];
-
-  networking.interfaces.enp0s31f6.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;

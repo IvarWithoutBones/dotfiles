@@ -122,6 +122,7 @@
                 # Extra directories that transmission has access to.
                 systemd.services.transmission.serviceConfig.BindPaths = [
                   "/mnt/hdd/downloads"
+                  "/mnt/hdd2/downloads"
                   "/mnt/ssd1/downloads"
                 ];
 
