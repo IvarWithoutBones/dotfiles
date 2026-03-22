@@ -1,11 +1,13 @@
 {
   pkgs,
+  config,
   ...
 }:
 
 {
   gtk = {
     enable = true;
+    gtk4.theme = config.gtk.theme;
 
     theme = {
       name = "Colloid-Purple-Dark-Catppuccin";

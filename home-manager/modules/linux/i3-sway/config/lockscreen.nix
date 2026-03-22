@@ -74,9 +74,10 @@ in
 
       timeouts = [
         {
+          # Go to sleep after N seconds.
           inherit timeout;
           command = swayCommand;
-        } # Go to sleep after N seconds.
+        }
         {
           # After another N seconds, turn off all displays.
           timeout = timeout * 2;

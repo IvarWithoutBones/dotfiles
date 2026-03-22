@@ -155,10 +155,13 @@
             ./home-manager/modules/linux/i3-sway/sway.nix
 
             (
-              { system, config, ... }:
+              { lib, system, config, ... }:
               {
                 programs.ssh.extraOptionOverrides.IdentityFile = config.sops.secrets."ssh/ivv/ed25519".path;
                 sops.secrets."ssh/ivv/ed25519".sopsFile = ./secrets/nixos-pc/ivv.yaml;
+
+                # We don't use the module, and not setting this option results in warnings if `home.stateVersion` is less than 23.05.
+                programs.swaylock.enable = lib.mkDefault false;
 
                 home = {
                   packages = [ sm64ex-practice.packages.${system}.default ];
@@ -246,9 +249,13 @@
 
           home-manager.modules = [
             (
-              { ... }:
+              { lib, ... }:
               {
                 programs.alacritty.settings.font.size = 15.5;
+
+                # We don't use the module, and not setting this option results in warnings if `home.stateVersion` is less than 23.05.
+                programs.swaylock.enable = lib.mkDefault false;
+
                 home.stateVersion = "21.11";
               }
             )

@@ -71,6 +71,7 @@ in
 
     signing = {
       signByDefault = true;
+      format = "openpgp";
       key = null; # Let the gpg agent handle it
     };
   };
