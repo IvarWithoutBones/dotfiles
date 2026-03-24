@@ -37,7 +37,7 @@ end
 
 require("lualine").setup({
     options = {
-        theme = "catppuccin",
+        theme = "catppuccin-nvim",
         component_separators = "|",
         section_separators = { left = "", right = "" },
         refresh = { statusline = 200 }, -- In milliseconds
