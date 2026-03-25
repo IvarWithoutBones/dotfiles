@@ -117,7 +117,7 @@
             ./modules/linux/desktop/xserver.nix
 
             (
-              { ... }:
+              { config, ... }:
               {
                 # Extra directories that transmission has access to.
                 systemd.services.transmission.serviceConfig.BindPaths = [
@@ -142,6 +142,9 @@
                   };
                 };
 
+                sops.secrets."nix/binary-cache-keys/nixos-pc-1".sopsFile = ./secrets/nixos-pc/host.yaml;
+                nix.settings.secret-key-files = [ config.sops.secrets."nix/binary-cache-keys/nixos-pc-1".path ];
+
                 networking.hostName = "nixos-pc";
                 system.stateVersion = "21.11";
               }
@@ -155,13 +158,13 @@
             ./home-manager/modules/linux/i3-sway/sway.nix
 
             (
-              { lib, system, config, ... }:
+              { system, config, ... }:
               {
                 programs.ssh.extraOptionOverrides.IdentityFile = config.sops.secrets."ssh/ivv/ed25519".path;
                 sops.secrets."ssh/ivv/ed25519".sopsFile = ./secrets/nixos-pc/ivv.yaml;
 
                 # We don't use the module, and not setting this option results in warnings if `home.stateVersion` is less than 23.05.
-                programs.swaylock.enable = lib.mkDefault false;
+                programs.swaylock.enable = nixpkgs.lib.mkDefault false;
 
                 home = {
                   packages = [ sm64ex-practice.packages.${system}.default ];
@@ -183,7 +186,7 @@
             ./modules/linux/hardware/bluetooth.nix
 
             (
-              { ... }:
+              { config, ... }:
               {
                 # Use MacOS's boot partition.
                 boot.loader.efi.efiSysMountPoint = "/boot";
@@ -203,6 +206,9 @@
                   hostName = "nixos-macbook";
                   wireless.iwd.enable = true;
                 };
+
+                sops.secrets."nix/binary-cache-keys/nixos-macbook-1".sopsFile = ./secrets/nixos-macbook/host.yaml;
+                nix.settings.secret-key-files = [ config.sops.secrets."nix/binary-cache-keys/nixos-macbook-1".path ];
 
                 system.stateVersion = "25.11";
               }

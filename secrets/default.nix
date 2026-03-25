@@ -7,7 +7,8 @@
 }:
 
 # Secret management using sops-nix. Used on NixOS, nix-darwin and home-manager.
-# To edit a file containing secrets, run `sops <path>`.
+# To edit a file containing secrets, run `sops edit <path>`.
+# To edit the host secrets, run `SOPS_AGE_KEY_FILE=/var/run/secrets.d/age-keys.txt EDITOR=nvim sops edit <path>` as root.
 # To add new keys that are allowed to see the secrets, add it to `.sops.yaml` and run `sops updatekeys <path>`.
 
 let

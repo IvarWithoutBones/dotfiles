@@ -100,6 +100,7 @@ in
       ./modules/linux/ssh.nix
       ./modules/linux/transmission.nix
       ./modules/linux/btrfs.nix
+      ./modules/linux/nix-ssh-serve.nix
       ./modules/linux/hardware/audio.nix
       ./modules/linux/desktop/lockscreen.nix
       ./modules/linux/desktop/sessions.nix
