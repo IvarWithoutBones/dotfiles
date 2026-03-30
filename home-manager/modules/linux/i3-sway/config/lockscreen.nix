@@ -70,7 +70,7 @@ in
     in
     lib.mkIf config.wayland.windowManager.sway.enable {
       enable = true;
-      systemdTarget = "sway-session.target"; # Only start when the sway session is active.
+      systemdTargets = [ "sway-session.target" ]; # Only start when the sway session is active.
 
       timeouts = [
         {

@@ -188,11 +188,13 @@
             (
               { config, ... }:
               {
-                # Use MacOS's boot partition.
-                boot.loader.efi.efiSysMountPoint = "/boot";
+                boot.loader.efi.efiSysMountPoint = "/boot"; # Use MacOS's boot partition.
 
-                # Use Apple's Bluetooth/Wifi firmware. Option comes from nixos-hardware.
-                hardware.apple-t2.firmware.enable = true;
+                # From nixos-hardware
+                hardware.apple-t2 = {
+                  firmware.enable = true; # Use Apple's Bluetooth/Wifi firmware.
+                  kernelChannel = "latest"; # Use the latest available kernel
+                };
 
                 systemd.network = {
                   networks."50-wg-dco" = {
@@ -208,7 +210,9 @@
                 };
 
                 sops.secrets."nix/binary-cache-keys/nixos-macbook-1".sopsFile = ./secrets/nixos-macbook/host.yaml;
-                nix.settings.secret-key-files = [ config.sops.secrets."nix/binary-cache-keys/nixos-macbook-1".path ];
+                nix.settings.secret-key-files = [
+                  config.sops.secrets."nix/binary-cache-keys/nixos-macbook-1".path
+                ];
 
                 system.stateVersion = "25.11";
               }

@@ -27,7 +27,7 @@
     };
 
     # Request manager for jellyfin
-    jellyseerr = {
+    seerr = {
       enable = true;
       openFirewall = true;
     };
