@@ -119,6 +119,9 @@
             (
               { config, ... }:
               {
+                # This is the last supported driver for GTX 10 series GPUs.
+                hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.legacy_580;
+
                 # Extra directories that transmission has access to.
                 systemd.services.transmission.serviceConfig.BindPaths = [
                   "/mnt/hdd/downloads"

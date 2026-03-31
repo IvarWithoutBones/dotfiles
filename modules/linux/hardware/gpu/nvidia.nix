@@ -10,7 +10,7 @@
 
   hardware = {
     nvidia = {
-      package = config.boot.kernelPackages.nvidiaPackages.stable;
+      package = lib.mkDefault config.boot.kernelPackages.nvidiaPackages.stable;
       open = false; # Getting "probe failed with driver nvidia" errors upon startup
       modesetting.enable = true; # Allow the kernel driver to configure the display
     };
