@@ -186,7 +186,7 @@
             ./modules/linux/hardware/bluetooth.nix
 
             (
-              { config, ... }:
+              { config, pkgs, ... }:
               {
                 boot.loader.efi.efiSysMountPoint = "/boot"; # Use MacOS's boot partition.
 
@@ -208,6 +208,10 @@
                   hostName = "nixos-macbook";
                   wireless.iwd.enable = true;
                 };
+
+                environment.systemPackages = [
+                  pkgs.impala
+                ];
 
                 sops.secrets."nix/binary-cache-keys/nixos-macbook-1".sopsFile = ./secrets/nixos-macbook/host.yaml;
                 nix.settings.secret-key-files = [
