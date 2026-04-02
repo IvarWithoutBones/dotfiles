@@ -6,7 +6,10 @@
 }:
 
 {
-  imports = [ ./config ];
+  imports = [
+    ./config
+    ../tofi.nix
+  ];
 
   wayland = {
     systemd.target = "sway-session.target";

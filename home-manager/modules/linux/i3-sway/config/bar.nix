@@ -1,5 +1,7 @@
 {
   pkgs,
+  config,
+  lib,
   ...
 }:
 
@@ -67,7 +69,7 @@ in
           click = [
             {
               button = "left";
-              cmd = "$TERMINAL --hold -e curl 'https://wttr.in/?F'";
+              cmd = "${lib.getExe config.xdg.terminal-exec.package} curl 'https://wttr.in/?F'";
             }
           ];
         }
@@ -159,7 +161,7 @@ in
           click = [
             {
               button = "left";
-              cmd = "$TERMINAL -e htop";
+              cmd = "${lib.getExe config.xdg.terminal-exec.package} htop";
             }
           ];
         }

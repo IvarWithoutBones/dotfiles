@@ -54,7 +54,7 @@ let
     in
     {
       inherit modifier;
-      terminal = config.home.sessionVariables.TERMINAL;
+      terminal = lib.getExe config.xdg.terminal-exec.package;
       defaultWorkspace = "workspace ${workspaces.ws1}";
 
       # Disable default resize mode
@@ -120,6 +120,11 @@ let
           # See https://github.com/ValveSoftware/steam-for-linux/issues/1040
           app_id = "steam";
           title = "[^Steam]";
+        }
+        {
+          # wl-color-picker
+          app_id = "zenity";
+          title = "Copy color to Clipboard";
         }
         { app_id = "EverestSplash-linux"; }
       ];

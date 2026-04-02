@@ -64,7 +64,12 @@ in
   linux = common // {
     modules = [
       (
-        { config, lib, pkgs, ... }:
+        {
+          config,
+          lib,
+          pkgs,
+          ...
+        }:
         {
           sops.secrets."user-passwords/${username}".neededForUsers = true;
 

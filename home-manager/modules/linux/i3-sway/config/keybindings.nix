@@ -131,42 +131,55 @@ let
     "XF86MonBrightnessDown" = "exec ${lib.getExe pkgs.brightnessctl} set 5%-";
 
     # Programs
-    "${modifier}+d" = "exec --no-startup-id ${lib.getExe' pkgs.dmenu-configured "dmenu_run"} -i";
-    "${modifier}+Return" = "exec --no-startup-id ${config.home.sessionVariables.TERMINAL}";
+    "${modifier}+Return" = "exec --no-startup-id ${lib.getExe config.xdg.terminal-exec.package}";
   };
 
-  mkExitBinding =
-    msgCmd: name:
-    "exec [ \"$(printf \"No\\nYes\" | ${lib.getExe pkgs.dmenu-configured} -i -p \"Would you like to exit ${name}?\")\" = \"Yes\" ] && ${msgCmd} exit";
+  exit =
+    askCmd: msgCmd: name:
+    "exec [ \"$(printf \"No\\nYes\" | ${askCmd} \"Would you like to exit ${name}?\")\" = \"Yes\" ] && ${msgCmd} exit";
 in
 {
   xsession.windowManager.i3.config.keybindings =
     let
-      msgCmd = lib.getExe' config.xsession.windowManager.i3.package "i3-msg";
+      msg = lib.getExe' config.xsession.windowManager.i3.package "i3-msg";
       modifier = config.xsession.windowManager.i3.config.modifier;
     in
     lib.mkIf config.xsession.windowManager.i3.enable (
-      (mkKeybindings modifier msgCmd)
+      (mkKeybindings modifier msg)
       // {
-        "${modifier}+Shift+e" = mkExitBinding msgCmd "i3";
-        "${modifier}+Shift+r" = "exec ${msgCmd} restart";
+        "${modifier}+Shift+e" = exit "${lib.getExe pkgs.dmenu-configured} -i -p" msg "i3";
+        "${modifier}+Shift+r" = "exec ${msg} restart";
         "--release Print" =
           "exec --no-startup-id ${lib.getExe pkgs.maim} -su /tmp/screenshot.png && ${lib.getExe pkgs.xclip} -selection clipboard -t image/png < /tmp/screenshot.png";
+
+        # Application launcher
+        "${modifier}+d" = "exec --no-startup-id ${lib.getExe' pkgs.dmenu-configured "dmenu_run"} -i";
+        "${modifier}+Shift+d" = "exec --no-startup-id ${lib.getExe' pkgs.dmenu-configured "dmenu_run"} -i";
       }
     );
 
   wayland.windowManager.sway.config.keybindings =
     let
-      msgCmd = lib.getExe' config.wayland.windowManager.sway.package "swaymsg";
+      msg = lib.getExe' config.wayland.windowManager.sway.package "swaymsg";
       modifier = config.wayland.windowManager.sway.config.modifier;
+
+      # Workaround for https://github.com/philj56/tofi/issues/173
+      tofiCmd =
+        cmd:
+        "${lib.getExe' config.programs.tofi.package cmd} --output \"$(${msg} -t get_outputs | ${lib.getExe pkgs.jq} -r '.[] | select(.focused).name')\"";
     in
     lib.mkIf config.wayland.windowManager.sway.enable (
-      (mkKeybindings modifier msgCmd)
+      (mkKeybindings modifier msg)
       // {
-        "${modifier}+Shift+e" = mkExitBinding msgCmd "sway";
-        "${modifier}+Shift+r" = "exec ${msgCmd} reload";
+        "${modifier}+Shift+e" = exit "${tofiCmd "tofi"} --prompt-text" msg "sway";
+        "${modifier}+Shift+r" = "exec ${msg} reload";
         "--release Print" =
           "exec --no-startup-id ${lib.getExe pkgs.sway-contrib.grimshot} savecopy anything /tmp/screenshot.png";
+
+        # Application launcher
+        "${modifier}+d" =
+          "exec --no-startup-id ${tofiCmd "tofi-run"} | ${lib.getExe' pkgs.findutils "xargs"} ${msg} exec --";
+        "${modifier}+Shift+d" = "exec --no-startup-id ${tofiCmd "tofi-drun"} --drun-launch=true";
       }
     );
 }
