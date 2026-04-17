@@ -6,6 +6,9 @@
 
   services.udev = {
     packages = with pkgs; [
+      # Controllers
+      game-devices-udev-rules
+
       # Keyboard firmware flashing/configuring
       qmk-udev-rules
       keychron-udev-rules

@@ -20,4 +20,10 @@
       pkgs.proton-ge-bin # A fork of Proton that sometimes has better compatibility.
     ];
   };
+
+  # Allow userspace to create virtual input devices, used for some games
+  hardware.uinput.enable = true;
+
+  # Make SDL applications support more controllers.
+  environment.sessionVariables.SDL_GAMECONTROLLERCONFIG_FILE = "${pkgs.sdl_gamecontrollerdb}/share/gamecontrollers.txt";
 }
