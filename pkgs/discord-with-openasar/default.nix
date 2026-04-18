@@ -5,7 +5,7 @@
   coreutils,
   findutils,
   gnused,
-  asar, # from nodePackages
+  asar,
 }:
 
 let

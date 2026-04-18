@@ -11,7 +11,7 @@ let
   languageServers = with pkgs; [
     taplo # TOML
     typescript-language-server # Typescript/Javascript
-    nodePackages.vscode-json-languageserver # JSON
+    vscode-json-languageserver # JSON
     vscode-langservers-extracted # HTML
     glsl_analyzer # GLSL
     autotools-language-server # Makefiles/configure.ac
@@ -50,7 +50,7 @@ let
 
     # Bash
     shellcheck
-    nodePackages.bash-language-server
+    bash-language-server
 
     # Nix
     nixd

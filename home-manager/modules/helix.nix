@@ -16,7 +16,7 @@ let
       marksman # Markdown
       dot-language-server # Dot (graphviz)
       taplo # TOML
-      nodePackages.vscode-json-languageserver # JSON
+      vscode-json-languageserver # JSON
       gopls # Go
       typescript-language-server # Typescript/Javascript
       vscode-langservers-extracted # HTML/CSS
@@ -38,7 +38,7 @@ let
 
       # Bash
       shellcheck
-      nodePackages.bash-language-server
+      bash-language-server
       shfmt
 
       # Python
