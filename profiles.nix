@@ -85,6 +85,7 @@ in
               "dialout"
             ]
             ++ lib.optional config.virtualisation.docker.enable "docker"
+            ++ lib.optional config.programs.wireshark.enable "wireshark"
             ++ lib.optional config.services.transmission.enable config.services.transmission.group
             ++ lib.optional config.services.jellyfin.enable config.services.jellyfin.group
             ++ lib.optional config.services.sonarr.enable config.services.sonarr.group
@@ -106,6 +107,7 @@ in
       ./modules/linux/transmission.nix
       ./modules/linux/btrfs.nix
       ./modules/linux/nix-ssh-serve.nix
+      ./modules/linux/wireshark.nix
       ./modules/linux/hardware/audio.nix
       ./modules/linux/desktop/lockscreen.nix
       ./modules/linux/desktop/sessions.nix
@@ -122,6 +124,7 @@ in
         ./home-manager/modules/linux/keyring.nix
         ./home-manager/modules/linux/xdg.nix
         ./home-manager/modules/linux/monitor-layout.nix
+        ./home-manager/modules/linux/wireshark.nix
       ]
       ++ common.home-manager.modules;
     };

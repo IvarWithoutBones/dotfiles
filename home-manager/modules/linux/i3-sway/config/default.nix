@@ -122,6 +122,11 @@ let
           title = "[^Steam]";
         }
         {
+          # Wireshark packet inspector
+          app_id = "org.wireshark.Wireshark";
+          title = "Wireshark · Packet .*";
+        }
+        {
           # wl-color-picker
           app_id = "zenity";
           title = "Copy color to Clipboard";
