@@ -28,18 +28,25 @@
         # Disable hardware cursors to fix the cursor sometimes disappearing
         export WLR_NO_HARDWARE_CURSORS=1
 
-        # Use the Wayland backend for SDL applications
-        export SDL_VIDEODRIVER=wayland
-
-        # Use the Wayland backend for QT applications
-        export QT_QPA_PLATFORM=wayland
-        export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
-
         # Fixes rendering issues in Java AWT applications (e.g. Ghidra)
         export _JAVA_AWT_WM_NONREPARENTING=1
 
         # Use the Wayland backend for Firefox
         export MOZ_ENABLE_WAYLAND=1
+
+        # Use the Wayland backend for SDL applications
+        export SDL_VIDEODRIVER=wayland
+
+        # Use the Wayland backend for QT applications
+        export QT_QPA_PLATFORM=wayland
+        export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
+      ''
+      # Set statically configured QT theming environment variables so that programs launched through sway inherit them.
+      + lib.optionalString (config.home.sessionVariables ? "QT_STYLE_OVERRIDE") ''
+        export QT_STYLE_OVERRIDE=${config.home.sessionVariables.QT_STYLE_OVERRIDE}
+      ''
+      + lib.optionalString (config.home.sessionVariables ? "QT_QPA_PLATFORMTHEME") ''
+        export QT_QPA_PLATFORMTHEME=${config.home.sessionVariables.QT_QPA_PLATFORMTHEME}
       '';
     };
   };

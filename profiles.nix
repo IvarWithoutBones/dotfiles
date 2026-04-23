@@ -119,6 +119,7 @@ in
       modules = [
         ./home-manager/modules/linux/cursor.nix
         ./home-manager/modules/linux/gtk.nix
+        ./home-manager/modules/linux/qt.nix
         ./home-manager/modules/linux/xresources.nix
         ./home-manager/modules/linux/dunst.nix
         ./home-manager/modules/linux/keyring.nix

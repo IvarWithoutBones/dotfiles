@@ -8,10 +8,7 @@
 
     defaultFonts = {
       monospace = [ "FiraCode Nerd Font" ];
-      emoji = [
-        "FiraCode Nerd Font"
-        "Noto Color Emoji"
-      ];
+      emoji = [ "FiraCode Nerd Font" ];
       serif = [ "Noto Serif" ];
       sansSerif = [ "Noto Sans" ];
     };
