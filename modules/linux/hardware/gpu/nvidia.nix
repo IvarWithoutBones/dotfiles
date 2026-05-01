@@ -47,7 +47,7 @@
       wantedBy = [ "multi-user.target" ];
       serviceConfig = {
         ExecStart = pkgs.writeShellScript "nvidia-gpu-power-limit" ''
-          ${lib.getExe' config.hardware.nvidia.package.bin "nvidia-smi"} --power-limit 200 # In watts
+          ${lib.getExe' config.hardware.nvidia.package.bin "nvidia-smi"} --power-limit 250 # In watts
         '';
       };
     };
