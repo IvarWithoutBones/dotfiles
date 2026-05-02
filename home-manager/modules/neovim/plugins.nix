@@ -52,13 +52,6 @@ in
         '';
       }
       {
-        # Enhanced f/t motions using Leap
-        plugin = flit-nvim;
-        config = mkLua ''
-          require("flit").setup()
-        '';
-      }
-      {
         # Easily modify surrounding delimiter pairs
         plugin = nvim-surround;
         config = mkLua ''
