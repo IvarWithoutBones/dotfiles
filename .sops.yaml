@@ -4,6 +4,8 @@ keys:
   - &ivv-nixos-pc age1dg4zwyrvau86mchwky7al8a73lzaqm2d6rf66qe762l5wj3nm96qcwek58
   - &nixos-macbook age1xtqd3ncx6d3365t8ee96lwyeq5mx35heexvjxgyrh6yytqspzcjqmj554w
   - &ivv-nixos-macbook age1zj8jq8vmgv83mcds2x99c5gf2xdnqnahpskpythwl2v9he0u6vdsdww0xw
+  - &nixos-framework age125ejsv8386a3wuemxy0urmtrsgthppkwstcv9kf9z5l9safn09mqezpflf
+  - &ivv-nixos-framework age1k0cprcqgy0l0xept7g0jcwnx24a9k0hvmmrd6a9ed3292w0qrgqs3a0zdn
 
 creation_rules:
   - path_regex: ^secrets/shared.yaml$
@@ -13,6 +15,8 @@ creation_rules:
       - *nixos-macbook
       - *ivv-nixos-pc
       - *ivv-nixos-macbook
+      - *nixos-framework
+      - *ivv-nixos-framework
 
   - path_regex: ^secrets/nixos-pc/host\.yaml$
     key_groups:
@@ -33,3 +37,13 @@ creation_rules:
     key_groups:
     - age:
       - *ivv-nixos-macbook
+
+  - path_regex: ^secrets/nixos-framework/host\.yaml$
+    key_groups:
+    - age:
+      - *nixos-framework
+
+  - path_regex: ^secrets/nixos-framework/ivv\.yaml$
+    key_groups:
+    - age:
+      - *ivv-nixos-framework
