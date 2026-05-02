@@ -178,6 +178,64 @@
           ];
         };
 
+        nixos-framework = lib.createSystem profiles.linux {
+          system = "x86_64-linux";
+
+          modules = [
+            nixos-hardware.nixosModules.framework-16-amd-ai-300-series
+            ./modules/linux/hardware/config/nixos-framework.nix
+            ./modules/linux/hardware/cpu/amd.nix
+            ./modules/linux/hardware/touchpad.nix
+            ./modules/linux/hardware/bluetooth.nix
+
+            (
+              { config, pkgs, ... }:
+              {
+                systemd.network = {
+                  networks."50-wg-dco" = {
+                    networkConfig.Description = "WireGuard interface";
+                    matchConfig.Name = "wg-dco";
+                    address = [ "10.10.10.130/32" ];
+                  };
+                };
+
+                networking = {
+                  hostName = "nixos-framework";
+                  wireless.iwd.enable = true;
+                };
+
+                environment.systemPackages = [
+                  pkgs.impala
+                ];
+
+                nix.settings.secret-key-files = [
+                  config.sops.secrets."nix/binary-cache-keys/nixos-framework-1".path
+                ];
+
+                sops.secrets."nix/binary-cache-keys/nixos-framework-1".sopsFile =
+                  ./secrets/nixos-framework/host.yaml;
+
+                system.stateVersion = "25.11";
+              }
+            )
+          ];
+
+          home-manager.modules = [
+            ./home-manager/modules/linux/i3-sway/sway.nix
+            ./home-manager/modules/linux/blueman-applet.nix
+
+            (
+              { config, ... }:
+              {
+                programs.ssh.extraOptionOverrides.IdentityFile = config.sops.secrets."ssh/ivv/ed25519".path;
+                sops.secrets."ssh/ivv/ed25519".sopsFile = ./secrets/nixos-framework/ivv.yaml;
+
+                home.stateVersion = "25.11";
+              }
+            )
+          ];
+        };
+
         nixos-macbook = lib.createSystem profiles.linux {
           system = "x86_64-linux";
 
