@@ -1,8 +1,4 @@
-{
-  lib,
-  pkgs,
-  ...
-}:
+{ pkgs, ... }:
 
 {
   environment = {
@@ -20,20 +16,6 @@
       neovim
       git
     ];
-  };
-
-  boot = {
-    kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
-    binfmt.emulatedSystems = [ "aarch64-linux" ];
-
-    loader = {
-      systemd-boot = {
-        enable = true;
-        configurationLimit = 10; # See https://github.com/NixOS/nixpkgs/issues/23926
-      };
-
-      efi.canTouchEfiVariables = false;
-    };
   };
 
   time.timeZone = "Europe/Amsterdam";
