@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   # Ensure the `plugdev` group exists, which the udev rules give permissions to.
@@ -18,7 +18,7 @@
       probe-rs-udev-rules # From my overlay
     ];
 
-    extraRules = ''
+    extraRules = lib.mkAfter ''
       # Keychron Q2 keyboard
       KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="3434", ATTRS{idProduct}=="0111", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
 

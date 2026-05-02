@@ -30,6 +30,13 @@ let
       scale = 2.0;
     };
 
+    framework = {
+      model = "BOE NE160QDM-NZ6 Unknown";
+      mode = "2560x1600";
+      refreshRate = "165.000";
+      scale = 1.5;
+    };
+
     dco-samsung = {
       model = "Samsung Electric Company C27F390 H4ZT201711";
       mode = "1920x1080";
@@ -53,12 +60,73 @@ let
         };
       }
       {
+        primary = true;
         output = outputs.desktop-iiyama;
         position = {
           x = 2560;
           y = 0;
         };
+      }
+    ];
+
+    dco-framework-triple = [
+      {
+        output = outputs.dco-samsung;
+        position = {
+          x = 0;
+          y = 142;
+        };
+      }
+      {
         primary = true;
+        output = outputs.dco-philips;
+        position = {
+          x = 1920;
+          y = 0;
+        };
+      }
+      {
+        output = outputs.framework;
+        position = {
+          x = 3840;
+          y = 936;
+        };
+      }
+    ];
+
+    dco-framework-philips = [
+      {
+        primary = true;
+        output = outputs.dco-philips;
+        position = {
+          x = 0;
+          y = 0;
+        };
+      }
+      {
+        output = outputs.framework;
+        position = {
+          x = 1920;
+          y = 936;
+        };
+      }
+    ];
+
+    dco-framework-samsung = [
+      {
+        primary = true;
+        output = outputs.dco-samsung;
+        position = {
+          x = 0;
+          y = 0;
+        };
+      }
+      {
+        output = outputs.framework;
+        position = {
+          x = 1920;
+          y = 794;
+        };
       }
     ];
 
@@ -71,12 +139,12 @@ let
         };
       }
       {
+        primary = true;
         output = outputs.dco-philips;
         position = {
           x = 1920;
           y = 0;
         };
-        primary = true;
       }
       {
         output = outputs.macbook;
@@ -89,12 +157,12 @@ let
 
     dco-macbook-philips = [
       {
+        primary = true;
         output = outputs.dco-philips;
         position = {
           x = 0;
           y = 0;
         };
-        primary = true;
       }
       {
         output = outputs.macbook;
@@ -107,12 +175,12 @@ let
 
     dco-macbook-samsung = [
       {
+        primary = true;
         output = outputs.dco-samsung;
         position = {
           x = 0;
           y = 0;
         };
-        primary = true;
       }
       {
         output = outputs.macbook;

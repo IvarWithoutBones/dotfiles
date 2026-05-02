@@ -8,8 +8,11 @@
 let
   substituters = {
     # Created in `modules/linux/nix-ssh-serve.nix`.
+    # To temporarily enable one of these, pass `--extra-substituters 'ssh://nix-ssh@foo?priority=100'` to `nix build` and friends.
     "ssh://nix-ssh@dco-ivar-pc" = "nixos-pc-1:b6bErWvNvqT/5S8n7Yz2SMYKgP/3Ipg/cpf5nbGbqZo=";
-    "ssh://nix-ssh@dco-ivar-laptop" = "nixos-macbook-1:7yI4aZ1e9o2JzzjKlJsha9SlSSJEDTuxH1OaC7VtxZo=";
+    "ssh://nix-ssh@dco-ivar-macbook" = "nixos-macbook-1:7yI4aZ1e9o2JzzjKlJsha9SlSSJEDTuxH1OaC7VtxZo=";
+    "ssh://nix-ssh@dco-ivar-framework" =
+      "nixos-framework-1:Y5qUd6Oym1fqwFAO83Y6cM5mPHfv3UKmqtf5MqyXv0w=";
   };
 in
 {
