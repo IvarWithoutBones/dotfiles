@@ -94,6 +94,7 @@ in
         }
       )
 
+      ./modules/linux/boot.nix
       ./modules/linux/system.nix
       ./modules/linux/keyring.nix
       ./modules/linux/polkit.nix

@@ -191,6 +191,11 @@
             (
               { config, pkgs, ... }:
               {
+                boot.loader.limine = {
+                  secureBoot.enable = true; # Note that this needs some manual setup: https://wiki.nixos.org/wiki/Limine#Secure_Boot
+                  resolution = "2560x1600";
+                };
+
                 systemd.network = {
                   networks."50-wg-dco" = {
                     networkConfig.Description = "WireGuard interface";
