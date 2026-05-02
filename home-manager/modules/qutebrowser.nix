@@ -12,6 +12,7 @@ let
   );
 
   userscripts = pkgs.qutebrowser-scripts.userscripts;
+  mpv = lib.getExe config.programs.mpv.package;
 in
 {
   programs.qutebrowser = {
@@ -48,8 +49,8 @@ in
 
     keyBindings.normal = {
       # Open videos in mpv
-      "<Alt-o>" = "hint links spawn --verbose --detach ${pkgs.mpv}/bin/mpv {hint-url}";
-      "<Alt-Shift-o>" = "spawn --verbose --detach ${pkgs.mpv}/bin/mpv {url}";
+      "<Alt-o>" = "hint links spawn --verbose --detach ${mpv} {hint-url}";
+      "<Alt-Shift-o>" = "spawn --verbose --detach ${mpv} {url}";
 
       # Open the tracker for a nixpkgs PR, script from my overlay
       "<Alt-n>" = "spawn --userscript ${userscripts.nixpkgs-tracker}/bin/qute-nixpkgs-tracker {url}";
@@ -61,7 +62,7 @@ in
     };
 
     aliases = {
-      "mpv" = "spawn --verbose --detach ${pkgs.mpv}/bin/mpv {url}";
+      "mpv" = "spawn --verbose --detach ${mpv} {url}";
       "nixpkgs-tracker" =
         "spawn --userscript --output-messages ${userscripts.nixpkgs-tracker}/bin/qute-nixpkgs-tracker {url}";
       "fake-fullscreen" =

@@ -5,11 +5,12 @@
     # links paths from derivations to /run/current-system/sw
     pathsToLink = [
       "/libexec"
+      "/share/man"
+      "/share/applications"
+      "/share/xdg-desktop-portal"
       "/share/zsh"
       "/share/fish"
       "/share/bash-completion"
-      "/share/xdg-desktop-portal"
-      "/share/applications"
     ];
 
     systemPackages = with pkgs; [
@@ -18,8 +19,7 @@
     ];
   };
 
-  time.timeZone = "Europe/Amsterdam";
   programs.zsh.enable = true;
-
   services.fstrim.enable = true;
+  time.timeZone = "Europe/Amsterdam";
 }
