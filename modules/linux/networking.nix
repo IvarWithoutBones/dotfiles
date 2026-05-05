@@ -24,16 +24,10 @@ in
     enable = true;
     config.networkConfig.IPv6PrivacyExtensions = "kernel";
 
-    links."10-enusb0" = {
-      linkConfig.Description = "USB Ethernet connection";
-      matchConfig.PermanentMACAddress = "be:3c:70:91:55:eb";
-      linkConfig.Name = "enusb0";
-    };
-
     networks = {
-      "10-enusb0-dhcpserver" = {
+      "10-usb-dhcpserver" = {
         networkConfig.Description = "Network for devices on USB Ethernet";
-        matchConfig.Name = "enusb0";
+        matchConfig.PermanentMACAddress = "00:e0:4c:36:08:b6";
         linkConfig.RequiredForOnline = "no"; # Don't block the boot sequence if not plugged in.
         dhcpServerConfig.DNS = "9.9.9.9";
 
@@ -45,6 +39,7 @@ in
         };
 
         routes = lib.toList {
+          Metric = 1025; # Make sure this has a lower priority than other interfaces
           Gateway = "192.168.7.17";
         };
       };
