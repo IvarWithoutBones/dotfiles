@@ -47,7 +47,7 @@ let
 
       # SQL (various dialects)
       sqls
-      # sqlfluff # TODO: Re-enable once the derivation is fixed.
+      sqlfluff
 
       # YAML
       yaml-language-server
@@ -213,11 +213,10 @@ in
             }
           ];
 
-          # TODO: Re-enable once the sqlfluff derivation is fixed.
-          # formatter = {
-          #   command = "sqlfluff";
-          #   args = [ "format" "-" ]; # Use stdin/stdout
-          # };
+          formatter = {
+            command = "sqlfluff";
+            args = [ "format" "-" ]; # Use stdin/stdout
+          };
         }
       ];
 

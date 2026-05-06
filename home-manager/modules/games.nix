@@ -18,9 +18,7 @@ in
     ares
     yafc-ce
     apotris
-
-    # TODO: Re-enable once the source hash is fixed in nixpkgs
-    # shipwright
+    shipwright
 
     celeste
     (loenn.override {
