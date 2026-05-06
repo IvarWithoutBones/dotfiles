@@ -227,7 +227,6 @@
 
           home-manager.modules = [
             ./home-manager/modules/linux/i3-sway/sway.nix
-            ./home-manager/modules/linux/blueman-applet.nix
 
             (
               { config, ... }:
@@ -291,7 +290,6 @@
 
           home-manager.modules = [
             ./home-manager/modules/linux/i3-sway/sway.nix
-            ./home-manager/modules/linux/blueman-applet.nix
 
             (
               { config, ... }:
