@@ -24,23 +24,44 @@ in
     enable = true;
     config.networkConfig.IPv6PrivacyExtensions = "kernel";
 
+    links."10-usb-ethernet" = {
+      linkConfig = {
+        Description = "USB Ethernet adapter";
+        Name = "eth-usb0";
+        NamePolicy = ""; # Required for our rename to apply
+      };
+
+      matchConfig = {
+        PermanentMACAddress = "00:e0:4c:36:08:b6";
+        Type = "ether";
+      };
+    };
+
     networks = {
       "10-usb-dhcpserver" = {
         networkConfig.Description = "Network for devices on USB Ethernet";
         matchConfig.PermanentMACAddress = "00:e0:4c:36:08:b6";
         linkConfig.RequiredForOnline = "no"; # Don't block the boot sequence if not plugged in.
-        dhcpServerConfig.DNS = "9.9.9.9";
 
         networkConfig = {
-          Address = "192.168.7.18/30";
+          DNS = "192.168.2.1";
           DHCPServer = true;
-          IPv4Forwarding = true;
-          IPv6Forwarding = true;
+        };
+
+        dhcpServerConfig = {
+          EmitDNS = false;
+          EmitNTP = false;
+          EmitSIP = false;
+          EmitRouter = false;
+        };
+
+        addresses = lib.toList {
+          Address = "192.168.7.18/30";
         };
 
         routes = lib.toList {
-          Metric = 1025; # Make sure this has a lower priority than other interfaces
           Gateway = "192.168.7.17";
+          Metric = 1030; # Make sure this has a lower priority than any other interface.
         };
       };
 
@@ -48,6 +69,8 @@ in
         networkConfig.Description = "Generic wireless interface";
         matchConfig.WLANInterfaceType = "station";
         linkConfig.RequiredForOnline = "routable";
+
+        # Ensure that wireless interfaces have a lower priority than wired interfaces.
         dhcpV4Config.RouteMetric = 1025;
         ipv6AcceptRAConfig.RouteMetric = 1025;
 
