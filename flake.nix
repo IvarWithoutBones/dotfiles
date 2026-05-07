@@ -187,6 +187,7 @@
             ./modules/linux/hardware/cpu/amd.nix
             ./modules/linux/hardware/touchpad.nix
             ./modules/linux/hardware/bluetooth.nix
+            ./modules/linux/sccache-builder.nix
 
             (
               { config, pkgs, ... }:
