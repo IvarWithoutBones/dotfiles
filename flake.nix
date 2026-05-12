@@ -210,6 +210,8 @@
                   wireless.iwd.enable = true;
                 };
 
+                services.fprintd.enable = true;
+
                 environment.systemPackages = [
                   pkgs.impala
                 ];
