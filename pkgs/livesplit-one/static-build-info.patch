@@ -1,34 +1,34 @@
-diff --git a/webpack.config.js b/webpack.config.js
-index 54ae225..b129eb5 100644
---- a/webpack.config.js
-+++ b/webpack.config.js
-@@ -15,6 +15,7 @@ import {
- } from "react-compiler-webpack";
+diff --git a/vite.config.ts b/vite.config.ts
+index 899b057..f793764 100644
+--- a/vite.config.ts
++++ b/vite.config.ts
+@@ -96,6 +96,7 @@ async function ensureFavicons() {
+ }
 
  function parseChangelog() {
-+    return []
++    return [];
      return execSync('git log --grep "^Changelog" -10')
          .toString()
          .split(/^commit /m)
-@@ -77,6 +78,7 @@ function parseChangelogEntries(commit) {
+@@ -160,6 +161,7 @@ async function getContributorsForRepo(
+     repoName: string,
+     githubToken?: string,
+ ): Promise<Contributor[]> {
++    return [];
+     const contributorsData = await fetch(
+         `https://api.github.com/repos/LiveSplit/${repoName}/contributors`,
+         {
+@@ -300,11 +302,8 @@ export default defineConfig(async ({ mode }) => {
+         console.warn("Failed to load GitHub data, skipping:", e);
+     }
 
- export default async (env, argv) => {
-     const getContributorsForRepo = async (repoName) => {
-+        return [];
-         const contributorsData = await fetch(
-             `https://api.github.com/repos/LiveSplit/${repoName}/contributors`,
-             {
-@@ -123,11 +125,8 @@ export default async (env, argv) => {
-         .map((user) => {
-             return { id: user.id, name: user.login };
-         });
 -    const commitHash = execSync("git rev-parse --short HEAD").toString();
 -    const date = new Date()
 -        .toISOString()
 -        .replace("T", " ")
 -        .replace(/\..+/, " UTC");
 +    const commitHash = "@shortRev@"
-+    const date = "@date@"
++    const date = "@date@";
 
-     const changelog = parseChangelog();
-
+     return {
+         plugins: [

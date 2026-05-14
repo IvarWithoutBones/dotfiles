@@ -4,6 +4,7 @@
   rustPlatform,
   fetchFromGitHub,
   fetchNpmDeps,
+  fetchpatch,
   wrapGAppsHook4,
   replaceVars,
   cargo-tauri,
@@ -19,20 +20,20 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "LiveSplitOne";
-  version = "2026-02-15";
+  version = "2026-04-14";
 
   src = fetchFromGitHub {
     owner = "LiveSplit";
     repo = "LiveSplitOne";
-    rev = "49f7eaafd81c1caf05311485d0f87bacdd592021";
-    sha256 = "sha256-+NEkwbuOGnQKVPWQWOE/q5LHoPzmv0KO+Ic1evu95uo=";
+    rev = "83ae5560d80bbf849697c9fb6d5482b6944da530";
+    sha256 = "sha256-Sx90cd8CKK+Der5O74uarV+uti67zSAdFF95np6GzMc=";
     fetchSubmodules = true;
   };
 
   npmDeps = fetchNpmDeps {
     name = "${finalAttrs.pname}-${finalAttrs.version}-npm-deps";
     inherit (finalAttrs) src;
-    hash = "sha256-DFGm/SbYbDhEqtpzgjaQMY/aiCyNqrhea8bzg5KJ5BE=";
+    hash = "sha256-R1GmLyaGlD4948goV7EiFkPb6PJcILr1NpC4lVGWNZA=";
   };
 
   cargoLock.lockFile = ./LiveSplitOne-Cargo.lock; # The lockfile for the Tauri app, the upstream lockfile is outdated
@@ -45,6 +46,13 @@ rustPlatform.buildRustPackage (finalAttrs: {
     (replaceVars ./static-build-info.patch {
       shortRev = lib.substring 0 7 finalAttrs.src.rev;
       date = finalAttrs.version;
+    })
+  ]
+  ++ lib.optionals stdenv.hostPlatform.isLinux [
+    (fetchpatch {
+      # Fixes popout windows on Linux: https://github.com/LiveSplit/LiveSplitOne/pull/1137
+      url = "https://github.com/DaVinciLord/LiveSplitOne/commit/e71bec425944f2947b47350aa1349b8f27bf2685.patch";
+      hash = "sha256-ylbRi+ac0ZE+nw3jxT4GEQG0uq5meCHw9OKJjh3zes8=";
     })
   ];
 
