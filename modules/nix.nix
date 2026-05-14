@@ -33,18 +33,27 @@ in
     settings = {
       extra-trusted-users = [ "@wheel" ];
       extra-allowed-users = [ "@wheel" ];
-      warn-dirty = false; # Gets pretty annoying while working on a flake.
-      fallback = true; # Build derivations locally if we can't reach a subsituter.
-      auto-optimise-store = !pkgs.stdenv.hostPlatform.isDarwin; # Can causes failures on Darwin, see https://github.com/NixOS/nix/issues/7273.
+
+      # Allow using local machines as binary caches.
+      extra-trusted-public-keys = lib.attrValues substituters;
+      extra-trusted-substituters = lib.attrNames substituters;
 
       extra-experimental-features = [
         "nix-command"
         "flakes"
       ];
 
-      # Allow using local machines as binary caches.
-      extra-trusted-public-keys = lib.attrValues substituters;
-      extra-trusted-substituters = lib.attrNames substituters;
+      # Can causes failures on Darwin, see https://github.com/NixOS/nix/issues/7273.
+      auto-optimise-store = !pkgs.stdenv.hostPlatform.isDarwin;
+
+      # When possible, make builders use their own substituters instead of the client's store.
+      builders-use-substitutes = true;
+
+      # Build derivations locally if we can't reach a subsituter.
+      fallback = true;
+
+      # Gets pretty annoying while working on a flake.
+      warn-dirty = false;
     };
   };
 }
