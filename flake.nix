@@ -187,6 +187,7 @@
             ./modules/linux/hardware/cpu/amd.nix
             ./modules/linux/hardware/touchpad.nix
             ./modules/linux/hardware/bluetooth.nix
+            ./modules/linux/hardware/fingerprint.nix
             ./modules/linux/sccache-builder.nix
 
             (
@@ -209,8 +210,6 @@
                   hostName = "nixos-framework";
                   wireless.iwd.enable = true;
                 };
-
-                services.fprintd.enable = true;
 
                 environment.systemPackages = [
                   pkgs.impala
