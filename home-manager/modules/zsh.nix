@@ -96,10 +96,14 @@ in
       # Use the colors from 'ls' in completions
       zstyle ':completion:*:default' list-colors ''${(s.:.)LS_COLORS}
 
-      # Set the Fast Syntax Highlighting theme (installed above) and fixes a rendering issue:
-      # https://github.com/zdharma-continuum/fast-syntax-highlighting/issues/78
+      # Set the Fast Syntax Highlighting theme (installed above)
       fast-theme XDG:catppuccin-mocha > /dev/null
-      export FAST_HIGHLIGHT[chroma-git]="→chroma/-subcommand.ch"
+
+      # Fixes a fast-syntax-highlighting rendering issue: https://github.com/zdharma-continuum/fast-syntax-highlighting/issues/78
+      export FAST_HIGHLIGHT[chroma-git]="→chroma/-fast-theme.ch"
+
+      # Fixes a fast-syntax-highlighting performance issue: https://github.com/zdharma-continuum/fast-syntax-highlighting/issues/74
+      export FAST_HIGHLIGHT[chroma-make]="→chroma/-fast-theme.ch"
 
       # Enter a 'nix shell' with packages selected by fzf
       source ${pkgs.nix-search-fzf.zsh-shell-widget}
