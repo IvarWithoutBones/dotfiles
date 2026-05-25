@@ -45,6 +45,11 @@ setFfmpegFlags() {
     # Detetect the available hardware accelerations methods
     local crf="${1:-15}" audioBitrate="${2:-}" videoBitrate="${3:-}" resolution="${4:-}" copyAudio="${5:-0}" inPlace="${6:-0}" extraArgs=("${@:7}")
 
+    FFMPEG_OUTPUT_FLAGS=(
+        -map 0        # Include all input streams by default.
+        -copy_unknown # Copy any unknown stream types without transcoding.
+    )
+
     # Transcode video to HEVC using hardware acceleration if available
     local availableEncoders
     availableEncoders="$(ffmpeg -hide_banner -encoders)"
@@ -119,7 +124,6 @@ setFfmpegFlags() {
 
     FFMPEG_OUTPUT_FLAGS+=(
         -movflags +faststart # Enable fast start for web playback
-        -c:s srt             # Transcode subtitles to SRT
         -nostdin             # Disable stdin to prevent ffmpeg from hanging if it expects input
         -progress pipe:1     # Show progress on stdout
         -loglevel warning    # Reduce log verbosity
@@ -139,6 +143,17 @@ transcodeVideo() {
     [[ ${videoDuration} == [0-9]:* ]] && videoDuration="0${videoDuration}" # ffprobe prints 0:00:00, but ffmpeg adds a leading zero
     videoDuration="${videoDuration%%.*}"                                   # Trim off milliseconds
 
+    # Transcode subtitles to SRT if possible, otherwise copy them as-is (e.g. for image-based subtitles like PGS)
+    local subtitleFlags=() i=0
+    for subtitle_codec in $(ffprobe -v error -select_streams s -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 "${input}"); do
+        case "${subtitle_codec}" in
+            "hdmv_pgs_subtitle") subtitleFlags+=(-codec:s:"${i}" copy) ;;
+            *) subtitleFlags+=(-codec:s:"${i}" srt) ;;
+        esac
+
+        i=$((i + 1))
+    done
+
     local sizeBefore sizeAfter printedProgress=0 cursorPosition=() newCursorPosition=()
     sizeBefore=$(du -h "${input}" | cut -f1)
 
@@ -147,7 +162,7 @@ transcodeVideo() {
     IFS='[;' read -p $'\n\033[6n' -sdRra cursorPosition < /dev/tty
     printf '\e[1A\e[K' >&2 # Clear the newline
 
-    ffmpeg "${FFMPEG_HARDWARE_FLAGS[@]}" -i "${input}" "${FFMPEG_OUTPUT_FLAGS[@]}" "${output}" \
+    ffmpeg "${FFMPEG_HARDWARE_FLAGS[@]}" -i "${input}" "${FFMPEG_OUTPUT_FLAGS[@]}" "${subtitleFlags[@]}" "${output}" \
         | grep --line-buffered "out_time=" \
         | while IFS= read -r progress; do
             progress="${progress#out_time=}"
