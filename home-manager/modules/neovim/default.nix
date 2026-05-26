@@ -242,13 +242,13 @@ in
         mode = "n";
         key = "<space>n";
         options.silent = true;
-        action = ":lua vim.diagnostic.goto_next({ float = false })<cr>";
+        action = ":lua vim.diagnostic.jump({ count = 1, float = false })<cr>";
       }
       {
         mode = "n";
         key = "<space>N";
         options.silent = true;
-        action = ":lua vim.diagnostic.goto_prev({ float = false })<cr>";
+        action = ":lua vim.diagnostic.jump({ count = -1, float = false })<cr>";
       }
 
       # Use `Control+Alt+{h,j,k,l}` to resize buffers from normal mode
