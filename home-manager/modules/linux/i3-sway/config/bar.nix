@@ -69,7 +69,7 @@ in
           click = [
             {
               button = "left";
-              cmd = "${lib.getExe config.xdg.terminal-exec.package} curl 'https://wttr.in/?F'";
+              cmd = "${lib.getExe config.xdg.terminal-exec.package} --hold -- ${lib.getExe pkgs.bash} -c '${lib.getExe pkgs.curl} \"https://wttr.in/?F\"; read'";
             }
           ];
         }
