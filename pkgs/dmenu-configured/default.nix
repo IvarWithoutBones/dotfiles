@@ -21,9 +21,6 @@ let
   };
 in
 patched.overrideAttrs (prev: {
-  # Required for the fuzzymatch patch to compile, it doesn't appear to pass this flag correctly to all compiled objects.
-  NIX_CFLAGS_COMPILE = prev.NIX_CFLAGS_COMPILE or [ ] ++ [ "-lm " ];
-
   postPatch = prev.postPatch or "" + ''
     # Patch in the desired bar height
     substituteInPlace config.def.h \

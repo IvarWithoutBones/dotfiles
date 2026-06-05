@@ -19,6 +19,7 @@ in
     yafc-ce
     apotris
     shipwright
+    sm64ex-practice-us
 
     celeste
     (loenn.override {

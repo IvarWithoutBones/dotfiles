@@ -113,6 +113,7 @@ in
   programs.nixvim = {
     enable = true;
     package = nvimWithDefaultPackages;
+    nixpkgs.source = ivar-dotfiles.inputs.nixpkgs;
 
     viAlias = true;
     vimAlias = true;

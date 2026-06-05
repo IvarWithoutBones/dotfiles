@@ -20,17 +20,17 @@
       settings.default_session.command =
         let
           desktopSessions = "${config.services.displayManager.sessionData.desktops}/share";
+          args = [
+            "--sessions=${desktopSessions}/wayland-sessions"
+            "--xsessions=${desktopSessions}/xsessions"
+            "--time"
+            "--asterisks"
+            "--user-menu"
+            "--remember"
+            "--remember-session"
+          ];
         in
-        ''
-          ${lib.getExe pkgs.tuigreet} \
-            --sessions ${desktopSessions}/wayland-sessions \
-            --xsessions ${desktopSessions}/xsessions \
-            --time \
-            --asterisks \
-            --user-menu \
-            --remember \
-            --remember-session
-        '';
+        "${lib.getExe pkgs.tuigreet} ${lib.concatStringsSep " " args}";
     };
   };
 }

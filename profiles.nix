@@ -56,7 +56,10 @@ let
     };
 
     extraConfig = {
-      nixpkgs.overlays = [ self.overlays.default ];
+      nixpkgs.overlays = [
+        self.overlays.default
+        inputs.sm64ex-practice.overlays.default
+      ];
     };
   };
 in

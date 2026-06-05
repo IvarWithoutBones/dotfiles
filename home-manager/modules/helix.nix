@@ -215,7 +215,10 @@ in
 
           formatter = {
             command = "sqlfluff";
-            args = [ "format" "-" ]; # Use stdin/stdout
+            args = [
+              "format"
+              "-"
+            ]; # Use stdin/stdout
           };
         }
       ];
