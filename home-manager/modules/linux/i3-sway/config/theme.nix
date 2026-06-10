@@ -65,7 +65,7 @@ let
 
     bars = lib.toList {
       # TODO: move this to bar.nix, this file should only contain the theming
-      statusCommand = "${pkgs.i3status-rust}/bin/i3status-rs ${config.xdg.configHome}/i3status-rust/config-top.toml";
+      statusCommand = "${lib.getExe config.programs.i3status-rust.package} ${config.xdg.configHome}/i3status-rust/config-top.toml";
       position = "top";
       inherit fonts;
 

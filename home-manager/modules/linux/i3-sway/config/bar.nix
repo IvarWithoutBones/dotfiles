@@ -57,36 +57,18 @@ in
         }
 
         {
-          # Temperature
-          block = "custom";
-          hide_when_empty = true;
-          interval = 200;
-
-          command = pkgs.writeShellScript "temperature" ''
-            weather="$(${pkgs.curl}/bin/curl -S "wttr.in/?format=1" 2>/dev/null | tr -d "+" | xargs)"
-            # This might contain long error codes if the service is down
-            (( "''${#weather}" < 10 )) && echo "$weather"
-          '';
-
+          block = "weather";
+          autolocate = true;
+          autolocate_interval = 600; # Update location every 10 minutes
+          service.name = "metno";
+          format = " $icon_ffin $temp_ffin.eng(width:3) ";
+          format_alt = " $location - $icon_ffin $temp_ffin $weather_verbose_ffin -  $wind_kmh_ffin km/h $direction_ffin -  $humidity_ffin ";
           click = [
             {
-              button = "left";
+              button = "right";
               cmd = "${lib.getExe config.xdg.terminal-exec.package} --hold -- ${lib.getExe pkgs.bash} -c '${lib.getExe pkgs.curl} \"https://wttr.in/?F\"; read'";
             }
           ];
-        }
-
-        {
-          # Ping time
-          block = "custom";
-          hide_when_empty = true;
-          interval = 1;
-
-          command = pkgs.writeShellScript "ping-time" ''
-            time="$(${pkgs.unixtools.ping}/bin/ping store.steampowered.com -c 1 -w 3 2>/dev/null | ${pkgs.gnugrep}/bin/grep time= | ${pkgs.coreutils}/bin/cut -d'=' -f4)"
-            # This might contain long error codes if the service is down
-            (( "''${#time}" < 15 )) && (( "''${#time}" > 1 )) && echo "  $time"
-          '';
         }
 
         {
@@ -108,6 +90,12 @@ in
               ""
             ];
           };
+        }
+
+        {
+          block = "backlight";
+          format = " $icon $brightness.eng(width:3) ";
+          missing_format = ""; # Hide the block if no backlight is detected
         }
 
         {
@@ -157,13 +145,75 @@ in
         }
 
         {
+          # Network icon, changes based on connection type and signal strength.
+          block = "net";
+          merge_with_next = true;
+          format = " $icon ";
+          format_alt = " $icon ";
+          inactive_format = "";
+          missing_format = "";
+          icons_overrides.net_wired = "";
+        }
+
+        {
+          # Ping time
+          block = "custom";
+          hide_when_empty = true;
+          interval = 1;
+
+          command = pkgs.writeShellScript "ping-time" ''
+            output="$(${lib.getExe pkgs.unixtools.ping} store.steampowered.com -c 1 -w 1 2>/dev/null | ${lib.getExe pkgs.gnugrep} "time=" | ${lib.getExe' pkgs.coreutils "cut"} -d '=' -f 4)"
+            (( "''${#output}" > 15 )) || (( "''${#output}" < 1 )) && exit 0
+
+            time="$(printf "%.1f" "$(cut -d " " -f 1 <<< "$output")")"
+            unit="$(cut -d " " -f 2 <<< "$output")"
+            (( "''${#time}" > 4 )) && time="$(printf "%.0f" "$time")"
+            (( "''${#time}" > 5 )) && time="99999"
+            printf "%-5s%2s" "$time" "$unit"
+          '';
+        }
+
+        {
+          # Upload/download speeds
+          block = "net";
+          interval = 1;
+          format = " ^icon_net_down $speed_down.eng(prefix:K,width:4) ^icon_net_up $speed_up.eng(prefix:K,width:4) ";
+          format_alt = " $icon {$signal_strength $ssid $frequency|Wired connection} via $device ";
+          inactive_format = "";
+          missing_format = "";
+
+          click = [
+            {
+              button = "middle";
+              cmd = "${lib.getExe pkgs.xdg-terminal-exec} --hold -- ${lib.getExe pkgs.bash} -c '${lib.getExe' pkgs.iproute2 "ip"} addr; read'";
+            }
+            {
+              button = "right";
+              cmd = pkgs.writeShellScript "network-menu" ''
+                if command -v impala &>/dev/null; then
+                  ${lib.getExe pkgs.xdg-terminal-exec} -- impala
+                else
+                  ${lib.getExe pkgs.libnotify} --urgency=critical --expire-time=5000 -- "Network" "Cannot configure network without impala."
+                fi
+              '';
+            }
+          ];
+        }
+
+        {
+          block = "disk_iostats";
+          format = "  $speed_read.eng(prefix:K,width:4)  $speed_write.eng(prefix:K,width:4) ";
+          interval = 1;
+        }
+
+        {
           block = "cpu";
           format = "  $utilization.eng(width:3) ";
           interval = 1;
           click = [
             {
               button = "left";
-              cmd = "${lib.getExe config.xdg.terminal-exec.package} htop";
+              cmd = "${lib.getExe config.xdg.terminal-exec.package} -- ${lib.getExe pkgs.htop} --sort-key=PERCENT_CPU";
             }
           ];
         }
@@ -172,6 +222,12 @@ in
           block = "memory";
           format = "  $mem_used.eng(prefix:M,width:3) ";
           interval = 1;
+          click = [
+            {
+              button = "left";
+              cmd = "${lib.getExe config.xdg.terminal-exec.package} -- ${lib.getExe pkgs.htop} --sort-key=PERCENT_MEM";
+            }
+          ];
         }
 
         {
