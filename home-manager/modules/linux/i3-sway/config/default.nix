@@ -84,6 +84,8 @@ let
           { app_id = "Psst-gui"; }
           { app_id = "Spotify"; }
           { app_id = "tidal-hifi"; }
+          { app_id = "sone"; }
+          { app_id = "io.github.nokse22.high-tide"; }
         ];
 
         ${workspaces.ws5} = mkWindowRules [

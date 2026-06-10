@@ -60,7 +60,7 @@
       picoscope
 
       signal-desktop
-      tidal-hifi
+      high-tide
       obsidian
       evince
       drawio

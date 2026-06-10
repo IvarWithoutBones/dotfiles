@@ -34,6 +34,8 @@ in
             "spotify"
             "psst"
             "tidal-hifi"
+            "io.github.nokse22.high-tide"
+            "io.github.lullabyX.sone"
           ];
           format = "{ $icon $combo.str(max_w:50,rot_interval:0.25) }|";
           theme_overrides.info_bg.link = "idle_bg"; # Disable darkened background
