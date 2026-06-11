@@ -148,11 +148,29 @@ in
           # Network icon, changes based on connection type and signal strength.
           block = "net";
           merge_with_next = true;
+          interval = 1;
           format = " $icon ";
-          format_alt = " $icon ";
+          format_alt = " {$signal_strength $ssid $frequency|Wired connection} via $device ^icon_net_down $speed_down.eng(prefix:K,width:4) ^icon_net_up $speed_up.eng(prefix:K,width:4) $icon ";
           inactive_format = "";
           missing_format = "";
           icons_overrides.net_wired = "";
+
+          click = [
+            {
+              button = "middle";
+              cmd = "${lib.getExe pkgs.xdg-terminal-exec} --hold -- ${lib.getExe pkgs.bash} -c '${lib.getExe' pkgs.iproute2 "ip"} addr; read'";
+            }
+            {
+              button = "right";
+              cmd = pkgs.writeShellScript "network-menu" ''
+                if command -v impala &>/dev/null; then
+                  ${lib.getExe pkgs.xdg-terminal-exec} -- impala
+                else
+                  ${lib.getExe pkgs.libnotify} --urgency=critical --expire-time=5000 -- "Network" "Cannot configure network without impala."
+                fi
+              '';
+            }
+          ];
         }
 
         {
@@ -174,35 +192,8 @@ in
         }
 
         {
-          # Upload/download speeds
-          block = "net";
-          interval = 1;
-          format = " ^icon_net_down $speed_down.eng(prefix:K,width:4) ^icon_net_up $speed_up.eng(prefix:K,width:4) ";
-          format_alt = " $icon {$signal_strength $ssid $frequency|Wired connection} via $device ";
-          inactive_format = "";
-          missing_format = "";
-
-          click = [
-            {
-              button = "middle";
-              cmd = "${lib.getExe pkgs.xdg-terminal-exec} --hold -- ${lib.getExe pkgs.bash} -c '${lib.getExe' pkgs.iproute2 "ip"} addr; read'";
-            }
-            {
-              button = "right";
-              cmd = pkgs.writeShellScript "network-menu" ''
-                if command -v impala &>/dev/null; then
-                  ${lib.getExe pkgs.xdg-terminal-exec} -- impala
-                else
-                  ${lib.getExe pkgs.libnotify} --urgency=critical --expire-time=5000 -- "Network" "Cannot configure network without impala."
-                fi
-              '';
-            }
-          ];
-        }
-
-        {
           block = "disk_iostats";
-          format = "  $speed_read.eng(prefix:K,width:4)  $speed_write.eng(prefix:K,width:4) ";
+          format = "  $speed_read.eng(prefix:K,width:3)  $speed_write.eng(prefix:K,width:3) ";
           interval = 1;
         }
 
