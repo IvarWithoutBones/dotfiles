@@ -73,12 +73,19 @@ in
 
         {
           block = "sound";
+          device_kind = "sink";
           format = " $icon $volume.eng(width:3) ";
+          format_alt = " $icon $volume.eng(width:3) - {$active_port|$output_description} ";
           show_volume_when_muted = true;
+
           click = [
             {
-              button = "left";
-              cmd = "${pkgs.pavucontrol}/bin/pavucontrol";
+              button = "right";
+              cmd = lib.getExe pkgs.pavucontrol;
+            }
+            {
+              button = "middle";
+              action = "toggle_mute";
             }
           ];
 
@@ -150,7 +157,7 @@ in
           merge_with_next = true;
           interval = 1;
           format = " $icon ";
-          format_alt = " {$signal_strength $ssid $frequency|Wired connection} via $device ^icon_net_down $speed_down.eng(prefix:K,width:4) ^icon_net_up $speed_up.eng(prefix:K,width:4) $icon ";
+          format_alt = " $device - {$ssid ($frequency.eng(pad_with:''), $signal_strength)|Wired} - ^icon_net_down $speed_down.eng(prefix:K,width:3) ^icon_net_up $speed_up.eng(prefix:K,width:3) $icon";
           inactive_format = "";
           missing_format = "";
           icons_overrides.net_wired = "";
@@ -186,39 +193,67 @@ in
             time="$(printf "%.1f" "$(cut -d " " -f 1 <<< "$output")")"
             unit="$(cut -d " " -f 2 <<< "$output")"
             (( "''${#time}" > 4 )) && time="$(printf "%.0f" "$time")"
-            (( "''${#time}" > 5 )) && time="99999"
-            printf "%-5s%2s" "$time" "$unit"
+            (( "''${#time}" > 4 )) && time="9999"
+            printf "%-4s%2s" "$time" "$unit"
           '';
         }
 
         {
-          block = "disk_iostats";
-          format = "  $speed_read.eng(prefix:K,width:3)  $speed_write.eng(prefix:K,width:3) ";
+          block = "amd_gpu";
           interval = 1;
+          format = "{ $icon $utilization.eng(width:3) |}";
+          format_alt = "{ $icon $utilization.eng(width:3)  $vram_used.eng(prefix:M,width:3)/$vram_total.eng(prefix:M,width:3) ($vram_used_percents) |}";
+          if_command = "test -d /sys/bus/pci/amdgpu";
+        }
+
+        {
+          block = "nvidia_gpu";
+          interval = 1;
+          format = " $icon $utilization.eng(width:3) ";
+          if_command = "command -v nvidia-smi";
         }
 
         {
           block = "cpu";
-          format = "  $utilization.eng(width:3) ";
+          format = " $icon $utilization.eng(width:3) ";
+          format_alt = " $icon $utilization.eng(width:3) { $frequency.eng(width:3) |}{$boost |}$barchart";
           interval = 1;
+
           click = [
             {
-              button = "left";
+              button = "right";
               cmd = "${lib.getExe config.xdg.terminal-exec.package} -- ${lib.getExe pkgs.htop} --sort-key=PERCENT_CPU";
             }
           ];
+
+          icons_overrides = {
+            cpu = [
+              ""
+              ""
+              "󰃤"
+            ];
+            cpu_boost_off = "󰾆";
+            cpu_boost_on = "󰓅";
+          };
         }
 
         {
           block = "memory";
-          format = "  $mem_used.eng(prefix:M,width:3) ";
+          format = " $icon $mem_used.eng(prefix:M,width:3) ";
+          format_alt = " $icon $mem_used.eng(prefix:M,width:3)/$mem_total.eng(prefix:M,width:3) ($mem_used_percents.eng(width:3)) $icon_swap $swap_used.eng(prefix:M,width:3)/$swap_total.eng(prefix:M,width:3) ($swap_used_percents.eng(width:1)) ";
           interval = 1;
+
           click = [
             {
-              button = "left";
+              button = "right";
               cmd = "${lib.getExe config.xdg.terminal-exec.package} -- ${lib.getExe pkgs.htop} --sort-key=PERCENT_MEM";
             }
           ];
+
+          icons_overrides = {
+            memory_mem = "";
+            memory_swap = "";
+          };
         }
 
         {
