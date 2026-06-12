@@ -61,8 +61,8 @@ in
           autolocate = true;
           autolocate_interval = 600; # Update location every 10 minutes
           service.name = "metno";
-          format = " $icon_ffin $temp_ffin.eng(width:3) ";
-          format_alt = " $location - $icon_ffin $temp_ffin $weather_verbose_ffin -  $wind_kmh_ffin km/h $direction_ffin -  $humidity_ffin ";
+          format = "{ $icon_ffin $temp_ffin.eng(width:3) |}";
+          format_alt = "{ $location - $icon_ffin $temp_ffin $weather_verbose_ffin -  $wind_kmh_ffin km/h $direction_ffin -  $humidity_ffin |}";
           click = [
             {
               button = "right";
@@ -156,10 +156,11 @@ in
           block = "net";
           merge_with_next = true;
           interval = 1;
-          format = " $icon ";
+          format = " $icon";
+
           format_alt = " $device - {$ssid ($frequency.eng(pad_with:''), $signal_strength)|Wired} - ^icon_net_down $speed_down.eng(prefix:K,width:3) ^icon_net_up $speed_up.eng(prefix:K,width:3) $icon";
-          inactive_format = "";
-          missing_format = "";
+          inactive_format = " 󱚵";
+          missing_format = " 󰖪";
           icons_overrides.net_wired = "";
 
           click = [
@@ -183,11 +184,10 @@ in
         {
           # Ping time
           block = "custom";
-          hide_when_empty = true;
           interval = 1;
 
           command = pkgs.writeShellScript "ping-time" ''
-            output="$(${lib.getExe pkgs.unixtools.ping} store.steampowered.com -c 1 -w 1 2>/dev/null | ${lib.getExe pkgs.gnugrep} "time=" | ${lib.getExe' pkgs.coreutils "cut"} -d '=' -f 4)"
+            output="$(timeout 0.5s ${lib.getExe pkgs.unixtools.ping} store.steampowered.com -c 1 2>/dev/null | ${lib.getExe pkgs.gnugrep} "time=" | ${lib.getExe' pkgs.coreutils "cut"} -d '=' -f 4)"
             (( "''${#output}" > 15 )) || (( "''${#output}" < 1 )) && exit 0
 
             time="$(printf "%.1f" "$(cut -d " " -f 1 <<< "$output")")"
@@ -202,7 +202,7 @@ in
           block = "amd_gpu";
           interval = 1;
           format = "{ $icon $utilization.eng(width:3) |}";
-          format_alt = "{ $icon $utilization.eng(width:3)  $vram_used.eng(prefix:M,width:3)/$vram_total.eng(prefix:M,width:3) ($vram_used_percents) |}";
+          format_alt = "{ $icon $utilization.eng(width:3)  $vram_used.eng(prefix:M,width:3)/$vram_total.eng(prefix:M,pad_with:'') ($vram_used_percents.eng(width:2)) |}";
           if_command = "test -d /sys/bus/pci/amdgpu";
         }
 
@@ -230,7 +230,6 @@ in
             cpu = [
               ""
               ""
-              "󰃤"
             ];
             cpu_boost_off = "󰾆";
             cpu_boost_on = "󰓅";
@@ -240,7 +239,7 @@ in
         {
           block = "memory";
           format = " $icon $mem_used.eng(prefix:M,width:3) ";
-          format_alt = " $icon $mem_used.eng(prefix:M,width:3)/$mem_total.eng(prefix:M,width:3) ($mem_used_percents.eng(width:3)) $icon_swap $swap_used.eng(prefix:M,width:3)/$swap_total.eng(prefix:M,width:3) ($swap_used_percents.eng(width:1)) ";
+          format_alt = " $icon $mem_used.eng(prefix:M,width:3)/$mem_total.eng(prefix:M,pad_with:'') ($mem_used_percents.eng(width:2)) $icon_swap $swap_used.eng(prefix:M,width:3)/$swap_total.eng(prefix:M,pad_with:'') ($swap_used_percents.eng(width:1)) ";
           interval = 1;
 
           click = [
