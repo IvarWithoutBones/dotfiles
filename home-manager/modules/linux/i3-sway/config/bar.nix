@@ -61,8 +61,8 @@ in
           autolocate = true;
           autolocate_interval = 600; # Update location every 10 minutes
           service.name = "metno";
-          format = " $icon_ffin $temp_ffin.eng(width:3) ";
-          format_alt = " $location - $icon_ffin $temp_ffin $weather_verbose_ffin -  $wind_kmh_ffin km/h $direction_ffin -  $humidity_ffin ";
+          format = "{ $icon_ffin $temp_ffin.eng(width:3) |}";
+          format_alt = "{ $location - $icon_ffin $temp_ffin $weather_verbose_ffin -  $wind_kmh_ffin km/h $direction_ffin -  $humidity_ffin |}";
           click = [
             {
               button = "right";
@@ -202,7 +202,7 @@ in
           block = "amd_gpu";
           interval = 1;
           format = "{ $icon $utilization.eng(width:3) |}";
-          format_alt = "{ $icon $utilization.eng(width:3)  $vram_used.eng(prefix:M,width:3)/$vram_total.eng(prefix:M,width:3) ($vram_used_percents) |}";
+          format_alt = "{ $icon $utilization.eng(width:3)  $vram_used.eng(prefix:M,width:3)/$vram_total.eng(prefix:M,pad_with:'') ($vram_used_percents.eng(width:2)) |}";
           if_command = "test -d /sys/bus/pci/amdgpu";
         }
 
@@ -230,7 +230,6 @@ in
             cpu = [
               ""
               ""
-              "󰃤"
             ];
             cpu_boost_off = "󰾆";
             cpu_boost_on = "󰓅";
@@ -240,7 +239,7 @@ in
         {
           block = "memory";
           format = " $icon $mem_used.eng(prefix:M,width:3) ";
-          format_alt = " $icon $mem_used.eng(prefix:M,width:3)/$mem_total.eng(prefix:M,width:3) ($mem_used_percents.eng(width:3)) $icon_swap $swap_used.eng(prefix:M,width:3)/$swap_total.eng(prefix:M,width:3) ($swap_used_percents.eng(width:1)) ";
+          format_alt = " $icon $mem_used.eng(prefix:M,width:3)/$mem_total.eng(prefix:M,pad_with:'') ($mem_used_percents.eng(width:2)) $icon_swap $swap_used.eng(prefix:M,width:3)/$swap_total.eng(prefix:M,pad_with:'') ($swap_used_percents.eng(width:1)) ";
           interval = 1;
 
           click = [
