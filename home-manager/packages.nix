@@ -66,7 +66,6 @@
       drawio
       psst
       krita
-      _1password-gui
       transmission-remote-gtk
       firefox
       libreoffice

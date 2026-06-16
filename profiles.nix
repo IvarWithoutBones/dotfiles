@@ -94,6 +94,10 @@ in
             ++ lib.optional config.services.sonarr.enable config.services.sonarr.group
             ++ lib.optional config.services.radarr.enable config.services.radarr.group;
           };
+
+          programs._1password-gui = lib.mkIf config.programs._1password-gui.enable {
+            polkitPolicyOwners = [ username ];
+          };
         }
       )
 
@@ -112,6 +116,7 @@ in
       ./modules/linux/btrfs.nix
       ./modules/linux/nix-ssh-serve.nix
       ./modules/linux/wireshark.nix
+      ./modules/linux/1password.nix
       ./modules/linux/hardware/audio.nix
       ./modules/linux/desktop/lockscreen.nix
       ./modules/linux/desktop/sessions.nix
