@@ -101,6 +101,15 @@ let
             app_id = "love";
             title = "Olympus";
           }
+          {
+            # Spelunky 2 mod manager
+            app_id = "steam_proton";
+            title = "Modlunky 2";
+          }
+          {
+            app_id = "steam_proton";
+            title = "Spelunky 2";
+          }
         ];
 
         ${workspaces.ws10} = mkWindowRules [
