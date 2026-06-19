@@ -58,17 +58,38 @@ in
 
         {
           block = "weather";
+          service = {
+            name = "metno";
+            forecast_hours = 1;
+          };
+
+          # Update location/forecast every 10 minutes
           autolocate = true;
-          autolocate_interval = 600; # Update location every 10 minutes
-          service.name = "metno";
+          autolocate_interval = 600;
+          interval = 600;
+
           format = "{ $icon_ffin $temp_ffin.eng(width:3) |}";
-          format_alt = "{ $location - $icon_ffin $temp_ffin $weather_verbose_ffin -  $wind_kmh_ffin km/h $direction_ffin -  $humidity_ffin |}";
+          format_alt = "{ $location - $icon_ffin  $temp_ffin $weather_verbose_ffin -  $wind_kmh_ffin km/h $direction_ffin -  $humidity_ffin |}";
           click = [
             {
               button = "right";
               cmd = "${lib.getExe config.xdg.terminal-exec.package} --hold -- ${lib.getExe pkgs.bash} -c '${lib.getExe pkgs.curl} \"https://wttr.in/?F\"; read'";
             }
           ];
+
+          icons_overrides = {
+            weather_sun = "☀️";
+            weather_moon = "🌙";
+            weather_clouds = "☁️";
+            weather_clouds_night = "";
+            weather_fog = "󰖑";
+            weather_fog_night = "";
+            weather_rain = "";
+            weather_rain_night = "";
+            weather_thunder = "";
+            weather_thunder_night = "";
+            weather_snow = "";
+          };
         }
 
         {
@@ -77,6 +98,10 @@ in
           format = " $icon $volume.eng(width:3) ";
           format_alt = " $icon $volume.eng(width:3) - {$active_port|$output_description} ";
           show_volume_when_muted = true;
+          active_port_mappings = {
+            analog-output-lineout = "Headphones";
+            analog-output-headphones = "Headphones";
+          };
 
           click = [
             {
