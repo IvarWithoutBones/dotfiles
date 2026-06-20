@@ -12,3 +12,6 @@
 
 # MacOS Finder
 .DS_Store
+
+# git-hooks.nix
+/.pre-commit-config.yaml

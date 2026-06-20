@@ -1,0 +1,12 @@
+[package]
+name = "change-me-project-name"
+description = "change-me-project-description"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]

@@ -1,0 +1,24 @@
+# Configuration for treefmt, a formatter multiplexer: https://github.com/numtide/treefmt
+
+[formatter.rustfmt]
+command = "rustfmt"
+options = ["--config", "skip_children=true", "--edition", "2024"]
+includes = ["*.rs"]
+
+[formatter.yamlfmt]
+command = "yamlfmt"
+options = ["-no_global_conf", "-conf", "./.yamlfmt.yml"]
+includes = ["*.yaml", "*.yml"]
+
+[formatter.nixfmt]
+command = "nixfmt"
+includes = ["*.nix"]
+
+[formatter.taplo]
+command = "taplo"
+includes = ["*.toml"]
+options = ["format"]
+
+[formatter.mdformat]
+command = "mdformat"
+includes = ["*.md"]

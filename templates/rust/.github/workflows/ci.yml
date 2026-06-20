@@ -1,4 +1,4 @@
-name: "Build"
+name: "CI"
 on: [push, pull_request]
 
 jobs:
@@ -8,10 +8,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v6.0.2
 
       - name: Install Nix
-        uses: cachix/install-nix-action@v31.3.0
+        uses: cachix/install-nix-action@v31.10.5
         with:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
@@ -20,4 +20,4 @@ jobs:
         run: nix build --print-build-logs
 
       - name: Run checks
-        run: nix flake check --print-build-logs --keep-going --all-systems
+        run: nix flake check --print-build-logs --keep-going

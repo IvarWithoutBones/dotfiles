@@ -1,11 +1,12 @@
 [workspace]
+resolver = "3"
 members = ["crates/*"]
-resolver = "2"
 
 [workspace.package]
 edition = "2024"
-rust-version = "1.86"
+rust-version = "1.96.0"
 license = "MIT OR Apache-2.0"
+authors = ["Ivar Scholten"]
 
 # High-performance but slow-to-compile release builds.
 [profile.release-lto]
@@ -20,11 +21,7 @@ pedantic = { level = "warn", priority = -1 }
 
 [workspace.lints.rust]
 missing_debug_implementations = "warn"
-keyword-idents-2024 = "warn"
 non-ascii-idents = "warn"
-unsafe_op_in_unsafe_fn = "warn"
-missing-unsafe-on-extern = "warn"
-unsafe-attr-outside-unsafe = "warn"
 
 [workspace.lints.rustdoc]
 private_doc_tests = "warn"
