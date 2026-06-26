@@ -167,6 +167,9 @@ in
 
       # Open all folds by default
       foldlevelstart = 99;
+
+      # Night keyboard layout (https://layouts.wiki/layouts/2024/night/) -> QWERTY HJKL mappings
+      langmap = "ch,aj,ek,il,hi,jc,le,ka,CH,AJ,EK,IL,HI,JC,LE,KA";
     };
 
     keymaps = [
