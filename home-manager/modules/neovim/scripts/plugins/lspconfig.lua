@@ -12,7 +12,7 @@ local configurations = {
     html = {}, -- HTML
     omnisharp = {}, -- C#
     taplo = {}, -- TOML
-    ts_ls = {}, -- TypeScript/JavaScript
+    vtsls = {}, -- Typescript/JavaScript
     autotools_ls = {}, -- Makefiles/configure.ac
     just = {}, -- Justfiles
     starlark_rust = {}, -- Bazel
@@ -219,6 +219,11 @@ vim.api.nvim_create_autocmd("LspAttach", {
                     -- Disable BasedPyright's formatting capability, use Ruff's instead.
                     client.server_capabilities.documentFormattingProvider = false
                 end
+            end
+
+            if client.name == "vtsls" then
+                -- Disable vtsls's formatting capability, use prettier instead (via none-ls).
+                client.server_capabilities.documentFormattingProvider = false
             end
 
             on_attach(client, args.buf)

@@ -10,7 +10,6 @@ let
   # Language servers, see `scripts/plugins/lspconfig.lua` for their configuration.
   languageServers = with pkgs; [
     taplo # TOML
-    typescript-language-server # Typescript/Javascript
     vscode-json-languageserver # JSON
     vscode-langservers-extracted # HTML
     glsl_analyzer # GLSL
@@ -23,6 +22,10 @@ let
     marksman # Markdown
     sqls # SQL
     wgsl-analyzer # WGSL
+
+    # TypeScript/JavaScript
+    vtsls
+    prettier
 
     # Lua
     lua-language-server
@@ -434,6 +437,8 @@ in
         "after/ftplugin/lua.lua" = setIndent 4;
         "after/ftplugin/sh.lua" = setIndent 4;
         "after/ftplugin/rust.lua" = setIndent 4;
+        "after/ftplugin/typescript.lua" = setIndent 2;
+        "after/ftplugin/javascript.lua" = setIndent 2;
       };
 
     # Highlight Python docstrings as RST
