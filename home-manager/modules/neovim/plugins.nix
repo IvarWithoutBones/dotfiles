@@ -171,6 +171,7 @@ in
       }
 
       codesettings-nvim # Project-local LSP settings
+      conform-nvim # Formatting for language server that don't natively support formatting
       {
         # Language server configuration presets
         plugin = nvim-lspconfig;

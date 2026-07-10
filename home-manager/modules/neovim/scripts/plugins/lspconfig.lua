@@ -108,6 +108,29 @@ local configurations = {
     },
 }
 
+-- Setup Conform for formatting.
+vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
+require("conform").setup({
+    lsp_format = "fallback",
+    formatters_by_ft = {
+        rust = { "rustfmt" },
+        c = { "clang-format" },
+        cpp = { "clang-format" },
+        bash = { "shfmt" },
+        sh = { "shfmt" },
+        lua = { "stylua" },
+        nix = { "nixfmt" },
+        zig = { "zigfmt" },
+        toml = { "taplo" },
+        yaml = { "yamlfmt" },
+        markdown = { "mdformat" },
+        python = { "ruff_format", "ruff_organize_imports" },
+        json = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { "prettierd", "prettier", stop_after_first = true },
+        typescript = { "prettierd", "prettier", stop_after_first = true },
+    },
+})
+
 local function binding(buffer, key, action, desc, mode)
     local keymapOpts = {
         buffer = buffer,
@@ -121,21 +144,7 @@ end
 ---@param client vim.lsp.Client
 ---@param buf number
 local function on_attach(client, buf)
-    if client:supports_method("textDocument/formatting", buf) then
-        local bind = "<space>f"
-        if client.name == "ruff" and vim.bo[buf].filetype == "python" then
-            -- When formatting using Ruff, apply its "organize imports" code action after formatting
-            binding(buf, bind, function()
-                vim.lsp.buf.format({ bufnr = buf, async = false })
-                vim.lsp.buf.code_action({
-                    apply = true,
-                    context = { only = { "source.organizeImports" }, diagnostics = {} },
-                })
-            end, "format document and organize imports")
-        else
-            binding(buf, bind, function() vim.lsp.buf.format({ bufnr = buf, async = true }) end, "format document")
-        end
-    end
+    binding(buf, "<space>f", function() require("conform").format({ bufnr = buf }) end, "format document", { "n", "v" })
 
     if client:supports_method("textDocument/signatureHelp", buf) then
         binding(buf, "<C-k>", vim.lsp.buf.signature_help, "signature help", { "n", "i" })
@@ -211,19 +220,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(args)
         local client = vim.lsp.get_client_by_id(args.data.client_id)
         if client then
-            if vim.lsp.is_enabled("ruff") and vim.lsp.is_enabled("basedpyright") then
-                if client.name == "ruff" then
-                    -- Disable Ruff's hover capability, use BasedPyright's instead.
-                    client.server_capabilities.hoverProvider = false
-                elseif client.name == "basedpyright" then
-                    -- Disable BasedPyright's formatting capability, use Ruff's instead.
-                    client.server_capabilities.documentFormattingProvider = false
-                end
-            end
-
-            if client.name == "vtsls" then
-                -- Disable vtsls's formatting capability, use prettier instead (via none-ls).
-                client.server_capabilities.documentFormattingProvider = false
+            if vim.lsp.is_enabled("basedpyright") and client.name == "ruff" then
+                -- Disable Ruff's hover capability, use BasedPyright's instead.
+                client.server_capabilities.hoverProvider = false
             end
 
             on_attach(client, args.buf)

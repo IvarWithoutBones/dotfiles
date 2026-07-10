@@ -25,7 +25,7 @@ let
 
     # TypeScript/JavaScript
     vtsls
-    prettier
+    prettierd
 
     # Lua
     lua-language-server
