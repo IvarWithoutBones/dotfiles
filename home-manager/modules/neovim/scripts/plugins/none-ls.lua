@@ -8,6 +8,9 @@ end
 local null_ls = require("null-ls")
 null_ls.setup({
     sources = {
+        -- Typescript/JavaScript formatting, requires the `prettier` package.
+        null_ls.builtins.formatting.prettier,
+
         -- Spell checking for code, requires the `codespell` package.
         null_ls.builtins.diagnostics.codespell.with({
             args = {
