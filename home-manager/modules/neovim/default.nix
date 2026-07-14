@@ -441,7 +441,9 @@ in
         "after/ftplugin/sh.lua" = setIndent 4;
         "after/ftplugin/rust.lua" = setIndent 4;
         "after/ftplugin/typescript.lua" = setIndent 2;
+        "after/ftplugin/typescriptreact.lua" = setIndent 2;
         "after/ftplugin/javascript.lua" = setIndent 2;
+        "after/ftplugin/javascriptreact.lua" = setIndent 2;
       };
 
     # Highlight Python docstrings as RST

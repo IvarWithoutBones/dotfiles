@@ -56,6 +56,10 @@ with pkgs;
 
   nix-search-fzf = callPackage ./nix-search-fzf { };
 
+  picoscope = callPackage ./picoscope {
+    oldPicoscope = prev.picoscope;
+  };
+
   probe-rs-udev-rules = callPackage ./probe-rs-udev-rules { };
 
   proton-ge-runner = callPackage ./proton-ge-runner { };
