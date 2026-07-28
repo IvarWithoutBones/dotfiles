@@ -188,6 +188,7 @@
             ./modules/linux/hardware/touchpad.nix
             ./modules/linux/hardware/bluetooth.nix
             ./modules/linux/hardware/fingerprint.nix
+            ./modules/linux/steam.nix
             ./modules/linux/sccache-builder.nix
 
             (
