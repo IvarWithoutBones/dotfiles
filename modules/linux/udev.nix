@@ -34,6 +34,12 @@
       # 8BitDo Ultimate 2 (Bluetooth, DInput)
       KERNEL=="hidraw*", KERNELS=="*2DC8:6012*", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
 
+      # 8BitDo 64
+      KERNEL=="hidraw*", KERNELS=="*2DC8:3019*", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
+
+      # 8BitDo 64 (Bootloader)
+      KERNEL=="hidraw*", KERNELS=="*2DC8:3208*", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
+
       # Picoscope 2000 oscilloscope
       SUBSYSTEM=="usb", ATTR{idVendor}=="0ce9", ATTR{idProduct}=="1007", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
 
