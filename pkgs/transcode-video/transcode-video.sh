@@ -15,6 +15,8 @@ Options:
   -r, --resolution <res>      Target vertical resolution (e.g. 720p, 1080p). Defaults to the original resolution.
   -c, --compression <level>   Compression level: none, low, medium, or high. Lower values yield better quality at the cost of larger file sizes. Default is none.
   -b, --bitrate <rate>        Target video bitrate (e.g. 1000k, 2M).
+      --crop <w:h:x:y>        Crop the video to the specified width, height, and x/y offsets (e.g. 1280:720:0:0).
+      --find-crop             Play the video and print crop values for the current frame. Use with --crop to crop the video.
       --copy-audio            Copy the audio stream without re-encoding.
       --dry-run               Show what would be done without modifying any files.
   -h, --help                  Show this help message and exit.
@@ -43,7 +45,7 @@ FFMPEG_OUTPUT_FLAGS=()
 
 setFfmpegFlags() {
     # Detetect the available hardware accelerations methods
-    local crf="${1:-15}" audioBitrate="${2:-}" videoBitrate="${3:-}" resolution="${4:-}" copyAudio="${5:-0}" inPlace="${6:-0}" extraArgs=("${@:7}")
+    local crf="${1:-15}" audioBitrate="${2:-}" videoBitrate="${3:-}" videoFilters="${4:-}" resolution="${5:-}" copyAudio="${6:-0}" inPlace="${7:-0}" extraArgs=("${@:8}")
 
     FFMPEG_OUTPUT_FLAGS=(
         -map 0        # Include all input streams by default.
@@ -81,10 +83,8 @@ setFfmpegFlags() {
         )
 
         if [[ -n ${resolution:-} ]]; then
-            FFMPEG_OUTPUT_FLAGS+=(
-                -noautoscale
-                -vf "format=nv12|cuda,hwupload,scale_cuda=-2:${resolution}:force_original_aspect_ratio=decrease"
-            )
+            FFMPEG_OUTPUT_FLAGS+=(-noautoscale)
+            videoFilters+=",format=nv12|cuda,hwupload,scale_cuda=-2:${resolution}:force_original_aspect_ratio=decrease"
         fi
     else
         # Software encoding fallback
@@ -95,8 +95,12 @@ setFfmpegFlags() {
         )
 
         if [[ -n ${resolution:-} ]]; then
-            FFMPEG_OUTPUT_FLAGS+=(-vf "scale=-2:${resolution%p}:force_original_aspect_ratio=decrease")
+            videoFilters+=",scale=-2:${resolution%p}:force_original_aspect_ratio=decrease"
         fi
+    fi
+
+    if [[ -n ${videoFilters:-} ]]; then
+        FFMPEG_OUTPUT_FLAGS+=(-vf "${videoFilters#,}") # Remove leading comma
     fi
 
     if [[ -n ${videoBitrate:-} ]]; then
@@ -223,7 +227,13 @@ trapHandler() {
 }
 
 handleVideoInput() {
-    local input="$1" output="$2" inPlace="$3" dryRun="$4"
+    local input="$1" output="$2" inPlace="$3" dryRun="$4" findCrop="$5"
+
+    if ((findCrop)); then
+        info "finding crop values for video: '${input}'" >&2
+        ffplay -i "${input}" -vf "cropdetect"
+        return
+    fi
 
     if [[ -n ${output:-} ]]; then
         if [[ -d ${output:-} ]]; then
@@ -266,7 +276,7 @@ handleVideoInput() {
 }
 
 handleInputDir() {
-    local input="$1" output="$2" inPlace="$3" dryRun="$4"
+    local input="$1" output="$2" inPlace="$3" dryRun="$4" findCrop="$5"
 
     local processed=0
     for file in "${input}"/*.{mp4,mkv,avi,mov,wmv,flv,webm}; do
@@ -278,16 +288,16 @@ handleInputDir() {
             outputFile="${output}/$(basename "${file}")"
         fi
 
-        handleVideoInput "${file}" "${outputFile}" "${inPlace}" "${dryRun}"
+        handleVideoInput "${file}" "${outputFile}" "${inPlace}" "${dryRun}" "${findCrop}"
     done
     ((processed)) || panic "no videos found in input directory: '${input}'"
 }
 
 handleInput() {
-    local input="$1" output="$2" inPlace="$3" dryRun="$4"
+    local input="$1" output="$2" inPlace="$3" dryRun="$4" findCrop="$5"
 
     if [[ -f ${input} ]]; then
-        handleVideoInput "${input}" "${output:-}" "${inPlace}" "${dryRun}"
+        handleVideoInput "${input}" "${output:-}" "${inPlace}" "${dryRun}" "${findCrop}"
     elif [[ -d ${input} ]]; then
         # If the user specified an output directory, ensure it either already exists or create it
         if [[ -n ${output:-} ]]; then
@@ -301,14 +311,14 @@ handleInput() {
         fi
 
         # Process all video files in the input directory
-        handleInputDir "${input}" "${output:-}" "${inPlace}" "${dryRun}"
+        handleInputDir "${input}" "${output:-}" "${inPlace}" "${dryRun}" "${findCrop}"
     else
         panic "input path does not exist: '${input}'"
     fi
 }
 
 main() {
-    local input output inPlace=0 dryRun=0 compression="none" resolution copyAudio=0 videoBitrate ffmpegArgs=()
+    local input output inPlace=0 dryRun=0 compression="low" resolution copyAudio=0 findCrop=0 videoBitrate ffmpegArgs=() videoFilters=""
     while (($# > 0)); do
         case "$1" in
             -r | --resolution)
@@ -336,6 +346,11 @@ main() {
                 shift || panic "missing argument for '$1'"
                 output="$(realpath "$1")"
                 ;;
+            --crop)
+                shift || panic "missing argument for '$1'"
+                videoFilters+="hwdownload,crop=$1,format=nv12|cuda,hwupload" # TODO: Crop on the GPU if possible
+                ;;
+            --find-crop) findCrop=1 ;;
             --copy-audio) copyAudio=1 ;;
             --dry-run) dryRun=1 ;;
             -h | --help)
@@ -377,8 +392,8 @@ main() {
         *) panic "unknown compression level: '${compression}'" ;;
     esac
 
-    ((dryRun == 0)) && setFfmpegFlags "${crf:-}" "${audioBitrate:-}" "${videoBitrate:-}" "${resolution:-}" "${copyAudio}" "${inPlace}" "${ffmpegArgs[@]}"
-    handleInput "${input}" "${output:-}" "${inPlace}" "${dryRun}"
+    ((dryRun == 0)) && setFfmpegFlags "${crf:-}" "${audioBitrate:-}" "${videoBitrate:-}" "${videoFilters}" "${resolution:-}" "${copyAudio}" "${inPlace}" "${ffmpegArgs[@]}"
+    handleInput "${input}" "${output:-}" "${inPlace}" "${dryRun}" "${findCrop}"
 }
 
 main "$@"
