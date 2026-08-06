@@ -69,7 +69,8 @@ in
           interval = 600;
 
           format = "{ $icon_ffin $temp_ffin.eng(width:3) |}";
-          format_alt = "{ $location - $icon_ffin  $temp_ffin $weather_verbose_ffin -  $wind_kmh_ffin km/h $direction_ffin -  $humidity_ffin |}";
+          format_alt = "{ $location - $icon_ffin $temp_ffin $weather_verbose_ffin -  $wind_kmh_ffin km/h $direction_ffin -  $humidity_ffin |}";
+          error_format = "";
           click = [
             {
               button = "right";
