@@ -1,16 +1,11 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+{ lib, pkgs, ... }:
 
 {
   programs = {
     fzf = {
       enable = true;
-      fileWidgetCommand = "${lib.getExe pkgs.fd} --type f";
-      changeDirWidgetCommand = "${lib.getExe pkgs.fd} --type d";
+      fileWidget.command = "${lib.getExe pkgs.fd} --type f";
+      changeDirWidget.command = "${lib.getExe pkgs.fd} --type d";
 
       # Theme taken from: https://github.com/catppuccin/fzf/blob/895df5b036add4cfa0dcfa4d826ad1db79ebc08f/mocha.md
       colors = {
