@@ -29,7 +29,7 @@ in
       betterdiscordctl = "${pkgs.betterdiscordctl}/bin/betterdiscordctl";
       themesPath = "${config.xdg.configHome}/BetterDiscord/themes";
     in
-    lib.mkIf pkgs.stdenv.isLinux (
+    lib.mkIf pkgs.stdenv.hostPlatform.isLinux (
       lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         # Install BetterDiscord if it isnt already
         ${betterdiscordctl} status | grep -E 'installed|injected' | grep -q "no" && \
@@ -46,7 +46,7 @@ in
 
   # This fixes an issue with Discord where being in a call for a long time causes the client to become unresponsive.
   # For more information see https://gist.github.com/Shika-B/fc15c63d66716347df8627c0d42959b5.
-  home.activation.discord = lib.mkIf pkgs.stdenv.isLinux (
+  home.activation.discord = lib.mkIf pkgs.stdenv.hostPlatform.isLinux (
     lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       $DRY_RUN_CMD eval "${pkgs.discord-with-openasar.noVoicechatLag.outPath}" 1>/dev/null
     ''

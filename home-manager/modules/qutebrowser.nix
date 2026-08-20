@@ -37,7 +37,7 @@ in
         javascript.clipboard = "access";
 
         # Disable scrolling past the end of the page, which is an issue with gesture navigation
-        user_stylesheets = lib.mkIf pkgs.stdenv.isDarwin (
+        user_stylesheets = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin (
           lib.toList (pkgs.writeText "qutebrowser-user-stylesheet.css" ''
             * {
               overscroll-behavior: none;
