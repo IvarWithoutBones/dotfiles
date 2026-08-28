@@ -3,6 +3,7 @@ final: prev:
 let
   pkgs = final;
 in
+assert !(builtins.hasAttr "wasm-bindgen-cli_0_2_127" prev);
 with pkgs;
 {
   apotris = prev.apotris.overrideAttrs (oldAttrs: {
@@ -69,6 +70,8 @@ with pkgs;
   read-macos-alias = callPackage ./read-macos-alias { };
 
   transcode-video = callPackage ./transcode-video { };
+
+  wasm-bindgen-cli_0_2_127 = callPackage ./wasm-bindgen-cli_0_2_127 { };
 
   yabai-zsh-completions = callPackage ./yabai-zsh-completions { };
 }

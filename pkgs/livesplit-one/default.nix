@@ -15,25 +15,25 @@
   pkg-config,
   webkitgtk_4_1,
   lld,
-  wasm-bindgen-cli_0_2_108,
+  wasm-bindgen-cli_0_2_127,
 }:
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "LiveSplitOne";
-  version = "2026-04-14";
+  version = "2026-08-07";
 
   src = fetchFromGitHub {
     owner = "LiveSplit";
     repo = "LiveSplitOne";
-    rev = "83ae5560d80bbf849697c9fb6d5482b6944da530";
-    sha256 = "sha256-Sx90cd8CKK+Der5O74uarV+uti67zSAdFF95np6GzMc=";
+    rev = "ba165d50991ac6ec21c25dd3422feb47309f5cc9";
+    sha256 = "sha256-OY0zRRNWED/1nlV1jVBDCUkc7vqt/nOJ8FLJEuPM7m4=";
     fetchSubmodules = true;
   };
 
   npmDeps = fetchNpmDeps {
     name = "${finalAttrs.pname}-${finalAttrs.version}-npm-deps";
     inherit (finalAttrs) src;
-    hash = "sha256-R1GmLyaGlD4948goV7EiFkPb6PJcILr1NpC4lVGWNZA=";
+    hash = "sha256-CsuXlAhjvgZTM/bxwhmQOAl7RllQF2rEaqC6yZ6nPM4=";
   };
 
   cargoLock.lockFile = ./LiveSplitOne-Cargo.lock; # The lockfile for the Tauri app, the upstream lockfile is outdated
@@ -58,7 +58,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
 
   nativeBuildInputs = [
     cargo-tauri.hook
-    wasm-bindgen-cli_0_2_108
+    wasm-bindgen-cli_0_2_127
     pkg-config
     lld
     npmHooks.npmConfigHook
