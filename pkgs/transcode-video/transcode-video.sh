@@ -71,7 +71,7 @@ setFfmpegFlags() {
             -tune:v hq                 # High quality tuning
             -preset:v p5               # Optimize for quality over speed
             -profile:v main10          # Set the HEVC profile to Main 10 for better compression efficiency
-            -level:v 5.1               # Set the HEVC level
+            -level:v auto               # Set the HEVC level
             -rc-lookahead:v 32         # Look N frames ahead for better compression
             -multipass:v fullres       # Enable multipass encoding
             -rc:v vbr                  # Use variable bitrate mode
