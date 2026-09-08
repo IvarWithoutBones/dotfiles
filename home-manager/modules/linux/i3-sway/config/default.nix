@@ -89,7 +89,6 @@ let
         ];
 
         ${workspaces.ws5} = mkWindowRules [
-          { app_id = "steam"; }
           { app_id = "sm64(ex|ex-practice|coopdx)"; }
           { app_id = "Apotris"; }
           { app_id = "factorio"; }
@@ -109,6 +108,10 @@ let
           {
             app_id = "steam_proton";
             title = "Spelunky 2";
+          }
+          {
+            app_id = "steam";
+            title = "^(?!(Steam Input On-screen Keyboard))$";
           }
         ];
 
