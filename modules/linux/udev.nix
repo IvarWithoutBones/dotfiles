@@ -19,6 +19,30 @@
     ];
 
     extraRules = lib.mkAfter ''
+      # 8BitDo Ultimate 2 (Dongle)
+      KERNEL=="hidraw*", ATTRS{idVendor}=="2dc8", ATTRS{idProduct}=="6012", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
+
+      # 8BitDo Ultimate 2 (Bluetooth)
+      KERNEL=="hidraw*", KERNELS=="*2DC8:6012*", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
+
+      # 8BitDo 64
+      KERNEL=="hidraw*", KERNELS=="*2DC8:3019*", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
+
+      # 8BitDo 64 (Bootloader)
+      KERNEL=="hidraw*", KERNELS=="*2DC8:3208*", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
+
+      # Steam Controller (Cable)
+      SUBSYSTEMS=="usb", ATTRS{idProduct}=="1302", ATTRS{idVendor}=="28de", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
+      KERNEL=="hidraw*", ATTRS{idProduct}=="1302", ATTRS{idVendor}=="28de", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
+
+      # Steam Controller (Bluetooth)
+      SUBSYSTEMS=="usb", ATTRS{idProduct}=="1303", ATTRS{idVendor}=="28de", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
+      KERNEL=="hidraw*", ATTRS{idProduct}=="1303", ATTRS{idVendor}=="28de", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
+
+      # Steam Controller (Puck)
+      SUBSYSTEMS=="usb", ATTRS{idProduct}=="1304", ATTRS{idVendor}=="28de", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
+      KERNEL=="hidraw*", ATTRS{idProduct}=="1304", ATTRS{idVendor}=="28de", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
+
       # Keychron Q2 keyboard
       KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="3434", ATTRS{idProduct}=="0111", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
 
@@ -27,18 +51,6 @@
 
       # SayoDevice macropad
       KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="8089", ATTRS{idProduct}=="0007", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
-
-      # 8BitDo Ultimate 2 (Dongle, DInput)
-      KERNEL=="hidraw*", ATTRS{idVendor}=="2dc8", ATTRS{idProduct}=="6012", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
-
-      # 8BitDo Ultimate 2 (Bluetooth, DInput)
-      KERNEL=="hidraw*", KERNELS=="*2DC8:6012*", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
-
-      # 8BitDo 64
-      KERNEL=="hidraw*", KERNELS=="*2DC8:3019*", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
-
-      # 8BitDo 64 (Bootloader)
-      KERNEL=="hidraw*", KERNELS=="*2DC8:3208*", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
 
       # Picoscope 2000 oscilloscope
       SUBSYSTEM=="usb", ATTR{idVendor}=="0ce9", ATTR{idProduct}=="1007", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"

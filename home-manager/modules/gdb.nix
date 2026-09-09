@@ -9,9 +9,9 @@
 let
   # An extra (mutable) configuration file for stuff we cannot configure with home-manager, used mainly for extra `add-auto-load-safe-path` entries.
   extraConfigFile =
-    if pkgs.stdenvNoCC.isLinux then
+    if pkgs.stdenvNoCC.hostPlatform.isLinux then
       "${config.xdg.configHome}/gdb/gdbinit-extra"
-    else if pkgs.stdenvNoCC.isDarwin then
+    else if pkgs.stdenvNoCC.hostPlatform.isDarwin then
       "${config.home.homeDirectory}/.gdbinit-extra"
     else
       throw "gdb: unsupported platform ${pkgs.stdenvNoCC.system}";
@@ -202,7 +202,7 @@ let
     '';
 in
 {
-  xdg.configFile = lib.mkIf pkgs.stdenvNoCC.isLinux {
+  xdg.configFile = lib.mkIf pkgs.stdenvNoCC.hostPlatform.isLinux {
     "gdb/gdbinit".text = gdbinit;
     "gdb/gdbearlyinit".text = gdbearlyinit;
   };
@@ -211,7 +211,7 @@ in
     packages = [ pkgs.gdb ];
 
     # Unfortunately GDB does not look in $XDG_CONFIG_HOME on Darwin, so we have to pollute the home directory instead.
-    file = lib.mkIf pkgs.stdenvNoCC.isDarwin {
+    file = lib.mkIf pkgs.stdenvNoCC.hostPlatform.isDarwin {
       ".gdbinit".text = gdbinit;
       ".gdbearlyinit".text = gdbearlyinit;
     };

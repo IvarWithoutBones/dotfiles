@@ -61,7 +61,7 @@ in
       github-actions = "${lib.getExe pkgs.act} -s GITHUB_TOKEN=\"$(${lib.getExe pkgs.github-cli} auth token)\"";
       termtitle = "() { printf '\\e]2;%s\\a' \"\$*\"; }"; # Set the terminal window's title
     }
-    // lib.optionalAttrs pkgs.stdenvNoCC.isLinux {
+    // lib.optionalAttrs pkgs.stdenvNoCC.hostPlatform.isLinux {
       copy =
         let
           wayland = "${lib.getExe' pkgs.wl-clipboard "wl-copy"} --trim-newline";
