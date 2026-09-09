@@ -16,6 +16,8 @@
 
     windowManager.sway = {
       enable = true;
+
+      # Set environment variables needed for GTK programs in the wrapper
       wrapperFeatures.gtk = true;
 
       # Create a systemd target (`sway-session.target`) so that other services can start after it

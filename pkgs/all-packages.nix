@@ -69,6 +69,17 @@ with pkgs;
 
   read-macos-alias = callPackage ./read-macos-alias { };
 
+  sway-unwrapped = prev.sway-unwrapped.overrideAttrs (oldAttrs: {
+    patches = oldAttrs.patches or [ ] ++ [
+      (pkgs.fetchurl {
+        # Add support for dbus menus in tray icons, which makes it possible for them to be interactive.
+        # This patch comes from the following PR: https://github.com/swaywm/sway/pull/8920
+        url = "https://github.com/swaywm/sway/compare/5bc72dee4771a2d2d2648b8f69d30e0747f263f6...d18bf0f2610ecc745d7c8c78977227b59f472e31.patch";
+        hash = "sha256-FW+RER/MmKZ9Gd+ei3aHA0BeKHGdLQm48A4XAyCkPFE=";
+      })
+    ];
+  });
+
   transcode-video = callPackage ./transcode-video { };
 
   wasm-bindgen-cli_0_2_127 = callPackage ./wasm-bindgen-cli_0_2_127 { };
