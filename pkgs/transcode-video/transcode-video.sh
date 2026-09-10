@@ -48,8 +48,9 @@ setFfmpegFlags() {
     local crf="${1:-15}" audioBitrate="${2:-}" videoBitrate="${3:-}" videoFilters="${4:-}" resolution="${5:-}" copyAudio="${6:-0}" inPlace="${7:-0}" extraArgs=("${@:8}")
 
     FFMPEG_OUTPUT_FLAGS=(
-        -map 0        # Include all input streams by default.
-        -copy_unknown # Copy any unknown stream types without transcoding.
+        -map 0          # Include all input streams by default.
+        -copy_unknown   # Copy any unknown stream types without transcoding.
+        -pix_fmt p010le # Use an 10-bit pixel format for better compression efficiency and quality.
     )
 
     # Transcode video to HEVC using hardware acceleration if available
@@ -71,7 +72,7 @@ setFfmpegFlags() {
             -tune:v hq                 # High quality tuning
             -preset:v p5               # Optimize for quality over speed
             -profile:v main10          # Set the HEVC profile to Main 10 for better compression efficiency
-            -level:v auto               # Set the HEVC level
+            -level:v auto              # Set the HEVC level
             -rc-lookahead:v 32         # Look N frames ahead for better compression
             -multipass:v fullres       # Enable multipass encoding
             -rc:v vbr                  # Use variable bitrate mode
@@ -348,7 +349,7 @@ main() {
                 ;;
             --crop)
                 shift || panic "missing argument for '$1'"
-                videoFilters+="hwdownload,crop=$1,format=nv12|cuda,hwupload" # TODO: Crop on the GPU if possible
+                videoFilters+="format=nv12|cuda,hwdownload,crop=$1" # TODO: Crop on the GPU if possible, dont assume NVIDIA format
                 ;;
             --find-crop) findCrop=1 ;;
             --copy-audio) copyAudio=1 ;;
