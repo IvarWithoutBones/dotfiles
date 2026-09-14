@@ -89,7 +89,7 @@ let
         ];
 
         ${workspaces.ws5} = mkWindowRules [
-          { app_id = "sm64(ex|ex-practice|coopdx)"; }
+          { app_id = "sm64(ex|ex-practice-(us|jp|eu)|coopdx)"; }
           { app_id = "Apotris"; }
           { app_id = "factorio"; }
           { app_id = "soh.elf"; }
