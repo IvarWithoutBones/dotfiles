@@ -387,6 +387,7 @@ in
       in
       [
         (setFileType "h" "c") # By default this is `cpp`
+        (setFileType "plymouth" "ini")
         (setFileType "ll" "llvm")
         (setFileType "wgsl" "wgsl")
         (setFileType "vert" "glsl")
