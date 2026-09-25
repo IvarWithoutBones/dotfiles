@@ -111,7 +111,7 @@ let
           }
           {
             app_id = "steam";
-            title = "^(?!(Steam Input On-screen Keyboard))$";
+            title = "(?!(^Steam Input On-screen Keyboard$))(^.*$)";
           }
         ];
 
