@@ -373,70 +373,34 @@ in
       }
     ];
 
-    autoCmd =
-      let
-        setFileType = ext: ft: {
-          desc = "Set the file type for '.${ext}' files to ${ft}";
-          event = [
-            "BufRead"
-            "BufNewFile"
-          ];
-          pattern = "*.${ext}";
-          command = "set filetype=${ft}";
-        };
-      in
-      [
-        (setFileType "h" "c") # By default this is `cpp`
-        (setFileType "plymouth" "ini")
-        (setFileType "ll" "llvm")
-        (setFileType "wgsl" "wgsl")
-        (setFileType "vert" "glsl")
-        (setFileType "tesc" "glsl")
-        (setFileType "tese" "glsl")
-        (setFileType "frag" "glsl")
-        (setFileType "geom" "glsl")
-        (setFileType "comp" "glsl")
-
-        {
-          desc = "Change the working directory to a git repository's root";
-          event = [ "VimEnter" ];
-          pattern = "*";
-          # Unfortunately there is no API to run a lua function directly, so we have to write it to a file
-          command = "luafile ${pkgs.writeText "cd-git-root.lua" ''
-            local gitRoot = vim.fn.system("${lib.getExe pkgs.git} rev-parse --show-toplevel 2>/dev/null")
-            if (gitRoot ~= nil and gitRoot ~= "") then
-                vim.cmd("cd " .. gitRoot)
-            end
-          ''}";
-        }
-      ];
+    autoCmd = [
+      {
+        desc = "Change the working directory to a git repository's root";
+        event = [ "VimEnter" ];
+        pattern = "*";
+        # Unfortunately there is no API to run a lua function directly, so we have to write it to a file
+        command = "luafile ${pkgs.writeText "cd-git-root.lua" ''
+          local gitRoot = vim.fn.system("${lib.getExe pkgs.git} rev-parse --show-toplevel 2>/dev/null")
+          if (gitRoot ~= nil and gitRoot ~= "") then
+              vim.cmd("cd " .. gitRoot)
+          end
+        ''}";
+      }
+    ];
 
     files =
       let
-        jumpToAndFromHeader = {
-          keymaps = [
-            {
-              mode = "n";
-              key = "<space>gp";
-              action = ":lua dofile(\"${./scripts/jump-to-and-from-header.lua}\")<cr>";
-              options = {
-                buffer = true; # Only apply this keybinding to C/C++ buffers
-                silent = true; # Do not print our `action`
-              };
-            }
-          ];
-        };
-
         setIndent = num: {
-          opts = {
+          localOpts = {
+            expandtab = true;
             shiftwidth = num;
             tabstop = num;
           };
         };
       in
       {
-        "after/ftplugin/c.lua" = jumpToAndFromHeader // (setIndent 4);
-        "after/ftplugin/cpp.lua" = jumpToAndFromHeader // (setIndent 4);
+        "after/ftplugin/c.lua" = setIndent 4;
+        "after/ftplugin/cpp.lua" = setIndent 4;
         "after/ftplugin/nix.lua" = setIndent 2;
         "after/ftplugin/lua.lua" = setIndent 4;
         "after/ftplugin/sh.lua" = setIndent 4;
@@ -445,6 +409,13 @@ in
         "after/ftplugin/typescriptreact.lua" = setIndent 2;
         "after/ftplugin/javascript.lua" = setIndent 2;
         "after/ftplugin/javascriptreact.lua" = setIndent 2;
+        "ftplugin/linkerscript.lua" = (setIndent 4) // {
+          localOpts = {
+            commentstring = "/* %s */";
+            comments = "s1:/*,mb:*,ex:*/";
+            include = "^\\s*INCLUDE";
+          };
+        };
       };
 
     # Highlight Python docstrings as RST
@@ -477,6 +448,7 @@ in
     # Execute each file in the list upon startup
     extraConfigLua = lib.concatMapStringsSep "\n" (file: "dofile(\"${file}\")") [
       ./scripts/lsp.lua
+      ./scripts/filetypes.lua
     ];
   };
 

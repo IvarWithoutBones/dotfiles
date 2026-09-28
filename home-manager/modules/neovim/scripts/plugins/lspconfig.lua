@@ -188,6 +188,11 @@ local function on_attach(client, buf)
         end
     end
 
+    -- C/C++ keybindings. The `LspClangdSwitchSourceHeader` command is provided by nvim-lspconfig.
+    if client.name == "clangd" then
+        binding(buf, "<space>gp", vim.cmd.LspClangdSwitchSourceHeader, "switch between source/header")
+    end
+
     -- Rust-specific keybindings. The `RustLsp` command is provided by rustaceanvim.
     if client.name == "rust-analyzer" then
         binding(buf, "gp", function() vim.cmd.RustLsp("parentModule") end, "open parent Rust module")
