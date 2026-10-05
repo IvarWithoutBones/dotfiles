@@ -23,14 +23,13 @@ in
     gc.automatic = true;
 
     # Pin the nixpkgs channel to the version from this flake.
-    nixPath = [ "nixpkgs=${ivar-dotfiles.inputs.nixpkgs}" ];
-
     registry = {
       dotfiles.flake = ivar-dotfiles.flake; # Add a reference to this flake, for its templates.
       nixpkgs.flake = ivar-dotfiles.inputs.nixpkgs; # Pin the flake registry's nixpkgs to the version from this flake.
     };
 
     settings = {
+      nix-path = [ "nixpkgs=${ivar-dotfiles.inputs.nixpkgs}" ];
       extra-trusted-users = [ "@wheel" ];
       extra-allowed-users = [ "@wheel" ];
 

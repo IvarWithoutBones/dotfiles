@@ -9,7 +9,7 @@
 let
   outputs = {
     desktop-iiyama = {
-      model = "Iiyama North America PL3490WQ 0x00000101";
+      model = "iiyama Corporation PL3490WQ 0x00000101";
       edid = "00ffffffffffff0026cd047601010000041d0103805022782aca95a6554ea1260f5054bd4b00d1c081808140950f9500b30081c00101dea370e0d4a0355000703a50204f3100001cef5170e0d4a0355000703a50204f3100001c000000fc00504c3334393057510a20202020000000fd0017501e632d000a20202020202001fc020335f155101f0413031202110105140706161544454b4c595a23090707830100006a030c001000393c20000067d85dc401788803565e00a0a0a0295030203500204f3100001eb33900a080381f4030203a00204f3100001eef51b87062a0355080b83a00204f3100001c000000000000000000000000000000000000000055";
       mode = "3440x1440";
       refreshRate = "59.936";
@@ -51,6 +51,28 @@ let
   };
 
   customProfiles = {
+    desktop-philips = [
+      {
+        primary = true;
+        output = outputs.desktop-philips;
+        position = {
+          x = 0;
+          y = 0;
+        };
+      }
+    ];
+
+    desktop-iiyama = [
+      {
+        primary = true;
+        output = outputs.desktop-iiyama;
+        position = {
+          x = 0;
+          y = 0;
+        };
+      }
+    ];
+
     desktop-dual = [
       {
         output = outputs.desktop-philips;

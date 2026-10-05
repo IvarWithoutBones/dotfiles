@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 
@@ -48,9 +47,11 @@ let
     inherit fonts;
 
     colors = {
+      background = colors.base;
       unfocused = mkColor { border = colors.highlighted; };
-      focusedInactive = mkColor { };
       urgent = mkColor { };
+      placeholder = mkColor { };
+      focusedInactive = mkColor { };
       focused =
         mkDefaultColor colors.highlighted [
           "background"
