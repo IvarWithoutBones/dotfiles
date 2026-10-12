@@ -13,6 +13,9 @@
       qmk-udev-rules
       keychron-udev-rules
 
+      # Yubikeys
+      yubikey-personalization
+
       # Embedded debug probes
       openocd
       probe-rs-udev-rules # From my overlay
