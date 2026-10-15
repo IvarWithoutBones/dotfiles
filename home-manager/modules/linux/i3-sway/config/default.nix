@@ -71,8 +71,9 @@ let
       assigns = {
         ${workspaces.ws2} = mkWindowRules [
           { app_id = "mpv"; }
-          { app_id = "org.jellyfin.JellyfinDesktop"; }
           { app_id = "nl.jknaapen.fladder"; }
+          { app_id = "org.jellyfin.JellyfinDesktop"; }
+          { app_id = "com.github.iwalton3.jellyfin-mpv-shim"; }
         ];
 
         ${workspaces.ws3} = mkWindowRules [

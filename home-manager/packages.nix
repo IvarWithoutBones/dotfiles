@@ -30,7 +30,6 @@
       gimp
       moonlight-qt
       keepassxc
-      jellyfin-media-player
       ffmpeg-full
 
       # Packages from my overlay
