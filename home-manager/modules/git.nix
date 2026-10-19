@@ -13,9 +13,10 @@ in
     enable = true;
 
     settings = {
-      rerere.enabled = true;
       init.defaultBranch = "main";
       diff.colorMoved = "zebra";
+      merge.conflictstyle = "diff3";
+      rerere.enabled = true;
       pull.rebase = true;
       push.autoSetupRemote = true;
       advice.skippedCherryPicks = false;
@@ -62,10 +63,6 @@ in
         ci = "commit";
         df = "diff";
         ap = "add --patch";
-        ignore = "update-index --skip-worktree";
-        unignore = "update-index --no-skip-worktree";
-        # Show `--skip-worktree` files (prefixed with `S`), and remove the prefix
-        ignored = "!${git} ls-files -v | grep '^S' | cut -d ' ' -f 2-";
       };
     };
 
@@ -76,15 +73,23 @@ in
     };
   };
 
-  # Prettier pager for diffs, adds syntax highlighting and line numbers
-  programs.delta = {
-    enable = true;
-    enableGitIntegration = true;
+  programs = {
+    # Prettier pager for diffs, adds syntax highlighting and line numbers
+    delta = {
+      enable = true;
+      enableGitIntegration = true;
 
-    options = {
-      navigate = true;
-      line-numbers = true;
-      conflictstyle = "diff3";
+      options = {
+        navigate = true;
+        line-numbers = true;
+        conflictstyle = "diff3";
+      };
+    };
+
+    # Syntax aware merge conflict resolution
+    mergiraf = {
+      enable = true;
+      enableGitIntegration = true;
     };
   };
 }
