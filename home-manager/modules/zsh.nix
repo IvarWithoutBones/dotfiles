@@ -55,7 +55,7 @@ in
       diff = "${lib.getExe' pkgs.diffutils "diff"} --color=auto --unified";
       dirdiff = "${lib.getExe' pkgs.diffutils "diff"} --color=auto -ENwbur";
       mp3 = "${lib.getExe config.programs.mpv.package} --no-video";
-      diskusage = "${lib.getExe' pkgs.coreutils "df"} -ht ext4";
+      diskusage = "${lib.getExe' pkgs.coreutils "df"} --exclude-type=tmpfs --exclude-type=devtmpfs --human-readable --total";
       mktar = "${lib.getExe pkgs.gnutar} -czvf";
       nix-locate-bin = "() { ${lib.getExe' pkgs.nix-index "nix-locate"} --type=x --whole-name --at-root \"\${@/#/\"/bin/\"}\" }"; # Prepend `/bin/` to each argument
       github-actions = "${lib.getExe pkgs.act} -s GITHUB_TOKEN=\"$(${lib.getExe pkgs.github-cli} auth token)\"";
