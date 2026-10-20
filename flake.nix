@@ -194,6 +194,10 @@
             (
               { config, pkgs, ... }:
               {
+                # Disable framework-laptop-kmod because it is incompatible with kernel 7.2.11.
+                # Option comes from nixos-hardware, enabled by default on kernel 6.10 and later.
+                hardware.framework.enableKmod = false;
+
                 boot.loader.limine = {
                   secureBoot.enable = true; # Note that this needs some manual setup: https://wiki.nixos.org/wiki/Limine#Secure_Boot
                   resolution = "2560x1600";

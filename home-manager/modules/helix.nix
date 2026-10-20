@@ -47,7 +47,7 @@ let
 
       # SQL (various dialects)
       sqls
-      sqlfluff
+      # sqlfluff
 
       # YAML
       yaml-language-server
