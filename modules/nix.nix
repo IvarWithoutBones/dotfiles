@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  config,
   ivar-dotfiles,
   ...
 }:
@@ -54,5 +55,13 @@ in
       # Gets pretty annoying while working on a flake.
       warn-dirty = false;
     };
+
+    # For the `access-tokens` option, which reduces rate limiting and allows access to private repos.
+    extraOptions = "!include ${config.sops.secrets.nix-extra-config.path}";
+  };
+
+  sops.secrets.nix-extra-config = {
+    mode = "0440";
+    group = "wheel";
   };
 }
