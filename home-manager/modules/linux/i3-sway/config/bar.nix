@@ -20,6 +20,32 @@ let
       echo "🌙"
     fi
   '';
+
+  bat = [
+    "󰁺"
+    "󰁻"
+    "󰁼"
+    "󰁽"
+    "󰁾"
+    "󰁿"
+    "󰂀"
+    "󰂁"
+    "󰂂"
+    "󰁹"
+  ];
+
+  bat_charging = [
+    "󰢜"
+    "󰂆"
+    "󰂇"
+    "󰂈"
+    "󰢝"
+    "󰂉"
+    "󰢞"
+    "󰂊"
+    "󰂋"
+    "󰂅"
+  ];
 in
 {
   programs.i3status-rust = {
@@ -92,7 +118,23 @@ in
             weather_snow = "";
           };
         }
+      ]
+      ++ lib.optional config.services.kdeconnect.enable {
+        block = "kdeconnect";
+        format = " $icon $name{ $bat_icon $bat_charge|}{ $notif_icon $notif_count|} ";
+        missing_format = "";
+        disconnected_format = "";
 
+        click = [
+          {
+            button = "right";
+            cmd = lib.getExe' config.services.kdeconnect.package "kdeconnect-app";
+          }
+        ];
+
+        icons_overrides = { inherit bat bat_charging; };
+      }
+      ++ [
         {
           block = "sound";
           device_kind = "sink";
@@ -148,33 +190,7 @@ in
             info_bg.link = "idle_bg";
           };
 
-          icons_overrides = {
-            bat = [
-              "󰁺"
-              "󰁻"
-              "󰁼"
-              "󰁽"
-              "󰁾"
-              "󰁿"
-              "󰂀"
-              "󰂁"
-              "󰂂"
-              "󰁹"
-            ];
-
-            bat_charging = [
-              "󰢜"
-              "󰂆"
-              "󰂇"
-              "󰂈"
-              "󰢝"
-              "󰂉"
-              "󰢞"
-              "󰂊"
-              "󰂋"
-              "󰂅"
-            ];
-          };
+          icons_overrides = { inherit bat bat_charging; };
         }
 
         {

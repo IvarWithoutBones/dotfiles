@@ -121,6 +121,7 @@ in
       ./modules/linux/desktop/lockscreen.nix
       ./modules/linux/desktop/sessions.nix
       ./modules/linux/desktop/tuigreet.nix
+      ./modules/linux/desktop/kde-connect.nix
     ]
     ++ common.modules;
 
@@ -135,6 +136,7 @@ in
         ./home-manager/modules/linux/xdg.nix
         ./home-manager/modules/linux/monitor-layout.nix
         ./home-manager/modules/linux/wireshark.nix
+        ./home-manager/modules/linux/kde-connect.nix
       ]
       ++ common.home-manager.modules;
     };
