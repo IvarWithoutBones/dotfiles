@@ -236,7 +236,7 @@ in
           block = "nvidia_gpu";
           interval = 1;
           format = " $icon $utilization.eng(width:3) ";
-          if_command = "command -v nvidia-smi";
+          if_command = "nvidia-smi";
         }
 
         {
