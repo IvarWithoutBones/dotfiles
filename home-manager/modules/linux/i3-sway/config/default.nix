@@ -111,8 +111,14 @@ let
             title = "Spelunky 2";
           }
           {
+            # Every Steam window except the on-screen keyboard
             app_id = "steam";
             title = "(?!(^Steam Input On-screen Keyboard$))(^.*$)";
+          }
+          {
+            # The GTK2 Steam updater dialog doesn't set any app_id or class
+            app_id = "^$";
+            title = "Steam";
           }
         ];
 
