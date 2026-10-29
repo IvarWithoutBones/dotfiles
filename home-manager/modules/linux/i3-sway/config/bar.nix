@@ -121,7 +121,7 @@ in
       ]
       ++ lib.optional config.services.kdeconnect.enable {
         block = "kdeconnect";
-        format = " $icon $name{ $bat_icon $bat_charge|}{ $notif_icon $notif_count|} ";
+        format = " $icon $name{ $bat_icon $bat_charge|}{ $notif_icon $notif_count.eng(width:1)|} ";
         missing_format = "";
         disconnected_format = "";
 
@@ -132,7 +132,20 @@ in
           }
         ];
 
-        icons_overrides = { inherit bat bat_charging; };
+        icons_overrides = {
+          inherit bat bat_charging;
+          notification = "";
+        };
+
+        theme_overrides = {
+          # Use the same colors for all states except warning/critical foreground
+          info_bg.link = "idle_bg";
+          info_fg.link = "idle_fg";
+          good_bg.link = "idle_bg";
+          good_fg.link = "idle_fg";
+          warning_bg.link = "idle_bg";
+          critical_bg.link = "idle_bg";
+        };
       }
       ++ [
         {
