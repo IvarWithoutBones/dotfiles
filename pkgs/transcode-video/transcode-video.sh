@@ -50,7 +50,6 @@ setFfmpegFlags() {
     FFMPEG_OUTPUT_FLAGS=(
         -map 0          # Include all input streams by default.
         -copy_unknown   # Copy any unknown stream types without transcoding.
-        -pix_fmt p010le # Use an 10-bit pixel format for better compression efficiency and quality.
     )
 
     # Transcode video to HEVC using hardware acceleration if available
@@ -85,8 +84,12 @@ setFfmpegFlags() {
 
         if [[ -n ${resolution:-} ]]; then
             FFMPEG_OUTPUT_FLAGS+=(-noautoscale)
-            videoFilters+=",format=nv12|cuda,hwupload,scale_cuda=-2:${resolution}:force_original_aspect_ratio=decrease"
+            videoFilters+=",scale_cuda=-2:${resolution}:force_original_aspect_ratio=decrease"
         fi
+
+        # Convert to a 10-bit pixel format for better compression efficiency and quality.
+        # TODO: Do this on the GPU if possible.
+        videoFilters+=",hwdownload,format=nv12,format=p010le"
     else
         # Software encoding fallback
         FFMPEG_OUTPUT_FLAGS+=(
