@@ -11,7 +11,7 @@
   hardware = {
     nvidia = {
       package = lib.mkDefault config.boot.kernelPackages.nvidiaPackages.stable;
-      open = false; # Getting "probe failed with driver nvidia" errors upon startup
+      open = true;
       modesetting.enable = true; # Allow the kernel driver to configure the display
     };
 
@@ -42,14 +42,14 @@
     '';
   };
 
-  systemd.services = {
-    nvidia-gpu-power-limit = {
-      wantedBy = [ "multi-user.target" ];
-      serviceConfig = {
-        ExecStart = pkgs.writeShellScript "nvidia-gpu-power-limit" ''
-          ${lib.getExe' config.hardware.nvidia.package.bin "nvidia-smi"} --power-limit 250 # In watts
-        '';
-      };
-    };
-  };
+  # systemd.services = {
+  #   nvidia-gpu-power-limit = {
+  #     wantedBy = [ "multi-user.target" ];
+  #     serviceConfig = {
+  #       ExecStart = pkgs.writeShellScript "nvidia-gpu-power-limit" ''
+  #         ${lib.getExe' config.hardware.nvidia.package.bin "nvidia-smi"} --power-limit 250 # In watts
+  #       '';
+  #     };
+  #   };
+  # };
 }
