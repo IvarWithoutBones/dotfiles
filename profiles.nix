@@ -88,6 +88,7 @@ in
               "dialout"
             ]
             ++ lib.optional config.virtualisation.docker.enable "docker"
+            ++ lib.optional config.virtualisation.podman.enable "podman"
             ++ lib.optional config.programs.wireshark.enable "wireshark"
             ++ lib.optional config.services.transmission.enable config.services.transmission.group
             ++ lib.optional config.services.jellyfin.enable config.services.jellyfin.group
@@ -109,6 +110,7 @@ in
       ./modules/linux/networking.nix
       ./modules/linux/gpg.nix
       ./modules/linux/docker.nix
+      ./modules/linux/podman.nix
       ./modules/linux/udev.nix
       ./modules/linux/zerotierone.nix
       ./modules/linux/ssh.nix
