@@ -57,6 +57,7 @@
       usbutils
       pciutils
       picoscope
+      tio
 
       signal-desktop
       high-tide
@@ -70,7 +71,6 @@
       libreoffice
       brightnessctl
       vial
-      # (fladder.override { targetFlutterPlatform = "linux"; }) # Defaults to web
     ];
 
   xdg.mimeApps.defaultApplications = lib.mkIf config.xdg.mimeApps.enable {
