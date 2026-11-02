@@ -16,6 +16,7 @@ in
       init.defaultBranch = "main";
       diff.colorMoved = "zebra";
       merge.conflictstyle = "diff3";
+      color.ui = "auto";
       rerere.enabled = true;
       pull.rebase = true;
       push.autoSetupRemote = true;
