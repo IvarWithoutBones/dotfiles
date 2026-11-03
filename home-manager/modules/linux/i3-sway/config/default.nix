@@ -94,6 +94,8 @@ let
           { app_id = "Apotris"; }
           { app_id = "factorio"; }
           { app_id = "soh.elf"; }
+          { app_id = "org.prismlauncher.PrismLauncher"; }
+          { app_id = "com\\..*\\.Lwjgl3ifyMinecraft"; }
           { app_id = "Celeste?(-unwrapped)"; }
           { app_id = "EverestSplash-linux"; } # Celeste mod loader
           {
