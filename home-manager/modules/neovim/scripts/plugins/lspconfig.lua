@@ -21,6 +21,7 @@ local configurations = {
     gopls = {}, -- Go
     marksman = {}, -- Markdown
     sqls = {}, -- SQL
+    bitbake_language_server = {}, -- BitBake
 
     -- Python
     basedpyright = {},
