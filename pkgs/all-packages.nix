@@ -48,6 +48,8 @@ with pkgs;
 
   iterm2-shell-integration = callPackage ./iterm2-shell-integration { };
 
+  language-server-bitbake = callPackage ./language-server-bitbake { };
+
   livesplit-one = callPackage ./livesplit-one { };
 
   loenn = callPackage ./loenn { };

@@ -22,7 +22,7 @@ let
     marksman # Markdown
     sqls # SQL
     wgsl-analyzer # WGSL
-    bitbake-language-server # BitBake
+    language-server-bitbake # BitBake
 
     # TypeScript/JavaScript
     vtsls

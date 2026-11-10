@@ -21,7 +21,21 @@ local configurations = {
     gopls = {}, -- Go
     marksman = {}, -- Markdown
     sqls = {}, -- SQL
-    bitbake_language_server = {}, -- BitBake
+
+    -- BitBake
+    ["language-server-bitbake"] = {
+        cmd = { "language-server-bitbake", "--stdio" },
+        filetypes = { "bitbake" },
+        root_markers = { ".git" },
+
+        before_init = function(_, config)
+            -- There is no schema in codesettings.nvim, we have to manually apply local overrides
+            local codesettings = require("codesettings")
+            config.settings = {
+                bitbake = codesettings.local_settings():merge(config.settings or {}):get("bitbake") or {},
+            }
+        end,
+    },
 
     -- Python
     basedpyright = {},
