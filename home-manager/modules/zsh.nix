@@ -60,22 +60,6 @@ in
       nix-locate-bin = "() { ${lib.getExe' pkgs.nix-index "nix-locate"} --type=x --whole-name --at-root \"\${@/#/\"/bin/\"}\" }"; # Prepend `/bin/` to each argument
       github-actions = "${lib.getExe pkgs.act} -s GITHUB_TOKEN=\"$(${lib.getExe pkgs.github-cli} auth token)\"";
       termtitle = "() { printf '\\e]2;%s\\a' \"\$*\"; }"; # Set the terminal window's title
-    }
-    // lib.optionalAttrs pkgs.stdenvNoCC.hostPlatform.isLinux {
-      copy =
-        let
-          wayland = "${lib.getExe' pkgs.wl-clipboard "wl-copy"} --trim-newline";
-          x11 = "${lib.getExe pkgs.xclip} -selection clipboard";
-        in
-        lib.optionalString (config.xsession.enable || config.wayland.windowManager.sway.enable) (
-          if config.wayland.windowManager.sway.enable then
-            if config.xsession.enable then
-              "() { [[ \${XDG_SESSION_TYPE:-} == 'wayland' ]] && ${wayland} || ${x11} }" # Pick at runtime
-            else
-              wayland
-          else
-            x11
-        );
     };
 
     initContent = lib.mkAfter ''

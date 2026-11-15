@@ -39,6 +39,10 @@
       cat-command
       copy-nix-derivation
       transcode-video
+      (copy.override {
+        waylandSupport = (!stdenvNoCC.hostPlatform.isDarwin) && config.wayland.windowManager.sway.enable;
+        x11Support = (!stdenvNoCC.hostPlatform.isDarwin) && config.xsession.enable;
+      })
     ]
     ++ lib.optionals pkgs.stdenvNoCC.hostPlatform.isDarwin [
       iterm2

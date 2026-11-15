@@ -28,6 +28,8 @@ with pkgs;
 
   cat-command = callPackage ./cat-command { };
 
+  copy = callPackage ./copy { };
+
   cd-file = callPackage ./cd-file { };
 
   copy-nix-derivation = callPackage ./copy-nix-derivation { };
