@@ -6,39 +6,9 @@
   makeWrapper,
   pkg-config,
   libsecret,
-
-  runCommand,
-  tree-sitter,
-  tree-sitter-grammars,
   pkgsCross,
-  linkFarm,
 }:
 
-let
-  wasi32cc = lib.getExe pkgsCross.wasi32.stdenv.cc;
-  wasi-sdk = linkFarm "wasi-sdk" { "bin/clang" = wasi32cc; };
-  wasm-ld = linkFarm "wasm-ld" {
-    "bin/wasm-ld" = lib.getExe' pkgsCross.wasi32.buildPackages.llvmPackages.lld "wasm-ld";
-  };
-
-  tree-sitter-wasm =
-    runCommand "tree-sitter-wasm"
-      {
-        nativeBuildInputs = [
-          tree-sitter
-          pkgsCross.wasi32.stdenv.cc.bintools
-          wasm-ld
-        ];
-
-        env.TREE_SITTER_WASI_SDK_PATH = wasi-sdk;
-      }
-      ''
-        mkdir -p $out
-        export HOME=$TMPDIR
-        tree-sitter build --wasm ${tree-sitter-grammars.tree-sitter-bitbake.src} --output $out/tree-sitter-bitbake.wasm
-        tree-sitter build --wasm ${tree-sitter-grammars.tree-sitter-bash.src} --output $out/tree-sitter-bash.wasm
-      '';
-in
 buildNpmPackage (finalAttrs: {
   pname = "language-server-bitbake";
   version = "2.10.0+26b6572";
@@ -112,9 +82,8 @@ buildNpmPackage (finalAttrs: {
     cp -r client/ $out/lib/node_modules/
 
     # Install the tree-sitter wasm binaries
-    for bin in ${tree-sitter-wasm}/*; do
-      cp $bin $out/lib/node_modules/language-server-bitbake/
-    done
+    ln -s ${pkgsCross.wasi32.tree-sitter-grammars.tree-sitter-bitbake}/parser.wasm $out/lib/node_modules/language-server-bitbake/tree-sitter-bitbake.wasm
+    ln -s ${pkgsCross.wasi32.tree-sitter-grammars.tree-sitter-bash}/parser.wasm $out/lib/node_modules/language-server-bitbake/tree-sitter-bash.wasm
   '';
 
   meta = {

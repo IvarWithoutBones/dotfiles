@@ -50,7 +50,7 @@ let
         ./home-manager/modules/helix.nix
         ./home-manager/modules/gdb.nix
         ./home-manager/modules/mpv.nix
-        ./home-manager/modules/qutebrowser.nix
+        # ./home-manager/modules/qutebrowser.nix
         ./home-manager/modules/fonts.nix
       ];
     };
