@@ -23,17 +23,19 @@ local configurations = {
     sqls = {}, -- SQL
 
     -- BitBake
-    ["language-server-bitbake"] = {
+    bitbake = {
         cmd = { "language-server-bitbake", "--stdio" },
         filetypes = { "bitbake" },
         root_markers = { ".git" },
+        settings = {},
 
-        before_init = function(_, config)
+        before_init = function(init_params, config)
             -- There is no schema in codesettings.nvim, we have to manually apply local overrides
-            local codesettings = require("codesettings")
-            config.settings = {
-                bitbake = codesettings.local_settings():merge(config.settings or {}):get("bitbake") or {},
-            }
+            local local_settings = require("codesettings").local_settings():get("bitbake") or {}
+            local merged_settings = vim.tbl_deep_extend("force", config.settings.bitbake or {}, local_settings)
+
+            config.settings.bitbake = merged_settings
+            init_params.initializationOptions = merged_settings
         end,
     },
 
@@ -270,7 +272,7 @@ vim.lsp.handlers["client/registerCapability"] = (function(overridden)
 end)(vim.lsp.handlers["client/registerCapability"])
 
 -- Default config for every language server
-local default_config = {
+vim.lsp.config("*", {
     before_init = before_init,
     capabilities = vim.tbl_deep_extend(
         "force",
@@ -282,10 +284,10 @@ local default_config = {
             general = { positionEncodings = { "utf-16" } },
         }
     ),
-}
+})
 
 -- Configure and enable the language servers
 for server_name, server_options in pairs(configurations) do
-    vim.lsp.config(server_name, vim.tbl_deep_extend("force", default_config, server_options))
+    vim.lsp.config(server_name, server_options)
     vim.lsp.enable(server_name)
 end
