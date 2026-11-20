@@ -123,10 +123,11 @@ in
     vimAlias = true;
 
     clipboard = {
-      register = "unnamedplus"; # Copy to the system clipboard by default
-      providers = lib.optionalAttrs pkgs.stdenvNoCC.hostPlatform.isLinux {
-        wl-copy.enable = true;
-        xclip.enable = true;
+      register = "unnamedplus"; # Copy/paste to system clipboard by default
+      providers = {
+        pbcopy.enable = pkgs.stdenv.hostPlatform.isDarwin;
+        wl-copy.enable = pkgs.stdenv.hostPlatform.isLinux && config.wayland.windowManager.sway.enable;
+        xclip.enable = pkgs.stdenv.hostPlatform.isLinux && config.xsession.enable;
       };
     };
 
@@ -444,6 +445,14 @@ in
         (#lua-match? @injection.content "^#: ")
         (#offset! @injection.content 0 3 0 0)
         (#set! injection.language "rst"))
+    '';
+
+    extraConfigLuaPre = ''
+      -- The Alacritty terminal does not support neovim's automatic OSC52 support detection,
+      -- which makes the clipboard non-functional over SSH: https://github.com/alacritty/alacritty/issues/7268
+      if vim.env.TERM == "alacritty" or vim.env.TERM_PROGRAM == "alacritty" then
+        vim.g.clipboard = "osc52"
+      end
     '';
 
     # Execute each file in the list upon startup
