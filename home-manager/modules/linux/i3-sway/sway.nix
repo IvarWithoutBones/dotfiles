@@ -61,12 +61,45 @@
     loupe # Image viewer
   ];
 
-  xdg.mimeApps.defaultApplications = lib.mkIf config.xdg.mimeApps.enable {
-    "inode/directory" = "nautilus.desktop";
-    "image/svg+xml" = "org.gnome.Loupe.desktop";
-    "image/png" = "org.gnome.Loupe.desktop";
-    "image/jpeg" = "org.gnome.Loupe.desktop";
-    "image/jpg" = "org.gnome.Loupe.desktop";
+  xdg = {
+    mimeApps.defaultApplications = lib.mkIf config.xdg.mimeApps.enable {
+      "inode/directory" = "nautilus.desktop";
+      "image/svg+xml" = "org.gnome.Loupe.desktop";
+      "image/png" = "org.gnome.Loupe.desktop";
+      "image/jpeg" = "org.gnome.Loupe.desktop";
+      "image/jpg" = "org.gnome.Loupe.desktop";
+    };
+
+    # Use xdg-desktop-portal-wlr for screen sharing and screenshots
+    portal = lib.mkIf config.xdg.portal.enable {
+      extraPortals = [ pkgs.xdg-desktop-portal-wlr ];
+      config.sway = lib.mkAfter config.xdg.portal.config.common // {
+        "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
+        "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
+      };
+    };
+
+    # Allow the user to select a monitor or window to share when using the screencast portal
+    configFile."xdg-desktop-portal-wlr/sway" = lib.mkIf config.xdg.portal.enable {
+      text = lib.generators.toINI { } {
+        screencast = {
+          chooser_type = "simple";
+          chooser_cmd = pkgs.writeShellScript "xdg-desktop-portal-wlr-sway-chooser" ''
+            set -euo pipefail
+
+            # Output is "<monitor> <monitor | window id>"
+            PICKED="$(${lib.getExe' config.wayland.windowManager.sway.package "swaymsg"} -t get_tree \
+                | ${lib.getExe pkgs.jq} -r '.. | select(.pid? and .visible?) |
+                  "\(.rect.x+.window_rect.x),\(.rect.y+.window_rect.y) \(.window_rect.width)x\(.window_rect.height) \(.foreign_toplevel_identifier)"' \
+                | ${lib.getExe pkgs.slurp} -o -r -f '%o %l')"
+
+            MONITOR="$(${lib.getExe' pkgs.coreutils "cut"} -d ' ' -f 1 <<< "$PICKED")"
+            OUTPUT="$(${lib.getExe' pkgs.coreutils "cut"} -d ' ' -f 2 <<< "$PICKED")"
+            [[ "$MONITOR" == "$OUTPUT" ]] && echo "Monitor: $OUTPUT" || echo "Window: $OUTPUT"
+          '';
+        };
+      };
+    };
   };
 
   systemd.user.services.wayland-pipewire-idle-inhibit =

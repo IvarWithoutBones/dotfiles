@@ -40,10 +40,6 @@ in
       ]
       ++ lib.optionalAttrs config.services.gnome-keyring.enable [
         pkgs.gnome-keyring
-      ]
-      ++ lib.optionals config.wayland.windowManager.sway.enable [
-        # Implements various screen sharing APIs for wlroots-based compositors
-        pkgs.xdg-desktop-portal-wlr
       ];
     };
   };
