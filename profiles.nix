@@ -119,6 +119,7 @@ in
       ./modules/linux/nix-ssh-serve.nix
       ./modules/linux/wireshark.nix
       ./modules/linux/1password.nix
+      ./modules/linux/nix-ld.nix
       ./modules/linux/hardware/audio.nix
       ./modules/linux/desktop/lockscreen.nix
       ./modules/linux/desktop/sessions.nix
