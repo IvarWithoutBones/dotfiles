@@ -15,4 +15,8 @@ vim.filetype.add({
         comp = "glsl",
         ["rust-toolchain"] = "toml",
     },
+    pattern = {
+        [".*/rauc/files/.*%.conf"] = "ini",
+        [".*/rauc/.*%.conf"] = "ini",
+    },
 })
